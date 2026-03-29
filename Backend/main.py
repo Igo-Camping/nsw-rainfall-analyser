@@ -31,7 +31,12 @@ app = FastAPI(
 # Allow requests from web frontend and mobile app
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # tighten this in production
+    allow_origins=[
+        "https://igo-camping.github.io",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "null",  # local file:// access
+    ],
     allow_methods=["GET"],
     allow_headers=["*"],
 )
