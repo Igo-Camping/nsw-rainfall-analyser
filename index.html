@@ -454,6 +454,9 @@ function onLgaChange() {
       map.fitBounds(bounds, { padding: [40, 40] });
     }
   }
+
+  // Draw LGA boundary polygon
+  drawLgaBoundary(lga);
 }
 
 function filterList() {
@@ -598,246 +601,171 @@ function interpretation(aepStr) {
 // ── Main analysis ──────────────────────────────────────────
 async function runAnalysis() {
   if (!selected) return;
-  const dur = mode==='recent'
+  const dur = parseInt(mode==='recent'
     ? document.getElementById('dur').value
-    : document.getElementById('durC').value;
+    : document.getElementById('durC').value);
 
-  let qs = `station_id=${selected.station_id}&duration_minutes=${dur}&aep=true`;
+  // Build time window
+  let fromDt, toDt;
   if (mode === 'recent') {
-    qs += `&hours_back=${document.getElementById('hoursBack').value}`;
+    toDt   = new Date();
+    fromDt = new Date(toDt - parseInt(document.getElementById('hoursBack').value) * 3600000);
   } else {
     const f = document.getElementById('fromDt').value;
     const t = document.getElementById('toDt').value;
     if (!f || !t) { alert('Please set a date range.'); return; }
-    qs += `&from_dt=${f}&to_dt=${t}`;
+    fromDt = new Date(f); toDt = new Date(t);
   }
 
   showLoad('Fetching rainfall data...');
 
   try {
-    // Primary analysis
-    const result = await api(`/rainfall?${qs}`);
-    lastResults = result;
-
-    // Temperature
-    let temp = null;
-    try { temp = await api(`/temperature?lat=${selected.lat}&lon=${selected.lon}`); } catch(e){}
-
-    hideLoad();
-
     if (currentTab === 'top-site') {
-      await runTopPerSite(dur, qs);
+      await runTopPerSite(dur, fromDt, toDt);
     } else if (currentTab === 'top-dur') {
-      await runTopDurations(qs);
+      await runTopDurations(fromDt, toDt);
     } else if (currentTab === 'daily') {
-      await runDailyTotals(qs);
+      await runDailyTotals(fromDt, toDt);
     } else {
-      renderResults(result, temp);
+      // Single station analysis
+      const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
+      const rolling  = calcRollingMax(readings, dur);
+      let aep = null;
+      try { aep = await api(`/aep?station_id=${selected.station_id}&duration_minutes=${dur}&depth_mm=${rolling?.max_depth_mm||0}`); } catch(e){}
+      let temp = null;
+      try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){}
+      lastResults = { station_id: selected.station_id, station_name: selected.name,
+        from: fromDt.toISOString(), to: toDt.toISOString(),
+        duration_minutes: dur, readings, rolling_max: rolling, aep };
+      hideLoad();
+      renderResults(lastResults, temp);
     }
-
   } catch(e) {
     hideLoad();
     alert(`Analysis failed: ${e.message}`);
   }
 }
 
-// ── Render single station results ──────────────────────────
-function renderResults(data, temp) {
-  const panel = document.getElementById('results');
-  panel.classList.add('show');
+// ── MHL data fetch (browser → MHL directly, no backend) ────
+const MHL_BASE = 'https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS';
 
-  const dur = data.duration_minutes;
-  document.getElementById('res-title').textContent = data.station_name;
-  const from = fmtDt(data.from), to = fmtDt(data.to);
-  document.getElementById('res-sub').textContent =
-    `${DUR_LABELS[dur]||dur+'min'} duration · ${from} → ${to}`;
-
-  const rm = data.rolling_max;
-  const aep = data.aep;
-  const aepStr = aep?.aep || (rm?.max_depth_mm > 0 ? 'Calculating...' : '>63.2%');
-  const {cls} = classifyAEP(aepStr);
-
-  // Summary tab
-  document.getElementById('r-summary').innerHTML = `
-    <div class="aep-hero">
-      <div>
-        <div class="aep-hero-lbl">Annual Exceedance Probability</div>
-        <div class="aep-hero-val"><span class="aep-badge ${cls}">${aepStr}</span></div>
-      </div>
-      <div class="aep-hero-info">
-        <div class="aep-hero-interp">${interpretation(aepStr)}</div>
-        <div class="aep-hero-ari">Return period: ${aepToARI(aepStr)}</div>
-        ${temp ? `<div class="aep-hero-ari" style="margin-top:4px">
-          ${tempIcon(temp.weather_code)} ${temp.temperature_c}°C · ${temp.humidity_pct}% humidity
-        </div>` : ''}
-      </div>
-    </div>
-
-    <div class="cards">
-      <div class="card">
-        <div class="card-lbl">Peak Depth</div>
-        <div class="card-val">${rm?.max_depth_mm??'—'}<span class="card-unit">mm</span></div>
-        <div class="card-sub">${DUR_LABELS[dur]||dur+'min'} rolling max</div>
-      </div>
-      <div class="card">
-        <div class="card-lbl">Total Depth</div>
-        <div class="card-val">${rm?.total_depth_mm??'—'}<span class="card-unit">mm</span></div>
-        <div class="card-sub">Event total</div>
-      </div>
-      <div class="card">
-        <div class="card-lbl">ARI</div>
-        <div class="card-val" style="font-size:16px">${aepToARI(aepStr)}</div>
-        <div class="card-sub">Return period</div>
-      </div>
-      <div class="card">
-        <div class="card-lbl">Readings</div>
-        <div class="card-val">${rm?.reading_count??'—'}</div>
-        <div class="card-sub">5-min intervals</div>
-      </div>
-    </div>
-
-    ${rm?.peak_start ? `<div style="font-size:11px;color:var(--text-l);margin-top:-4px;margin-bottom:12px">
-      Peak window: <strong>${fmtDt(rm.peak_start)}</strong> → <strong>${fmtDt(rm.peak_end)}</strong>
-    </div>` : ''}
-
-    ${!rm || rm.reading_count === 0 ? '<div style="color:var(--text-l);font-size:13px;padding:20px 0;text-align:center">No rainfall data for this period.</div>' : ''}
-  `;
-
-  // Chart tab
-  renderChart(data.readings, rm?.peak_start, rm?.peak_end);
-
-  // IFD tab
-  renderIFDTable(aep, rm?.max_depth_mm, dur);
-
-  // Update marker
-  setMarkerStyle(data.station_id,
-    rm?.max_depth_mm > 0 ? 'result' : 'selected');
-
-  switchRTab('r-summary');
-}
-
-// ── Render rainfall chart ──────────────────────────────────
-function renderChart(readings, peakStart, peakEnd) {
-  const el = document.getElementById('r-chart');
-
-  if (!readings || !readings.length) {
-    el.innerHTML = '<div style="color:var(--text-l);font-size:13px;text-align:center;padding:30px">No data to chart.</div>';
-    return;
-  }
-
-  // Sample if too many points
-  let data = readings;
-  if (data.length > 300) {
-    const step = Math.ceil(data.length / 300);
-    data = data.filter((_,i) => i % step === 0);
-  }
-
-  const labels = data.map(r => fmtTime(r.timestamp));
-  const values = data.map(r => r.value);
-  const colors = data.map(r => {
-    if (peakStart && peakEnd) {
-      const ts = new Date(r.timestamp);
-      return ts >= new Date(peakStart) && ts <= new Date(peakEnd)
-        ? 'rgba(0,132,127,0.75)' : 'rgba(0,132,127,0.2)';
-    }
-    return 'rgba(0,132,127,0.5)';
+async function fetchMhlData(tsId, fromDt, toDt) {
+  const fmt = d => d.toISOString().slice(0,19);
+  const params = new URLSearchParams({
+    service:      'kisters',
+    type:         'queryServices',
+    request:      'getTimeseriesValues',
+    ts_id:        tsId,
+    from:         fmt(fromDt),
+    to:           fmt(toDt),
+    format:       'json',
+    returnfields: 'Timestamp,Value'
   });
 
-  el.innerHTML = `
-    <div class="chart-title">5-Minute Rainfall (highlighted = peak window)</div>
-    <div class="chart-wrap"><canvas id="rc"></canvas></div>
-  `;
+  const resp = await fetch(`${MHL_BASE}?${params}`);
+  if (!resp.ok) throw new Error(`MHL API ${resp.status}`);
+  const data = await resp.json();
 
-  if (rainChart) rainChart.destroy();
-  rainChart = new Chart(document.getElementById('rc').getContext('2d'), {
-    type: 'bar',
-    data: { labels, datasets: [{
-      data: values, backgroundColor: colors,
-      borderColor:'transparent', borderRadius:1,
-      barPercentage:1, categoryPercentage:1
-    }]},
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false},
-        tooltip:{callbacks:{label:c=>`${c.parsed.y.toFixed(2)} mm`}}},
-      scales:{
-        x:{grid:{display:false},ticks:{maxTicksLimit:12,font:{size:10},color:'#5A6B7A'}},
-        y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},color:'#5A6B7A',callback:v=>v+' mm'}}
-      }
-    }
-  });
+  if (!data || data.length < 1) return [];
+  const raw = data[0]?.data || [];
+
+  return raw.map(row => ({
+    timestamp: row[0],
+    value: (row[1] === null || row[1] === '' || row[1] === '--') ? 0 : Math.max(0, parseFloat(row[1]) || 0)
+  })).filter(r => r.timestamp);
 }
 
-// ── IFD reference table ────────────────────────────────────
-function renderIFDTable(aep, observedDepth, dur) {
-  const el = document.getElementById('r-ifd');
-  if (!aep?.ifd_reference) {
-    el.innerHTML = '<div style="color:var(--text-l);font-size:13px;text-align:center;padding:30px">No IFD data available for this station.</div>';
-    return;
-  }
+// ── Rolling max calculation (in browser) ───────────────────
+function calcRollingMax(readings, durationMinutes) {
+  if (!readings || !readings.length) return null;
 
-  const ref = aep.ifd_reference;
-  const aeps = Object.keys(ref);
-  const vals = Object.values(ref);
+  const intervals = Math.max(1, Math.floor(durationMinutes / 5));
+  const vals = readings.map(r => r.value);
+  const timestamps = readings.map(r => r.timestamp);
 
-  // Find bracket
-  let loBracket = -1, hiBracket = -1;
-  for (let i = 0; i < vals.length-1; i++) {
-    if (observedDepth >= vals[i] && observedDepth < vals[i+1]) {
-      loBracket = i; hiBracket = i+1;
+  let maxDepth = 0, peakStart = null, peakEnd = null;
+
+  // Prefix sum for O(n) rolling window
+  const prefix = [0];
+  for (let i = 0; i < vals.length; i++) prefix.push(prefix[i] + vals[i]);
+
+  for (let i = 0; i <= vals.length - intervals; i++) {
+    const windowSum = prefix[i + intervals] - prefix[i];
+    if (windowSum > maxDepth) {
+      maxDepth  = windowSum;
+      peakStart = timestamps[i];
+      peakEnd   = timestamps[i + intervals - 1];
     }
   }
 
-  el.innerHTML = `
-    <div class="chart-title">IFD Reference — ${DUR_LABELS[dur]||dur+' min'} Duration</div>
-    <table>
-      <thead><tr>
-        <th>AEP</th>
-        ${aeps.map(a=>`<th class="r">${a}</th>`).join('')}
-      </tr></thead>
-      <tbody>
-        <tr class="${observedDepth>0?'obs-row':''}">
-          <td><strong>Observed</strong></td>
-          ${aeps.map(()=>`<td class="r"><strong>${observedDepth??'—'} mm</strong></td>`).join('')}
-        </tr>
-        <tr>
-          <td>IFD Depth (mm)</td>
-          ${vals.map((v,i)=>`<td class="r ${i===loBracket||i===hiBracket?'bracket-hi':''}">${v}</td>`).join('')}
-        </tr>
-        <tr>
-          <td>Return Period</td>
-          ${aeps.map(a=>`<td class="r">${aepToARI(a)}</td>`).join('')}
-        </tr>
-      </tbody>
-    </table>
-    <div style="font-size:11px;color:var(--text-l);margin-top:10px">
-      Source: BoM IFD 2016. Yellow highlight = bracket containing observed depth.
-    </div>
-  `;
+  const totalDepth = vals.reduce((a, b) => a + b, 0);
+
+  return {
+    max_depth_mm:   Math.round(maxDepth * 100) / 100,
+    peak_start:     peakStart,
+    peak_end:       peakEnd,
+    total_depth_mm: Math.round(totalDepth * 100) / 100,
+    reading_count:  readings.length
+  };
+}
+
+// ── Temperature (browser → Open-Meteo directly) ────────────
+async function fetchTemperature(lat, lon) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+    `&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Australia/Sydney`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error('temp fetch failed');
+  const data = await resp.json();
+  const cur = data.current || {};
+  return {
+    temperature_c: cur.temperature_2m,
+    humidity_pct:  cur.relative_humidity_2m,
+    weather_code:  cur.weather_code
+  };
+}
+
+// ── Analyse one station (used by multi-site analysis) ───────
+async function analyseStation(station, dur, fromDt, toDt) {
+  try {
+    const readings = await fetchMhlData(station.ts_id, fromDt, toDt);
+    const rolling  = calcRollingMax(readings, dur);
+    let aep = null;
+    if (rolling?.max_depth_mm > 0) {
+      try {
+        aep = await api(`/aep?station_id=${station.station_id}&duration_minutes=${dur}&depth_mm=${rolling.max_depth_mm}`);
+      } catch(e) {}
+    }
+    return {
+      station_id:    station.station_id,
+      station_name:  station.name,
+      duration_minutes: dur,
+      from:          fromDt.toISOString(),
+      to:            toDt.toISOString(),
+      readings,
+      rolling_max:   rolling,
+      aep
+    };
+  } catch(e) {
+    return null;
+  }
 }
 
 // ── Top Intensity Per Site ─────────────────────────────────
-async function runTopPerSite(dur, baseQS) {
-  // Get stations in selected LGA
+async function runTopPerSite(dur, fromDt, toDt) {
   const lga = document.getElementById('lgaSel').value;
   const stations = lga
     ? allStations.filter(s => getLGA(s) === lga)
-    : (selected ? [selected] : allStations.slice(0,15));
+    : (selected ? [selected] : allStations.slice(0, 15));
 
   if (!stations.length) { hideLoad(); alert('No stations in selected area.'); return; }
 
-  showLoad(`Analysing ${stations.length} stations...`);
   allSiteResults = [];
+  const BATCH = 8;  // More parallel since MHL calls are direct now
 
-  // Fetch all stations in parallel (batched)
-  const BATCH = 5;
   for (let i = 0; i < stations.length; i += BATCH) {
-    const batch = stations.slice(i, i+BATCH);
-    setLoadTxt(`Fetching ${i+1}–${Math.min(i+BATCH, stations.length)} of ${stations.length}...`);
-    const results = await Promise.all(batch.map(s => {
-      const qs = baseQS.replace(`station_id=${selected?.station_id}`, `station_id=${s.station_id}`);
-      return api(`/rainfall?${qs}`).catch(() => null);
-    }));
+    const batch = stations.slice(i, i + BATCH);
+    setLoadTxt(`Fetching ${i+1}–${Math.min(i+BATCH, stations.length)} of ${stations.length} stations...`);
+    const results = await Promise.all(batch.map(s => analyseStation(s, dur, fromDt, toDt)));
     allSiteResults.push(...results.filter(Boolean));
   }
 
@@ -853,7 +781,6 @@ function renderTopPerSite(results, dur) {
   document.getElementById('res-sub').textContent =
     `${DUR_LABELS[dur]||dur+'min'} duration · ${lga || 'All stations'} · Ranked by AEP`;
 
-  // Sort by depth descending
   const sorted = [...results]
     .filter(r => r.rolling_max)
     .sort((a,b) => (b.rolling_max?.max_depth_mm||0) - (a.rolling_max?.max_depth_mm||0));
@@ -871,9 +798,7 @@ function renderTopPerSite(results, dur) {
         <td>${i+1}</td>
         <td><strong>${r.station_name}</strong></td>
         <td class="r">${depth} mm</td>
-        <td>
-          <div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div>
-        </td>
+        <td><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
         <td class="r">${aepToARI(aepStr)}</td>
         <td class="r">${rm?.total_depth_mm||'—'} mm</td>
@@ -882,9 +807,7 @@ function renderTopPerSite(results, dur) {
   }).join('');
 
   document.getElementById('r-allsite').innerHTML = `
-    <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
-      <span style="font-size:12px;color:var(--text-l)">${sorted.length} stations analysed</span>
-    </div>
+    <div style="margin-bottom:12px;font-size:12px;color:var(--text-l)">${sorted.length} stations analysed</div>
     <table>
       <thead><tr>
         <th>#</th><th>Station</th>
@@ -897,24 +820,23 @@ function renderTopPerSite(results, dur) {
     </table>
   `;
 
-  // Also show comparison chart
   renderCompareChart(sorted, dur);
 }
 
 function renderCompareChart(results, dur) {
   const el = document.getElementById('r-chart');
-  const top10 = results.slice(0,10);
+  const top10 = results.slice(0, 10);
   el.innerHTML = `
     <div class="chart-title">Peak Depth Comparison — ${DUR_LABELS[dur]||dur+'min'} (Top 10)</div>
     <div class="chart-wrap"><canvas id="cc"></canvas></div>
   `;
   if (compareChart) compareChart.destroy();
-  compareChart = new Chart(document.getElementById('cc').getContext('2d'),{
-    type:'bar',
-    data:{
-      labels: top10.map(r => r.station_name.replace(/\s*\(Rain\)|\s*\(Precipitation\)/gi,'')),
-      datasets:[{
-        data: top10.map(r => r.rolling_max?.max_depth_mm||0),
+  compareChart = new Chart(document.getElementById('cc').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: top10.map(r => r.station_name.replace(/\s*\(Rain\)|\s*\(Precipitation\)/gi, '')),
+      datasets: [{
+        data: top10.map(r => r.rolling_max?.max_depth_mm || 0),
         backgroundColor: top10.map(r => {
           const pct = parseFloat((r.aep?.aep||'100').replace(/[~<>%]/g,''));
           if (isNaN(pct)||pct>63) return '#27AE60';
@@ -922,24 +844,22 @@ function renderCompareChart(results, dur) {
           if (pct>5)  return '#E67E22';
           return '#E74C3C';
         }),
-        borderRadius:4
+        borderRadius: 4
       }]
     },
-    options:{
-      indexAxis:'y',
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>`${c.parsed.x.toFixed(1)} mm`}}},
-      scales:{
-        x:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},callback:v=>v+' mm'}},
-        y:{grid:{display:false},ticks:{font:{size:10}}}
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{display:false}, tooltip:{callbacks:{label:c=>`${c.parsed.x.toFixed(1)} mm`}} },
+      scales: {
+        x: { grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:10},callback:v=>v+' mm'} },
+        y: { grid:{display:false}, ticks:{font:{size:10}} }
       }
     }
   });
 }
 
 // ── Top 5 Durations ────────────────────────────────────────
-async function runTopDurations(baseQS) {
+async function runTopDurations(fromDt, toDt) {
   if (!selected) return;
   showLoad('Analysing all durations...');
 
@@ -948,11 +868,8 @@ async function runTopDurations(baseQS) {
 
   for (let i = 0; i < durs.length; i++) {
     setLoadTxt(`Duration ${i+1}/${durs.length}: ${DUR_LABELS[durs[i]]}...`);
-    const qs = baseQS.replace(/duration_minutes=\d+/, `duration_minutes=${durs[i]}`);
-    try {
-      const r = await api(`/rainfall?${qs}`);
-      results.push(r);
-    } catch(e) {}
+    const r = await analyseStation(selected, durs[i], fromDt, toDt);
+    if (r) results.push(r);
   }
 
   hideLoad();
@@ -964,34 +881,26 @@ function renderTopDurations(results) {
   document.getElementById('res-title').textContent = `Top 5 Durations — ${selected.name}`;
   document.getElementById('res-sub').textContent = 'All durations analysed, ranked by AEP';
 
-  const sorted = results
-    .filter(r => r.rolling_max?.max_depth_mm > 0)
-    .sort((a,b) => {
-      const pa = parseFloat((a.aep?.aep||'100').replace(/[~<>%]/g,''));
-      const pb = parseFloat((b.aep?.aep||'100').replace(/[~<>%]/g,''));
-      return pa - pb;
-    });
+  const sorted = [...results].sort((a,b) => {
+    const pa = parseFloat((a.aep?.aep||'100').replace(/[~<>%]/g,''));
+    const pb = parseFloat((b.aep?.aep||'100').replace(/[~<>%]/g,''));
+    return pa - pb;
+  });
 
-  const rows = results
-    .sort((a,b) => {
-      const pa = parseFloat((a.aep?.aep||'100').replace(/[~<>%]/g,''));
-      const pb = parseFloat((b.aep?.aep||'100').replace(/[~<>%]/g,''));
-      return pa - pb;
-    })
-    .map((r, i) => {
-      const rm = r.rolling_max;
-      const aepStr = r.aep?.aep || '>63.2%';
-      const {cls} = classifyAEP(aepStr);
-      return `
-        <tr class="${i<5?'highlight':''}">
-          <td>${i+1}</td>
-          <td>${DUR_LABELS[r.duration_minutes]||r.duration_minutes+'min'}</td>
-          <td class="r">${rm?.max_depth_mm??'—'} mm</td>
-          <td><span class="aep-badge ${cls}">${aepStr}</span></td>
-          <td class="r">${aepToARI(aepStr)}</td>
-          <td>${rm?.peak_start ? fmtDt(rm.peak_start)+' → '+fmtDt(rm.peak_end) : '—'}</td>
-        </tr>`;
-    }).join('');
+  const rows = sorted.map((r, i) => {
+    const rm = r.rolling_max;
+    const aepStr = r.aep?.aep || '>63.2%';
+    const {cls} = classifyAEP(aepStr);
+    return `
+      <tr class="${i<5?'highlight':''}">
+        <td>${i+1}</td>
+        <td>${DUR_LABELS[r.duration_minutes]||r.duration_minutes+'min'}</td>
+        <td class="r">${rm?.max_depth_mm??'—'} mm</td>
+        <td><span class="aep-badge ${cls}">${aepStr}</span></td>
+        <td class="r">${aepToARI(aepStr)}</td>
+        <td>${rm?.peak_start ? fmtDt(rm.peak_start)+' → '+fmtDt(rm.peak_end) : '—'}</td>
+      </tr>`;
+  }).join('');
 
   document.getElementById('r-allsite').innerHTML = `
     <div style="margin-bottom:10px;font-size:11px;color:var(--text-l)">
@@ -1006,22 +915,19 @@ function renderTopDurations(results) {
       <tbody>${rows}</tbody>
     </table>
   `;
-
   switchRTab('r-allsite');
 }
 
 // ── Daily totals ───────────────────────────────────────────
-async function runDailyTotals(baseQS) {
+async function runDailyTotals(fromDt, toDt) {
   showLoad('Calculating daily totals...');
-  // Use a 7-day window for daily analysis
-  const qs = baseQS
-    .replace(/hours_back=\d+/, 'hours_back=168')
-    .replace(/duration_minutes=\d+/, 'duration_minutes=1440');
-
+  // Use 7-day window
+  const from7 = new Date(toDt - 7 * 24 * 3600000);
   try {
-    const r = await api(`/rainfall?${qs}`);
+    const readings = await fetchMhlData(selected.ts_id, from7, toDt);
     hideLoad();
-    renderDailyTotals(r);
+    renderDailyTotals({ station_name: selected.name, readings,
+      from: from7.toISOString(), to: toDt.toISOString() });
     document.getElementById('results').classList.add('show');
   } catch(e) {
     hideLoad();
@@ -1040,10 +946,10 @@ function renderDailyTotals(data) {
     return;
   }
 
-  // Aggregate by day
   const byDay = {};
   data.readings.forEach(r => {
-    const day = r.timestamp.split('T')[0].split(' ')[0];
+    const raw = r.timestamp.replace(' ', 'T');
+    const day = new Date(raw).toLocaleDateString('en-CA', {timeZone:'Australia/Sydney'});
     if (!byDay[day]) byDay[day] = 0;
     byDay[day] += r.value;
   });
@@ -1051,11 +957,12 @@ function renderDailyTotals(data) {
   const days = Object.entries(byDay)
     .sort(([a],[b]) => a.localeCompare(b))
     .map(([day, total]) => ({
-      day, total: Math.round(total*100)/100,
-      label: new Date(day+'T00:00:00').toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'short'})
+      day, total: Math.round(total * 100) / 100,
+      label: new Date(day+'T00:00:00').toLocaleDateString('en-AU',
+        {weekday:'long', day:'numeric', month:'short', year:'numeric'})
     }));
 
-  const maxT = Math.max(...days.map(d=>d.total)) || 1;
+  const maxT = Math.max(...days.map(d => d.total)) || 1;
 
   const rows = days.map(d => `
     <tr>
@@ -1073,7 +980,6 @@ function renderDailyTotals(data) {
       <tbody>${rows}</tbody>
     </table>
   `;
-
   switchRTab('r-allsite');
 }
 
@@ -1155,6 +1061,61 @@ function showLoad(txt) {
 function setLoadTxt(txt) { document.getElementById('load-txt').textContent = txt; }
 function hideLoad() { document.getElementById('loading').classList.remove('show'); }
 function closeResults() { document.getElementById('results').classList.remove('show'); allSiteResults = null; }
+
+// ── LGA Boundary ───────────────────────────────────────────
+let lgaBoundaryLayer = null;
+
+// NSW Spatial Services - public ArcGIS REST API
+const NSW_LGA_API = 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/3/query';
+
+async function drawLgaBoundary(lgaName) {
+  // Remove existing boundary
+  if (lgaBoundaryLayer) {
+    map.removeLayer(lgaBoundaryLayer);
+    lgaBoundaryLayer = null;
+  }
+
+  if (!lgaName) return;
+
+  // Convert LGA name to uppercase for the API query
+  const lgaUpper = lgaName.toUpperCase();
+
+  const params = new URLSearchParams({
+    where:          `lganame='${lgaUpper}'`,
+    outFields:      'lganame',
+    returnGeometry: 'true',
+    outSR:          '4326',
+    f:              'geojson'
+  });
+
+  try {
+    const resp = await fetch(`${NSW_LGA_API}?${params}`);
+    if (!resp.ok) throw new Error(`API ${resp.status}`);
+    const geojson = await resp.json();
+
+    if (!geojson.features || !geojson.features.length) {
+      console.warn(`No boundary found for ${lgaName}`);
+      return;
+    }
+
+    lgaBoundaryLayer = L.geoJSON(geojson, {
+      style: {
+        color:       '#00847F',
+        weight:      2.5,
+        opacity:     0.8,
+        fillColor:   '#00847F',
+        fillOpacity: 0.06,
+        dashArray:   '6, 4'
+      }
+    }).addTo(map);
+
+    console.log(`Boundary drawn for ${lgaName}`);
+
+  } catch(e) {
+    // Silently fail — boundary is cosmetic, don't break anything
+    console.warn(`Could not load boundary for ${lgaName}:`, e.message);
+  }
+}
 
 // Start
 init();
