@@ -232,6 +232,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
   <div class="tab" onclick="switchTab('top-site')">📊 Top Intensity Per Site</div>
   <div class="tab" onclick="switchTab('top-dur')">⏱ Top 5 Durations</div>
   <div class="tab" onclick="switchTab('daily')">📅 Daily Totals</div>
+  <div class="tab" onclick="switchTab('monitors')">📡 Other Monitors</div>
 </div>
 
 <div class="body">
@@ -244,6 +245,15 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
       <select id="lgaSel" onchange="onLgaChange()">
         <option value="">All stations</option>
       </select>
+      <div id="nbcSubWrap" style="display:none;margin-top:8px">
+        <div class="lbl" style="margin-bottom:4px">NBC Gauge Group</div>
+        <select id="nbcSub" onchange="onNbcSubChange()">
+          <option value="all">All NBC (57)</option>
+          <option value="standard">Standard 15 (Excel tool)</option>
+          <option value="north">Northern Beaches North</option>
+          <option value="south">Northern Beaches South</option>
+        </select>
+      </div>
     </div>
 
     <!-- Search -->
@@ -438,8 +448,13 @@ function getLGA(station) {
 }
 
 function onLgaChange() {
-  filterList();
   const lga = document.getElementById('lgaSel').value;
+
+  // Show NBC sub-filter only when Northern Beaches is selected
+  const nbcWrap = document.getElementById('nbcSubWrap');
+  if (nbcWrap) nbcWrap.style.display = lga === 'Northern Beaches' ? '' : 'none';
+
+  filterList();
 
   // Update map markers visibility
   Object.entries(markers).forEach(([id, m]) => {
@@ -549,8 +564,9 @@ function switchTab(tab) {
   document.querySelectorAll('.tab').forEach((el,i) => {
     el.classList.toggle('active', ['map','top-site','top-dur','daily'][i] === tab);
   });
-  if (tab !== 'map') {
-    // Run analysis if we have a station
+  if (tab === 'monitors') {
+    loadOtherMonitors();
+  } else if (tab !== 'map') {
     if (selected) runAnalysis();
   }
 }
@@ -648,6 +664,53 @@ async function runAnalysis() {
     console.error('Analysis error:', e);
     alert(`Analysis failed: ${e.message}\n\nSee browser console (F12) for details.`);
   }
+}
+
+
+// ── NBC Standard 15 gauges (from NBC_Rainfall_Calculator.xlsm) ─
+const NBC_STANDARD_15 = [
+  'Avalon (Rain)', 'Cromer Depot (Precipitation)', 'Great Mackerel (Rain)',
+  'Middle Creek (Rain)', 'Mona Vale (Rain)', 'Newport (Rain)',
+  'Palm Beach Golf Club (Rain)', 'Warriewood (Rain)', 'Allambie Heights (Rain)',
+  'Belrose (Rain)', 'Curl Curl (Rain)', 'Manly CBD (Rain)',
+  'Manly Dam (Rain)', 'Queenscliff (Rain)', 'Spit Bridge (Rain)'
+];
+
+// NBC North (Pittwater / Palm Beach end)
+const NBC_NORTH = [
+  'Avalon (Rain)', 'Great Mackerel (Rain)', 'Middle Creek (Rain)',
+  'Mona Vale (Rain)', 'Newport (Rain)', 'Palm Beach Golf Club (Rain)',
+  'Warriewood (Rain)'
+];
+
+// NBC South (Manly / Warringah end)
+const NBC_SOUTH = [
+  'Allambie Heights (Rain)', 'Belrose (Rain)', 'Cromer Depot (Precipitation)',
+  'Curl Curl (Rain)', 'Manly CBD (Rain)', 'Manly Dam (Rain)',
+  'Queenscliff (Rain)', 'Spit Bridge (Rain)'
+];
+
+function getNbcSubStations() {
+  const sub = document.getElementById('nbcSub')?.value || 'all';
+  const nbcStations = allStations.filter(s => getLGA(s) === 'Northern Beaches');
+  if (sub === 'standard') return nbcStations.filter(s => NBC_STANDARD_15.includes(s.name));
+  if (sub === 'north')    return nbcStations.filter(s => NBC_NORTH.includes(s.name));
+  if (sub === 'south')    return nbcStations.filter(s => NBC_SOUTH.includes(s.name));
+  return nbcStations;
+}
+
+function onNbcSubChange() {
+  const stations = getNbcSubStations();
+  // Update station list
+  renderList(stations);
+  // Update map markers
+  Object.entries(markers).forEach(([id, m]) => {
+    const s = allStations.find(s => s.station_id === id);
+    if (!s) return;
+    const match = stations.find(st => st.station_id === id);
+    if (match) { if (!map.hasLayer(m)) m.addTo(map); }
+    else { if (map.hasLayer(m)) map.removeLayer(m); }
+  });
 }
 
 // ── MHL data fetch (browser → MHL directly, no backend) ────
@@ -757,9 +820,14 @@ async function analyseStation(station, dur, fromDt, toDt) {
 // ── Top Intensity Per Site ─────────────────────────────────
 async function runTopPerSite(dur, fromDt, toDt) {
   const lga = document.getElementById('lgaSel').value;
-  const stations = lga
-    ? allStations.filter(s => getLGA(s) === lga)
-    : (selected ? [selected] : allStations.slice(0, 15));
+  let stations;
+  if (lga === 'Northern Beaches') {
+    stations = getNbcSubStations();
+  } else if (lga) {
+    stations = allStations.filter(s => getLGA(s) === lga);
+  } else {
+    stations = selected ? [selected] : allStations.slice(0, 15);
+  }
 
   if (!stations.length) { hideLoad(); alert('No stations in selected area.'); return; }
 
@@ -1326,6 +1394,277 @@ function showLoad(txt) {
 function setLoadTxt(txt) { document.getElementById('load-txt').textContent = txt; }
 function hideLoad() { document.getElementById('loading').classList.remove('show'); }
 function closeResults() { document.getElementById('results').classList.remove('show'); allSiteResults = null; }
+
+
+// ── Other Monitors ─────────────────────────────────────────
+// Stream/river gauges, tide, estuary from MHL KiWIS
+// These are fetched live — not in the station cache
+
+const MONITOR_PARAM_TYPES = [
+  { key: 'stream',  label: 'Stream & River',  params: ['Water Level','Stage','Flow','Discharge'], colour: '#2980B9' },
+  { key: 'tide',    label: 'Tide',            params: ['Sea Level','Tidal Level','Tide'],         colour: '#8E44AD' },
+  { key: 'estuary', label: 'Estuary & Coastal', params: ['Estuary Level','Lake Level','Lagoon'],  colour: '#16A085' },
+];
+
+let otherStations = [];    // fetched once
+let levelChart = null;
+
+async function loadOtherMonitors() {
+  const panel = document.getElementById('results');
+  panel.classList.add('show');
+  document.getElementById('res-title').textContent = 'Other Monitors';
+  document.getElementById('res-sub').textContent = 'Stream, tide and estuary gauges — MHL network';
+
+  // Show placeholder tabs
+  document.getElementById('r-summary').innerHTML = `
+    <div id="monitor-controls" style="margin-bottom:16px">
+      <div class="lbl">Monitor Type</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+        ${MONITOR_PARAM_TYPES.map(t => `
+          <button onclick="filterMonitors('${t.key}')"
+            id="mtype-${t.key}"
+            style="padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);
+                   background:white;font-size:12px;font-weight:600;cursor:pointer;
+                   color:var(--text-l);transition:all .15s"
+            onmouseover="this.style.borderColor='${t.colour}'"
+            onmouseout="if(!this.classList.contains('active'))this.style.borderColor='var(--border)'">
+            ${t.label}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div id="monitor-list">
+      <div style="color:var(--text-l);font-size:13px;text-align:center;padding:20px">
+        Loading monitor stations...
+      </div>
+    </div>
+  `;
+
+  switchRTab('r-summary');
+
+  if (!otherStations.length) {
+    await fetchOtherStations();
+  }
+  filterMonitors('stream');
+}
+
+async function fetchOtherStations() {
+  // Fetch full station list from MHL and filter to water level types
+  try {
+    const params = new URLSearchParams({
+      service: 'kisters', type: 'queryServices',
+      request: 'getStationList', format: 'json',
+      returnfields: 'station_name,station_no,station_id,station_latitude,station_longitude'
+    });
+    const resp = await fetch(`${MHL_BASE}?${params}`);
+    const data = await resp.json();
+    if (!data || data.length < 2) return;
+
+    const headers = data[0];
+    const all = data.slice(1).map(row => {
+      const s = {};
+      headers.forEach((h, i) => s[h] = row[i]);
+      return s;
+    });
+
+    // Filter to water level stations by name keywords
+    const streamKw  = ['creek','river','stream','gauge','weir','dam','reservoir','lake','lagoon'];
+    const tideKw    = ['tide','tidal','sea level','port','harbour','harbor','wharf','jetty'];
+    const estuaryKw = ['estuary','bay','inlet','narrabeen','pittwater','manly','cove','haven'];
+
+    otherStations = all.filter(s => {
+      const n = s.station_name?.toLowerCase() || '';
+      const hasCoords = s.station_latitude && s.station_longitude;
+      const lat = parseFloat(s.station_latitude);
+      const lon = parseFloat(s.station_longitude);
+      const inAus = lat >= -44 && lat <= -10 && lon >= 112 && lon <= 154;
+      if (!hasCoords || !inAus) return false;
+      return [...streamKw, ...tideKw, ...estuaryKw].some(kw => n.includes(kw));
+    }).map(s => ({
+      station_id: s.station_id,
+      station_no: s.station_no,
+      name: s.station_name,
+      lat: parseFloat(s.station_latitude),
+      lon: parseFloat(s.station_longitude),
+      type: (() => {
+        const n = s.station_name.toLowerCase();
+        if (tideKw.some(kw => n.includes(kw))) return 'tide';
+        if (estuaryKw.some(kw => n.includes(kw))) return 'estuary';
+        return 'stream';
+      })()
+    }));
+
+    console.log(`Loaded ${otherStations.length} other monitor stations`);
+  } catch(e) {
+    console.error('Failed to load monitor stations:', e);
+  }
+}
+
+function filterMonitors(typeKey) {
+  // Update button styles
+  MONITOR_PARAM_TYPES.forEach(t => {
+    const btn = document.getElementById(`mtype-${t.key}`);
+    if (!btn) return;
+    if (t.key === typeKey) {
+      btn.style.background = t.colour;
+      btn.style.color = 'white';
+      btn.style.borderColor = t.colour;
+      btn.classList.add('active');
+    } else {
+      btn.style.background = 'white';
+      btn.style.color = 'var(--text-l)';
+      btn.style.borderColor = 'var(--border)';
+      btn.classList.remove('active');
+    }
+  });
+
+  const filtered = otherStations.filter(s => s.type === typeKey);
+  const typeInfo  = MONITOR_PARAM_TYPES.find(t => t.key === typeKey);
+
+  const listEl = document.getElementById('monitor-list');
+  if (!filtered.length) {
+    listEl.innerHTML = '<div style="color:var(--text-l);font-size:13px;text-align:center;padding:20px">No stations of this type found.</div>';
+    return;
+  }
+
+  listEl.innerHTML = `
+    <div style="font-size:11px;color:var(--text-l);margin-bottom:10px">${filtered.length} stations — click to view level chart</div>
+    <table>
+      <thead><tr>
+        <th>Station</th><th>Location</th><th style="text-align:center">Action</th>
+      </tr></thead>
+      <tbody>
+        ${filtered.map(s => `
+          <tr>
+            <td><strong>${s.name}</strong></td>
+            <td style="font-size:11px;color:var(--text-l)">${s.lat.toFixed(3)}, ${s.lon.toFixed(3)}</td>
+            <td style="text-align:center">
+              <button onclick="showLevelChart('${s.station_id}','${s.name.replace(/'/g,"\'")}','${typeInfo.colour}')"
+                style="padding:4px 12px;background:${typeInfo.colour};color:white;border:none;
+                       border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+                View Chart
+              </button>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+async function showLevelChart(stationId, stationName, colour) {
+  // Fetch last 7 days of data for the station
+  // First find the water level ts_id
+  showLoad(`Loading ${stationName}...`);
+
+  try {
+    // Get timeseries list for this station
+    const tsParams = new URLSearchParams({
+      service: 'kisters', type: 'queryServices',
+      request: 'getTimeseriesList',
+      station_id: stationId, format: 'json',
+      returnfields: 'ts_id,ts_name,ts_shortname,parametertype_name'
+    });
+    const tsResp = await fetch(`${MHL_BASE}?${tsParams}`);
+    const tsData = await tsResp.json();
+
+    if (!tsData || tsData.length < 2) {
+      hideLoad(); alert('No data available for this station.'); return;
+    }
+
+    const headers = tsData[0];
+    const series  = tsData.slice(1).map(row => {
+      const s = {};
+      headers.forEach((h, i) => s[h] = row[i]);
+      return s;
+    });
+
+    // Find water level ts_id
+    const levelTs = series.find(s => {
+      const combined = `${s.ts_name} ${s.ts_shortname} ${s.parametertype_name}`.toLowerCase();
+      return combined.includes('level') || combined.includes('stage') ||
+             combined.includes('height') || combined.includes('tide');
+    }) || series[0];
+
+    if (!levelTs?.ts_id) {
+      hideLoad(); alert('No level timeseries found for this station.'); return;
+    }
+
+    // Fetch 7 days of data
+    const to   = new Date();
+    const from = new Date(to - 7 * 24 * 3600000);
+    const readings = await fetchMhlData(levelTs.ts_id, from, to);
+
+    hideLoad();
+
+    if (!readings.length) {
+      alert('No data returned for this station in the last 7 days.');
+      return;
+    }
+
+    // Render in chart tab
+    const chartEl = document.getElementById('r-chart');
+
+    // Sample if too many points
+    let data = readings;
+    if (data.length > 500) {
+      const step = Math.ceil(data.length / 500);
+      data = data.filter((_, i) => i % step === 0);
+    }
+
+    const labels = data.map(r => fmtDt(r.timestamp));
+    const values = data.map(r => r.value);
+    const unit   = levelTs.ts_name?.includes('m)') ? 'm' :
+                   levelTs.ts_name?.includes('mm') ? 'mm' : 'm AHD';
+
+    chartEl.innerHTML = `
+      <div class="chart-title">${stationName} — Level (${unit}) — Last 7 Days</div>
+      <div style="font-size:11px;color:var(--text-l);margin-bottom:8px">
+        Timeseries: ${levelTs.ts_name} · ${readings.length} readings
+      </div>
+      <div class="chart-wrap" style="height:220px"><canvas id="lc"></canvas></div>
+      <div style="margin-top:10px;display:flex;gap:16px;font-size:12px">
+        <span>Min: <strong>${Math.min(...values).toFixed(3)} ${unit}</strong></span>
+        <span>Max: <strong>${Math.max(...values).toFixed(3)} ${unit}</strong></span>
+        <span>Latest: <strong>${values[values.length-1]?.toFixed(3)} ${unit}</strong></span>
+      </div>
+    `;
+
+    if (levelChart) levelChart.destroy();
+    levelChart = new Chart(document.getElementById('lc').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          borderColor: colour,
+          backgroundColor: colour + '18',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: true,
+          tension: 0.1
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend:{display:false},
+          tooltip:{callbacks:{label:c=>`${c.parsed.y.toFixed(3)} ${unit}`}}},
+        scales: {
+          x: { grid:{display:false}, ticks:{maxTicksLimit:8,font:{size:10},color:'#5A6B7A'} },
+          y: { grid:{color:'rgba(0,0,0,0.04)'}, ticks:{font:{size:10},color:'#5A6B7A',callback:v=>v.toFixed(2)+' '+unit} }
+        }
+      }
+    });
+
+    switchRTab('r-chart');
+    document.getElementById('res-title').textContent = stationName;
+    document.getElementById('res-sub').textContent = `Water level · Last 7 days · ${levelTs.ts_name}`;
+
+  } catch(e) {
+    hideLoad();
+    alert(`Failed to load data: ${e.message}`);
+  }
+}
 
 // ── LGA Boundary ───────────────────────────────────────────
 let lgaBoundaryLayer = null;
