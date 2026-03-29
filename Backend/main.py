@@ -18,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 import json
 import math
+import asyncio
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 import httpx
@@ -31,13 +32,9 @@ app = FastAPI(
 # Allow requests from web frontend and mobile app
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://igo-camping.github.io",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        "null",  # local file:// access
-    ],
-    allow_methods=["GET"],
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -91,15 +88,27 @@ async def fetch_mhl_timeseries(
         "returnfields": "Timestamp,Value"
     }
 
-    async with httpx.AsyncClient(timeout=30) as client:
-        resp = await client.get(MHL_BASE, params=params)
-        resp.raise_for_status()
-        data = resp.json()
+    timeout = httpx.Timeout(60.0, connect=30.0)
+
+    for attempt in range(3):
+        try:
+            async with httpx.AsyncClient(timeout=timeout) as client:
+                resp = await client.get(MHL_BASE, params=params)
+                resp.raise_for_status()
+                data = resp.json()
+                break
+        except (httpx.ConnectTimeout, httpx.ReadTimeout) as e:
+            if attempt == 2:
+                raise HTTPException(status_code=504,
+                    detail=f"MHL API timeout after 3 attempts: {str(e)}")
+            await asyncio.sleep(2)
+        except Exception as e:
+            raise HTTPException(status_code=502,
+                detail=f"MHL API error: {str(e)}")
 
     if not data or len(data) < 2:
         return []
 
-    # Response: [{ "ts_id": ..., "rows": "N", "columns": "...", "data": [[ts, val], ...] }]
     ts_data = data[0]
     raw_data = ts_data.get("data", [])
 
