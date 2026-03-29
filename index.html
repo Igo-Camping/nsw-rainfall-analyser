@@ -401,7 +401,10 @@ function setStatus(ok, txt) {
 
 async function loadStations() {
   const data = await api('/stations?limit=2000');
+  // Load full station detail including IFD for each station in background
   allStations = data.stations;
+  // Fetch full IFD data for all stations (needed for browser-side AEP calc)
+  loadIfdData();
   buildLgaDropdown();
   renderList(allStations);
   plotAllMarkers(allStations);
@@ -630,8 +633,7 @@ async function runAnalysis() {
       // Single station analysis
       const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
       const rolling  = calcRollingMax(readings, dur);
-      let aep = null;
-      try { aep = await api(`/aep?station_id=${selected.station_id}&duration_minutes=${dur}&depth_mm=${rolling?.max_depth_mm||0}`); } catch(e){}
+      let aep = calcAEP(selected.station_id, dur, rolling?.max_depth_mm || 0);
       let temp = null;
       try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){}
       lastResults = { station_id: selected.station_id, station_name: selected.name,
@@ -732,7 +734,7 @@ async function analyseStation(station, dur, fromDt, toDt) {
     let aep = null;
     if (rolling?.max_depth_mm > 0) {
       try {
-        aep = await api(`/aep?station_id=${station.station_id}&duration_minutes=${dur}&depth_mm=${rolling.max_depth_mm}`);
+        aep = calcAEP(station.station_id, dur, rolling.max_depth_mm);
       } catch(e) {}
     }
     return {
@@ -1026,6 +1028,105 @@ async function api(path) {
   const r = await fetch(API + path);
   if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
   return r.json();
+}
+
+// ── IFD data loader ─────────────────────────────────────────
+// Loads full station data (including IFD tables) in the background
+// so AEP calc can run entirely in the browser
+const ifdCache = {};  // station_id -> ifd object
+
+async function loadIfdData() {
+  // Fetch all stations with full IFD data in batches
+  const BATCH = 20;
+  for (let i = 0; i < allStations.length; i += BATCH) {
+    const batch = allStations.slice(i, i + BATCH);
+    await Promise.all(batch.map(async s => {
+      try {
+        const full = await api(`/stations/${s.station_id}`);
+        if (full.ifd) ifdCache[s.station_id] = full.ifd;
+      } catch(e) {}
+    }));
+  }
+  console.log(`IFD data loaded for ${Object.keys(ifdCache).length} stations`);
+}
+
+// ── Browser-side AEP calculation ────────────────────────────
+// Replicates the IFD_Rare_Compat logic from the Excel tool
+// Piecewise log-linear interpolation in ln(AEP) space
+function calcAEP(stationId, durationMinutes, depthMm) {
+  const ifd = ifdCache[stationId];
+  if (!ifd || depthMm <= 0) return { aep: '>63.2%', interpretation: 'Very frequent — less than 2-year ARI' };
+
+  // Find closest duration in IFD table
+  const availDurs = Object.keys(ifd).map(Number).sort((a,b)=>a-b);
+  let durKey = durationMinutes;
+  if (!ifd[durKey]) {
+    durKey = availDurs.reduce((best, d) => Math.abs(d-durationMinutes) < Math.abs(best-durationMinutes) ? d : best, availDurs[0]);
+  }
+
+  const row = ifd[durKey] || ifd[String(durKey)];
+  if (!row) return null;
+
+  // AEP order from most frequent to rarest
+  const AEP_ORDER = ['63.2%','50%','20%','10%','5%','2%','1%'];
+  const AEP_VALS  = [0.632, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01];
+
+  const available = AEP_ORDER.filter(a => row[a] != null);
+  if (!available.length) return null;
+
+  const depths = available.map(a => row[a]);
+  const probs  = available.map(a => AEP_VALS[AEP_ORDER.indexOf(a)]);
+
+  // Below all thresholds
+  if (depthMm < depths[0]) {
+    return {
+      aep: `>63.2%`,
+      bracket_lower_aep: null,
+      bracket_upper_aep: '63.2%',
+      ifd_reference: row,
+      interpretation: 'Very frequent — less than 2-year ARI'
+    };
+  }
+
+  // Above all thresholds
+  if (depthMm >= depths[depths.length-1]) {
+    return {
+      aep: `<1%`,
+      bracket_lower_aep: '1%',
+      bracket_upper_aep: null,
+      ifd_reference: row,
+      interpretation: 'Extreme event — rarer than 1 in 100 years'
+    };
+  }
+
+  // Find bracket and interpolate in log(AEP) space
+  for (let i = 0; i < depths.length - 1; i++) {
+    if (depthMm >= depths[i] && depthMm < depths[i+1]) {
+      const frac = (depthMm - depths[i]) / (depths[i+1] - depths[i]);
+      const lnA  = Math.log(probs[i]);
+      const lnB  = Math.log(probs[i+1]);
+      const lnP  = lnA + frac * (lnB - lnA);
+      const pct  = Math.round(Math.exp(lnP) * 1000) / 10;
+      return {
+        aep: `~${pct}%`,
+        bracket_lower_aep: available[i],
+        bracket_upper_aep: available[i+1],
+        ifd_reference: row,
+        interpretation: interpretAEP(pct)
+      };
+    }
+  }
+
+  return { aep: '>63.2%', ifd_reference: row, interpretation: 'Very frequent' };
+}
+
+function interpretAEP(pct) {
+  if (pct <= 1)  return 'Extreme event — rarer than 1 in 100 years';
+  if (pct <= 2)  return 'Very rare — approximately 1 in 50 years';
+  if (pct <= 5)  return 'Rare — approximately 1 in 20 years';
+  if (pct <= 10) return 'Significant — approximately 1 in 10 years';
+  if (pct <= 20) return 'Moderate — approximately 1 in 5 years';
+  return 'Frequent — less than 1 in 5 years';
 }
 
 function fmtDt(iso) {
