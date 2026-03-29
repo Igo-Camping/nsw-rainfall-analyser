@@ -409,52 +409,28 @@ async function loadStations() {
 
 // ── LGA dropdown ───────────────────────────────────────────
 function buildLgaDropdown() {
-  // Extract unique LGAs from station names/metadata
-  // Since station cache may not have LGA, we assign based on known NBC gauges
-  // and geographic bounding boxes for others
   const lgaSel = document.getElementById('lgaSel');
-
-  // Build LGA list from station data
+  const priority = ['Northern Beaches','Central Coast','Ku-ring-gai','Newcastle','Hunter Valley','Greater Sydney West','Lane Cove'];
   const lgas = new Set();
-  allStations.forEach(s => {
-    const lga = getLGA(s);
-    if (lga) lgas.add(lga);
-  });
-
-  const sorted = [...lgas].sort();
+  allStations.forEach(s => { if (s.lga) lgas.add(s.lga); });
+  const sorted = [
+    ...priority.filter(l => lgas.has(l)),
+    ...[...lgas].filter(l => !priority.includes(l) && l !== 'NSW Other').sort(),
+    ...(lgas.has('NSW Other') ? ['NSW Other'] : [])
+  ];
   sorted.forEach(lga => {
+    const count = allStations.filter(s => s.lga === lga).length;
     const opt = document.createElement('option');
     opt.value = lga;
-    opt.textContent = lga;
+    opt.textContent = `${lga} (${count})`;
     lgaSel.appendChild(opt);
   });
+  lgaSel.value = 'Northern Beaches';
+  onLgaChange();
 }
 
 function getLGA(station) {
-  // Assign LGA based on coordinates (bounding boxes for NSW LGAs)
-  const lat = station.lat, lon = station.lon;
-  if (!lat || !lon) return 'Unknown';
-
-  // Northern Beaches Council approximate bounds
-  if (lat >= -33.85 && lat <= -33.55 && lon >= 151.15 && lon <= 151.35) return 'Northern Beaches';
-  // Ku-ring-gai
-  if (lat >= -33.75 && lat <= -33.55 && lon >= 151.05 && lon <= 151.25) return 'Ku-ring-gai';
-  // Lane Cove
-  if (lat >= -33.85 && lat <= -33.75 && lon >= 151.12 && lon <= 151.22) return 'Lane Cove';
-  // Willoughby
-  if (lat >= -33.82 && lat <= -33.75 && lon >= 151.18 && lon <= 151.28) return 'Willoughby';
-  // Mosman
-  if (lat >= -33.85 && lat <= -33.80 && lon >= 151.22 && lon <= 151.28) return 'Mosman';
-  // Hunter
-  if (lat >= -33.2 && lat <= -32.5 && lon >= 151.4 && lon <= 152.0) return 'Hunter';
-  // Central Coast
-  if (lat >= -33.5 && lat <= -33.1 && lon >= 151.2 && lon <= 151.6) return 'Central Coast';
-  // Newcastle
-  if (lat >= -33.0 && lat <= -32.8 && lon >= 151.6 && lon <= 151.85) return 'Newcastle';
-
-  // Generic NSW coastal
-  if (lon >= 150.5 && lon <= 153.5) return 'NSW Coastal';
-  return 'NSW Other';
+  return station.lga || 'Unknown';
 }
 
 function onLgaChange() {
