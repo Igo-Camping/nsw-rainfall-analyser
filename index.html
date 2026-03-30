@@ -820,6 +820,47 @@ async function analyseStation(station, dur, fromDt, toDt) {
   }
 }
 
+// ── Find best duration for a station (Top Intensity Per Site) ─
+async function analyseStationBestDuration(station, fromDt, toDt) {
+  // Fetch data once, then calculate rolling max for all durations
+  try {
+    const readings = await fetchMhlData(station.ts_id, fromDt, toDt);
+    if (!readings || !readings.length) return null;
+
+    const durations = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440];
+    let bestResult = null;
+    let bestAepPct = 100;
+
+    for (const dur of durations) {
+      const rolling = calcRollingMax(readings, dur);
+      if (!rolling || rolling.max_depth_mm <= 0) continue;
+
+      const aep = calcAEP(station.station_id, dur, rolling.max_depth_mm);
+      if (!aep) continue;
+
+      const pct = parseFloat((aep.aep||'100').replace(/[~<>%]/g,''));
+      if (isNaN(pct)) continue;
+
+      if (pct < bestAepPct) {
+        bestAepPct = pct;
+        bestResult = {
+          station_id:      station.station_id,
+          station_name:    station.name,
+          duration_minutes: dur,
+          from:            fromDt.toISOString(),
+          to:              toDt.toISOString(),
+          readings,
+          rolling_max:     rolling,
+          aep
+        };
+      }
+    }
+    return bestResult;
+  } catch(e) {
+    return null;
+  }
+}
+
 // ── Top Intensity Per Site ─────────────────────────────────
 async function runTopPerSite(dur, fromDt, toDt) {
   const lga = document.getElementById('lgaSel').value;
@@ -840,7 +881,7 @@ async function runTopPerSite(dur, fromDt, toDt) {
   for (let i = 0; i < stations.length; i += BATCH) {
     const batch = stations.slice(i, i + BATCH);
     setLoadTxt(`Fetching ${i+1}–${Math.min(i+BATCH, stations.length)} of ${stations.length} stations...`);
-    const results = await Promise.all(batch.map(s => analyseStation(s, dur, fromDt, toDt)));
+    const results = await Promise.all(batch.map(s => analyseStationBestDuration(s, fromDt, toDt)));
     allSiteResults.push(...results.filter(Boolean));
   }
 
@@ -854,7 +895,7 @@ function renderTopPerSite(results, dur) {
   document.getElementById('res-title').textContent = 'Top Intensity Per Site';
   const lga = document.getElementById('lgaSel').value;
   document.getElementById('res-sub').textContent =
-    `${DUR_LABELS[dur]||dur+'min'} duration · ${lga || 'All stations'} · Ranked by AEP`;
+    `Best duration per gauge · ${lga || 'All stations'} · Ranked by AEP`;
 
   const sorted = [...results]
     .filter(r => r.rolling_max)
@@ -872,6 +913,7 @@ function renderTopPerSite(results, dur) {
       <tr>
         <td>${i+1}</td>
         <td><strong>${r.station_name}</strong></td>
+        <td>${DUR_LABELS[r.duration_minutes]||r.duration_minutes+'min'}</td>
         <td class="r">${depth} mm</td>
         <td><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
@@ -885,7 +927,7 @@ function renderTopPerSite(results, dur) {
     <div style="margin-bottom:12px;font-size:12px;color:var(--text-l)">${sorted.length} stations analysed</div>
     <table>
       <thead><tr>
-        <th>#</th><th>Station</th>
+        <th>#</th><th>Station</th><th>Best Duration</th>
         <th class="r">Peak (mm)</th>
         <th style="min-width:120px">Intensity</th>
         <th>AEP</th><th class="r">Return Period</th>
