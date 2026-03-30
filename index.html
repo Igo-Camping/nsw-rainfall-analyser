@@ -768,13 +768,26 @@ function calcRollingMax(readings, durationMinutes) {
     }
   }
 
-  const totalDepth = vals.reduce((a, b) => a + b, 0);
+  // Total for the calendar day containing the peak event (midnight to midnight AEST)
+  let dailyTotal = 0;
+  if (peakStart) {
+    const peakDate = new Date(peakStart.replace(' ', 'T'));
+    // Get the date string in Sydney time
+    const sydneyDate = peakDate.toLocaleDateString('en-CA', {timeZone: 'Australia/Sydney'});
+    readings.forEach(r => {
+      const rDate = new Date(r.timestamp.replace(' ', 'T'))
+        .toLocaleDateString('en-CA', {timeZone: 'Australia/Sydney'});
+      if (rDate === sydneyDate) dailyTotal += r.value;
+    });
+  } else {
+    dailyTotal = vals.reduce((a, b) => a + b, 0);
+  }
 
   return {
     max_depth_mm:   Math.round(maxDepth * 100) / 100,
     peak_start:     peakStart,
     peak_end:       peakEnd,
-    total_depth_mm: Math.round(totalDepth * 100) / 100,
+    total_depth_mm: Math.round(dailyTotal * 100) / 100,
     reading_count:  readings.length
   };
 }
@@ -1139,7 +1152,7 @@ function renderResults(data, temp) {
       <div class="card">
         <div class="card-lbl">Total Depth</div>
         <div class="card-val">${rm?.total_depth_mm??'—'}<span class="card-unit">mm</span></div>
-        <div class="card-sub">Event total</div>
+        <div class="card-sub">Daily total (peak day)</div>
       </div>
       <div class="card">
         <div class="card-lbl">ARI</div>
