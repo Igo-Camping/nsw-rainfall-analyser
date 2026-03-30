@@ -5,8 +5,8 @@
     "name": "14 Icarus Pl Q H (Rain)",
     "lat": -33.73431111111111,
     "lon": 150.9013972222222,
-    "ts_id": "11327042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11328042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.1,
@@ -216,8 +216,8 @@
     "name": "2122051",
     "lat": -34.38468223671011,
     "lon": 150.5698375586655,
-    "ts_id": "67510042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "67511042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.04,
@@ -427,8 +427,8 @@
     "name": "2122052",
     "lat": -34.4137678879279,
     "lon": 150.5954734887714,
-    "ts_id": "67592042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "67593042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.11,
@@ -638,8 +638,8 @@
     "name": "213211",
     "lat": -34.04660988544049,
     "lon": 151.0063024051715,
-    "ts_id": "53588042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "53589042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -849,8 +849,8 @@
     "name": "215208 Hillview",
     "lat": -35.184356950228114,
     "lon": 149.95361853067044,
-    "ts_id": "54583042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "54584042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.7,
@@ -1060,8 +1060,8 @@
     "name": "215209",
     "lat": -35.447145116166446,
     "lon": 149.7219030707744,
-    "ts_id": "54654042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "54655042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.65,
@@ -1271,8 +1271,8 @@
     "name": "215210",
     "lat": -35.42189160471238,
     "lon": 149.93632998179538,
-    "ts_id": "54757042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "54758042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.67,
@@ -1482,8 +1482,8 @@
     "name": "215220 Hampden Br",
     "lat": -34.72798978097836,
     "lon": 150.5224407279461,
-    "ts_id": "55026042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "55027042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.01,
@@ -1693,8 +1693,8 @@
     "name": "215237",
     "lat": -35.42497787528893,
     "lon": 149.73679330732938,
-    "ts_id": "55146042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "55147042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.65,
@@ -1904,8 +1904,8 @@
     "name": "28 Tancredi Armidale (Rain)",
     "lat": -30.50630833333333,
     "lon": 151.6530361111111,
-    "ts_id": "11329042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11330042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.92,
@@ -2115,8 +2115,8 @@
     "name": "31000011 - Sugar Valley GC",
     "lat": -32.90674166666667,
     "lon": 151.5756388888889,
-    "ts_id": "100716042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100717042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.1,
@@ -2326,8 +2326,8 @@
     "name": "567083",
     "lat": -33.81857588667412,
     "lon": 150.9128587393771,
-    "ts_id": "81747042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55361042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.11,
@@ -2537,8 +2537,8 @@
     "name": "568046",
     "lat": -34.35259015394546,
     "lon": 150.6325186121493,
-    "ts_id": "81924042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "73209042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.17,
@@ -2748,8 +2748,8 @@
     "name": "568047",
     "lat": -34.33065440327675,
     "lon": 150.6106722101574,
-    "ts_id": "81769042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "59668042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.08,
@@ -2959,8 +2959,8 @@
     "name": "568048",
     "lat": -34.26436838093,
     "lon": 150.8061795559,
-    "ts_id": "81748042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55412042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.42,
@@ -3170,8 +3170,8 @@
     "name": "568049",
     "lat": -34.32402125661163,
     "lon": 150.7438264161298,
-    "ts_id": "81770042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "59801042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.34,
@@ -3381,8 +3381,8 @@
     "name": "568054",
     "lat": -34.47453437166454,
     "lon": 150.5269779562495,
-    "ts_id": "81749042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55556042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.04,
@@ -3592,8 +3592,8 @@
     "name": "568069",
     "lat": -34.18317076431555,
     "lon": 150.923329300929,
-    "ts_id": "81750042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55561042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.47,
@@ -3803,8 +3803,8 @@
     "name": "568070",
     "lat": -34.55524295821203,
     "lon": 150.5802935098876,
-    "ts_id": "81777042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "60900042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.11,
@@ -4014,8 +4014,8 @@
     "name": "568076",
     "lat": -34.70292014053177,
     "lon": 150.691786540049,
-    "ts_id": "81753042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55620042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.4,
@@ -4225,8 +4225,8 @@
     "name": "568084",
     "lat": -34.73206202477451,
     "lon": 150.1334494149741,
-    "ts_id": "81754042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55625042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.76,
@@ -4436,8 +4436,8 @@
     "name": "568113",
     "lat": -34.55079051010513,
     "lon": 150.4788188370422,
-    "ts_id": "81771042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "59934042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.99,
@@ -4647,8 +4647,8 @@
     "name": "568124",
     "lat": -34.65566071865857,
     "lon": 150.4908980574444,
-    "ts_id": "81755042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55652042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.07,
@@ -4858,8 +4858,8 @@
     "name": "568166",
     "lat": -34.17948149766184,
     "lon": 150.5680921333928,
-    "ts_id": "81751042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55588042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.86,
@@ -5069,8 +5069,8 @@
     "name": "568167",
     "lat": -34.17438025438822,
     "lon": 150.7737663805756,
-    "ts_id": "81752042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55593042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.95,
@@ -5280,8 +5280,8 @@
     "name": "568183",
     "lat": -34.5742332253445,
     "lon": 150.5194609655732,
-    "ts_id": "81756042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55657042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.02,
@@ -5491,8 +5491,8 @@
     "name": "569002",
     "lat": -35.30252357845662,
     "lon": 149.87943131642618,
-    "ts_id": "81757042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55684042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.66,
@@ -5702,8 +5702,8 @@
     "name": "570343",
     "lat": -34.99646968369806,
     "lon": 149.8202465205435,
-    "ts_id": "81758042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55689042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.59,
@@ -5913,8 +5913,8 @@
     "name": "570344",
     "lat": -35.689298332504606,
     "lon": 149.63265477155224,
-    "ts_id": "81759042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55716042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.69,
@@ -6124,8 +6124,8 @@
     "name": "570346",
     "lat": -35.1622506081313,
     "lon": 149.76065494803308,
-    "ts_id": "81760042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55721042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.62,
@@ -6335,8 +6335,8 @@
     "name": "570347",
     "lat": -35.18934073738199,
     "lon": 149.94591318140732,
-    "ts_id": "81761042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "55748042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.69,
@@ -6546,8 +6546,8 @@
     "name": "570351",
     "lat": -35.221738948333886,
     "lon": 149.93676287277967,
-    "ts_id": "81776042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "60868042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.69,
@@ -6757,8 +6757,8 @@
     "name": "5KEWN01 - Council Dep Kew (Rain)",
     "lat": -37.792669,
     "lon": 145.029144,
-    "ts_id": "102689042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102685042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.55,
@@ -6968,8 +6968,8 @@
     "name": "5KEWN02 - Victoria Park Kew (Rain)",
     "lat": -37.802497,
     "lon": 145.046612,
-    "ts_id": "102677042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102673042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.57,
@@ -7179,8 +7179,8 @@
     "name": "5KEWN03 - Hayes Paddock (Rain)",
     "lat": -37.789252,
     "lon": 145.057037,
-    "ts_id": "102669042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102665042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.55,
@@ -7390,8 +7390,8 @@
     "name": "5LMER01 - James Martin Res (Rain)",
     "lat": -37.705016,
     "lon": 144.953713,
-    "ts_id": "102729042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102725042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.47,
@@ -7601,8 +7601,8 @@
     "name": "5LMER02 - Fawkerer  Leasure Center (Rain)",
     "lat": -37.703507,
     "lon": 144.969186,
-    "ts_id": "102621042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102617042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.47,
@@ -7812,8 +7812,8 @@
     "name": "5LMER03 - Moreland Football Club (Rain)",
     "lat": -37.69585,
     "lon": 144.976353,
-    "ts_id": "102629042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102625042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.46,
@@ -8023,8 +8023,8 @@
     "name": "5LMER04 - Fawkner Memorial Gardens (Rain)",
     "lat": -37.713623,
     "lon": 144.961591,
-    "ts_id": "102737042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102733042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.47,
@@ -8234,8 +8234,8 @@
     "name": "5LMER05 - Fawkner Tennis Club (Rain)",
     "lat": -37.714634,
     "lon": 144.968825,
-    "ts_id": "102745042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102741042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.47,
@@ -8445,8 +8445,8 @@
     "name": "5LMER06 - St Jospeh's P.S  (Rain)",
     "lat": -37.70283,
     "lon": 144.993558,
-    "ts_id": "102589042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102585042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.48,
@@ -8656,8 +8656,8 @@
     "name": "5LMER07 - Tiemans (Rain)",
     "lat": -37.694887,
     "lon": 145.013352,
-    "ts_id": "102581042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102577042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.47,
@@ -8867,8 +8867,8 @@
     "name": "5LMER08 - Preston B.C (Rain)",
     "lat": -37.712273,
     "lon": 144.993996,
-    "ts_id": "102637042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102633042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.48,
@@ -9078,8 +9078,8 @@
     "name": "5LMER09 - Macbro Pty Ltd (Rain)",
     "lat": -37.724991,
     "lon": 144.960905,
-    "ts_id": "102472042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102468042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.47,
@@ -9289,8 +9289,8 @@
     "name": "5LMER10 - Coburg Leasure Center (Rain)",
     "lat": -37.742553,
     "lon": 144.968703,
-    "ts_id": "102605042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102601042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.49,
@@ -9500,8 +9500,8 @@
     "name": "5LMER11 - Focus Dr Coburg (Rain)",
     "lat": -37.729321,
     "lon": 144.983195,
-    "ts_id": "102753042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102749042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.5,
@@ -9711,8 +9711,8 @@
     "name": "5LMER13 - David St Preston (Rain)",
     "lat": -37.743127,
     "lon": 145.00706,
-    "ts_id": "102597042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102593042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.5,
@@ -9922,8 +9922,8 @@
     "name": "5LMER14 - Henderson Pk (Rain)",
     "lat": -37.75275,
     "lon": 144.998169,
-    "ts_id": "102761042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102757042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.52,
@@ -10133,8 +10133,8 @@
     "name": "5LMER15 - Northote Golf Club",
     "lat": -37.757982,
     "lon": 144.984417,
-    "ts_id": "102771042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102767042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.52,
@@ -10344,8 +10344,8 @@
     "name": "5LMER16 - Brickworks Lane (Rain)",
     "lat": -37.766804,
     "lon": 145.005001,
-    "ts_id": "102613042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102609042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.52,
@@ -10555,8 +10555,8 @@
     "name": "5UEDC01 - Top Cart (Rain)",
     "lat": -37.658595,
     "lon": 145.019173,
-    "ts_id": "102697042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102693042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.45,
@@ -10766,8 +10766,8 @@
     "name": "5UEDC02 - German Ln Lalor (Rain)",
     "lat": -37.670697,
     "lon": 145.009536,
-    "ts_id": "102705042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102701042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.45,
@@ -10977,8 +10977,8 @@
     "name": "5UEDC03 - Myrtle St Thomastwon (Rain)",
     "lat": -37.67926,
     "lon": 145.028945,
-    "ts_id": "102713042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102709042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.48,
@@ -11188,8 +11188,8 @@
     "name": "5UEDC04 - Temple Dr Thomastown (Rain)",
     "lat": -37.691859,
     "lon": 145.018741,
-    "ts_id": "102721042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102717042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.47,
@@ -11399,8 +11399,8 @@
     "name": "5WALN01 - Hidden Valley G.C (Rain)",
     "lat": -37.394443,
     "lon": 144.993544,
-    "ts_id": "102645042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102641042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.48,
@@ -11610,8 +11610,8 @@
     "name": "5WALN02 - Darraweit Rd Wallan (Rain)",
     "lat": -37.405062,
     "lon": 144.968996,
-    "ts_id": "102653042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102649042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.45,
@@ -11821,8 +11821,8 @@
     "name": "5WALN03 Lauriton Dr Wallan (Rain)",
     "lat": -37.422734,
     "lon": 144.991053,
-    "ts_id": "102661042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "102657042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.45,
@@ -12032,8 +12032,8 @@
     "name": "5WRAAF01 - Williamstown (Rain)",
     "lat": -32.791652,
     "lon": 151.84806,
-    "ts_id": "109930042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "109931042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.19,
@@ -12243,8 +12243,8 @@
     "name": "7 Belmore St (Cowra STP)",
     "lat": -33.82488055555555,
     "lon": 148.6820666666667,
-    "ts_id": "10701042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10702042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.62,
@@ -12665,8 +12665,8 @@
     "name": "Abbotsbury",
     "lat": -33.87082852435216,
     "lon": 150.85719565879594,
-    "ts_id": "81855042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67710042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.07,
@@ -12876,8 +12876,8 @@
     "name": "Agnew Wharf",
     "lat": -37.251551611754735,
     "lon": 149.92185229465554,
-    "ts_id": "80575042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "80576042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.8,
@@ -13087,8 +13087,8 @@
     "name": "Ainsworth Road (Rain)",
     "lat": -28.916,
     "lon": 152.8841,
-    "ts_id": "178070042",
-    "ts_name": "15 min model data",
+    "ts_id": "178066042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.44,
@@ -13298,8 +13298,8 @@
     "name": "Aldavilla Downstream",
     "lat": -31.082533671538698,
     "lon": 152.78317083421126,
-    "ts_id": "83615042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "83613042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.41,
@@ -13509,8 +13509,8 @@
     "name": "Alstonville STP",
     "lat": -28.831,
     "lon": 153.444,
-    "ts_id": "115217042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "115213042",
+    "ts_name": "01 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.53,
@@ -13720,8 +13720,8 @@
     "name": "Anglican Girls College (Rain)",
     "lat": -33.484009,
     "lon": 151.182045,
-    "ts_id": "11333042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11334042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.15,
@@ -13931,8 +13931,8 @@
     "name": "Artaroon Bowls Club (Rain)",
     "lat": -33.809691,
     "lon": 151.192511,
-    "ts_id": "10991042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10992042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.43,
@@ -14142,8 +14142,8 @@
     "name": "Ashfield Park BC",
     "lat": -33.884969,
     "lon": 151.134366,
-    "ts_id": "81859042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67774042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.34,
@@ -14353,8 +14353,8 @@
     "name": "Ashlar Golf Course",
     "lat": -33.758135,
     "lon": 150.90277,
-    "ts_id": "81856042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67726042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.1,
@@ -14564,8 +14564,8 @@
     "name": "Auburn 0098",
     "lat": -33.84484,
     "lon": 151.034225,
-    "ts_id": "81829042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "65260042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -14775,8 +14775,8 @@
     "name": "Auburn BC (Rain)",
     "lat": -33.845948597825014,
     "lon": 151.03276352803937,
-    "ts_id": "11101042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11102042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -14986,8 +14986,8 @@
     "name": "Avalon Rain",
     "lat": -33.639119,
     "lon": 151.330087,
-    "ts_id": "81106042",
-    "ts_name": "15 min model data",
+    "ts_id": "59250042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.36,
@@ -15408,8 +15408,8 @@
     "name": "Avoca Reservoir Rain (Decomm)",
     "lat": -33.47803611111112,
     "lon": 151.4367638888889,
-    "ts_id": "81826042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64959042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -15619,8 +15619,8 @@
     "name": "Awaba (Stony Creek) (Rain)",
     "lat": -33.014427,
     "lon": 151.539689,
-    "ts_id": "110936042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "110932042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.13,
@@ -15830,8 +15830,8 @@
     "name": "Backyard of 36 Centennial Rd  (Rain)",
     "lat": -34.471063,
     "lon": 150.4101416666667,
-    "ts_id": "91599042",
-    "ts_name": "5m.Totals",
+    "ts_id": "89069042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.88,
@@ -16041,8 +16041,8 @@
     "name": "Balgowlah (Rain)",
     "lat": -33.789571,
     "lon": 151.265539,
-    "ts_id": "11283042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11284042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.51,
@@ -16252,8 +16252,8 @@
     "name": "Balgowlah Bowls Club (Rain)",
     "lat": -33.806804,
     "lon": 151.261619,
-    "ts_id": "11125042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11126042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.53,
@@ -16463,8 +16463,8 @@
     "name": "Balgowlah Dept (Rain)",
     "lat": -33.7883333,
     "lon": 151.267,
-    "ts_id": "11287042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11288042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.51,
@@ -16674,8 +16674,8 @@
     "name": "Balgownie (Rain) (Decomm)",
     "lat": -34.38143055555555,
     "lon": 150.8819833333334,
-    "ts_id": "10713042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10714042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -16885,8 +16885,8 @@
     "name": "Balmoral Beach (Rain)",
     "lat": -33.829229,
     "lon": 151.256212,
-    "ts_id": "10795042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10796042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.51,
@@ -17096,8 +17096,8 @@
     "name": "Banks Road",
     "lat": -33.92073,
     "lon": 150.871861,
-    "ts_id": "98476042",
-    "ts_name": "15 min model data",
+    "ts_id": "98472042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.0,
@@ -17307,8 +17307,8 @@
     "name": "Bapturst Church (Rain)",
     "lat": -33.72532222222223,
     "lon": 151.0821666666667,
-    "ts_id": "10835042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10836042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -17518,8 +17518,8 @@
     "name": "Barham STP (Rain)",
     "lat": -35.64275833333333,
     "lon": 144.1452027777778,
-    "ts_id": "10779042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10780042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.34,
@@ -17729,8 +17729,8 @@
     "name": "Barker College (Rain)",
     "lat": -33.70893333333333,
     "lon": 151.0993722222222,
-    "ts_id": "10871042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10872042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -17940,8 +17940,8 @@
     "name": "Barlows Bay",
     "lat": -36.20918664145696,
     "lon": 150.10195726225942,
-    "ts_id": "81731042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51202042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.91,
@@ -18362,8 +18362,8 @@
     "name": "Barnsley",
     "lat": -32.92777932685106,
     "lon": 151.58716606910355,
-    "ts_id": "81903042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "72498042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.12,
@@ -18573,8 +18573,8 @@
     "name": "Barren Grounds (Rain)",
     "lat": -34.67711,
     "lon": 150.71154,
-    "ts_id": "175845042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "175841042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.42,
@@ -18784,8 +18784,8 @@
     "name": "Barrengarry (Rain)",
     "lat": -34.6866,
     "lon": 150.5253,
-    "ts_id": "100791042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100793042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.04,
@@ -18995,8 +18995,8 @@
     "name": "Barwon Water Belmont (Rain)",
     "lat": -38.18657219749555,
     "lon": 144.351441650588,
-    "ts_id": "99331042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "99332042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.1,
@@ -19206,8 +19206,8 @@
     "name": "Bateau Bay",
     "lat": -33.379029929507716,
     "lon": 151.47447939920002,
-    "ts_id": "81906042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "72546042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.28,
@@ -19417,8 +19417,8 @@
     "name": "Batemans Bay (BoM)",
     "lat": -35.7223333,
     "lon": 150.184667,
-    "ts_id": "10599042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10600042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.96,
@@ -19628,8 +19628,8 @@
     "name": "Bathurst (Rain)",
     "lat": -33.773951,
     "lon": 149.550909,
-    "ts_id": "10763042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10764042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.45,
@@ -19839,8 +19839,8 @@
     "name": "Baulkham Hills (Rain)",
     "lat": -33.74317139905967,
     "lon": 150.990266004045,
-    "ts_id": "11123042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11124042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.17,
@@ -20261,8 +20261,8 @@
     "name": "Beacon Hill School (Rain)",
     "lat": -33.751847,
     "lon": 151.260699,
-    "ts_id": "11341042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11342042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.53,
@@ -20472,8 +20472,8 @@
     "name": "Beecroft (Rain)",
     "lat": -33.74114,
     "lon": 151.057009,
-    "ts_id": "10799042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10800042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -20683,8 +20683,8 @@
     "name": "Beecroft Bowls Club (rain)",
     "lat": -33.75772777777778,
     "lon": 151.0794027777778,
-    "ts_id": "11127042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11128042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.26,
@@ -20894,8 +20894,8 @@
     "name": "Bellbrook  (Macleay R)",
     "lat": -30.8198,
     "lon": 152.509,
-    "ts_id": "83701042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88828042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.43,
@@ -21316,8 +21316,8 @@
     "name": "Belmont WWTW (RG)",
     "lat": -33.046,
     "lon": 151.6711,
-    "ts_id": "169730042",
-    "ts_name": "35 - 15 min Totals",
+    "ts_id": "169724042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -21527,8 +21527,8 @@
     "name": "Belmore Bridge",
     "lat": -32.72945799354616,
     "lon": 151.5538726042807,
-    "ts_id": "81732042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51278042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.0,
@@ -21738,8 +21738,8 @@
     "name": "Belongil Creek (ERTS)",
     "lat": -28.65,
     "lon": 153.6,
-    "ts_id": "94419042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "94421042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.58,
@@ -21949,8 +21949,8 @@
     "name": "Belrose Rain",
     "lat": -33.74035554717663,
     "lon": 151.21021386173928,
-    "ts_id": "81108042",
-    "ts_name": "15 min model data",
+    "ts_id": "59224042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.43,
@@ -22160,8 +22160,8 @@
     "name": "Belrose West WP (Rain)",
     "lat": -33.72381680263672,
     "lon": 151.2153538278996,
-    "ts_id": "11115042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11116042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.4,
@@ -22371,8 +22371,8 @@
     "name": "Bemboka (Rain)",
     "lat": -36.6631,
     "lon": 149.5139,
-    "ts_id": "104989042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "104991042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.72,
@@ -22582,8 +22582,8 @@
     "name": "Bensville Rain",
     "lat": -33.49761666666667,
     "lon": 151.3856666666667,
-    "ts_id": "81844042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67326042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.26,
@@ -22793,8 +22793,8 @@
     "name": "Berkeley Vale",
     "lat": -33.34480231791758,
     "lon": 151.4223497219674,
-    "ts_id": "81805042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64310042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -23004,8 +23004,8 @@
     "name": "Berowra Bowls Club (Rain)",
     "lat": -33.61996388888889,
     "lon": 151.149625,
-    "ts_id": "10965042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10966042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -23215,8 +23215,8 @@
     "name": "Beverly Job Park (Rain)",
     "lat": -33.75095277777778,
     "lon": 151.277975,
-    "ts_id": "84300042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "84301042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.48,
@@ -23426,8 +23426,8 @@
     "name": "Bexley BC",
     "lat": -33.942419,
     "lon": 151.110124,
-    "ts_id": "81865042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67870042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -23637,8 +23637,8 @@
     "name": "Bilambil Hgts Res (Rain)",
     "lat": -28.217002,
     "lon": 153.478792,
-    "ts_id": "11347042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11348042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.76,
@@ -23848,8 +23848,8 @@
     "name": "Birrong Bowls Club (Rain)",
     "lat": -33.89043333333333,
     "lon": 151.0163972222222,
-    "ts_id": "10615042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10616042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.16,
@@ -24059,8 +24059,8 @@
     "name": "Black Range (Rain)",
     "lat": -36.7253,
     "lon": 149.8431,
-    "ts_id": "105005042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "105007042",
+    "ts_name": "00 - De-accumulated.P",
     "ifd": {
       "1": {
         "63.2%": 1.82,
@@ -24270,8 +24270,8 @@
     "name": "Blacktown Dog Pound (Rain)",
     "lat": -33.80428746490387,
     "lon": 150.90138020797562,
-    "ts_id": "11047042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11048042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.11,
@@ -24481,8 +24481,8 @@
     "name": "Blue Nobby",
     "lat": -30.7172,
     "lon": 151.853,
-    "ts_id": "83820042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88829042",
+    "ts_name": "01 - De_accumulated.P",
     "ifd": {
       "1": {
         "63.2%": 1.84,
@@ -24692,8 +24692,8 @@
     "name": "Bodalla (Rain)",
     "lat": -36.0872,
     "lon": 150.0508,
-    "ts_id": "105001042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "105003042",
+    "ts_name": "00 - De-accumulated.P",
     "ifd": {
       "1": {
         "63.2%": 1.89,
@@ -24903,8 +24903,8 @@
     "name": "Bonnyrigg Heights CC (Rain)",
     "lat": -33.890948,
     "lon": 150.872995,
-    "ts_id": "179159042",
-    "ts_name": "15 min model data",
+    "ts_id": "179155042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -25114,8 +25114,8 @@
     "name": "Boonanghi Mtn Repeater",
     "lat": -31.041,
     "lon": 152.575,
-    "ts_id": "83810042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88830042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.39,
@@ -25325,8 +25325,8 @@
     "name": "Bowra Sugarloaf Repeater",
     "lat": -30.662389,
     "lon": 152.653389,
-    "ts_id": "83823042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88831042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.56,
@@ -25536,8 +25536,8 @@
     "name": "Bowral BC  (Rain)",
     "lat": -34.479699,
     "lon": 150.426084,
-    "ts_id": "91600042",
-    "ts_name": "5m.Totals",
+    "ts_id": "89065042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.9,
@@ -25747,8 +25747,8 @@
     "name": "Bowral Golf Course  (Rain)",
     "lat": -34.48845833333333,
     "lon": 150.4159611111111,
-    "ts_id": "91594042",
-    "ts_name": "5m.Totals",
+    "ts_id": "89063042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.87,
@@ -25958,8 +25958,8 @@
     "name": "Bowral treatment works (Rain)",
     "lat": -34.49125,
     "lon": 150.3990888888889,
-    "ts_id": "91595042",
-    "ts_name": "5m.Totals",
+    "ts_id": "89053042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.85,
@@ -26169,8 +26169,8 @@
     "name": "Bowraville Downstream",
     "lat": -30.654355529737256,
     "lon": 152.8618914615285,
-    "ts_id": "72654042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "72655042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.67,
@@ -26380,8 +26380,8 @@
     "name": "Broadmeadow Helipad (Rain)",
     "lat": -32.92088333333333,
     "lon": 151.730025,
-    "ts_id": "10669042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10670042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -26591,8 +26591,8 @@
     "name": "Broadwater Esp. (Rain)",
     "lat": -28.211816,
     "lon": 153.497554,
-    "ts_id": "11355042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11356042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.76,
@@ -26802,8 +26802,8 @@
     "name": "Brooklyn (Rain)",
     "lat": -33.547246,
     "lon": 151.225164,
-    "ts_id": "10641042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10642042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.17,
@@ -27013,8 +27013,8 @@
     "name": "Brookvale Oval (Rain)",
     "lat": -33.75947777777778,
     "lon": 151.2726888888889,
-    "ts_id": "11111042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11112042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.53,
@@ -27224,8 +27224,8 @@
     "name": "Broughton Creek",
     "lat": -34.789,
     "lon": 150.708,
-    "ts_id": "175889042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "175890042",
+    "ts_name": "01 - De-accumulate",
     "ifd": {
       "1": {
         "63.2%": 2.16,
@@ -27435,8 +27435,8 @@
     "name": "Bryant Group (Rain)",
     "lat": -33.78435,
     "lon": 150.806583,
-    "ts_id": "11003042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11004042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -27646,8 +27646,8 @@
     "name": "Budds Mare (Rain)",
     "lat": -30.984784,
     "lon": 151.972125,
-    "ts_id": "176388042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "176390042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.86,
@@ -27857,8 +27857,8 @@
     "name": "Budjong Creek Upstream (Decomm)",
     "lat": -34.483329,
     "lon": 150.853803,
-    "ts_id": "10709042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10710042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.27,
@@ -28068,8 +28068,8 @@
     "name": "Buladeleh (ERTS)",
     "lat": -32.41391408,
     "lon": 152.20708148,
-    "ts_id": "153577042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "153579042",
+    "ts_name": "01- DeAccumulated.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -28279,8 +28279,8 @@
     "name": "Bulahdelah",
     "lat": -32.41391407579482,
     "lon": 152.2070814847734,
-    "ts_id": "81720042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "49420042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -28490,8 +28490,8 @@
     "name": "Bulli Pass (Rain) (Decomm)",
     "lat": -34.316417,
     "lon": 150.90234,
-    "ts_id": "10715042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10716042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.42,
@@ -28701,8 +28701,8 @@
     "name": "Bumana Creek",
     "lat": -34.67727222222222,
     "lon": 149.723975,
-    "ts_id": "11291042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11292042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.46,
@@ -28912,8 +28912,8 @@
     "name": "Bundanoon (Rain)",
     "lat": -34.66857,
     "lon": 150.29636,
-    "ts_id": "175792042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "175788042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.82,
@@ -29123,8 +29123,8 @@
     "name": "Bungonia (Rain)",
     "lat": -34.807799,
     "lon": 150.006703,
-    "ts_id": "175806042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "175802042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.67,
@@ -29334,8 +29334,8 @@
     "name": "Burwood Council Dep (Rain)",
     "lat": -33.89553055555555,
     "lon": 151.096175,
-    "ts_id": "10825042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10826042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.28,
@@ -29545,8 +29545,8 @@
     "name": "Buttonderry AWS",
     "lat": -33.21359163769939,
     "lon": 151.42572216932268,
-    "ts_id": "96966042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "96967042",
+    "ts_name": "Public.Web",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -29756,8 +29756,8 @@
     "name": "Calderwood (Rain) (Decomm)",
     "lat": -34.549425,
     "lon": 150.710517,
-    "ts_id": "10723042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10724042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.32,
@@ -29967,8 +29967,8 @@
     "name": "Callala Bay (Rain)",
     "lat": -35.02217222222222,
     "lon": 150.6738138888889,
-    "ts_id": "10689042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10690042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.08,
@@ -30178,8 +30178,8 @@
     "name": "Camden Chrsitian Life Center (Rain)",
     "lat": -34.05,
     "lon": 150.766667,
-    "ts_id": "10643042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10644042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.91,
@@ -30389,8 +30389,8 @@
     "name": "Camperdown Bowls Club (Rain)",
     "lat": -33.887874,
     "lon": 151.176394,
-    "ts_id": "10861042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10862042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.38,
@@ -30600,8 +30600,8 @@
     "name": "Canley Heights (Rain)",
     "lat": -33.88983665303957,
     "lon": 150.92304037223974,
-    "ts_id": "11065042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11066042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -30811,8 +30811,8 @@
     "name": "Canterbury RC (Rain)",
     "lat": -33.908463,
     "lon": 151.118123,
-    "ts_id": "81860042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67790042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -31022,8 +31022,8 @@
     "name": "Carfiff (Rain)",
     "lat": -32.939857,
     "lon": 151.677938,
-    "ts_id": "10741042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10742042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -31233,8 +31233,8 @@
     "name": "Carlingford BC",
     "lat": -33.783096,
     "lon": 151.048978,
-    "ts_id": "81835042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "66478042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -31444,8 +31444,8 @@
     "name": "Carrow brook",
     "lat": -32.2722,
     "lon": 151.3052,
-    "ts_id": "81905042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "72530042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.76,
@@ -31655,8 +31655,8 @@
     "name": "Centennial Cl Armidale (Rain)",
     "lat": -30.505284,
     "lon": 151.679268,
-    "ts_id": "11361042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11362042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.92,
@@ -31866,8 +31866,8 @@
     "name": "Chambigne",
     "lat": -28.4146,
     "lon": 152.4178,
-    "ts_id": "180962042",
-    "ts_name": "15 min model data",
+    "ts_id": "180958042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.16,
@@ -32077,8 +32077,8 @@
     "name": "Chatswood BC",
     "lat": -33.801,
     "lon": 151.1803,
-    "ts_id": "112966042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "112962042",
+    "ts_name": "01 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.43,
@@ -32288,8 +32288,8 @@
     "name": "Chatswood Res (Rain)",
     "lat": -33.80711296257695,
     "lon": 151.17901558125445,
-    "ts_id": "11041042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11042042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.43,
@@ -32499,8 +32499,8 @@
     "name": "Chester Hill BC",
     "lat": -33.877377,
     "lon": 150.996066,
-    "ts_id": "81853042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67678042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.1,
@@ -32710,8 +32710,8 @@
     "name": "Chincogan (ERTS)",
     "lat": -28.525,
     "lon": 153.479,
-    "ts_id": "94156042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "94158042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.64,
@@ -32921,8 +32921,8 @@
     "name": "Chisholm Park \u2013 White City FC (Rain)",
     "lat": -33.885206,
     "lon": 150.910541,
-    "ts_id": "179174042",
-    "ts_name": "15 min model data",
+    "ts_id": "179170042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -33132,8 +33132,8 @@
     "name": "Chittaway (Rain) (Decomm)",
     "lat": -33.337800022323556,
     "lon": 151.39179994955165,
-    "ts_id": "81808042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64358042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -33343,8 +33343,8 @@
     "name": "Clarence (Rain)",
     "lat": -33.477717,
     "lon": 150.220774,
-    "ts_id": "10765042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10766042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.87,
@@ -33554,8 +33554,8 @@
     "name": "Clearfield (Rain)",
     "lat": -29.175,
     "lon": 152.8777,
-    "ts_id": "178085042",
-    "ts_name": "15 min model data",
+    "ts_id": "178081042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.42,
@@ -33765,8 +33765,8 @@
     "name": "Cleveland Road",
     "lat": -34.50388587841588,
     "lon": 150.77577634933036,
-    "ts_id": "81799042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "63972042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -33976,8 +33976,8 @@
     "name": "Clover Hill",
     "lat": -34.56761092706847,
     "lon": 150.6480166325668,
-    "ts_id": "81897042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71858042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -34187,8 +34187,8 @@
     "name": "Clybucca Main Compund AWS",
     "lat": -30.9175,
     "lon": 152.9189,
-    "ts_id": "99828042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "99824042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.53,
@@ -34398,8 +34398,8 @@
     "name": "Cobury Bowls Club (Rain)",
     "lat": -37.745036,
     "lon": 144.967284,
-    "ts_id": "11373042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11374042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.49,
@@ -34609,8 +34609,8 @@
     "name": "Coffs Harbour Airport BoM (Rain)",
     "lat": -30.315067,
     "lon": 153.117764,
-    "ts_id": "10603042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10604042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.95,
@@ -34820,8 +34820,8 @@
     "name": "Collaroy Res (Rain)",
     "lat": -33.73036743616639,
     "lon": 151.2921269760519,
-    "ts_id": "11375042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11376042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.45,
@@ -35031,8 +35031,8 @@
     "name": "Collector (Rain)",
     "lat": -34.916615,
     "lon": 149.434878,
-    "ts_id": "177621042",
-    "ts_name": "15 min model data",
+    "ts_id": "177617042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.42,
@@ -35242,8 +35242,8 @@
     "name": "Collombatti Ck",
     "lat": -30.9738,
     "lon": 152.832,
-    "ts_id": "83814042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88832042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.46,
@@ -35453,8 +35453,8 @@
     "name": "Colo Junction",
     "lat": -33.43769,
     "lon": 150.88315,
-    "ts_id": "81736042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51560042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.94,
@@ -35664,8 +35664,8 @@
     "name": "Company Dam, Grenfell",
     "lat": -33.884481,
     "lon": 148.153967,
-    "ts_id": "172893042",
-    "ts_name": "15 min model data",
+    "ts_id": "172889042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.6,
@@ -35875,8 +35875,8 @@
     "name": "Condell Park Res",
     "lat": -33.919113,
     "lon": 151.010533,
-    "ts_id": "81857042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67742042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.14,
@@ -36086,8 +36086,8 @@
     "name": "Coombadjha",
     "lat": -28.5559,
     "lon": 152.6578,
-    "ts_id": "180977042",
-    "ts_name": "15 min model data",
+    "ts_id": "180973042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -36297,8 +36297,8 @@
     "name": "Corrimal Colliery (Rain) (Decomm)",
     "lat": -34.374252,
     "lon": 150.872844,
-    "ts_id": "10725042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10726042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.63,
@@ -36508,8 +36508,8 @@
     "name": "Cowan Fire Control Centre",
     "lat": -33.61109169,
     "lon": 151.1595927,
-    "ts_id": "176085042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "176081042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -36719,8 +36719,8 @@
     "name": "Cowan Station (Rain)",
     "lat": -33.585041,
     "lon": 151.179498,
-    "ts_id": "10645042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10646042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -36930,8 +36930,8 @@
     "name": "Crabbes Creek (Parklands) (ERTS)",
     "lat": -28.467144426978912,
     "lon": 153.529944447887,
-    "ts_id": "174870042",
-    "ts_name": "15m.Total",
+    "ts_id": "94248042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.65,
@@ -37141,8 +37141,8 @@
     "name": "Crawford River",
     "lat": -32.41923055555555,
     "lon": 152.1907,
-    "ts_id": "153455042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "166215042",
+    "ts_name": "Observer Readings",
     "ifd": {
       "1": {
         "63.2%": 2.19,
@@ -37352,8 +37352,8 @@
     "name": "Cremorne Pt SPS (Rain)",
     "lat": -33.84760833333333,
     "lon": 151.2311166666667,
-    "ts_id": "11055042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11056042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.5,
@@ -37563,8 +37563,8 @@
     "name": "Cromer",
     "lat": -33.734483364587376,
     "lon": 151.2844167079057,
-    "ts_id": "81107042",
-    "ts_name": "15 min model data",
+    "ts_id": "72881042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.45,
@@ -37774,8 +37774,8 @@
     "name": "Cromer Depot",
     "lat": -33.733792,
     "lon": 151.284646,
-    "ts_id": "164078042",
-    "ts_name": "15 min model data",
+    "ts_id": "164074042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.45,
@@ -37985,8 +37985,8 @@
     "name": "Cromer Golf Club",
     "lat": -33.72836666666667,
     "lon": 151.2715944444444,
-    "ts_id": "99668042",
-    "ts_name": "15 min model data",
+    "ts_id": "99664042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.49,
@@ -38196,8 +38196,8 @@
     "name": "Cromer RSL Village (Rain)",
     "lat": -33.721858,
     "lon": 151.285627,
-    "ts_id": "11379042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11380042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.41,
@@ -38407,8 +38407,8 @@
     "name": "Crookwell (Rain)",
     "lat": -34.45531,
     "lon": 149.473089,
-    "ts_id": "177606042",
-    "ts_name": "15 min model data",
+    "ts_id": "177602042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.33,
@@ -38618,8 +38618,8 @@
     "name": "Crystal Creek",
     "lat": -30.3488,
     "lon": 152.9025,
-    "ts_id": "83840042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88825042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.82,
@@ -38829,8 +38829,8 @@
     "name": "CSIR0 Prospect (Rain)",
     "lat": -33.809889,
     "lon": 150.931691,
-    "ts_id": "10877042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10878042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.12,
@@ -39040,8 +39040,8 @@
     "name": "Cudgera",
     "lat": -28.392233,
     "lon": 153.505261,
-    "ts_id": "81618042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "72434042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.69,
@@ -39251,8 +39251,8 @@
     "name": "Cumberland Forest (Rain)",
     "lat": -33.74817344133322,
     "lon": 151.0388750554368,
-    "ts_id": "11085042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11086042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -39462,8 +39462,8 @@
     "name": "Curl Curl",
     "lat": -33.76622416056313,
     "lon": 151.29489253812739,
-    "ts_id": "99601042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "99597042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.48,
@@ -39673,8 +39673,8 @@
     "name": "Currarong Creek",
     "lat": -35.01745747133059,
     "lon": 150.82049172496195,
-    "ts_id": "166660042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "166661042",
+    "ts_name": "00 - De-accumulated.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -39884,8 +39884,8 @@
     "name": "CWS Bellingen",
     "lat": -30.43281388888889,
     "lon": 152.8690166666667,
-    "ts_id": "10555042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10556042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.74,
@@ -40095,8 +40095,8 @@
     "name": "Darkes Road",
     "lat": -34.479421076715006,
     "lon": 150.79439008322353,
-    "ts_id": "81801042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64004042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -40306,8 +40306,8 @@
     "name": "Daruk Park",
     "lat": -33.94896666666666,
     "lon": 150.8980277777778,
-    "ts_id": "98265042",
-    "ts_name": "15 min model data",
+    "ts_id": "98261042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.99,
@@ -40728,8 +40728,8 @@
     "name": "Delward ERTS",
     "lat": -31.65,
     "lon": 152.56,
-    "ts_id": "83312042",
-    "ts_name": "15 min Rainfall",
+    "ts_id": "99078042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.4,
@@ -40939,8 +40939,8 @@
     "name": "Dendrobium Rain",
     "lat": -34.40234166666667,
     "lon": 150.7843111111111,
-    "ts_id": "81881042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71514042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.55,
@@ -41150,8 +41150,8 @@
     "name": "Deniston (Rain)",
     "lat": -33.820084,
     "lon": 151.104497,
-    "ts_id": "10809042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10810042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -41361,8 +41361,8 @@
     "name": "Dombarton Loop",
     "lat": -34.450693360967605,
     "lon": 150.7654231094369,
-    "ts_id": "81798042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "63956042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.29,
@@ -41572,8 +41572,8 @@
     "name": "Dora Creek (Rain)",
     "lat": -33.065266,
     "lon": 151.508135,
-    "ts_id": "10737042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10738042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.14,
@@ -41783,8 +41783,8 @@
     "name": "Dora Creek WWTW (RG)",
     "lat": -33.097,
     "lon": 151.5038,
-    "ts_id": "169754042",
-    "ts_name": "35 - 15 min Totals",
+    "ts_id": "169748042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.16,
@@ -41994,8 +41994,8 @@
     "name": "Dorrigo (Alert)",
     "lat": -30.3956,
     "lon": 152.692,
-    "ts_id": "83808042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "96275042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.64,
@@ -42205,8 +42205,8 @@
     "name": "Dorrigo BoM (Rain)",
     "lat": -30.342305,
     "lon": 152.713878,
-    "ts_id": "10557042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10558042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.67,
@@ -42416,8 +42416,8 @@
     "name": "East Beach Carravan Park (Rain)",
     "lat": -34.690142,
     "lon": 150.852209,
-    "ts_id": "11381042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11382042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.29,
@@ -42627,8 +42627,8 @@
     "name": "East Roseville Bowls Club (Rain)",
     "lat": -33.77641666666666,
     "lon": 151.1980583333333,
-    "ts_id": "11383042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11384042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.42,
@@ -42838,8 +42838,8 @@
     "name": "Eastwood Bowls Club (Rain)",
     "lat": -33.792927,
     "lon": 151.085884,
-    "ts_id": "11051042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11052042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.28,
@@ -43049,8 +43049,8 @@
     "name": "Eden BoM (Rain)",
     "lat": -37.0666667,
     "lon": 149.903167,
-    "ts_id": "10613042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10614042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.83,
@@ -43260,8 +43260,8 @@
     "name": "Eleebana Reservoir (Rain)",
     "lat": -32.995630635060756,
     "lon": 151.65150246970066,
-    "ts_id": "110924042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "110920042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -43471,8 +43471,8 @@
     "name": "Ellenborough (Rain)",
     "lat": -31.455066683810188,
     "lon": 152.45944796554735,
-    "ts_id": "10623042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10624042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.32,
@@ -43682,8 +43682,8 @@
     "name": "Empire Vale (Rain) (Decomm)",
     "lat": -28.913869448854012,
     "lon": 153.509328687628,
-    "ts_id": "85901042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "85902042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.53,
@@ -43893,8 +43893,8 @@
     "name": "Engadine BC",
     "lat": -34.061964,
     "lon": 151.009921,
-    "ts_id": "81866042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67886042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -44104,8 +44104,8 @@
     "name": "Epping Bowls Club (Rain)",
     "lat": -33.774476,
     "lon": 151.083997,
-    "ts_id": "11049042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11050042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.26,
@@ -44315,8 +44315,8 @@
     "name": "Erskine Park Res (Rain)",
     "lat": -33.807715,
     "lon": 150.799414,
-    "ts_id": "81841042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67278042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.02,
@@ -44526,8 +44526,8 @@
     "name": "Erskineville BC",
     "lat": -33.901965,
     "lon": 151.189472,
-    "ts_id": "81864042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67854042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.39,
@@ -44737,8 +44737,8 @@
     "name": "Ettalong Public School Rain",
     "lat": -33.509874,
     "lon": 151.336356,
-    "ts_id": "83952042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "83948042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -44948,8 +44948,8 @@
     "name": "Eungai Creek BoM (Rain)",
     "lat": -30.85,
     "lon": 152.88,
-    "ts_id": "10757042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10758042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.55,
@@ -45159,8 +45159,8 @@
     "name": "Euroka Upstream (Decomm)",
     "lat": -31.089061105199175,
     "lon": 152.77789995516974,
-    "ts_id": "81931042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "52302042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.41,
@@ -45370,8 +45370,8 @@
     "name": "F2E North",
     "lat": -30.8698,
     "lon": 152.9303,
-    "ts_id": "99839042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "99835042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.58,
@@ -45581,8 +45581,8 @@
     "name": "F2E South",
     "lat": -31.027,
     "lon": 152.8804,
-    "ts_id": "99850042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "99846042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.46,
@@ -45792,8 +45792,8 @@
     "name": "Farrells Creek",
     "lat": -33.71716388888889,
     "lon": 150.6946,
-    "ts_id": "81797042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "63522042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.96,
@@ -46003,8 +46003,8 @@
     "name": "Fassifern (Rain)",
     "lat": -32.999507,
     "lon": 151.56329,
-    "ts_id": "10739042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10740042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.13,
@@ -46214,8 +46214,8 @@
     "name": "Findon Creek (Rain)",
     "lat": -28.3946,
     "lon": 152.8856,
-    "ts_id": "178025042",
-    "ts_name": "15 min model data",
+    "ts_id": "178021042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.29,
@@ -46425,8 +46425,8 @@
     "name": "Fivedock Bowling Club (Rain)",
     "lat": -33.86511697616002,
     "lon": 151.13527118967798,
-    "ts_id": "11081042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11082042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.33,
@@ -46636,8 +46636,8 @@
     "name": "Forestville Rain",
     "lat": -33.76256387140731,
     "lon": 151.21061110804396,
-    "ts_id": "94259042",
-    "ts_name": "15 min model data",
+    "ts_id": "94255042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.45,
@@ -46847,8 +46847,8 @@
     "name": "Fox Hill Golf Course (Rain)",
     "lat": -33.799735,
     "lon": 150.935723,
-    "ts_id": "10875042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10876042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.11,
@@ -47058,8 +47058,8 @@
     "name": "Frenchs Forest",
     "lat": -33.7493,
     "lon": 151.2334,
-    "ts_id": "113582042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "113578042",
+    "ts_name": "01 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.46,
@@ -47269,8 +47269,8 @@
     "name": "Frenchs Forest Rd (Rain)",
     "lat": -33.795912,
     "lon": 151.249792,
-    "ts_id": "11119042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11120042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.49,
@@ -47691,8 +47691,8 @@
     "name": "Gears (Wyong River)",
     "lat": -33.251105,
     "lon": 151.314952,
-    "ts_id": "180388042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "174826042",
+    "ts_name": "00 - Continuous.O",
     "ifd": {
       "1": {
         "63.2%": 2.12,
@@ -47902,8 +47902,8 @@
     "name": "Girralong ERTS",
     "lat": -30.566,
     "lon": 152.6528,
-    "ts_id": "83843042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88834042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.57,
@@ -48113,8 +48113,8 @@
     "name": "Gladstone Park BC (Rain)",
     "lat": -33.85931666666667,
     "lon": 151.1828361111111,
-    "ts_id": "10863042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10864042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.38,
@@ -48324,8 +48324,8 @@
     "name": "Glen Alice (Rain)",
     "lat": -33.0488,
     "lon": 150.2325,
-    "ts_id": "10927042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10928042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.79,
@@ -48535,8 +48535,8 @@
     "name": "Gleniffer",
     "lat": -30.386555,
     "lon": 152.881536,
-    "ts_id": "10559042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10560042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.77,
@@ -48746,8 +48746,8 @@
     "name": "Gleniffer (ERTS)",
     "lat": -30.3883,
     "lon": 152.8817,
-    "ts_id": "83846042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88835042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.77,
@@ -48957,8 +48957,8 @@
     "name": "Gore Creek (Rain)",
     "lat": -33.82945277777777,
     "lon": 151.1822361111111,
-    "ts_id": "11405042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11406042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.39,
@@ -49379,8 +49379,8 @@
     "name": "Gostwyck",
     "lat": -32.565035150083645,
     "lon": 151.60547113712153,
-    "ts_id": "81733042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51332042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.94,
@@ -49590,8 +49590,8 @@
     "name": "Grass Gully",
     "lat": -34.845120291164,
     "lon": 150.42831673721375,
-    "ts_id": "100465042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100467042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.93,
@@ -49801,8 +49801,8 @@
     "name": "Great Mackerel Rain",
     "lat": -33.59035832198337,
     "lon": 151.30085829002894,
-    "ts_id": "89034042",
-    "ts_name": "15 min model data",
+    "ts_id": "89030042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -50012,8 +50012,8 @@
     "name": "Green Valley",
     "lat": -31.273589973369,
     "lon": 152.85729962680045,
-    "ts_id": "81741042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "52116042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.44,
@@ -50223,8 +50223,8 @@
     "name": "Greenwell Point",
     "lat": -34.90727853157265,
     "lon": 150.73648424210782,
-    "ts_id": "83641042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "83642042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.16,
@@ -50434,8 +50434,8 @@
     "name": "Gregory & Ligar Ballarat (Rain)",
     "lat": -37.54596111111111,
     "lon": 143.8631722222222,
-    "ts_id": "11407042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11408042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.38,
@@ -50645,8 +50645,8 @@
     "name": "Greystanes (Rain)",
     "lat": -33.826502224577034,
     "lon": 150.9391590880329,
-    "ts_id": "11011042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11012042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.09,
@@ -50856,8 +50856,8 @@
     "name": "Guildford",
     "lat": -33.847883,
     "lon": 150.970953,
-    "ts_id": "81854042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67694042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.12,
@@ -51067,8 +51067,8 @@
     "name": "Guyra (Box Point)",
     "lat": -30.3351,
     "lon": 151.734,
-    "ts_id": "83850042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88836042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.92,
@@ -51278,8 +51278,8 @@
     "name": "Guyra STP (Rain)",
     "lat": -30.21025,
     "lon": 151.6553333333334,
-    "ts_id": "10907042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10908042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.9,
@@ -51489,8 +51489,8 @@
     "name": "Hamlyn Terrace",
     "lat": -33.25089138234498,
     "lon": 151.4692072513614,
-    "ts_id": "81806042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64326042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -51700,8 +51700,8 @@
     "name": "Hampden Br",
     "lat": -34.726790427010734,
     "lon": 150.5199870234126,
-    "ts_id": "100473042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100475042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.01,
@@ -51911,8 +51911,8 @@
     "name": "Hartigan Hill Res. (Rain)",
     "lat": -28.33428,
     "lon": 153.38893,
-    "ts_id": "11413042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11414042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.63,
@@ -52122,8 +52122,8 @@
     "name": "Hebersham Res",
     "lat": -33.755273,
     "lon": 150.824796,
-    "ts_id": "81874042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71347042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -52333,8 +52333,8 @@
     "name": "Helensburgh 1",
     "lat": -34.1975,
     "lon": 150.935,
-    "ts_id": "81923042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "73070042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.46,
@@ -52544,8 +52544,8 @@
     "name": "Helensburgh 2",
     "lat": -34.18944444444444,
     "lon": 150.907,
-    "ts_id": "81922042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "73054042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.47,
@@ -52755,8 +52755,8 @@
     "name": "Helensburgh PV5",
     "lat": -34.159,
     "lon": 150.928,
-    "ts_id": "81921042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "73038042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.42,
@@ -52966,8 +52966,8 @@
     "name": "Helensburgh PV6",
     "lat": -34.1816,
     "lon": 150.943,
-    "ts_id": "81920042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "73022042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.46,
@@ -53177,8 +53177,8 @@
     "name": "Helensburgh PV7",
     "lat": -34.1827,
     "lon": 150.957,
-    "ts_id": "81919042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "73006042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.48,
@@ -53388,8 +53388,8 @@
     "name": "Helensburgh PV8",
     "lat": -34.16384,
     "lon": 150.96384,
-    "ts_id": "140630042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "140626042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.45,
@@ -53599,8 +53599,8 @@
     "name": "Hexham Bridge",
     "lat": -32.81767044711689,
     "lon": 151.68143610992632,
-    "ts_id": "81742042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "52389042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.11,
@@ -53810,8 +53810,8 @@
     "name": "High Level Res Armidale (Rain)",
     "lat": -30.535079,
     "lon": 151.650121,
-    "ts_id": "11419042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11420042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.91,
@@ -54021,8 +54021,8 @@
     "name": "Hillview",
     "lat": -35.18345156987253,
     "lon": 149.95501487253657,
-    "ts_id": "100457042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100459042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.7,
@@ -54232,8 +54232,8 @@
     "name": "HMAS Watson (Rain)",
     "lat": -33.83916111111111,
     "lon": 151.2807527777778,
-    "ts_id": "11193042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11194042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.5,
@@ -54443,8 +54443,8 @@
     "name": "Holgate",
     "lat": -33.41959444580447,
     "lon": 151.39831670795627,
-    "ts_id": "83960042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "83963042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -54654,8 +54654,8 @@
     "name": "Homebush Bay Brick Pit",
     "lat": -33.84147777777778,
     "lon": 151.07215,
-    "ts_id": "10807042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10808042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -54865,8 +54865,8 @@
     "name": "Homebush BC",
     "lat": -33.85948,
     "lon": 151.084199,
-    "ts_id": "81862042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67822042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.27,
@@ -55076,8 +55076,8 @@
     "name": "Hornsby Council",
     "lat": -33.700311,
     "lon": 151.097564,
-    "ts_id": "83253042",
-    "ts_name": "15 Min Rainfall.Web",
+    "ts_id": "72606042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -55287,8 +55287,8 @@
     "name": "Houghlahans Creek (ERTS)",
     "lat": -28.790000018983587,
     "lon": 153.47000003723505,
-    "ts_id": "94426042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "94428042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.53,
@@ -55498,8 +55498,8 @@
     "name": "Hunter Springs",
     "lat": -31.8626,
     "lon": 151.4398,
-    "ts_id": "81893042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71706042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.86,
@@ -55709,8 +55709,8 @@
     "name": "Hunters Hill Club (Rain)",
     "lat": -33.833417,
     "lon": 151.153358,
-    "ts_id": "11015042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11016042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.35,
@@ -55920,8 +55920,8 @@
     "name": "Huntley Colliery",
     "lat": -34.51024961971552,
     "lon": 150.71949596028065,
-    "ts_id": "81800042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "63988042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.4,
@@ -56131,8 +56131,8 @@
     "name": "Huonbrook",
     "lat": -28.55212290692943,
     "lon": 153.38564781655677,
-    "ts_id": "81899042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "72066042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.59,
@@ -56342,8 +56342,8 @@
     "name": "Illalong (Rain)",
     "lat": -30.907568,
     "lon": 152.919431,
-    "ts_id": "10755042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10756042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.53,
@@ -56553,8 +56553,8 @@
     "name": "Ingleburn Dam",
     "lat": -33.998647,
     "lon": 150.79557,
-    "ts_id": "81849042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67614042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.97,
@@ -56764,8 +56764,8 @@
     "name": "Island Point",
     "lat": -35.09737767261854,
     "lon": 150.59467000392843,
-    "ts_id": "165709042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "165710042",
+    "ts_name": "00 - De-accumulated.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -56975,8 +56975,8 @@
     "name": "Jeogla (ERTS)",
     "lat": -30.815775,
     "lon": 152.147992,
-    "ts_id": "177934042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "177936042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -57186,8 +57186,8 @@
     "name": "Jilliby (Rain)",
     "lat": -33.26666666666667,
     "lon": 151.4,
-    "ts_id": "11259042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11260042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -57608,8 +57608,8 @@
     "name": "Kameruka ERTS",
     "lat": -36.7481,
     "lon": 149.68989,
-    "ts_id": "103558042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "103560042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.74,
@@ -57819,8 +57819,8 @@
     "name": "Kangaroo Creek",
     "lat": -29.997006,
     "lon": 152.836093,
-    "ts_id": "180947042",
-    "ts_name": "15 min model data",
+    "ts_id": "180943042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.5,
@@ -58030,8 +58030,8 @@
     "name": "Kangy Angy",
     "lat": -33.33326831112615,
     "lon": 151.3900793749156,
-    "ts_id": "81936042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "74551042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -58241,8 +58241,8 @@
     "name": "Kareela Golf Club (Rain)",
     "lat": -34.019268,
     "lon": 151.086139,
-    "ts_id": "11185042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11186042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.27,
@@ -58452,8 +58452,8 @@
     "name": "Kariong Reservoir Rain",
     "lat": -33.44515,
     "lon": 151.2965888888889,
-    "ts_id": "81831042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "66414042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -58663,8 +58663,8 @@
     "name": "Karonga School (Rain)",
     "lat": -33.771166,
     "lon": 151.060549,
-    "ts_id": "11039042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11040042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -58874,8 +58874,8 @@
     "name": "Katoomba BC (Rain)",
     "lat": -33.70775555555556,
     "lon": 150.3145833333333,
-    "ts_id": "11029042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11030042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -59085,8 +59085,8 @@
     "name": "Katoomba North",
     "lat": -33.696524,
     "lon": 150.31915,
-    "ts_id": "81827042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "65228042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -59296,8 +59296,8 @@
     "name": "Kelso Creek",
     "lat": -33.95485471588456,
     "lon": 150.9847383193572,
-    "ts_id": "81730042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51159042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.02,
@@ -59507,8 +59507,8 @@
     "name": "Kenny Hill",
     "lat": -34.060273,
     "lon": 150.779273,
-    "ts_id": "81878042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71411042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.94,
@@ -59718,8 +59718,8 @@
     "name": "Kenthurst",
     "lat": -33.666796,
     "lon": 150.990181,
-    "ts_id": "81868042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67918042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.11,
@@ -59929,8 +59929,8 @@
     "name": "Kiama Golf Club (Rain)",
     "lat": -34.631758,
     "lon": 150.85236,
-    "ts_id": "11429042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11430042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.29,
@@ -60140,8 +60140,8 @@
     "name": "Killcare Heights Reservoir Rain",
     "lat": -33.521725,
     "lon": 151.3822111111111,
-    "ts_id": "81825042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64943042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.3,
@@ -60351,8 +60351,8 @@
     "name": "Kinchela Entrance",
     "lat": -31.0303,
     "lon": 152.994,
-    "ts_id": "83804042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88837042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.52,
@@ -60562,8 +60562,8 @@
     "name": "Kincumber",
     "lat": -33.47889272532431,
     "lon": 151.3897471564276,
-    "ts_id": "81846042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67358042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.26,
@@ -60773,8 +60773,8 @@
     "name": "Kincumber Mountain Reservoir Rain",
     "lat": -33.46304722222222,
     "lon": 151.3800527777778,
-    "ts_id": "81845042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67342042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -60984,8 +60984,8 @@
     "name": "Kookaburra School Hut (Rain)",
     "lat": -31.023831,
     "lon": 152.338855,
-    "ts_id": "176398042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "176400042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.15,
@@ -61195,8 +61195,8 @@
     "name": "Koolewong (Decom 2016)",
     "lat": -33.472899467043796,
     "lon": 151.32406615907433,
-    "ts_id": "81721042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "49755042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.19,
@@ -61406,8 +61406,8 @@
     "name": "Koolewong 2",
     "lat": -33.47616110973299,
     "lon": 151.3242333362876,
-    "ts_id": "128180042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "128176042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -61617,8 +61617,8 @@
     "name": "Kooroowi (Scotchman)",
     "lat": -30.53,
     "lon": 152.8517,
-    "ts_id": "83861042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88838042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.71,
@@ -61828,8 +61828,8 @@
     "name": "Kooroowi Sharabel RG",
     "lat": -30.4696115637962,
     "lon": 152.81833604449423,
-    "ts_id": "166643042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "166638042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.62,
@@ -62039,8 +62039,8 @@
     "name": "Koreelah",
     "lat": -28.403339,
     "lon": 152.411398,
-    "ts_id": "180992042",
-    "ts_name": "15 min model data",
+    "ts_id": "180988042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.16,
@@ -62250,8 +62250,8 @@
     "name": "Kotara Bowls Club (Rain)",
     "lat": -32.94100555555555,
     "lon": 151.7009111111111,
-    "ts_id": "10673042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10674042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -62461,8 +62461,8 @@
     "name": "Kulnura",
     "lat": -33.232522141061075,
     "lon": 151.21623764125005,
-    "ts_id": "81904042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "72514042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.1,
@@ -62672,8 +62672,8 @@
     "name": "Kulnura at Pioneer Park",
     "lat": -33.226838,
     "lon": 151.222527,
-    "ts_id": "175196042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "175192042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.1,
@@ -62883,8 +62883,8 @@
     "name": "Lacks Ck (Middle Pocket) (ERTS)",
     "lat": -28.494,
     "lon": 153.485,
-    "ts_id": "94159042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "94161042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.64,
@@ -63094,8 +63094,8 @@
     "name": "Lake Ainsworth",
     "lat": -28.780757968601716,
     "lon": 153.5928240328923,
-    "ts_id": "81743042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "52476042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.57,
@@ -63305,8 +63305,8 @@
     "name": "Lake Conjola",
     "lat": -35.26845659112697,
     "lon": 150.4983711027508,
-    "ts_id": "81775042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "60663042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.99,
@@ -63516,8 +63516,8 @@
     "name": "Lake Conjola D/S",
     "lat": -35.269177,
     "lon": 150.500266,
-    "ts_id": "126531042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "126527042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.0,
@@ -63727,8 +63727,8 @@
     "name": "Lake Macquarie (AWS)",
     "lat": -33.0887,
     "lon": 151.4636,
-    "ts_id": "115563042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "115565042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.13,
@@ -63938,8 +63938,8 @@
     "name": "Lake Munmorah (Rain)",
     "lat": -33.1939790071656,
     "lon": 151.565094668618,
-    "ts_id": "177115042",
-    "ts_name": "15 min model data",
+    "ts_id": "177111042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -64149,8 +64149,8 @@
     "name": "Lake Tabourie",
     "lat": -35.440953764561954,
     "lon": 150.40342820889964,
-    "ts_id": "170679042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "170680042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.98,
@@ -64360,8 +64360,8 @@
     "name": "Lakemba BC",
     "lat": -33.921976,
     "lon": 151.074935,
-    "ts_id": "81861042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67806042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -64782,8 +64782,8 @@
     "name": "Leichhardt Bus Depot (Rain)",
     "lat": -33.876462,
     "lon": 151.159987,
-    "ts_id": "10867042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10868042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.36,
@@ -64993,8 +64993,8 @@
     "name": "Lisarow",
     "lat": -33.3808048592602,
     "lon": 151.3755733031639,
-    "ts_id": "81804042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64294042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -65204,8 +65204,8 @@
     "name": "Little Lake",
     "lat": -34.56297496332564,
     "lon": 150.86420552105537,
-    "ts_id": "81722042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "49919042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.28,
@@ -65415,8 +65415,8 @@
     "name": "Little Lake Entrance",
     "lat": -34.560994633730516,
     "lon": 150.86634434834167,
-    "ts_id": "100640042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "100636042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.28,
@@ -65626,8 +65626,8 @@
     "name": "Logans Crossing",
     "lat": -31.614111782722944,
     "lon": 152.69333362059928,
-    "ts_id": "81723042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "49956042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.47,
@@ -65837,8 +65837,8 @@
     "name": "Long Jetty",
     "lat": -33.357242355279475,
     "lon": 151.48194186521602,
-    "ts_id": "83480042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "83481042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.29,
@@ -66048,8 +66048,8 @@
     "name": "Long Reef SLSC",
     "lat": -33.73306944444445,
     "lon": 151.3023583333333,
-    "ts_id": "10999042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11000042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.43,
@@ -66259,8 +66259,8 @@
     "name": "Lookout Rd Res (Rain)",
     "lat": -32.93309722222222,
     "lon": 151.68915,
-    "ts_id": "10687042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10688042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -66470,8 +66470,8 @@
     "name": "M4 Monitoring Station",
     "lat": -33.81691388888888,
     "lon": 150.9743472222222,
-    "ts_id": "83633042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "83634042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.13,
@@ -66681,8 +66681,8 @@
     "name": "Macquarie College",
     "lat": -32.921,
     "lon": 151.651,
-    "ts_id": "115553042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "115555042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.15,
@@ -66892,8 +66892,8 @@
     "name": "Main Arm",
     "lat": -28.5000833333,
     "lon": 153.433222222,
-    "ts_id": "81901042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "72466042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.61,
@@ -67103,8 +67103,8 @@
     "name": "Mandalong",
     "lat": -33.11254573690395,
     "lon": 151.44830243398553,
-    "ts_id": "81409042",
-    "ts_name": "15 Minute Model data",
+    "ts_id": "72698042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.12,
@@ -67314,8 +67314,8 @@
     "name": "Mangrove Mountain AWS",
     "lat": -33.3,
     "lon": 151.22,
-    "ts_id": "174358042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "174360042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.14,
@@ -67525,8 +67525,8 @@
     "name": "Manly CBD Rain",
     "lat": -33.79604,
     "lon": 151.283187,
-    "ts_id": "94406042",
-    "ts_name": "15 min model data",
+    "ts_id": "94402042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.49,
@@ -67736,8 +67736,8 @@
     "name": "Manly Dam",
     "lat": -33.782156,
     "lon": 151.255594,
-    "ts_id": "81719042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "49097042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.51,
@@ -67947,8 +67947,8 @@
     "name": "Mardi Dam",
     "lat": -33.297810429522144,
     "lon": 151.40007443858133,
-    "ts_id": "81877042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71395042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -68158,8 +68158,8 @@
     "name": "Markwell",
     "lat": -32.38,
     "lon": 152.1934583333333,
-    "ts_id": "96251042",
-    "ts_name": "10 - DayTotal",
+    "ts_id": "152434042",
+    "ts_name": "02 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -68369,8 +68369,8 @@
     "name": "Martinsville",
     "lat": -33.054888,
     "lon": 151.407042,
-    "ts_id": "81408042",
-    "ts_name": "15 minute Model data",
+    "ts_id": "72682042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.07,
@@ -68580,8 +68580,8 @@
     "name": "Matthews Reserve (Rain)",
     "lat": -37.86858611111111,
     "lon": 145.2773388888889,
-    "ts_id": "11455042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11456042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.56,
@@ -68791,8 +68791,8 @@
     "name": "Mayfield Bowling Club (Rain)",
     "lat": -32.900697,
     "lon": 151.746649,
-    "ts_id": "10677042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10678042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -69002,8 +69002,8 @@
     "name": "Mayfield West Bowls Club (Rain)",
     "lat": -32.888299,
     "lon": 151.726578,
-    "ts_id": "10675042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10676042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.19,
@@ -69213,8 +69213,8 @@
     "name": "Meadow Creek @ Gunning JS Br ",
     "lat": -34.780546,
     "lon": 149.269452,
-    "ts_id": "177587042",
-    "ts_name": "15 min model data",
+    "ts_id": "177583042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.32,
@@ -69424,8 +69424,8 @@
     "name": "Menai Police",
     "lat": -34.011665,
     "lon": 151.009053,
-    "ts_id": "81858042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67758042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -69635,8 +69635,8 @@
     "name": "Merimbula Wharf",
     "lat": -36.89295365400753,
     "lon": 149.90980456543426,
-    "ts_id": "83624042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "83625042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.85,
@@ -69846,8 +69846,8 @@
     "name": "Merriwa",
     "lat": -32.055037895,
     "lon": 150.398021507,
-    "ts_id": "181039042",
-    "ts_name": "15 min model data",
+    "ts_id": "181035042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.77,
@@ -70057,8 +70057,8 @@
     "name": "Middle Boambee",
     "lat": -30.324179719568267,
     "lon": 153.04909881154813,
-    "ts_id": "81815042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64536042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.92,
@@ -70268,8 +70268,8 @@
     "name": "Middle Creek",
     "lat": -33.72059166666667,
     "lon": 151.2439472222222,
-    "ts_id": "159906042",
-    "ts_name": "15min_Rainfall.Total",
+    "ts_id": "83628042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.42,
@@ -70479,8 +70479,8 @@
     "name": "Millbank",
     "lat": -30.8695,
     "lon": 152.629,
-    "ts_id": "83868042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88839042",
+    "ts_name": "01 - De_accumulate.P",
     "ifd": {
       "1": {
         "63.2%": 2.42,
@@ -70690,8 +70690,8 @@
     "name": "Miller",
     "lat": -33.921476,
     "lon": 150.886134,
-    "ts_id": "81851042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67646042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.01,
@@ -71112,8 +71112,8 @@
     "name": "Minchinbury",
     "lat": -33.800628,
     "lon": 150.839886,
-    "ts_id": "81848042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67598042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.05,
@@ -71323,8 +71323,8 @@
     "name": "Minnie Water Pump Station",
     "lat": -29.7847,
     "lon": 153.2639,
-    "ts_id": "83830042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88840042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.82,
@@ -71534,8 +71534,8 @@
     "name": "Minto",
     "lat": -34.031121,
     "lon": 150.860885,
-    "ts_id": "81879042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71427042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.01,
@@ -71745,8 +71745,8 @@
     "name": "Mobbs Hill Res (Rain)",
     "lat": -33.78208495567212,
     "lon": 151.0529611973092,
-    "ts_id": "10979042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10980042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.26,
@@ -71956,8 +71956,8 @@
     "name": "Mona Vale (BoM)",
     "lat": -33.6771667,
     "lon": 151.311667,
-    "ts_id": "10633042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10634042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.39,
@@ -72167,8 +72167,8 @@
     "name": "Mona Vale Rain",
     "lat": -33.66826666666667,
     "lon": 151.3021083333333,
-    "ts_id": "81111042",
-    "ts_name": "15 min model data",
+    "ts_id": "59234042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.37,
@@ -72378,8 +72378,8 @@
     "name": "Monivae",
     "lat": -32.673684293,
     "lon": 149.892240036,
-    "ts_id": "181054042",
-    "ts_name": "15 min model data",
+    "ts_id": "181050042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.74,
@@ -72589,8 +72589,8 @@
     "name": "Moparrabah",
     "lat": -30.980200038568007,
     "lon": 152.50200002202183,
-    "ts_id": "83818042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88841042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.37,
@@ -72800,8 +72800,8 @@
     "name": "Morans Creek",
     "lat": -33.144167,
     "lon": 151.421912,
-    "ts_id": "180894042",
-    "ts_name": "15 min model data",
+    "ts_id": "180890042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.12,
@@ -73011,8 +73011,8 @@
     "name": "Moruya Heads (BoM)",
     "lat": -35.9108333,
     "lon": 150.1015,
-    "ts_id": "10777042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10778042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.92,
@@ -73222,8 +73222,8 @@
     "name": "Mosman B/C (Rain)",
     "lat": -33.828058,
     "lon": 151.241946,
-    "ts_id": "172317042",
-    "ts_name": "15 min model data",
+    "ts_id": "172313042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.5,
@@ -73433,8 +73433,8 @@
     "name": "Mosman Bowling Club (Rain)",
     "lat": -33.80823611111111,
     "lon": 151.2458277777778,
-    "ts_id": "11463042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11464042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.47,
@@ -73644,8 +73644,8 @@
     "name": "Mosman Lawn Tennis (Rain)",
     "lat": -33.82043611111111,
     "lon": 151.2367666666667,
-    "ts_id": "11461042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11462042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.47,
@@ -73855,8 +73855,8 @@
     "name": "Mount Annan Public School (Rain)",
     "lat": -34.0566667,
     "lon": 150.755167,
-    "ts_id": "10639042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10640042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.93,
@@ -74066,8 +74066,8 @@
     "name": "Mount Boyce (Rain)",
     "lat": -33.606756,
     "lon": 150.268338,
-    "ts_id": "10767042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10768042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.97,
@@ -74277,8 +74277,8 @@
     "name": "Mount Darragh (Rain)",
     "lat": -36.8403,
     "lon": 149.5214,
-    "ts_id": "104997042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "104999042",
+    "ts_name": "00 - De-accumulated.P",
     "ifd": {
       "1": {
         "63.2%": 1.79,
@@ -74488,8 +74488,8 @@
     "name": "Mount Druit Transport (Rain)",
     "lat": -33.763715,
     "lon": 150.808976,
-    "ts_id": "11007042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11008042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -74699,8 +74699,8 @@
     "name": "Mount Elliot",
     "lat": -33.402120062998904,
     "lon": 151.39394995857737,
-    "ts_id": "81847042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67374042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -74910,8 +74910,8 @@
     "name": "Mount George",
     "lat": -31.88257410017792,
     "lon": 152.1459770804187,
-    "ts_id": "81773042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "60148042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.15,
@@ -75121,8 +75121,8 @@
     "name": "Mount Kembla",
     "lat": -34.44410925887435,
     "lon": 150.8181726884435,
-    "ts_id": "81818042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64606042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.5,
@@ -75332,8 +75332,8 @@
     "name": "Mount Mitchell",
     "lat": -29.9356,
     "lon": 151.8896,
-    "ts_id": "180917042",
-    "ts_name": "15 min model data",
+    "ts_id": "180913042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.94,
@@ -75543,8 +75543,8 @@
     "name": "Mount Nebo (Rain) (Decomm)",
     "lat": -34.422588,
     "lon": 150.840013,
-    "ts_id": "10717042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10718042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.5,
@@ -75754,8 +75754,8 @@
     "name": "Mt Keira (Rain)",
     "lat": -34.410893,
     "lon": 150.858463,
-    "ts_id": "11191042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11192042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.41,
@@ -75965,8 +75965,8 @@
     "name": "Mt Kuring-gia (Rain)",
     "lat": -33.652766,
     "lon": 151.136725,
-    "ts_id": "10803042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10804042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -76176,8 +76176,8 @@
     "name": "Mt Pleasant",
     "lat": -34.39801531093423,
     "lon": 150.85717803310922,
-    "ts_id": "81822042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64758042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.54,
@@ -76387,8 +76387,8 @@
     "name": "Mt Pleasant Reservoir",
     "lat": -33.72317426756694,
     "lon": 150.72054121939715,
-    "ts_id": "81872042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71315042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.98,
@@ -76598,8 +76598,8 @@
     "name": "Mt View (Rain)",
     "lat": -35.45512234907295,
     "lon": 149.72473420254352,
-    "ts_id": "100453042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100455042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.65,
@@ -76809,8 +76809,8 @@
     "name": "Mullumbimby Creek (ERTS)",
     "lat": -28.554,
     "lon": 153.437,
-    "ts_id": "94162042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "94164042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.62,
@@ -77020,8 +77020,8 @@
     "name": "Mummulgum (Rain)",
     "lat": -28.7883,
     "lon": 152.7728,
-    "ts_id": "178055042",
-    "ts_name": "15 min model data",
+    "ts_id": "178051042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.39,
@@ -77231,8 +77231,8 @@
     "name": "Mundays Lane",
     "lat": -31.325316,
     "lon": 152.841535,
-    "ts_id": "157532042",
-    "ts_name": "15 min model data",
+    "ts_id": "157530042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.46,
@@ -77442,8 +77442,8 @@
     "name": "Murwillumbah Civic (Rain)",
     "lat": -28.326638,
     "lon": 153.401149,
-    "ts_id": "11471042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11472042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.64,
@@ -77653,8 +77653,8 @@
     "name": "Murwillumbah STP (Rain)",
     "lat": -28.323505,
     "lon": 153.384139,
-    "ts_id": "11473042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11474042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.63,
@@ -77864,8 +77864,8 @@
     "name": "Muskoka Farm Gunderman",
     "lat": -33.445056,
     "lon": 151.07775,
-    "ts_id": "176533042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "176529042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -78075,8 +78075,8 @@
     "name": "Myocum",
     "lat": -28.589444450537243,
     "lon": 153.51673585271584,
-    "ts_id": "81902042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "72482042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.6,
@@ -78286,8 +78286,8 @@
     "name": "Nabiac",
     "lat": -32.11670561973304,
     "lon": 152.33038606055672,
-    "ts_id": "81724042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "50104042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -78497,8 +78497,8 @@
     "name": "Nabiac (ERTS)",
     "lat": -32.11670562,
     "lon": 152.33038606,
-    "ts_id": "153556042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "153558042",
+    "ts_name": "01 - DeAccumulate.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -78708,8 +78708,8 @@
     "name": "Narara",
     "lat": -33.390039837610146,
     "lon": 151.32605619679077,
-    "ts_id": "81807042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64342042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -78919,8 +78919,8 @@
     "name": "Narrabeen Creek",
     "lat": -33.689633,
     "lon": 151.299536,
-    "ts_id": "81802042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64031042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.4,
@@ -79130,8 +79130,8 @@
     "name": "Nerriga BoM (Rainfall)",
     "lat": -35.12,
     "lon": 150.08,
-    "ts_id": "11477042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11478042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.82,
@@ -79341,8 +79341,8 @@
     "name": "New England School Armidale (Rain)",
     "lat": -30.519396,
     "lon": 151.64552,
-    "ts_id": "11479042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11480042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.92,
@@ -79552,8 +79552,8 @@
     "name": "New England Tech Armidale (Rain)",
     "lat": -30.492588,
     "lon": 151.652527,
-    "ts_id": "11481042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11482042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.95,
@@ -79763,8 +79763,8 @@
     "name": "Newport Rain",
     "lat": -33.657197,
     "lon": 151.318638,
-    "ts_id": "115426042",
-    "ts_name": "15 min model data",
+    "ts_id": "115422042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.37,
@@ -79974,8 +79974,8 @@
     "name": "Newports Creek Rain",
     "lat": -30.311640001075315,
     "lon": 153.06129289058853,
-    "ts_id": "81816042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64552042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.94,
@@ -80185,8 +80185,8 @@
     "name": "Nimbin Weir",
     "lat": -28.58343055555556,
     "lon": 153.2130611111111,
-    "ts_id": "91161042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "91163042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.42,
@@ -80396,8 +80396,8 @@
     "name": "Nimmitabel (Rain)",
     "lat": -36.5902,
     "lon": 149.3824,
-    "ts_id": "104985042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "104987042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.64,
@@ -80607,8 +80607,8 @@
     "name": "Norah Head AWS",
     "lat": -33.2811121663087,
     "lon": 151.576008871341,
-    "ts_id": "174767042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "174769042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -80818,8 +80818,8 @@
     "name": "Nords Wharf Oval (Rain)",
     "lat": -33.13012738965814,
     "lon": 151.60978803186725,
-    "ts_id": "110947042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "110943042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -81029,8 +81029,8 @@
     "name": "North Bonville",
     "lat": -30.36162091603946,
     "lon": 153.00617090691028,
-    "ts_id": "81813042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64504042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.92,
@@ -81240,8 +81240,8 @@
     "name": "North Epping BC",
     "lat": -33.753579,
     "lon": 151.092221,
-    "ts_id": "81837042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "66510042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.26,
@@ -81451,8 +81451,8 @@
     "name": "North Head STP (Rain)",
     "lat": -33.81047777777778,
     "lon": 151.3051722222222,
-    "ts_id": "11147042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11148042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.55,
@@ -81662,8 +81662,8 @@
     "name": "North Macquarie",
     "lat": -34.577208896860974,
     "lon": 150.7263005789168,
-    "ts_id": "81896042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71842042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.25,
@@ -81873,8 +81873,8 @@
     "name": "North Manly",
     "lat": -33.776066,
     "lon": 151.269934,
-    "ts_id": "83320042",
-    "ts_name": "15 min Rainfall",
+    "ts_id": "11278042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.51,
@@ -82295,8 +82295,8 @@
     "name": "North Parramatta (Rain)",
     "lat": -33.7931748134634,
     "lon": 151.01665944515196,
-    "ts_id": "11149042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11150042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -82506,8 +82506,8 @@
     "name": "North Rocks DBS (Rain)",
     "lat": -33.767107,
     "lon": 151.029939,
-    "ts_id": "11151042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11152042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -82717,8 +82717,8 @@
     "name": "North St Ives",
     "lat": -33.709206,
     "lon": 151.187764,
-    "ts_id": "81838042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "66526042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.36,
@@ -82928,8 +82928,8 @@
     "name": "Northbridge BC",
     "lat": -33.80602631466606,
     "lon": 151.21191946516,
-    "ts_id": "81830042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "65276042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.45,
@@ -83139,8 +83139,8 @@
     "name": "Northmead Bowling Club (Rain)",
     "lat": -33.78428523193775,
     "lon": 150.99443519952544,
-    "ts_id": "10995042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10996042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.15,
@@ -83350,8 +83350,8 @@
     "name": "Nowra Bridge",
     "lat": -34.86516676072985,
     "lon": 150.60239552176265,
-    "ts_id": "170357042",
-    "ts_name": "00 - Contiunuos.O",
+    "ts_id": "177376042",
+    "ts_name": "00 - De-accumulated.P",
     "ifd": {
       "1": {
         "63.2%": 2.0,
@@ -83561,8 +83561,8 @@
     "name": "Nurrewin",
     "lat": -34.55826503989349,
     "lon": 150.65191950949554,
-    "ts_id": "81898042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71874042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.32,
@@ -83772,8 +83772,8 @@
     "name": "Old Cemerty Macarther (Rain)",
     "lat": -37.54943888888889,
     "lon": 143.8497333333334,
-    "ts_id": "11495042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11496042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.37,
@@ -83983,8 +83983,8 @@
     "name": "Oliver St Freshwater",
     "lat": -33.77556388888889,
     "lon": 151.2838888888889,
-    "ts_id": "10849042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10850042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.49,
@@ -84194,8 +84194,8 @@
     "name": "Orchard Hills Flind",
     "lat": -33.788115,
     "lon": 150.75613,
-    "ts_id": "81842042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67294042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.0,
@@ -84405,8 +84405,8 @@
     "name": "Orchard Hills Kings",
     "lat": -33.778593,
     "lon": 150.718476,
-    "ts_id": "81870042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71283042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.99,
@@ -84616,8 +84616,8 @@
     "name": "Orchard Hills WTP",
     "lat": -33.801505,
     "lon": 150.707858,
-    "ts_id": "81871042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71299042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.99,
@@ -84827,8 +84827,8 @@
     "name": "Pacific Palms (ERTS)",
     "lat": -32.33302843,
     "lon": 152.52611124,
-    "ts_id": "153570042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "153572042",
+    "ts_name": "01 - DeAccumulate.P",
     "ifd": {
       "1": {
         "63.2%": 2.44,
@@ -85038,8 +85038,8 @@
     "name": "Pacific Palms Wharf",
     "lat": -32.333028434356876,
     "lon": 152.52611123858563,
-    "ts_id": "99144042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "99140042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.44,
@@ -85249,8 +85249,8 @@
     "name": "Palm Beach Golf Rain",
     "lat": -33.58958055555556,
     "lon": 151.3226361111111,
-    "ts_id": "98138042",
-    "ts_name": "15 min model data",
+    "ts_id": "98134042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -85460,8 +85460,8 @@
     "name": "Palmgrove",
     "lat": -33.2979,
     "lon": 151.302,
-    "ts_id": "174270042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "174272042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.17,
@@ -85671,8 +85671,8 @@
     "name": "Pamamia BC (Rain)",
     "lat": -33.95622515854119,
     "lon": 150.98638318065542,
-    "ts_id": "11129042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11130042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.02,
@@ -85882,8 +85882,8 @@
     "name": "Parramatta Masonic",
     "lat": -33.816807,
     "lon": 151.014494,
-    "ts_id": "81834042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "66462042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -86093,8 +86093,8 @@
     "name": "Parramatta SPS 101",
     "lat": -33.814874,
     "lon": 151.016321,
-    "ts_id": "81828042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "65244042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -86304,8 +86304,8 @@
     "name": "Patonga",
     "lat": -33.550983,
     "lon": 151.274619,
-    "ts_id": "81725042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "50334042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -86515,8 +86515,8 @@
     "name": "Peakhurst BC (Rain)",
     "lat": -33.96021064523988,
     "lon": 151.07137597679468,
-    "ts_id": "11133042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11134042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -86726,8 +86726,8 @@
     "name": "Pearl Beach Reservoir Rain",
     "lat": -33.53629166666666,
     "lon": 151.3065194444445,
-    "ts_id": "81832042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "66430042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -86937,8 +86937,8 @@
     "name": "Peats Ridge (BoM Meteorological)",
     "lat": -33.3167,
     "lon": 151.2333,
-    "ts_id": "84168042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "84170042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -87148,8 +87148,8 @@
     "name": "Pennant Hills BC",
     "lat": -33.735466,
     "lon": 151.073079,
-    "ts_id": "81836042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "66494042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -87359,8 +87359,8 @@
     "name": "Penrith BoM (Rain)",
     "lat": -33.7276667,
     "lon": 150.682167,
-    "ts_id": "10627042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10628042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.96,
@@ -87570,8 +87570,8 @@
     "name": "Penrith Lakes (Rain)",
     "lat": -33.726088,
     "lon": 150.683333,
-    "ts_id": "10647042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10648042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.96,
@@ -87781,8 +87781,8 @@
     "name": "Perry Drive",
     "lat": -30.27789746179088,
     "lon": 153.1054504675868,
-    "ts_id": "81811042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64450042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.95,
@@ -87992,8 +87992,8 @@
     "name": "Perry Drive Coffs Harbour (ERTS)",
     "lat": -30.2817,
     "lon": 153.1083,
-    "ts_id": "83833042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88842042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.95,
@@ -88203,8 +88203,8 @@
     "name": "Petersham Bowls Club (Rain)",
     "lat": -33.893012,
     "lon": 151.152268,
-    "ts_id": "10859042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10860042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.36,
@@ -88414,8 +88414,8 @@
     "name": "Pillar Valley (ERTS)",
     "lat": -29.7504,
     "lon": 153.1051,
-    "ts_id": "170342042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "170344042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.67,
@@ -88625,8 +88625,8 @@
     "name": "Port Kembla",
     "lat": -34.47900418176369,
     "lon": 150.89441218326667,
-    "ts_id": "81895042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71826042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.28,
@@ -89047,8 +89047,8 @@
     "name": "Prospect Park (Rain)",
     "lat": -33.79727,
     "lon": 150.923648,
-    "ts_id": "10841042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10842042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.1,
@@ -89258,8 +89258,8 @@
     "name": "PS D - Albany St Berry",
     "lat": -34.7736667,
     "lon": 150.717833,
-    "ts_id": "10969042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10970042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.16,
@@ -89469,8 +89469,8 @@
     "name": "Pt Lookout",
     "lat": -30.483,
     "lon": 152.397,
-    "ts_id": "83875042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88843042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.35,
@@ -89680,8 +89680,8 @@
     "name": "Pt Perpendicular BoM (Rain)",
     "lat": -35.093921,
     "lon": 150.804857,
-    "ts_id": "10707042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10708042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -89891,8 +89891,8 @@
     "name": "Punt Bridge",
     "lat": -33.43821270166828,
     "lon": 151.35959545025892,
-    "ts_id": "81746042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "53243042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -90102,8 +90102,8 @@
     "name": "Quakers Hill Nursing Home (Rain)",
     "lat": -33.71965833333334,
     "lon": 150.8920333333333,
-    "ts_id": "11509042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11510042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.06,
@@ -90313,8 +90313,8 @@
     "name": "Queenscliff",
     "lat": -33.78315556350952,
     "lon": 151.28230278531223,
-    "ts_id": "163864042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "163860042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.49,
@@ -90524,8 +90524,8 @@
     "name": "Quipolly Dam",
     "lat": -31.41958611111111,
     "lon": 150.7014333333333,
-    "ts_id": "87628042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "87629042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.84,
@@ -90735,8 +90735,8 @@
     "name": "Raby Reservoir (Rain)",
     "lat": -33.971978,
     "lon": 150.827663,
-    "ts_id": "81852042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67662042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.99,
@@ -90946,8 +90946,8 @@
     "name": "Rainfall@ACCESS OFF 3281 OLD HUME HWY BERRIMA",
     "lat": -34.48419667,
     "lon": 150.3435758,
-    "ts_id": "124987042",
-    "ts_name": "5m.Total",
+    "ts_id": "117574042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.79,
@@ -91157,8 +91157,8 @@
     "name": "Rainfall@COLO ST MITTAGONG",
     "lat": -34.45051944,
     "lon": 150.4566356,
-    "ts_id": "123145042",
-    "ts_name": "5m.Total",
+    "ts_id": "117589042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.93,
@@ -91368,8 +91368,8 @@
     "name": "Rainfall@DRAPERS RD  BRAEMAR",
     "lat": -34.42093583,
     "lon": 150.4760475,
-    "ts_id": "123143042",
-    "ts_name": "5m.Total",
+    "ts_id": "117583042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.94,
@@ -91579,8 +91579,8 @@
     "name": "Rainfall@FRANKLAND ST MITTAGONG",
     "lat": -34.4448825,
     "lon": 150.4348156,
-    "ts_id": "123146042",
-    "ts_name": "5m.Total",
+    "ts_id": "117593042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.88,
@@ -91790,8 +91790,8 @@
     "name": "Rainfall@MYLORA ST HILLTOP",
     "lat": -34.35527806,
     "lon": 150.4868531,
-    "ts_id": "123141042",
-    "ts_name": "5m.Total",
+    "ts_id": "117577042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.92,
@@ -92001,8 +92001,8 @@
     "name": "Rainfall@RAILWAY TCE OR CORDEAUX ST MITTAGONG",
     "lat": -34.43992194,
     "lon": 150.4689781,
-    "ts_id": "123144042",
-    "ts_name": "5m.Total",
+    "ts_id": "117586042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.92,
@@ -92212,8 +92212,8 @@
     "name": "Rainfall@RESERVOIR ST MITTAGONG",
     "lat": -34.46070861,
     "lon": 150.441445,
-    "ts_id": "123147042",
-    "ts_name": "5m.Total",
+    "ts_id": "117596042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.91,
@@ -92423,8 +92423,8 @@
     "name": "Rainfall@TELOPEA ST COLO VALE",
     "lat": -34.395205,
     "lon": 150.4854478,
-    "ts_id": "123142042",
-    "ts_name": "5m.Total",
+    "ts_id": "117580042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.93,
@@ -92634,8 +92634,8 @@
     "name": "Rainfall@Water Reservoir Australia Ave",
     "lat": -34.50052722,
     "lon": 150.3360181,
-    "ts_id": "124986042",
-    "ts_name": "5m.Total",
+    "ts_id": "117571042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.79,
@@ -92845,8 +92845,8 @@
     "name": "Red Hill",
     "lat": -30.28463576964898,
     "lon": 153.06899149800813,
-    "ts_id": "81792042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "62256042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.93,
@@ -93056,8 +93056,8 @@
     "name": "Red Hill (Coff Harbour)",
     "lat": -30.2867,
     "lon": 153.0683,
-    "ts_id": "83883042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88845042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.93,
@@ -93267,8 +93267,8 @@
     "name": "Redoak ERTS",
     "lat": -31.72527777777778,
     "lon": 152.6391666666667,
-    "ts_id": "99091042",
-    "ts_name": "15 min Rainfall",
+    "ts_id": "99090042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.46,
@@ -93478,8 +93478,8 @@
     "name": "Regatta Point",
     "lat": -36.369608731517346,
     "lon": 150.06723070486916,
-    "ts_id": "81774042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "60389042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.89,
@@ -93900,8 +93900,8 @@
     "name": "Richmond Rd (Rain)",
     "lat": -34.013739,
     "lon": 151.108132,
-    "ts_id": "11515042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11516042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.3,
@@ -94111,8 +94111,8 @@
     "name": "Rixons Pass",
     "lat": -34.35104732344315,
     "lon": 150.88288804730925,
-    "ts_id": "81810042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64434042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.43,
@@ -94322,8 +94322,8 @@
     "name": "RMSSL Toronto",
     "lat": -32.999564,
     "lon": 151.51152,
-    "ts_id": "116151042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "116147042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.09,
@@ -94533,8 +94533,8 @@
     "name": "Robertson",
     "lat": -34.58733996721771,
     "lon": 150.61776757436687,
-    "ts_id": "100469042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100471042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.14,
@@ -94744,8 +94744,8 @@
     "name": "Rooty Hill (Rainfall)",
     "lat": -33.768899,
     "lon": 150.82416,
-    "ts_id": "11157042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11158042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.03,
@@ -94955,8 +94955,8 @@
     "name": "Rosemeadow Res",
     "lat": -34.10399,
     "lon": 150.784119,
-    "ts_id": "81875042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71363042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.01,
@@ -95166,8 +95166,8 @@
     "name": "Rous Hill STP Rain",
     "lat": -33.67406608629369,
     "lon": 150.92496586588777,
-    "ts_id": "11161042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11162042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.06,
@@ -95377,8 +95377,8 @@
     "name": "Russell Vale",
     "lat": -34.358048049245596,
     "lon": 150.8946273965399,
-    "ts_id": "81819042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64622042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.43,
@@ -95588,8 +95588,8 @@
     "name": "Ryde Pump Station (Rain)",
     "lat": -33.80927937516628,
     "lon": 151.08859731469815,
-    "ts_id": "11165042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11166042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.27,
@@ -95799,8 +95799,8 @@
     "name": "Sackville Downstream",
     "lat": -33.497271147299635,
     "lon": 150.87687747933273,
-    "ts_id": "81734042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51403042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.96,
@@ -96010,8 +96010,8 @@
     "name": "Sandstone Hill",
     "lat": -29.7964,
     "lon": 153.1447,
-    "ts_id": "83888042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88846042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.7,
@@ -96221,8 +96221,8 @@
     "name": "Scrivener Street",
     "lat": -33.92228638111079,
     "lon": 150.9352646724079,
-    "ts_id": "81735042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51506042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.0,
@@ -96432,8 +96432,8 @@
     "name": "Seaham",
     "lat": -32.6634134,
     "lon": 151.73235,
-    "ts_id": "81737042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51603042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.05,
@@ -96643,8 +96643,8 @@
     "name": "Seale Road Belmore River",
     "lat": -31.1086,
     "lon": 152.952,
-    "ts_id": "83778042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88847042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.47,
@@ -96854,8 +96854,8 @@
     "name": "Seven Hills",
     "lat": -33.761234,
     "lon": 150.958732,
-    "ts_id": "81869042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67934042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.14,
@@ -97065,8 +97065,8 @@
     "name": "Seven Oaks (Macleay R)",
     "lat": -30.9998,
     "lon": 152.925,
-    "ts_id": "83812042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88848042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.51,
@@ -97276,8 +97276,8 @@
     "name": "Shanes Park",
     "lat": -33.71348,
     "lon": 150.792702,
-    "ts_id": "81873042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71331042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.0,
@@ -97698,8 +97698,8 @@
     "name": "Shannon Creek Middle (Rain)",
     "lat": -29.84793888888889,
     "lon": 152.77535,
-    "ts_id": "10587042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10588042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.4,
@@ -97909,8 +97909,8 @@
     "name": "Shannon Creek U/S",
     "lat": -29.88258888888889,
     "lon": 152.7487916666667,
-    "ts_id": "10589042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10590042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.36,
@@ -98120,8 +98120,8 @@
     "name": "Shephards Lane",
     "lat": -30.27134,
     "lon": 153.08411,
-    "ts_id": "81812042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64477042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.93,
@@ -98331,8 +98331,8 @@
     "name": "Shephards Lane (Coff Harbour)",
     "lat": -30.2767,
     "lon": 153.0833,
-    "ts_id": "83907042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88849042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.94,
@@ -98542,8 +98542,8 @@
     "name": "Smeaton Grange",
     "lat": -34.03683333333333,
     "lon": 150.8051666666667,
-    "ts_id": "84024042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "84025042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.95,
@@ -98753,8 +98753,8 @@
     "name": "Smoky Cape BoM (Rain)",
     "lat": -30.9225,
     "lon": 153.087,
-    "ts_id": "10751042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10752042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.66,
@@ -98964,8 +98964,8 @@
     "name": "Snowball (Rain)",
     "lat": -35.946514518480164,
     "lon": 149.5861237699913,
-    "ts_id": "100783042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100785042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.63,
@@ -99175,8 +99175,8 @@
     "name": "Sooley Creek",
     "lat": -34.68549722222222,
     "lon": 149.6920472222222,
-    "ts_id": "11289042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11290042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.44,
@@ -99386,8 +99386,8 @@
     "name": "South Boambee",
     "lat": -30.3397300180941,
     "lon": 153.05013052513272,
-    "ts_id": "81814042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64520042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.95,
@@ -99597,8 +99597,8 @@
     "name": "Spit Bridge",
     "lat": -33.80433888888889,
     "lon": 151.2455555555555,
-    "ts_id": "97548042",
-    "ts_name": "15 min model data",
+    "ts_id": "97544042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.47,
@@ -99808,8 +99808,8 @@
     "name": "SPS 186 Hunters Hill (Rain)",
     "lat": -33.838652,
     "lon": 151.122676,
-    "ts_id": "11017042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11018042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.29,
@@ -100230,8 +100230,8 @@
     "name": "SPS-BW14  (Rain)",
     "lat": -34.50095555555556,
     "lon": 150.4497333333333,
-    "ts_id": "91597042",
-    "ts_name": "5m.Totals",
+    "ts_id": "89059042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.91,
@@ -100441,8 +100441,8 @@
     "name": "SPS65 Five Dock",
     "lat": -33.854284464527304,
     "lon": 151.14165647268118,
-    "ts_id": "81863042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67838042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.33,
@@ -100652,8 +100652,8 @@
     "name": "St Ignatius College (Rain)",
     "lat": -33.82748333333333,
     "lon": 151.1579888888889,
-    "ts_id": "11093042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11094042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.35,
@@ -100863,8 +100863,8 @@
     "name": "St Leonards Park (Rain)",
     "lat": -33.83105833333333,
     "lon": 151.2094,
-    "ts_id": "10813042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10814042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.44,
@@ -101074,8 +101074,8 @@
     "name": "Steamboat Court (Rain)",
     "lat": -28.216737,
     "lon": 153.486075,
-    "ts_id": "11537042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11538042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.76,
@@ -101285,8 +101285,8 @@
     "name": "Stephens Park Derby St  (Rain)",
     "lat": -34.49165833333333,
     "lon": 150.4340083333333,
-    "ts_id": "91598042",
-    "ts_name": "5m.Totals",
+    "ts_id": "89061042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.9,
@@ -101496,8 +101496,8 @@
     "name": "Sterland",
     "lat": -33.28955391305234,
     "lon": 151.3078223922144,
-    "ts_id": "81935042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "74557042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.17,
@@ -101707,8 +101707,8 @@
     "name": "Strickland",
     "lat": -33.37828387620649,
     "lon": 151.33775083683324,
-    "ts_id": "81937042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "74553042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -101918,8 +101918,8 @@
     "name": "Stuarts Island (Decomm)",
     "lat": -30.658430512716617,
     "lon": 152.99241999133974,
-    "ts_id": "81821042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64753042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.77,
@@ -102129,8 +102129,8 @@
     "name": "Stuarts Island Downstream",
     "lat": -30.6556109099022,
     "lon": 152.994979512055,
-    "ts_id": "81932042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "49044042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.77,
@@ -102340,8 +102340,8 @@
     "name": "Sublime Point (Rain)",
     "lat": -34.297241,
     "lon": 150.921177,
-    "ts_id": "175832042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "175828042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.62,
@@ -102551,8 +102551,8 @@
     "name": "Swansea No. 8 WWPS (RG)",
     "lat": -33.0797,
     "lon": 151.6317,
-    "ts_id": "169742042",
-    "ts_name": "35 - 15 min Totals",
+    "ts_id": "169736042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -102762,8 +102762,8 @@
     "name": "Tanban Forestry BoM (Rain)",
     "lat": -30.95,
     "lon": 152.8,
-    "ts_id": "10749042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10750042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.46,
@@ -102973,8 +102973,8 @@
     "name": "Taralga (Rain)",
     "lat": -34.404811,
     "lon": 149.819734,
-    "ts_id": "177636042",
-    "ts_name": "15 min model data",
+    "ts_id": "177632042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.5,
@@ -103184,8 +103184,8 @@
     "name": "Tarbuck Bay",
     "lat": -32.37477031408913,
     "lon": 152.4849349362654,
-    "ts_id": "81726042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "50597042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.41,
@@ -103395,8 +103395,8 @@
     "name": "Taylors Arm ERTS",
     "lat": -30.7794,
     "lon": 152.7024,
-    "ts_id": "83912042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88850042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.5,
@@ -103606,8 +103606,8 @@
     "name": "Telegraph Point",
     "lat": -31.323645941087534,
     "lon": 152.8011607988794,
-    "ts_id": "81738042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51690042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.44,
@@ -103817,8 +103817,8 @@
     "name": "Terrigal Reservoir Rain",
     "lat": -33.45313055555556,
     "lon": 151.4411472222222,
-    "ts_id": "81843042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67310042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.29,
@@ -104028,8 +104028,8 @@
     "name": "Thora",
     "lat": -30.426544,
     "lon": 152.780226,
-    "ts_id": "10553042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10554042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.65,
@@ -104239,8 +104239,8 @@
     "name": "Thora Bridge (Bellinger R)",
     "lat": -30.425,
     "lon": 152.7806,
-    "ts_id": "169881042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "169883042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.67,
@@ -104450,8 +104450,8 @@
     "name": "Thornleigh Waste (Rain)",
     "lat": -33.72381111111111,
     "lon": 151.08865,
-    "ts_id": "10873042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10874042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -104661,8 +104661,8 @@
     "name": "Thronbury Bowls Club (Rain)",
     "lat": -37.75891388888889,
     "lon": 144.9987277777778,
-    "ts_id": "11547042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11548042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.52,
@@ -104872,8 +104872,8 @@
     "name": "Throsby Park (Rain)",
     "lat": -34.81179040749328,
     "lon": 150.19831552417654,
-    "ts_id": "100787042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100789042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.8,
@@ -105083,8 +105083,8 @@
     "name": "Tia (highrent)",
     "lat": -31.1922,
     "lon": 151.858,
-    "ts_id": "83921042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88852042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.82,
@@ -105294,8 +105294,8 @@
     "name": "Tiona (Decomm)",
     "lat": -32.30213884644892,
     "lon": 152.51576940594362,
-    "ts_id": "81727042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "50772042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.41,
@@ -105505,8 +105505,8 @@
     "name": "Toongabbie BC",
     "lat": -33.78416111111111,
     "lon": 150.9525861111111,
-    "ts_id": "11211042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11212042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.13,
@@ -105716,8 +105716,8 @@
     "name": "Toongabbie School (Rain)",
     "lat": -33.789957,
     "lon": 150.943391,
-    "ts_id": "10845042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10846042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.11,
@@ -105927,8 +105927,8 @@
     "name": "Toukley",
     "lat": -33.26349539845514,
     "lon": 151.5248112920553,
-    "ts_id": "81739042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51744042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.27,
@@ -106138,8 +106138,8 @@
     "name": "Tree Grouop Armidale (Rain)",
     "lat": -30.524259,
     "lon": 151.671465,
-    "ts_id": "11551042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11552042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.92,
@@ -106349,8 +106349,8 @@
     "name": "Tucombil (ERTS)",
     "lat": -28.819999961459217,
     "lon": 153.4800000076063,
-    "ts_id": "94423042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "94425042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.54,
@@ -106771,8 +106771,8 @@
     "name": "Tumbulgum",
     "lat": -28.2772462714291,
     "lon": 153.46060830391204,
-    "ts_id": "84079042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "84080042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.69,
@@ -107404,8 +107404,8 @@
     "name": "Tuncurry (Decomm)",
     "lat": -32.154857125814154,
     "lon": 152.47578296102654,
-    "ts_id": "81728042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "50870042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.37,
@@ -107615,8 +107615,8 @@
     "name": "Tuncurry (ERTS)",
     "lat": -32.159003,
     "lon": 152.473643,
-    "ts_id": "153563042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "153565042",
+    "ts_name": "01 -DeAccumulate.P",
     "ifd": {
       "1": {
         "63.2%": 2.35,
@@ -107826,8 +107826,8 @@
     "name": "Tuncurry D/S",
     "lat": -32.159003,
     "lon": 152.473643,
-    "ts_id": "129839042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "124268042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.35,
@@ -108037,8 +108037,8 @@
     "name": "Turners Flat",
     "lat": -31.0052,
     "lon": 152.712,
-    "ts_id": "83806042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88853042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.39,
@@ -108248,8 +108248,8 @@
     "name": "Tyringham",
     "lat": -30.207143,
     "lon": 152.546389,
-    "ts_id": "180932042",
-    "ts_name": "15 min model data",
+    "ts_id": "180928042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.41,
@@ -108459,8 +108459,8 @@
     "name": "Ulladulla BoM (Rain)",
     "lat": -35.36361111111111,
     "lon": 150.4827777777778,
-    "ts_id": "10581042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10582042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.0,
@@ -108670,8 +108670,8 @@
     "name": "Upper Calderwood",
     "lat": -34.543607614596304,
     "lon": 150.69790653915666,
-    "ts_id": "81880042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71465042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.38,
@@ -108881,8 +108881,8 @@
     "name": "Upper Crabbes Creek (ERTS)",
     "lat": -28.46353333333333,
     "lon": 153.4526222222222,
-    "ts_id": "175853042",
-    "ts_name": "15 minute total",
+    "ts_id": "94435042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.65,
@@ -109092,8 +109092,8 @@
     "name": "Upper Darkwood",
     "lat": -30.4508,
     "lon": 152.6231,
-    "ts_id": "83903042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88854042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.55,
@@ -109303,8 +109303,8 @@
     "name": "Upper Duck",
     "lat": -28.555872,
     "lon": 152.657704,
-    "ts_id": "181024042",
-    "ts_name": "15 min model data",
+    "ts_id": "181020042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -109514,8 +109514,8 @@
     "name": "Upper Main Arm (ERTS)",
     "lat": -28.506,
     "lon": 153.387,
-    "ts_id": "94165042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "94167042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.63,
@@ -109725,8 +109725,8 @@
     "name": "Uralla STP (Rain)",
     "lat": -30.62792222222222,
     "lon": 151.4874916666666,
-    "ts_id": "10695042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10696042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.81,
@@ -109936,8 +109936,8 @@
     "name": "Utungun",
     "lat": -30.729700690736244,
     "lon": 152.85167284690417,
-    "ts_id": "81740042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "51787042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.62,
@@ -110358,8 +110358,8 @@
     "name": "Valla Dam",
     "lat": -30.6028631975982,
     "lon": 152.9902139726461,
-    "ts_id": "171745042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "171741042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.81,
@@ -110569,8 +110569,8 @@
     "name": "Virginus Park (Rain)",
     "lat": -33.96079444444445,
     "lon": 151.0232416666667,
-    "ts_id": "10847042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10848042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.1,
@@ -110780,8 +110780,8 @@
     "name": "Wahroonga (Rain)",
     "lat": -33.719532,
     "lon": 151.108952,
-    "ts_id": "10811042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10812042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.28,
@@ -110991,8 +110991,8 @@
     "name": "Wahroonga Ada Ave",
     "lat": -33.72,
     "lon": 151.11,
-    "ts_id": "113592042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "113588042",
+    "ts_name": "01 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.28,
@@ -111202,8 +111202,8 @@
     "name": "Walcha",
     "lat": -30.9898,
     "lon": 151.672,
-    "ts_id": "83894042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88855042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.78,
@@ -111413,8 +111413,8 @@
     "name": "Wamberal Reservoir Rain",
     "lat": -33.41473888888888,
     "lon": 151.4431083333333,
-    "ts_id": "81824042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64927042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.27,
@@ -111624,8 +111624,8 @@
     "name": "Wangi B C  (Rain)",
     "lat": -33.066328,
     "lon": 151.578338,
-    "ts_id": "110958042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "110954042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.19,
@@ -111835,8 +111835,8 @@
     "name": "Warnervale (Rain) (Decomm)",
     "lat": -33.249275,
     "lon": 151.455883,
-    "ts_id": "130041042",
-    "ts_name": "5m.Total",
+    "ts_id": "11248042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -112046,8 +112046,8 @@
     "name": "Warriewood Rain",
     "lat": -33.69514444444444,
     "lon": 151.29888333,
-    "ts_id": "100327042",
-    "ts_name": "15 min model data",
+    "ts_id": "100323042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.4,
@@ -112257,8 +112257,8 @@
     "name": "Watagan Central (Rain)",
     "lat": -33.0258,
     "lon": 151.188,
-    "ts_id": "174275042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "174277042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.88,
@@ -112468,8 +112468,8 @@
     "name": "Wattle Creek",
     "lat": -28.819281,
     "lon": 152.238458,
-    "ts_id": "181009042",
-    "ts_name": "15 min model data",
+    "ts_id": "181005042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.11,
@@ -112679,8 +112679,8 @@
     "name": "Webbs Creek",
     "lat": -33.38746021,
     "lon": 150.98233647,
-    "ts_id": "81783042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "61852042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.95,
@@ -112890,8 +112890,8 @@
     "name": "Wedderburn (Rain)",
     "lat": -34.147892,
     "lon": 150.846441,
-    "ts_id": "175819042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "175815042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -113101,8 +113101,8 @@
     "name": "Wellington STP",
     "lat": -32.548775,
     "lon": 148.9251972222222,
-    "ts_id": "10761042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10762042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.84,
@@ -113312,8 +113312,8 @@
     "name": "West Hoxton",
     "lat": -33.920977,
     "lon": 150.829078,
-    "ts_id": "81850042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67630042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.01,
@@ -113523,8 +113523,8 @@
     "name": "Westmead Hospital",
     "lat": -33.799811,
     "lon": 150.988924,
-    "ts_id": "81840042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67262042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.15,
@@ -113734,8 +113734,8 @@
     "name": "Whitemans Ridge",
     "lat": -33.20350123061196,
     "lon": 151.32256803779575,
-    "ts_id": "81933042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "74549042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.09,
@@ -113945,8 +113945,8 @@
     "name": "Whytes Gully S1",
     "lat": -34.462466,
     "lon": 150.797317,
-    "ts_id": "81768042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "59540042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -114156,8 +114156,8 @@
     "name": "Williamtown (BoM Meteorological)",
     "lat": -32.79000002,
     "lon": 151.83999997413912,
-    "ts_id": "92199042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "92200042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.19,
@@ -114367,8 +114367,8 @@
     "name": "Windale No. 2 WWPS (RG)",
     "lat": -32.9899,
     "lon": 151.6917,
-    "ts_id": "169640042",
-    "ts_name": "35 - 15 min Totals",
+    "ts_id": "169634042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -114578,8 +114578,8 @@
     "name": "Wittitrin",
     "lat": -31.0852,
     "lon": 152.611,
-    "ts_id": "83816042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88856042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.36,
@@ -114789,8 +114789,8 @@
     "name": "Wollomombi",
     "lat": -30.5161,
     "lon": 152.044,
-    "ts_id": "83892042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88857042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.01,
@@ -115000,8 +115000,8 @@
     "name": "Wollongbar (Rain) (Decomm)",
     "lat": -28.817802780463445,
     "lon": 153.4171499897282,
-    "ts_id": "85903042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "85904042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.51,
@@ -115211,8 +115211,8 @@
     "name": "Wollongong Airport (Rain) (Decomm)",
     "lat": -34.568922,
     "lon": 150.789009,
-    "ts_id": "10711042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10712042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -115422,8 +115422,8 @@
     "name": "Wollumboola",
     "lat": -34.93839821340759,
     "lon": 150.76468399765042,
-    "ts_id": "80383042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "80384042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.19,
@@ -115633,8 +115633,8 @@
     "name": "Wongawilli",
     "lat": -34.479391523740475,
     "lon": 150.7487843748854,
-    "ts_id": "81817042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64568042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.36,
@@ -115844,8 +115844,8 @@
     "name": "Wongwibinda",
     "lat": -30.23419,
     "lon": 152.198558,
-    "ts_id": "180604042",
-    "ts_name": "15 min model data",
+    "ts_id": "180600042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.08,
@@ -116055,8 +116055,8 @@
     "name": "Woodcroft Centre (Rain)",
     "lat": -33.74903055555556,
     "lon": 150.8795361111111,
-    "ts_id": "11581042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11582042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.06,
@@ -116266,8 +116266,8 @@
     "name": "Woodstock Park (Rain)",
     "lat": -33.881725,
     "lon": 151.1044638888889,
-    "ts_id": "10823042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10824042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -116899,8 +116899,8 @@
     "name": "Wooli River@Caravan Park",
     "lat": -29.8517,
     "lon": 153.253,
-    "ts_id": "83890042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "88858042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.87,
@@ -117110,8 +117110,8 @@
     "name": "Wooli Sportsground RG",
     "lat": -29.858227,
     "lon": 153.266212,
-    "ts_id": "167064042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "167060042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.87,
@@ -117321,8 +117321,8 @@
     "name": "Woonona (Rain) (Decomm)",
     "lat": -34.34833333333334,
     "lon": 150.8947222222222,
-    "ts_id": "85907042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "85908042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.58,
@@ -117532,8 +117532,8 @@
     "name": "Woranora Dam AWS",
     "lat": -34.11368446888168,
     "lon": 150.9353173577483,
-    "ts_id": "81772042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "60067042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.29,
@@ -117743,8 +117743,8 @@
     "name": "Woronora Fire Brig (Rain)",
     "lat": -34.02001666666666,
     "lon": 151.0483694444444,
-    "ts_id": "11189042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11190042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.21,
@@ -117954,8 +117954,8 @@
     "name": "Woy Woy (Rainfall)",
     "lat": -33.486224,
     "lon": 151.305765,
-    "ts_id": "10631042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10632042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -118165,8 +118165,8 @@
     "name": "Woy Woy Tip Rain",
     "lat": -33.50422777777778,
     "lon": 151.2911666666667,
-    "ts_id": "81833042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "66446042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.23,
@@ -118376,8 +118376,8 @@
     "name": "WTW Arundle Dr Armidale (Rain)",
     "lat": -30.49203611111111,
     "lon": 151.6777694444444,
-    "ts_id": "11585042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11586042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.95,
@@ -118587,8 +118587,8 @@
     "name": "Wyee",
     "lat": -33.17518227030145,
     "lon": 151.4834910565317,
-    "ts_id": "81410042",
-    "ts_name": "15 Minute Model data",
+    "ts_id": "64374042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -118798,8 +118798,8 @@
     "name": "Wyndora (Rain)",
     "lat": -30.27424166666667,
     "lon": 152.8679972222222,
-    "ts_id": "10591042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10592042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.72,
@@ -119009,8 +119009,8 @@
     "name": "Wyoming",
     "lat": -33.41012419984056,
     "lon": 151.34830612830956,
-    "ts_id": "81803042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64278042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.18,
@@ -119220,8 +119220,8 @@
     "name": "Wyoming (Rain)",
     "lat": -33.417866,
     "lon": 151.359484,
-    "ts_id": "11241042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "11242042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.2,
@@ -119431,8 +119431,8 @@
     "name": "Wyong (Rain)",
     "lat": -33.290091,
     "lon": 151.423367,
-    "ts_id": "130042042",
-    "ts_name": "5m.Total",
+    "ts_id": "85906042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -119642,8 +119642,8 @@
     "name": "Wyong Olney Forest  (Rain)",
     "lat": -33.0776,
     "lon": 151.3417,
-    "ts_id": "174280042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "174282042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.05,
@@ -119853,8 +119853,8 @@
     "name": "Wyong Pool (Rain)",
     "lat": -33.285306,
     "lon": 151.428201,
-    "ts_id": "177097042",
-    "ts_name": "15 min model data",
+    "ts_id": "177093042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.24,
@@ -120064,8 +120064,8 @@
     "name": "Wyong Weir Upstream",
     "lat": -33.2778438425708,
     "lon": 151.40643005707292,
-    "ts_id": "100770042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "98102042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.22,
@@ -120275,8 +120275,8 @@
     "name": "Yalwal (Rain)",
     "lat": -34.93262097563817,
     "lon": 150.38665714266781,
-    "ts_id": "100461042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "100463042",
+    "ts_name": "10 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.97,
@@ -120486,8 +120486,8 @@
     "name": "Yamba Rainfall",
     "lat": -29.43257806231557,
     "lon": 153.3632877926486,
-    "ts_id": "81823042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "64906042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.68,
@@ -120697,8 +120697,8 @@
     "name": "Yarramalong",
     "lat": -33.225537150421154,
     "lon": 151.2708136826259,
-    "ts_id": "81934042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "74555042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.09,
@@ -120908,8 +120908,8 @@
     "name": "Yarrawarrah",
     "lat": -34.057529,
     "lon": 151.034098,
-    "ts_id": "81867042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "67902042",
+    "ts_name": "05 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.31,
@@ -121119,8 +121119,8 @@
     "name": "Yelgun Creek (ERTS)",
     "lat": -28.484836101565556,
     "lon": 153.514408300446,
-    "ts_id": "174871042",
-    "ts_name": "15m.Total",
+    "ts_id": "94395042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.64,
@@ -121330,8 +121330,8 @@
     "name": "Yellow Rock Road",
     "lat": -34.61213082005918,
     "lon": 150.74111620584654,
-    "ts_id": "81882042",
-    "ts_name": "5min_Rainfall.Total",
+    "ts_id": "71530042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.43,
@@ -121541,8 +121541,8 @@
     "name": "Zig Zag (Rain)",
     "lat": -33.470684,
     "lon": 150.198699,
-    "ts_id": "10769042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "10770042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 1.84,
