@@ -208,7 +208,8 @@
       }
     },
     "built": "2026-03-29T05:48:27.626894",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66085",
@@ -419,7 +420,8 @@
       }
     },
     "built": "2026-03-29T05:48:35.040674",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66089",
@@ -630,7 +632,8 @@
       }
     },
     "built": "2026-03-29T05:48:41.372615",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64747",
@@ -841,7 +844,8 @@
       }
     },
     "built": "2026-03-29T05:49:03.034773",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64803",
@@ -1052,7 +1056,8 @@
       }
     },
     "built": "2026-03-29T05:49:10.455319",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64807",
@@ -1263,7 +1268,8 @@
       }
     },
     "built": "2026-03-29T05:49:16.175988",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64811",
@@ -1474,7 +1480,8 @@
       }
     },
     "built": "2026-03-29T05:49:21.878160",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64831",
@@ -1685,7 +1692,8 @@
       }
     },
     "built": "2026-03-29T05:49:31.208481",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64847",
@@ -1896,7 +1904,8 @@
       }
     },
     "built": "2026-03-29T05:49:39.600778",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "55891",
@@ -2107,7 +2116,8 @@
       }
     },
     "built": "2026-03-29T05:49:48.950421",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "153352",
@@ -2318,7 +2328,8 @@
       }
     },
     "built": "2026-03-29T05:49:54.703524",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": false
   },
   {
     "station_id": "64867",
@@ -2529,7 +2540,8 @@
       }
     },
     "built": "2026-03-29T05:50:08.711220",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66769",
@@ -2740,7 +2752,8 @@
       }
     },
     "built": "2026-03-29T05:50:14.438587",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65209",
@@ -2951,7 +2964,8 @@
       }
     },
     "built": "2026-03-29T05:50:20.770011",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64871",
@@ -3162,7 +3176,8 @@
       }
     },
     "built": "2026-03-29T05:50:26.460992",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65213",
@@ -3373,7 +3388,8 @@
       }
     },
     "built": "2026-03-29T05:50:32.207086",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64875",
@@ -3584,7 +3600,8 @@
       }
     },
     "built": "2026-03-29T05:50:37.958535",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64879",
@@ -3795,7 +3812,8 @@
       }
     },
     "built": "2026-03-29T05:50:43.744977",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65321",
@@ -4006,7 +4024,8 @@
       }
     },
     "built": "2026-03-29T05:50:49.812888",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64891",
@@ -4217,7 +4236,8 @@
       }
     },
     "built": "2026-03-29T05:50:55.536634",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64895",
@@ -4428,7 +4448,8 @@
       }
     },
     "built": "2026-03-29T05:51:01.735365",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65217",
@@ -4639,7 +4660,8 @@
       }
     },
     "built": "2026-03-29T05:51:07.524291",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64899",
@@ -4850,7 +4872,8 @@
       }
     },
     "built": "2026-03-29T05:51:13.171302",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64883",
@@ -5061,7 +5084,8 @@
       }
     },
     "built": "2026-03-29T05:51:19.155716",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64887",
@@ -5272,7 +5296,8 @@
       }
     },
     "built": "2026-03-29T05:51:24.938838",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64903",
@@ -5483,7 +5508,8 @@
       }
     },
     "built": "2026-03-29T05:51:30.707335",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64907",
@@ -5694,7 +5720,8 @@
       }
     },
     "built": "2026-03-29T05:51:36.423443",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64911",
@@ -5905,7 +5932,8 @@
       }
     },
     "built": "2026-03-29T05:51:42.178041",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64915",
@@ -6116,7 +6144,8 @@
       }
     },
     "built": "2026-03-29T05:51:47.946834",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64919",
@@ -6327,7 +6356,8 @@
       }
     },
     "built": "2026-03-29T05:51:53.813494",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64923",
@@ -6538,7 +6568,8 @@
       }
     },
     "built": "2026-03-29T05:51:59.518507",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65313",
@@ -6749,7 +6780,8 @@
       }
     },
     "built": "2026-03-29T05:52:05.196647",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156748",
@@ -6960,7 +6992,8 @@
       }
     },
     "built": "2026-03-29T05:52:10.804255",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156745",
@@ -7171,7 +7204,8 @@
       }
     },
     "built": "2026-03-29T05:52:16.466390",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156742",
@@ -7382,7 +7416,8 @@
       }
     },
     "built": "2026-03-29T05:52:22.117125",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156793",
@@ -7593,7 +7628,8 @@
       }
     },
     "built": "2026-03-29T05:52:27.657335",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156704",
@@ -7804,7 +7840,8 @@
       }
     },
     "built": "2026-03-29T05:52:33.179982",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156707",
@@ -8015,7 +8052,8 @@
       }
     },
     "built": "2026-03-29T05:52:39.014154",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156796",
@@ -8226,7 +8264,8 @@
       }
     },
     "built": "2026-03-29T05:52:44.671109",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156799",
@@ -8437,7 +8476,8 @@
       }
     },
     "built": "2026-03-29T05:52:50.725240",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156692",
@@ -8648,7 +8688,8 @@
       }
     },
     "built": "2026-03-29T05:52:56.365235",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156689",
@@ -8859,7 +8900,8 @@
       }
     },
     "built": "2026-03-29T05:53:02.059538",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156720",
@@ -9070,7 +9112,8 @@
       }
     },
     "built": "2026-03-29T05:53:07.603780",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156685",
@@ -9281,7 +9324,8 @@
       }
     },
     "built": "2026-03-29T05:53:14.633666",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156698",
@@ -9492,7 +9536,8 @@
       }
     },
     "built": "2026-03-29T05:53:20.107087",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156802",
@@ -9703,7 +9748,8 @@
       }
     },
     "built": "2026-03-29T05:53:25.778348",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156695",
@@ -9914,7 +9960,8 @@
       }
     },
     "built": "2026-03-29T05:53:31.344996",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156805",
@@ -10125,7 +10172,8 @@
       }
     },
     "built": "2026-03-29T05:53:36.875239",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156888",
@@ -10336,7 +10384,8 @@
       }
     },
     "built": "2026-03-29T05:53:42.466407",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156701",
@@ -10547,7 +10596,8 @@
       }
     },
     "built": "2026-03-29T05:53:48.221295",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156761",
@@ -10758,7 +10808,8 @@
       }
     },
     "built": "2026-03-29T05:53:53.815661",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156774",
@@ -10969,7 +11020,8 @@
       }
     },
     "built": "2026-03-29T05:53:59.502130",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156777",
@@ -11180,7 +11232,8 @@
       }
     },
     "built": "2026-03-29T05:54:06.999662",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156780",
@@ -11391,7 +11444,8 @@
       }
     },
     "built": "2026-03-29T05:54:14.668307",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156723",
@@ -11602,7 +11656,8 @@
       }
     },
     "built": "2026-03-29T05:54:23.909530",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156726",
@@ -11813,7 +11868,8 @@
       }
     },
     "built": "2026-03-29T05:54:32.571285",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "156739",
@@ -12024,7 +12080,8 @@
       }
     },
     "built": "2026-03-29T05:54:40.145403",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "166139",
@@ -12235,7 +12292,8 @@
       }
     },
     "built": "2026-03-29T05:54:47.910107",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": false
   },
   {
     "station_id": "48359",
@@ -12446,7 +12504,8 @@
       }
     },
     "built": "2026-03-29T05:54:55.656990",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "118764",
@@ -12657,7 +12716,8 @@
       }
     },
     "built": "2026-03-29T06:01:09.916666",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66121",
@@ -12868,7 +12928,8 @@
       }
     },
     "built": "2026-03-29T06:01:19.750395",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65285",
@@ -13079,7 +13140,8 @@
       }
     },
     "built": "2026-03-29T06:01:29.135845",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "396673",
@@ -13290,7 +13352,8 @@
       }
     },
     "built": "2026-03-29T06:01:36.869267",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "90983",
@@ -13501,7 +13564,8 @@
       }
     },
     "built": "2026-03-29T06:01:44.840214",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "173298",
@@ -13712,7 +13776,8 @@
       }
     },
     "built": "2026-03-29T06:03:26.653061",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "55897",
@@ -13923,7 +13988,8 @@
       }
     },
     "built": "2026-03-29T06:03:33.857519",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "48378",
@@ -14134,7 +14200,8 @@
       }
     },
     "built": "2026-03-29T06:03:47.504777",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "66137",
@@ -14345,7 +14412,8 @@
       }
     },
     "built": "2026-03-29T06:03:55.876944",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66125",
@@ -14556,7 +14624,8 @@
       }
     },
     "built": "2026-03-29T06:04:04.899801",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65841",
@@ -14767,7 +14836,8 @@
       }
     },
     "built": "2026-03-29T06:04:17.422579",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "48390",
@@ -14978,7 +15048,8 @@
       }
     },
     "built": "2026-03-29T06:04:25.023104",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65167",
@@ -15189,7 +15260,8 @@
       }
     },
     "built": "2026-03-29T06:04:34.636614",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "64481",
@@ -15400,7 +15472,8 @@
       }
     },
     "built": "2026-03-29T06:04:43.063863",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "65809",
@@ -15611,7 +15684,8 @@
       }
     },
     "built": "2026-03-29T06:04:50.890561",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "166319",
@@ -15822,7 +15896,8 @@
       }
     },
     "built": "2026-03-29T06:04:58.556663",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "118776",
@@ -16033,7 +16108,8 @@
       }
     },
     "built": "2026-03-29T06:05:11.536920",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48402",
@@ -16244,7 +16320,8 @@
       }
     },
     "built": "2026-03-29T06:05:24.873100",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "48405",
@@ -16455,7 +16532,8 @@
       }
     },
     "built": "2026-03-29T06:05:40.317249",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "48411",
@@ -16666,7 +16744,8 @@
       }
     },
     "built": "2026-03-29T06:05:48.436560",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "48414",
@@ -16877,7 +16956,8 @@
       }
     },
     "built": "2026-03-29T06:05:56.166482",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48417",
@@ -17088,7 +17168,8 @@
       }
     },
     "built": "2026-03-29T06:06:12.667689",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "143168",
@@ -17299,7 +17380,8 @@
       }
     },
     "built": "2026-03-29T06:06:24.186453",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "48420",
@@ -17510,7 +17592,8 @@
       }
     },
     "built": "2026-03-29T06:06:32.016778",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "48423",
@@ -17721,7 +17804,8 @@
       }
     },
     "built": "2026-03-29T06:06:43.257811",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48426",
@@ -17932,7 +18016,8 @@
       }
     },
     "built": "2026-03-29T06:06:50.975757",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "64473",
@@ -18143,7 +18228,8 @@
       }
     },
     "built": "2026-03-29T06:06:58.597638",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64201",
@@ -18354,7 +18440,8 @@
       }
     },
     "built": "2026-03-29T06:07:09.621737",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66677",
@@ -18565,7 +18652,8 @@
       }
     },
     "built": "2026-03-29T06:07:17.351724",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "304031",
@@ -18776,7 +18864,8 @@
       }
     },
     "built": "2026-03-29T06:07:26.765691",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "153747",
@@ -18987,7 +19076,8 @@
       }
     },
     "built": "2026-03-29T06:07:34.657851",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "147668",
@@ -19198,7 +19288,8 @@
       }
     },
     "built": "2026-03-29T06:07:44.349625",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66689",
@@ -19409,7 +19500,8 @@
       }
     },
     "built": "2026-03-29T06:08:07.020728",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "48435",
@@ -19620,7 +19712,8 @@
       }
     },
     "built": "2026-03-29T06:08:16.389768",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48438",
@@ -19831,7 +19924,8 @@
       }
     },
     "built": "2026-03-29T06:08:25.503502",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48441",
@@ -20042,7 +20136,8 @@
       }
     },
     "built": "2026-03-29T06:08:33.342711",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "119803",
@@ -20253,7 +20348,8 @@
       }
     },
     "built": "2026-03-29T06:08:44.340165",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "55909",
@@ -20464,7 +20560,8 @@
       }
     },
     "built": "2026-03-29T06:08:58.007494",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "48447",
@@ -20675,7 +20772,8 @@
       }
     },
     "built": "2026-03-29T06:09:05.782545",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "48450",
@@ -20886,7 +20984,8 @@
       }
     },
     "built": "2026-03-29T06:09:13.461437",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "104546",
@@ -21097,7 +21196,8 @@
       }
     },
     "built": "2026-03-29T06:09:37.757759",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65179",
@@ -21308,7 +21408,8 @@
       }
     },
     "built": "2026-03-29T06:10:15.628905",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": false
   },
   {
     "station_id": "199515",
@@ -21519,7 +21620,8 @@
       }
     },
     "built": "2026-03-29T06:10:25.614237",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": true
   },
   {
     "station_id": "64485",
@@ -21730,7 +21832,8 @@
       }
     },
     "built": "2026-03-29T06:10:37.927739",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "132160",
@@ -21941,7 +22044,8 @@
       }
     },
     "built": "2026-03-29T06:10:50.406354",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65155",
@@ -22152,7 +22256,8 @@
       }
     },
     "built": "2026-03-29T06:10:58.481949",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "48466",
@@ -22363,7 +22468,8 @@
       }
     },
     "built": "2026-03-29T06:11:06.216629",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "160873",
@@ -22574,7 +22680,8 @@
       }
     },
     "built": "2026-03-29T06:11:17.668167",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66065",
@@ -22785,7 +22892,8 @@
       }
     },
     "built": "2026-03-29T06:11:29.129793",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "65711",
@@ -22996,7 +23104,8 @@
       }
     },
     "built": "2026-03-29T06:11:40.633188",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "48472",
@@ -23207,7 +23316,8 @@
       }
     },
     "built": "2026-03-29T06:11:56.938904",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "106120",
@@ -23418,7 +23528,8 @@
       }
     },
     "built": "2026-03-29T06:12:27.380931",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "66159",
@@ -23629,7 +23740,8 @@
       }
     },
     "built": "2026-03-29T06:12:42.359173",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "55918",
@@ -23840,7 +23952,8 @@
       }
     },
     "built": "2026-03-29T06:12:53.785402",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48484",
@@ -24051,7 +24164,8 @@
       }
     },
     "built": "2026-03-29T06:13:07.003693",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "160885",
@@ -24262,7 +24376,8 @@
       }
     },
     "built": "2026-03-29T06:13:17.685694",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48487",
@@ -24473,7 +24588,8 @@
       }
     },
     "built": "2026-03-29T06:13:30.811653",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "104540",
@@ -24684,7 +24800,8 @@
       }
     },
     "built": "2026-03-29T06:13:42.392025",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "160882",
@@ -24895,7 +25012,8 @@
       }
     },
     "built": "2026-03-29T06:14:04.721564",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "458636",
@@ -25106,7 +25224,8 @@
       }
     },
     "built": "2026-03-29T06:14:29.847437",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "104537",
@@ -25317,7 +25436,8 @@
       }
     },
     "built": "2026-03-29T06:14:59.349872",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104651",
@@ -25528,7 +25648,8 @@
       }
     },
     "built": "2026-03-29T06:15:21.659964",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "118772",
@@ -25739,7 +25860,8 @@
       }
     },
     "built": "2026-03-29T06:15:29.642278",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "118770",
@@ -25950,7 +26072,8 @@
       }
     },
     "built": "2026-03-29T06:15:38.050575",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "118760",
@@ -26161,7 +26284,8 @@
       }
     },
     "built": "2026-03-29T06:15:46.410363",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66701",
@@ -26372,7 +26496,8 @@
       }
     },
     "built": "2026-03-29T06:15:56.675221",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48508",
@@ -26583,7 +26708,8 @@
       }
     },
     "built": "2026-03-29T06:16:41.721130",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": false
   },
   {
     "station_id": "55930",
@@ -26794,7 +26920,8 @@
       }
     },
     "built": "2026-03-29T06:16:53.458036",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48511",
@@ -27005,7 +27132,8 @@
       }
     },
     "built": "2026-03-29T06:17:05.867212",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48514",
@@ -27216,7 +27344,8 @@
       }
     },
     "built": "2026-03-29T06:17:12.638566",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "307866",
@@ -27427,7 +27556,8 @@
       }
     },
     "built": "2026-03-29T06:17:18.950846",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48517",
@@ -27638,7 +27768,8 @@
       }
     },
     "built": "2026-03-29T06:17:44.378505",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "329908",
@@ -27849,7 +27980,8 @@
       }
     },
     "built": "2026-03-29T06:17:51.963827",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48520",
@@ -28060,7 +28192,8 @@
       }
     },
     "built": "2026-03-29T06:17:58.655752",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "191333",
@@ -28271,7 +28404,8 @@
       }
     },
     "built": "2026-03-29T06:18:04.657483",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64233",
@@ -28482,7 +28616,8 @@
       }
     },
     "built": "2026-03-29T06:18:09.061127",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48526",
@@ -28693,7 +28828,8 @@
       }
     },
     "built": "2026-03-29T06:18:16.791273",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48532",
@@ -28904,7 +29040,8 @@
       }
     },
     "built": "2026-03-29T06:18:22.517482",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "303951",
@@ -29115,7 +29252,8 @@
       }
     },
     "built": "2026-03-29T06:18:28.308377",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "303986",
@@ -29326,7 +29464,8 @@
       }
     },
     "built": "2026-03-29T06:18:39.694576",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48535",
@@ -29537,7 +29676,8 @@
       }
     },
     "built": "2026-03-29T06:18:57.686899",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "140626",
@@ -29748,7 +29888,8 @@
       }
     },
     "built": "2026-03-29T06:19:04.526422",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "48538",
@@ -29959,7 +30100,8 @@
       }
     },
     "built": "2026-03-29T06:19:16.836747",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48541",
@@ -30170,7 +30312,8 @@
       }
     },
     "built": "2026-03-29T06:19:22.980159",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48544",
@@ -30381,7 +30524,8 @@
       }
     },
     "built": "2026-03-29T06:19:36.305730",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "48553",
@@ -30592,7 +30736,8 @@
       }
     },
     "built": "2026-03-29T06:19:57.214831",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "48562",
@@ -30803,7 +30948,8 @@
       }
     },
     "built": "2026-03-29T06:20:03.093562",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66141",
@@ -31014,7 +31160,8 @@
       }
     },
     "built": "2026-03-29T06:20:09.888769",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "48571",
@@ -31225,7 +31372,8 @@
       }
     },
     "built": "2026-03-29T06:20:17.703191",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": false
   },
   {
     "station_id": "65965",
@@ -31436,7 +31584,8 @@
       }
     },
     "built": "2026-03-29T06:20:23.416552",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "66685",
@@ -31647,7 +31796,8 @@
       }
     },
     "built": "2026-03-29T06:20:30.187562",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "55939",
@@ -31858,7 +32008,8 @@
       }
     },
     "built": "2026-03-29T06:20:43.609250",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "546634",
@@ -32069,7 +32220,8 @@
       }
     },
     "built": "2026-03-29T06:20:50.285231",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "168470",
@@ -32280,7 +32432,8 @@
       }
     },
     "built": "2026-03-29T06:20:57.111562",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "48583",
@@ -32491,7 +32644,8 @@
       }
     },
     "built": "2026-03-29T06:21:02.891118",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "66113",
@@ -32702,7 +32856,8 @@
       }
     },
     "built": "2026-03-29T06:21:09.828177",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "130612",
@@ -32913,7 +33068,8 @@
       }
     },
     "built": "2026-03-29T06:21:15.635443",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "458640",
@@ -33124,7 +33280,8 @@
       }
     },
     "built": "2026-03-29T06:21:22.440487",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "65723",
@@ -33335,7 +33492,8 @@
       }
     },
     "built": "2026-03-29T06:21:29.622607",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "48589",
@@ -33546,7 +33704,8 @@
       }
     },
     "built": "2026-03-29T06:21:36.461220",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "396677",
@@ -33757,7 +33916,8 @@
       }
     },
     "built": "2026-03-29T06:22:02.445244",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65651",
@@ -33968,7 +34128,8 @@
       }
     },
     "built": "2026-03-29T06:22:08.393049",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66601",
@@ -34179,7 +34340,8 @@
       }
     },
     "built": "2026-03-29T06:22:17.113187",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "150080",
@@ -34390,7 +34552,8 @@
       }
     },
     "built": "2026-03-29T06:22:28.803621",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "55957",
@@ -34601,7 +34764,8 @@
       }
     },
     "built": "2026-03-29T06:22:55.833603",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48598",
@@ -34812,7 +34976,8 @@
       }
     },
     "built": "2026-03-29T06:23:21.249437",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "55960",
@@ -35023,7 +35188,8 @@
       }
     },
     "built": "2026-03-29T06:23:37.800922",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "378931",
@@ -35234,7 +35400,8 @@
       }
     },
     "built": "2026-03-29T06:23:45.670553",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104564",
@@ -35445,7 +35612,8 @@
       }
     },
     "built": "2026-03-29T06:23:53.802765",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64517",
@@ -35656,7 +35824,8 @@
       }
     },
     "built": "2026-03-29T06:24:01.782007",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "202999",
@@ -35867,7 +36036,8 @@
       }
     },
     "built": "2026-03-29T06:24:15.894769",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66129",
@@ -36078,7 +36248,8 @@
       }
     },
     "built": "2026-03-29T06:24:23.897558",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "546638",
@@ -36289,7 +36460,8 @@
       }
     },
     "built": "2026-03-29T06:25:26.275879",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48619",
@@ -36500,7 +36672,8 @@
       }
     },
     "built": "2026-03-29T06:26:00.800432",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "312621",
@@ -36711,7 +36884,8 @@
       }
     },
     "built": "2026-03-29T06:26:19.830030",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "48622",
@@ -36922,7 +37096,8 @@
       }
     },
     "built": "2026-03-29T06:26:27.537017",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "131071",
@@ -37133,7 +37308,8 @@
       }
     },
     "built": "2026-03-29T06:26:35.643469",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "50629",
@@ -37344,7 +37520,8 @@
       }
     },
     "built": "2026-03-29T06:26:45.278203",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48628",
@@ -37555,7 +37732,8 @@
       }
     },
     "built": "2026-03-29T06:26:53.269594",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "66743",
@@ -37766,7 +37944,8 @@
       }
     },
     "built": "2026-03-29T06:27:08.923187",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "196724",
@@ -37977,7 +38156,8 @@
       }
     },
     "built": "2026-03-29T06:27:16.914874",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "149795",
@@ -38188,7 +38368,8 @@
       }
     },
     "built": "2026-03-29T06:27:24.987458",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "55966",
@@ -38399,7 +38580,8 @@
       }
     },
     "built": "2026-03-29T06:27:32.890127",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "378926",
@@ -38610,7 +38792,8 @@
       }
     },
     "built": "2026-03-29T06:27:44.516533",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104728",
@@ -38821,7 +39004,8 @@
       }
     },
     "built": "2026-03-29T06:28:06.149483",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48634",
@@ -39032,7 +39216,8 @@
       }
     },
     "built": "2026-03-29T06:28:13.911059",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66661",
@@ -39243,7 +39428,8 @@
       }
     },
     "built": "2026-03-29T06:28:37.211903",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48643",
@@ -39454,7 +39640,8 @@
       }
     },
     "built": "2026-03-29T06:28:58.479986",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65535",
@@ -39665,7 +39852,8 @@
       }
     },
     "built": "2026-03-29T06:29:12.127120",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "65237",
@@ -39876,7 +40064,8 @@
       }
     },
     "built": "2026-03-29T06:29:24.007276",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48453",
@@ -40087,7 +40276,8 @@
       }
     },
     "built": "2026-03-29T06:29:35.625462",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65659",
@@ -40298,7 +40488,8 @@
       }
     },
     "built": "2026-03-29T06:29:49.673604",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "50706",
@@ -40509,7 +40700,8 @@
       }
     },
     "built": "2026-03-29T06:30:02.811169",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "106121",
@@ -40720,7 +40912,8 @@
       }
     },
     "built": "2026-03-29T06:30:18.796437",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "70130",
@@ -40931,7 +41124,8 @@
       }
     },
     "built": "2026-03-29T06:30:44.300977",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66535",
@@ -41142,7 +41336,8 @@
       }
     },
     "built": "2026-03-29T06:30:52.009630",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48652",
@@ -41353,7 +41548,8 @@
       }
     },
     "built": "2026-03-29T06:30:59.746501",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65647",
@@ -41564,7 +41760,8 @@
       }
     },
     "built": "2026-03-29T06:31:15.538548",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48658",
@@ -41775,7 +41972,8 @@
       }
     },
     "built": "2026-03-29T06:31:23.668380",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": false
   },
   {
     "station_id": "199527",
@@ -41986,7 +42184,8 @@
       }
     },
     "built": "2026-03-29T06:31:31.593191",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "104555",
@@ -42197,7 +42396,8 @@
       }
     },
     "built": "2026-03-29T06:31:39.641051",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48661",
@@ -42408,7 +42608,8 @@
       }
     },
     "built": "2026-03-29T06:31:47.878460",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "55969",
@@ -42619,7 +42820,8 @@
       }
     },
     "built": "2026-03-29T06:32:28.563696",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "55972",
@@ -42830,7 +43032,8 @@
       }
     },
     "built": "2026-03-29T06:32:38.847358",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "48670",
@@ -43041,7 +43244,8 @@
       }
     },
     "built": "2026-03-29T06:32:48.722319",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "48676",
@@ -43252,7 +43456,8 @@
       }
     },
     "built": "2026-03-29T06:33:02.688377",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "166304",
@@ -43463,7 +43668,8 @@
       }
     },
     "built": "2026-03-29T06:33:12.457135",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": true
   },
   {
     "station_id": "48685",
@@ -43674,7 +43880,8 @@
       }
     },
     "built": "2026-03-29T06:33:20.308668",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "108158",
@@ -43885,7 +44092,8 @@
       }
     },
     "built": "2026-03-29T06:33:31.497165",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66163",
@@ -44096,7 +44304,8 @@
       }
     },
     "built": "2026-03-29T06:33:43.077846",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "48694",
@@ -44307,7 +44516,8 @@
       }
     },
     "built": "2026-03-29T06:33:50.767777",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "66053",
@@ -44518,7 +44728,8 @@
       }
     },
     "built": "2026-03-29T06:34:04.510227",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66155",
@@ -44729,7 +44940,8 @@
       }
     },
     "built": "2026-03-29T06:34:12.358253",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "104997",
@@ -44940,7 +45152,8 @@
       }
     },
     "built": "2026-03-29T06:34:22.232687",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48703",
@@ -45151,7 +45364,8 @@
       }
     },
     "built": "2026-03-29T06:34:30.127137",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64599",
@@ -45362,7 +45576,8 @@
       }
     },
     "built": "2026-03-29T06:34:41.963763",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "150156",
@@ -45573,7 +45788,8 @@
       }
     },
     "built": "2026-03-29T06:35:05.680370",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "150161",
@@ -45784,7 +46000,8 @@
       }
     },
     "built": "2026-03-29T06:35:13.711807",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65603",
@@ -45995,7 +46212,8 @@
       }
     },
     "built": "2026-03-29T06:35:31.720956",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "48712",
@@ -46206,7 +46424,8 @@
       }
     },
     "built": "2026-03-29T06:35:39.732311",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": false
   },
   {
     "station_id": "396631",
@@ -46417,7 +46636,8 @@
       }
     },
     "built": "2026-03-29T06:35:51.630441",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48715",
@@ -46628,7 +46848,8 @@
       }
     },
     "built": "2026-03-29T06:36:01.374737",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "131362",
@@ -46839,7 +47060,8 @@
       }
     },
     "built": "2026-03-29T06:36:15.034970",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "48724",
@@ -47050,7 +47272,8 @@
       }
     },
     "built": "2026-03-29T06:36:26.949598",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "168842",
@@ -47261,7 +47484,8 @@
       }
     },
     "built": "2026-03-29T06:36:38.896049",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "48727",
@@ -47472,7 +47696,8 @@
       }
     },
     "built": "2026-03-29T06:36:46.745903",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "103036",
@@ -47683,7 +47908,8 @@
       }
     },
     "built": "2026-03-29T06:37:00.707281",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "258708",
@@ -47691,8 +47917,8 @@
     "name": "Gears (Wyong River)",
     "lat": -33.251105,
     "lon": 151.314952,
-    "ts_id": "174826042",
-    "ts_name": "00 - Continuous.O",
+    "ts_id": "174830042",
+    "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
         "63.2%": 2.12,
@@ -47894,7 +48120,8 @@
       }
     },
     "built": "2026-03-29T06:37:10.809095",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "104752",
@@ -48105,7 +48332,8 @@
       }
     },
     "built": "2026-03-29T06:37:28.845479",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48733",
@@ -48316,7 +48544,8 @@
       }
     },
     "built": "2026-03-29T06:37:40.928507",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "48736",
@@ -48527,7 +48756,8 @@
       }
     },
     "built": "2026-03-29T06:37:48.821187",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48745",
@@ -48738,7 +48968,8 @@
       }
     },
     "built": "2026-03-29T06:37:57.957670",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "104755",
@@ -48746,8 +48977,8 @@
     "name": "Gleniffer (ERTS)",
     "lat": -30.3883,
     "lon": 152.8817,
-    "ts_id": "88835042",
-    "ts_name": "10 - Continuous.P",
+    "ts_id": "169556042",
+    "ts_name": "ObserverReadings",
     "ifd": {
       "1": {
         "63.2%": 2.77,
@@ -48949,7 +49180,8 @@
       }
     },
     "built": "2026-03-29T06:38:05.839183",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "56005",
@@ -49160,7 +49392,8 @@
       }
     },
     "built": "2026-03-29T06:38:27.437992",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "69450",
@@ -49371,7 +49604,8 @@
       }
     },
     "built": "2026-03-29T06:38:37.331172",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "64489",
@@ -49582,7 +49816,8 @@
       }
     },
     "built": "2026-03-29T06:38:45.107577",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "152885",
@@ -49793,7 +50028,8 @@
       }
     },
     "built": "2026-03-29T06:39:00.765551",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "117719",
@@ -50004,7 +50240,8 @@
       }
     },
     "built": "2026-03-29T06:39:08.606283",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "64575",
@@ -50215,7 +50452,8 @@
       }
     },
     "built": "2026-03-29T06:39:24.475138",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64269",
@@ -50426,7 +50664,8 @@
       }
     },
     "built": "2026-03-29T06:39:38.020174",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "56008",
@@ -50637,7 +50876,8 @@
       }
     },
     "built": "2026-03-29T06:39:45.915205",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48761",
@@ -50848,7 +51088,8 @@
       }
     },
     "built": "2026-03-29T06:39:53.640574",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66117",
@@ -51059,7 +51300,8 @@
       }
     },
     "built": "2026-03-29T06:40:01.679597",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "104539",
@@ -51270,7 +51512,8 @@
       }
     },
     "built": "2026-03-29T06:40:19.904200",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48776",
@@ -51481,7 +51724,8 @@
       }
     },
     "built": "2026-03-29T06:40:28.024386",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65715",
@@ -51692,7 +51936,8 @@
       }
     },
     "built": "2026-03-29T06:40:42.388297",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "152889",
@@ -51903,7 +52148,8 @@
       }
     },
     "built": "2026-03-29T06:40:50.400736",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "56017",
@@ -52114,7 +52360,8 @@
       }
     },
     "built": "2026-03-29T06:41:11.171789",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66499",
@@ -52325,7 +52572,8 @@
       }
     },
     "built": "2026-03-29T06:42:57.496805",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66765",
@@ -52536,7 +52784,8 @@
       }
     },
     "built": "2026-03-29T06:43:05.548455",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "66763",
@@ -52747,7 +52996,8 @@
       }
     },
     "built": "2026-03-29T06:43:13.547274",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "66761",
@@ -52958,7 +53208,8 @@
       }
     },
     "built": "2026-03-29T06:43:21.683300",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "66759",
@@ -53169,7 +53420,8 @@
       }
     },
     "built": "2026-03-29T06:43:29.768449",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "66757",
@@ -53380,7 +53632,8 @@
       }
     },
     "built": "2026-03-29T06:43:37.790363",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "187870",
@@ -53591,7 +53844,8 @@
       }
     },
     "built": "2026-03-29T06:43:45.821957",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "64607",
@@ -53802,7 +54056,8 @@
       }
     },
     "built": "2026-03-29T06:44:04.333493",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": true
   },
   {
     "station_id": "56026",
@@ -54013,7 +54268,8 @@
       }
     },
     "built": "2026-03-29T06:44:12.402966",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "152881",
@@ -54224,7 +54480,8 @@
       }
     },
     "built": "2026-03-29T06:44:20.777582",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48786",
@@ -54435,7 +54692,8 @@
       }
     },
     "built": "2026-03-29T06:44:50.491058",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "104994",
@@ -54646,7 +54904,8 @@
       }
     },
     "built": "2026-03-29T06:44:58.614389",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "51136",
@@ -54857,7 +55116,8 @@
       }
     },
     "built": "2026-03-29T06:45:06.400623",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66149",
@@ -55068,7 +55328,8 @@
       }
     },
     "built": "2026-03-29T06:45:14.381777",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66699",
@@ -55279,7 +55540,8 @@
       }
     },
     "built": "2026-03-29T06:45:22.380988",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": true
   },
   {
     "station_id": "132182",
@@ -55490,7 +55752,8 @@
       }
     },
     "built": "2026-03-29T06:45:30.676989",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66579",
@@ -55701,7 +55964,8 @@
       }
     },
     "built": "2026-03-29T06:45:49.566318",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48801",
@@ -55912,7 +56176,8 @@
       }
     },
     "built": "2026-03-29T06:45:58.621907",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "65655",
@@ -56123,7 +56388,8 @@
       }
     },
     "built": "2026-03-29T06:46:06.692067",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66625",
@@ -56334,7 +56600,8 @@
       }
     },
     "built": "2026-03-29T06:46:16.869433",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48813",
@@ -56545,7 +56812,8 @@
       }
     },
     "built": "2026-03-29T06:46:27.131706",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66097",
@@ -56756,7 +57024,8 @@
       }
     },
     "built": "2026-03-29T06:46:39.442773",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64285",
@@ -56967,7 +57236,8 @@
       }
     },
     "built": "2026-03-29T06:47:01.963929",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "393537",
@@ -57178,7 +57448,8 @@
       }
     },
     "built": "2026-03-29T06:47:14.052308",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48819",
@@ -57389,7 +57660,8 @@
       }
     },
     "built": "2026-03-29T06:47:40.720963",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "119801",
@@ -57600,7 +57872,8 @@
       }
     },
     "built": "2026-03-29T06:48:43.493763",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "157767",
@@ -57811,7 +58084,8 @@
       }
     },
     "built": "2026-03-29T06:49:07.329622",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "546630",
@@ -58022,7 +58296,8 @@
       }
     },
     "built": "2026-03-29T06:49:17.169774",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "71198",
@@ -58233,7 +58508,8 @@
       }
     },
     "built": "2026-03-29T06:49:25.065668",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "48822",
@@ -58444,7 +58720,8 @@
       }
     },
     "built": "2026-03-29T06:49:33.111136",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65953",
@@ -58655,7 +58932,8 @@
       }
     },
     "built": "2026-03-29T06:49:39.024441",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "48825",
@@ -58866,7 +59144,8 @@
       }
     },
     "built": "2026-03-29T06:49:45.084906",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "48828",
@@ -59077,7 +59356,8 @@
       }
     },
     "built": "2026-03-29T06:49:52.897006",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65833",
@@ -59288,7 +59568,8 @@
       }
     },
     "built": "2026-03-29T06:49:58.738984",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64469",
@@ -59499,7 +59780,8 @@
       }
     },
     "built": "2026-03-29T06:50:08.856947",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "66515",
@@ -59710,7 +59992,8 @@
       }
     },
     "built": "2026-03-29T06:50:31.797249",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66171",
@@ -59921,7 +60204,8 @@
       }
     },
     "built": "2026-03-29T06:50:39.776202",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "56041",
@@ -60132,7 +60416,8 @@
       }
     },
     "built": "2026-03-29T06:50:47.901101",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65807",
@@ -60343,7 +60628,8 @@
       }
     },
     "built": "2026-03-29T06:51:00.264291",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104548",
@@ -60554,7 +60840,8 @@
       }
     },
     "built": "2026-03-29T06:51:16.555683",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66073",
@@ -60765,7 +61052,8 @@
       }
     },
     "built": "2026-03-29T06:51:26.864340",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "66069",
@@ -60976,7 +61264,8 @@
       }
     },
     "built": "2026-03-29T06:51:36.885935",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "329914",
@@ -61187,7 +61476,8 @@
       }
     },
     "built": "2026-03-29T06:52:03.565733",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64289",
@@ -61398,7 +61688,8 @@
       }
     },
     "built": "2026-03-29T06:52:11.717914",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "182813",
@@ -61609,7 +61900,8 @@
       }
     },
     "built": "2026-03-29T06:52:19.949453",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "104757",
@@ -61820,7 +62112,8 @@
       }
     },
     "built": "2026-03-29T06:52:34.143834",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "197843",
@@ -62031,7 +62324,8 @@
       }
     },
     "built": "2026-03-29T06:52:42.179456",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "546642",
@@ -62242,7 +62536,8 @@
       }
     },
     "built": "2026-03-29T06:52:52.242506",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "48858",
@@ -62453,7 +62748,8 @@
       }
     },
     "built": "2026-03-29T06:53:06.720554",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": false
   },
   {
     "station_id": "66681",
@@ -62664,7 +62960,8 @@
       }
     },
     "built": "2026-03-29T06:53:14.843526",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "286245",
@@ -62875,7 +63172,8 @@
       }
     },
     "built": "2026-03-29T06:53:23.016244",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "130613",
@@ -63086,7 +63384,8 @@
       }
     },
     "built": "2026-03-29T06:53:41.832837",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64615",
@@ -63297,7 +63596,8 @@
       }
     },
     "built": "2026-03-29T06:53:50.007031",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65301",
@@ -63305,7 +63605,7 @@
     "name": "Lake Conjola",
     "lat": -35.26845659112697,
     "lon": 150.4983711027508,
-    "ts_id": "60663042",
+    "ts_id": "165712042",
     "ts_name": "00 - Continuous.P",
     "ifd": {
       "1": {
@@ -63508,7 +63808,8 @@
       }
     },
     "built": "2026-03-29T06:54:02.377040",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "180014",
@@ -63719,7 +64020,8 @@
       }
     },
     "built": "2026-03-29T06:54:12.645582",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "173533",
@@ -63930,7 +64232,8 @@
       }
     },
     "built": "2026-03-29T06:54:48.558512",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": false
   },
   {
     "station_id": "353075",
@@ -64141,7 +64444,8 @@
       }
     },
     "built": "2026-03-29T06:54:56.813302",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "65297",
@@ -64352,7 +64656,8 @@
       }
     },
     "built": "2026-03-29T06:55:04.805996",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66145",
@@ -64563,7 +64868,8 @@
       }
     },
     "built": "2026-03-29T06:55:15.261327",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64305",
@@ -64774,7 +65080,8 @@
       }
     },
     "built": "2026-03-29T06:55:34.065629",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48883",
@@ -64985,7 +65292,8 @@
       }
     },
     "built": "2026-03-29T06:55:48.577195",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65707",
@@ -65196,7 +65504,8 @@
       }
     },
     "built": "2026-03-29T06:56:09.216990",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "64317",
@@ -65407,7 +65716,8 @@
       }
     },
     "built": "2026-03-29T06:56:30.265883",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "153184",
@@ -65618,7 +65928,8 @@
       }
     },
     "built": "2026-03-29T06:56:42.522045",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64321",
@@ -65829,7 +66140,8 @@
       }
     },
     "built": "2026-03-29T06:57:17.415563",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64325",
@@ -66040,7 +66352,8 @@
       }
     },
     "built": "2026-03-29T06:57:25.194288",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "48901",
@@ -66251,7 +66564,8 @@
       }
     },
     "built": "2026-03-29T06:57:33.376708",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "48907",
@@ -66462,7 +66776,8 @@
       }
     },
     "built": "2026-03-29T06:57:45.448527",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": false
   },
   {
     "station_id": "51439",
@@ -66673,7 +66988,8 @@
       }
     },
     "built": "2026-03-29T06:58:10.169507",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "173505",
@@ -66884,7 +67200,8 @@
       }
     },
     "built": "2026-03-29T06:59:11.754300",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": true
   },
   {
     "station_id": "66669",
@@ -67095,7 +67412,8 @@
       }
     },
     "built": "2026-03-29T06:59:26.096781",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66713",
@@ -67306,7 +67624,8 @@
       }
     },
     "built": "2026-03-29T06:59:36.570013",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "233271",
@@ -67517,7 +67836,8 @@
       }
     },
     "built": "2026-03-29T06:59:46.468706",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "131915",
@@ -67728,7 +68048,8 @@
       }
     },
     "built": "2026-03-29T06:59:54.451405",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "64189",
@@ -67939,7 +68260,8 @@
       }
     },
     "built": "2026-03-29T07:00:04.427662",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "66511",
@@ -68150,7 +68472,8 @@
       }
     },
     "built": "2026-03-29T07:00:54.092484",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "48932",
@@ -68361,7 +68684,8 @@
       }
     },
     "built": "2026-03-29T07:01:05.272666",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66709",
@@ -68572,7 +68896,8 @@
       }
     },
     "built": "2026-03-29T07:01:21.829720",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "56080",
@@ -68783,7 +69108,8 @@
       }
     },
     "built": "2026-03-29T07:01:31.734273",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48941",
@@ -68994,7 +69320,8 @@
       }
     },
     "built": "2026-03-29T07:01:40.125989",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": false
   },
   {
     "station_id": "48944",
@@ -69205,7 +69532,8 @@
       }
     },
     "built": "2026-03-29T07:01:48.401757",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": false
   },
   {
     "station_id": "378101",
@@ -69416,7 +69744,8 @@
       }
     },
     "built": "2026-03-29T07:02:02.543969",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66133",
@@ -69627,7 +69956,8 @@
       }
     },
     "built": "2026-03-29T07:02:10.542617",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64723",
@@ -69838,7 +70168,8 @@
       }
     },
     "built": "2026-03-29T07:02:31.522003",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "548224",
@@ -70049,7 +70380,8 @@
       }
     },
     "built": "2026-03-29T07:02:39.580011",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65753",
@@ -70260,7 +70592,8 @@
       }
     },
     "built": "2026-03-29T07:02:49.581051",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65543",
@@ -70471,7 +70804,8 @@
       }
     },
     "built": "2026-03-29T07:02:57.746817",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "104545",
@@ -70682,7 +71016,8 @@
       }
     },
     "built": "2026-03-29T07:03:16.654250",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66105",
@@ -70893,7 +71228,8 @@
       }
     },
     "built": "2026-03-29T07:03:24.892881",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65103",
@@ -71104,7 +71440,8 @@
       }
     },
     "built": "2026-03-29T07:03:35.246451",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66093",
@@ -71315,7 +71652,8 @@
       }
     },
     "built": "2026-03-29T07:03:45.260973",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "104713",
@@ -71526,7 +71864,8 @@
       }
     },
     "built": "2026-03-29T07:03:55.248663",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66519",
@@ -71737,7 +72076,8 @@
       }
     },
     "built": "2026-03-29T07:04:03.197091",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "48977",
@@ -71948,7 +72288,8 @@
       }
     },
     "built": "2026-03-29T07:04:13.039483",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "48983",
@@ -72159,7 +72500,8 @@
       }
     },
     "built": "2026-03-29T07:04:21.080258",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "65163",
@@ -72370,7 +72712,8 @@
       }
     },
     "built": "2026-03-29T07:04:29.079158",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "548598",
@@ -72581,7 +72924,8 @@
       }
     },
     "built": "2026-03-29T07:04:37.143454",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104459",
@@ -72589,8 +72933,8 @@
     "name": "Moparrabah",
     "lat": -30.980200038568007,
     "lon": 152.50200002202183,
-    "ts_id": "88841042",
-    "ts_name": "10 - Continuous.P",
+    "ts_id": "169580042",
+    "ts_name": "ObserverReadings",
     "ifd": {
       "1": {
         "63.2%": 2.37,
@@ -72792,7 +73136,8 @@
       }
     },
     "built": "2026-03-29T07:05:08.124935",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "545244",
@@ -73003,7 +73348,8 @@
       }
     },
     "built": "2026-03-29T07:05:16.057741",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "48986",
@@ -73214,7 +73560,8 @@
       }
     },
     "built": "2026-03-29T07:05:34.498004",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "202118",
@@ -73425,7 +73772,8 @@
       }
     },
     "built": "2026-03-29T07:06:13.963007",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "56092",
@@ -73636,7 +73984,8 @@
       }
     },
     "built": "2026-03-29T07:06:22.004538",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "56089",
@@ -73847,7 +74196,8 @@
       }
     },
     "built": "2026-03-29T07:06:30.090672",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "49010",
@@ -74058,7 +74408,8 @@
       }
     },
     "built": "2026-03-29T07:06:38.054702",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "51659",
@@ -74269,7 +74620,8 @@
       }
     },
     "built": "2026-03-29T07:06:46.173402",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "160879",
@@ -74480,7 +74832,8 @@
       }
     },
     "built": "2026-03-29T07:06:53.868775",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49016",
@@ -74691,7 +75044,8 @@
       }
     },
     "built": "2026-03-29T07:06:59.805052",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66077",
@@ -74902,7 +75256,8 @@
       }
     },
     "built": "2026-03-29T07:07:05.561145",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "65229",
@@ -75113,7 +75468,8 @@
       }
     },
     "built": "2026-03-29T07:07:18.388689",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65767",
@@ -75324,7 +75680,8 @@
       }
     },
     "built": "2026-03-29T07:07:24.350043",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "546622",
@@ -75535,7 +75892,8 @@
       }
     },
     "built": "2026-03-29T07:07:30.206628",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49001",
@@ -75746,7 +76104,8 @@
       }
     },
     "built": "2026-03-29T07:07:36.022142",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "49019",
@@ -75957,7 +76316,8 @@
       }
     },
     "built": "2026-03-29T07:07:44.974062",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48864",
@@ -76168,7 +76528,8 @@
       }
     },
     "built": "2026-03-29T07:07:50.895535",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "65785",
@@ -76379,7 +76740,8 @@
       }
     },
     "built": "2026-03-29T07:07:56.753270",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66491",
@@ -76590,7 +76952,8 @@
       }
     },
     "built": "2026-03-29T07:08:02.676284",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "152907",
@@ -76801,7 +77164,8 @@
       }
     },
     "built": "2026-03-29T07:08:08.574352",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "130611",
@@ -77012,7 +77376,8 @@
       }
     },
     "built": "2026-03-29T07:08:21.307356",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "396669",
@@ -77223,7 +77588,8 @@
       }
     },
     "built": "2026-03-29T07:08:28.211126",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "194929",
@@ -77434,7 +77800,8 @@
       }
     },
     "built": "2026-03-29T07:08:33.960997",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "56104",
@@ -77645,7 +78012,8 @@
       }
     },
     "built": "2026-03-29T07:08:41.742007",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "56107",
@@ -77856,7 +78224,8 @@
       }
     },
     "built": "2026-03-29T07:08:48.724485",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "340005",
@@ -78067,7 +78436,8 @@
       }
     },
     "built": "2026-03-29T07:08:54.452806",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "66673",
@@ -78278,7 +78648,8 @@
       }
     },
     "built": "2026-03-29T07:09:12.151842",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64345",
@@ -78489,7 +78860,8 @@
       }
     },
     "built": "2026-03-29T07:09:18.167931",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "191315",
@@ -78700,7 +79072,8 @@
       }
     },
     "built": "2026-03-29T07:09:22.656505",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65719",
@@ -78911,7 +79284,8 @@
       }
     },
     "built": "2026-03-29T07:09:43.566891",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "65663",
@@ -79122,7 +79496,8 @@
       }
     },
     "built": "2026-03-29T07:10:06.003979",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "56113",
@@ -79333,7 +79708,8 @@
       }
     },
     "built": "2026-03-29T07:10:29.826173",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "56116",
@@ -79544,7 +79920,8 @@
       }
     },
     "built": "2026-03-29T07:10:36.634744",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "56119",
@@ -79755,7 +80132,8 @@
       }
     },
     "built": "2026-03-29T07:10:42.569358",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "173431",
@@ -79966,7 +80344,8 @@
       }
     },
     "built": "2026-03-29T07:10:55.412209",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "65755",
@@ -80177,7 +80556,8 @@
       }
     },
     "built": "2026-03-29T07:11:04.012826",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "54328",
@@ -80388,7 +80768,8 @@
       }
     },
     "built": "2026-03-29T07:11:13.050431",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "160870",
@@ -80599,7 +80980,8 @@
       }
     },
     "built": "2026-03-29T07:11:19.490016",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "257464",
@@ -80810,7 +81192,8 @@
       }
     },
     "built": "2026-03-29T07:11:25.284225",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "166324",
@@ -81021,7 +81404,8 @@
       }
     },
     "built": "2026-03-29T07:11:32.204302",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "65749",
@@ -81232,7 +81616,8 @@
       }
     },
     "built": "2026-03-29T07:11:38.182425",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65973",
@@ -81443,7 +81828,8 @@
       }
     },
     "built": "2026-03-29T07:11:47.212089",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "49074",
@@ -81654,7 +82040,8 @@
       }
     },
     "built": "2026-03-29T07:11:54.868692",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "66597",
@@ -81865,7 +82252,8 @@
       }
     },
     "built": "2026-03-29T07:12:00.606227",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49080",
@@ -82076,7 +82464,8 @@
       }
     },
     "built": "2026-03-29T07:12:06.372474",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "64647",
@@ -82287,7 +82676,8 @@
       }
     },
     "built": "2026-03-29T07:12:12.318774",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49083",
@@ -82498,7 +82888,8 @@
       }
     },
     "built": "2026-03-29T07:12:18.038474",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49086",
@@ -82709,7 +83100,8 @@
       }
     },
     "built": "2026-03-29T07:12:24.744208",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65977",
@@ -82920,7 +83312,8 @@
       }
     },
     "built": "2026-03-29T07:12:32.745471",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "65845",
@@ -83131,7 +83524,8 @@
       }
     },
     "built": "2026-03-29T07:12:39.674688",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "49098",
@@ -83342,7 +83736,8 @@
       }
     },
     "built": "2026-03-29T07:12:45.505864",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64983",
@@ -83553,7 +83948,8 @@
       }
     },
     "built": "2026-03-29T07:12:51.241307",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66605",
@@ -83764,7 +84160,8 @@
       }
     },
     "built": "2026-03-29T07:12:58.146530",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "56140",
@@ -83975,7 +84372,8 @@
       }
     },
     "built": "2026-03-29T07:13:44.540227",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "49104",
@@ -84186,7 +84584,8 @@
       }
     },
     "built": "2026-03-29T07:13:51.280315",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "66057",
@@ -84397,7 +84796,8 @@
       }
     },
     "built": "2026-03-29T07:13:58.051596",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66483",
@@ -84608,7 +85008,8 @@
       }
     },
     "built": "2026-03-29T07:14:04.039536",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66487",
@@ -84819,7 +85220,8 @@
       }
     },
     "built": "2026-03-29T07:14:09.871515",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "191327",
@@ -85030,7 +85432,8 @@
       }
     },
     "built": "2026-03-29T07:14:20.690163",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "146608",
@@ -85241,7 +85644,8 @@
       }
     },
     "built": "2026-03-29T07:14:25.280805",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "142412",
@@ -85452,7 +85856,8 @@
       }
     },
     "built": "2026-03-29T07:14:31.095411",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "231911",
@@ -85663,7 +86068,8 @@
       }
     },
     "built": "2026-03-29T07:14:42.121405",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "49116",
@@ -85874,7 +86280,8 @@
       }
     },
     "built": "2026-03-29T07:14:48.998079",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65961",
@@ -86085,7 +86492,8 @@
       }
     },
     "built": "2026-03-29T07:15:06.123638",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65837",
@@ -86296,7 +86704,8 @@
       }
     },
     "built": "2026-03-29T07:15:13.028916",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64377",
@@ -86507,7 +86916,8 @@
       }
     },
     "built": "2026-03-29T07:15:20.031717",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "49128",
@@ -86718,7 +87128,8 @@
       }
     },
     "built": "2026-03-29T07:15:26.819183",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65955",
@@ -86929,7 +87340,8 @@
       }
     },
     "built": "2026-03-29T07:15:35.636626",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "69534",
@@ -87140,7 +87552,8 @@
       }
     },
     "built": "2026-03-29T07:15:41.444824",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "65969",
@@ -87351,7 +87764,8 @@
       }
     },
     "built": "2026-03-29T07:15:53.282176",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": true
   },
   {
     "station_id": "49137",
@@ -87562,7 +87976,8 @@
       }
     },
     "built": "2026-03-29T07:16:00.295278",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49134",
@@ -87773,7 +88188,8 @@
       }
     },
     "built": "2026-03-29T07:16:06.058191",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65743",
@@ -87984,7 +88400,8 @@
       }
     },
     "built": "2026-03-29T07:16:12.882710",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104716",
@@ -88195,7 +88612,8 @@
       }
     },
     "built": "2026-03-29T07:16:18.633994",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "49140",
@@ -88406,7 +88824,8 @@
       }
     },
     "built": "2026-03-29T07:16:24.551555",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "200026",
@@ -88617,7 +89036,8 @@
       }
     },
     "built": "2026-03-29T07:16:32.414570",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66593",
@@ -88828,7 +89248,8 @@
       }
     },
     "built": "2026-03-29T07:16:54.974145",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "119799",
@@ -89039,7 +89460,8 @@
       }
     },
     "built": "2026-03-29T07:17:16.071783",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "49152",
@@ -89250,7 +89672,8 @@
       }
     },
     "built": "2026-03-29T07:17:24.938091",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49155",
@@ -89461,7 +89884,8 @@
       }
     },
     "built": "2026-03-29T07:17:31.478159",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "104538",
@@ -89672,7 +90096,8 @@
       }
     },
     "built": "2026-03-29T07:17:37.372682",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49158",
@@ -89883,7 +90308,8 @@
       }
     },
     "built": "2026-03-29T07:17:43.167415",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64703",
@@ -90094,7 +90520,8 @@
       }
     },
     "built": "2026-03-29T07:17:49.992747",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "56161",
@@ -90305,7 +90732,8 @@
       }
     },
     "built": "2026-03-29T07:17:58.066897",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65123",
@@ -90516,7 +90944,8 @@
       }
     },
     "built": "2026-03-29T07:18:04.886328",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "52034",
@@ -90727,7 +91156,8 @@
       }
     },
     "built": "2026-03-29T07:18:10.743960",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66109",
@@ -90938,7 +91368,8 @@
       }
     },
     "built": "2026-03-29T07:18:17.527998",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "175730",
@@ -91149,7 +91580,8 @@
       }
     },
     "built": "2026-03-29T07:18:24.443618",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "175747",
@@ -91360,7 +91792,8 @@
       }
     },
     "built": "2026-03-29T07:18:30.246219",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "175745",
@@ -91571,7 +92004,8 @@
       }
     },
     "built": "2026-03-29T07:18:36.083681",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "175748",
@@ -91782,7 +92216,8 @@
       }
     },
     "built": "2026-03-29T07:18:41.902043",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "175743",
@@ -91993,7 +92428,8 @@
       }
     },
     "built": "2026-03-29T07:18:47.877205",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "175746",
@@ -92204,7 +92640,8 @@
       }
     },
     "built": "2026-03-29T07:18:53.727462",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "175749",
@@ -92415,7 +92852,8 @@
       }
     },
     "built": "2026-03-29T07:18:59.512843",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "175744",
@@ -92626,7 +93064,8 @@
       }
     },
     "built": "2026-03-29T07:19:05.307048",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "175729",
@@ -92837,7 +93276,8 @@
       }
     },
     "built": "2026-03-29T07:19:13.720344",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65483",
@@ -93048,7 +93488,8 @@
       }
     },
     "built": "2026-03-29T07:19:25.322763",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104758",
@@ -93259,7 +93700,8 @@
       }
     },
     "built": "2026-03-29T07:19:33.352647",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "70083",
@@ -93470,7 +93912,8 @@
       }
     },
     "built": "2026-03-29T07:19:42.019491",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65265",
@@ -93681,7 +94124,8 @@
       }
     },
     "built": "2026-03-29T07:19:48.471094",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "118774",
@@ -93892,7 +94336,8 @@
       }
     },
     "built": "2026-03-29T07:19:57.402533",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "56170",
@@ -94103,7 +94548,8 @@
       }
     },
     "built": "2026-03-29T07:20:04.228411",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65739",
@@ -94314,7 +94760,8 @@
       }
     },
     "built": "2026-03-29T07:20:34.264524",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "174017",
@@ -94525,7 +94972,8 @@
       }
     },
     "built": "2026-03-29T07:20:41.235958",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": false
   },
   {
     "station_id": "152928",
@@ -94736,7 +95184,8 @@
       }
     },
     "built": "2026-03-29T07:20:49.286652",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "49206",
@@ -94947,7 +95396,8 @@
       }
     },
     "built": "2026-03-29T07:20:58.399726",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66503",
@@ -95158,7 +95608,8 @@
       }
     },
     "built": "2026-03-29T07:21:04.984397",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49218",
@@ -95369,7 +95820,8 @@
       }
     },
     "built": "2026-03-29T07:21:12.885175",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "65771",
@@ -95580,7 +96032,8 @@
       }
     },
     "built": "2026-03-29T07:21:18.874213",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49230",
@@ -95791,7 +96244,8 @@
       }
     },
     "built": "2026-03-29T07:21:27.935963",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64501",
@@ -96002,7 +96456,8 @@
       }
     },
     "built": "2026-03-29T07:21:34.916120",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "104748",
@@ -96213,7 +96668,8 @@
       }
     },
     "built": "2026-03-29T07:21:57.358201",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64513",
@@ -96424,7 +96880,8 @@
       }
     },
     "built": "2026-03-29T07:22:16.605596",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64521",
@@ -96635,7 +97092,8 @@
       }
     },
     "built": "2026-03-29T07:22:22.362286",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "104556",
@@ -96846,7 +97304,8 @@
       }
     },
     "built": "2026-03-29T07:22:28.215964",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66175",
@@ -97057,7 +97516,8 @@
       }
     },
     "built": "2026-03-29T07:22:36.153660",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "104562",
@@ -97268,7 +97728,8 @@
       }
     },
     "built": "2026-03-29T07:22:41.948940",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66495",
@@ -97479,7 +97940,8 @@
       }
     },
     "built": "2026-03-29T07:22:50.861681",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "52172",
@@ -97690,7 +98152,8 @@
       }
     },
     "built": "2026-03-29T07:22:56.853956",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "49260",
@@ -97901,7 +98364,8 @@
       }
     },
     "built": "2026-03-29T07:23:02.706613",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "49263",
@@ -98112,7 +98576,8 @@
       }
     },
     "built": "2026-03-29T07:23:08.924092",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65747",
@@ -98323,7 +98788,8 @@
       }
     },
     "built": "2026-03-29T07:23:19.965698",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104759",
@@ -98534,7 +99000,8 @@
       }
     },
     "built": "2026-03-29T07:23:26.725184",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "54180",
@@ -98745,7 +99212,8 @@
       }
     },
     "built": "2026-03-29T07:24:01.274906",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49270",
@@ -98956,7 +99424,8 @@
       }
     },
     "built": "2026-03-29T07:24:08.037240",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "153740",
@@ -99167,7 +99636,8 @@
       }
     },
     "built": "2026-03-29T07:24:14.946767",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49276",
@@ -99378,7 +99848,8 @@
       }
     },
     "built": "2026-03-29T07:24:20.883416",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65751",
@@ -99589,7 +100060,8 @@
       }
     },
     "built": "2026-03-29T07:24:26.750979",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "141148",
@@ -99800,7 +100272,8 @@
       }
     },
     "built": "2026-03-29T07:24:38.823523",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "49294",
@@ -100011,7 +100484,8 @@
       }
     },
     "built": "2026-03-29T07:24:45.708022",
-    "lga": "Lane Cove"
+    "lga": "Lane Cove",
+    "active": false
   },
   {
     "station_id": "118762",
@@ -100222,7 +100696,8 @@
       }
     },
     "built": "2026-03-29T07:24:51.567956",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "118766",
@@ -100433,7 +100908,8 @@
       }
     },
     "built": "2026-03-29T07:24:57.388685",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66151",
@@ -100644,7 +101120,8 @@
       }
     },
     "built": "2026-03-29T07:25:03.207618",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "49303",
@@ -100855,7 +101332,8 @@
       }
     },
     "built": "2026-03-29T07:25:11.206358",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "49309",
@@ -101066,7 +101544,8 @@
       }
     },
     "built": "2026-03-29T07:25:17.027261",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": false
   },
   {
     "station_id": "56203",
@@ -101277,7 +101756,8 @@
       }
     },
     "built": "2026-03-29T07:25:23.851058",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "118768",
@@ -101488,7 +101968,8 @@
       }
     },
     "built": "2026-03-29T07:25:29.645763",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "71201",
@@ -101699,7 +102180,8 @@
       }
     },
     "built": "2026-03-29T07:25:35.670859",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "71199",
@@ -101910,7 +102392,8 @@
       }
     },
     "built": "2026-03-29T07:25:47.655346",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "65781",
@@ -102121,7 +102604,8 @@
       }
     },
     "built": "2026-03-29T07:25:53.664386",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64185",
@@ -102332,7 +102816,8 @@
       }
     },
     "built": "2026-03-29T07:25:59.669888",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "304026",
@@ -102543,7 +103028,8 @@
       }
     },
     "built": "2026-03-29T07:26:07.567347",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "199521",
@@ -102754,7 +103240,8 @@
       }
     },
     "built": "2026-03-29T07:26:37.002237",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "49336",
@@ -102965,7 +103452,8 @@
       }
     },
     "built": "2026-03-29T07:26:52.282382",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "378935",
@@ -103176,7 +103664,8 @@
       }
     },
     "built": "2026-03-29T07:27:00.479999",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64399",
@@ -103387,7 +103876,8 @@
       }
     },
     "built": "2026-03-29T07:27:06.343739",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104749",
@@ -103598,7 +104088,8 @@
       }
     },
     "built": "2026-03-29T07:27:19.376650",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64527",
@@ -103809,7 +104300,8 @@
       }
     },
     "built": "2026-03-29T07:27:28.340431",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "66061",
@@ -104020,7 +104512,8 @@
       }
     },
     "built": "2026-03-29T07:27:40.817541",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "49348",
@@ -104231,7 +104724,8 @@
       }
     },
     "built": "2026-03-29T07:27:52.869632",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "104753",
@@ -104442,7 +104936,8 @@
       }
     },
     "built": "2026-03-29T07:27:58.802748",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "49351",
@@ -104653,7 +105148,8 @@
       }
     },
     "built": "2026-03-29T07:28:05.759379",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "56218",
@@ -104864,7 +105360,8 @@
       }
     },
     "built": "2026-03-29T07:28:11.396366",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "153744",
@@ -105075,7 +105572,8 @@
       }
     },
     "built": "2026-03-29T07:28:18.232894",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104543",
@@ -105286,7 +105784,8 @@
       }
     },
     "built": "2026-03-29T07:28:23.950854",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64415",
@@ -105497,7 +105996,8 @@
       }
     },
     "built": "2026-03-29T07:28:34.686860",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "49360",
@@ -105708,7 +106208,8 @@
       }
     },
     "built": "2026-03-29T07:28:48.582951",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49366",
@@ -105919,7 +106420,8 @@
       }
     },
     "built": "2026-03-29T07:28:54.361705",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "64535",
@@ -106130,7 +106632,8 @@
       }
     },
     "built": "2026-03-29T07:29:03.110283",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "56224",
@@ -106341,7 +106844,8 @@
       }
     },
     "built": "2026-03-29T07:29:18.186213",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "132171",
@@ -106552,7 +107056,8 @@
       }
     },
     "built": "2026-03-29T07:29:28.037803",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "152869",
@@ -106763,7 +107268,8 @@
       }
     },
     "built": "2026-03-29T07:29:39.878357",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "64423",
@@ -106974,7 +107480,8 @@
       }
     },
     "built": "2026-03-29T07:29:46.702418",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "184014",
@@ -107185,7 +107692,8 @@
       }
     },
     "built": "2026-03-29T07:29:51.157712",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64999",
@@ -107396,7 +107904,8 @@
       }
     },
     "built": "2026-03-29T07:29:56.994250",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64427",
@@ -107607,7 +108116,8 @@
       }
     },
     "built": "2026-03-29T07:30:03.899141",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "191321",
@@ -107818,7 +108328,8 @@
       }
     },
     "built": "2026-03-29T07:30:09.646442",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "179201",
@@ -108029,7 +108540,8 @@
       }
     },
     "built": "2026-03-29T07:30:14.098588",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104568",
@@ -108240,7 +108752,8 @@
       }
     },
     "built": "2026-03-29T07:30:20.984734",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "546626",
@@ -108451,7 +108964,8 @@
       }
     },
     "built": "2026-03-29T07:30:55.305991",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49381",
@@ -108662,7 +109176,8 @@
       }
     },
     "built": "2026-03-29T07:31:02.086157",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66527",
@@ -108873,7 +109388,8 @@
       }
     },
     "built": "2026-03-29T07:31:16.070361",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "132265",
@@ -109084,7 +109600,8 @@
       }
     },
     "built": "2026-03-29T07:31:24.444875",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104751",
@@ -109295,7 +109812,8 @@
       }
     },
     "built": "2026-03-29T07:31:34.393018",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "546650",
@@ -109506,7 +110024,8 @@
       }
     },
     "built": "2026-03-29T07:31:40.156960",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "130610",
@@ -109717,7 +110236,8 @@
       }
     },
     "built": "2026-03-29T07:31:48.116461",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49387",
@@ -109928,7 +110448,8 @@
       }
     },
     "built": "2026-03-29T07:32:00.915992",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "64539",
@@ -110139,7 +110660,8 @@
       }
     },
     "built": "2026-03-29T07:32:11.079219",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "104553",
@@ -110350,7 +110872,8 @@
       }
     },
     "built": "2026-03-29T07:32:16.946500",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "201318",
@@ -110561,7 +111084,8 @@
       }
     },
     "built": "2026-03-29T07:32:26.162515",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49399",
@@ -110772,7 +111296,8 @@
       }
     },
     "built": "2026-03-29T07:32:33.519236",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49402",
@@ -110983,7 +111508,8 @@
       }
     },
     "built": "2026-03-29T07:32:39.577932",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": false
   },
   {
     "station_id": "168855",
@@ -111194,7 +111720,8 @@
       }
     },
     "built": "2026-03-29T07:32:45.321687",
-    "lga": "Ku-ring-gai"
+    "lga": "Ku-ring-gai",
+    "active": true
   },
   {
     "station_id": "104541",
@@ -111405,7 +111932,8 @@
       }
     },
     "built": "2026-03-29T07:32:51.153920",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65805",
@@ -111616,7 +112144,8 @@
       }
     },
     "built": "2026-03-29T07:33:30.785449",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "166329",
@@ -111827,7 +112356,8 @@
       }
     },
     "built": "2026-03-29T07:33:36.721172",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": true
   },
   {
     "station_id": "49411",
@@ -112038,7 +112568,8 @@
       }
     },
     "built": "2026-03-29T07:33:47.614846",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "152253",
@@ -112249,7 +112780,8 @@
       }
     },
     "built": "2026-03-29T07:33:55.557933",
-    "lga": "Northern Beaches"
+    "lga": "Northern Beaches",
+    "active": true
   },
   {
     "station_id": "231945",
@@ -112460,7 +112992,8 @@
       }
     },
     "built": "2026-03-29T07:34:03.456993",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "546646",
@@ -112671,7 +113204,8 @@
       }
     },
     "built": "2026-03-29T07:34:13.322786",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65427",
@@ -112882,7 +113416,8 @@
       }
     },
     "built": "2026-03-29T07:34:20.266611",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "303991",
@@ -113093,7 +113628,8 @@
       }
     },
     "built": "2026-03-29T07:34:25.968008",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": true
   },
   {
     "station_id": "49417",
@@ -113304,7 +113840,8 @@
       }
     },
     "built": "2026-03-29T07:34:31.735430",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66101",
@@ -113515,7 +114052,8 @@
       }
     },
     "built": "2026-03-29T07:34:40.699201",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "66049",
@@ -113726,7 +114264,8 @@
       }
     },
     "built": "2026-03-29T07:34:49.544191",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "71202",
@@ -113937,7 +114476,8 @@
       }
     },
     "built": "2026-03-29T07:34:58.447349",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "65205",
@@ -114148,7 +114688,8 @@
       }
     },
     "built": "2026-03-29T07:35:08.253917",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "126314",
@@ -114359,7 +114900,8 @@
       }
     },
     "built": "2026-03-29T07:35:16.260782",
-    "lga": "Hunter Valley"
+    "lga": "Hunter Valley",
+    "active": false
   },
   {
     "station_id": "199500",
@@ -114570,7 +115112,8 @@
       }
     },
     "built": "2026-03-29T07:35:26.214053",
-    "lga": "Newcastle"
+    "lga": "Newcastle",
+    "active": true
   },
   {
     "station_id": "104570",
@@ -114781,7 +115324,8 @@
       }
     },
     "built": "2026-03-29T07:35:40.486987",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "104542",
@@ -114992,7 +115536,8 @@
       }
     },
     "built": "2026-03-29T07:35:46.421551",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "108159",
@@ -115203,7 +115748,8 @@
       }
     },
     "built": "2026-03-29T07:35:52.181178",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "48366",
@@ -115414,7 +115960,8 @@
       }
     },
     "built": "2026-03-29T07:35:57.977639",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65241",
@@ -115625,7 +116172,8 @@
       }
     },
     "built": "2026-03-29T07:36:03.894492",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65759",
@@ -115836,7 +116384,8 @@
       }
     },
     "built": "2026-03-29T07:36:19.858940",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "522902",
@@ -116047,7 +116596,8 @@
       }
     },
     "built": "2026-03-29T07:36:26.566818",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "56269",
@@ -116258,7 +116808,8 @@
       }
     },
     "built": "2026-03-29T07:36:33.348523",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49462",
@@ -116469,7 +117020,8 @@
       }
     },
     "built": "2026-03-29T07:36:40.548199",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "200598",
@@ -116680,7 +117232,8 @@
       }
     },
     "built": "2026-03-29T07:36:50.652913",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "64457",
@@ -116891,7 +117444,8 @@
       }
     },
     "built": "2026-03-29T07:36:56.483029",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "104754",
@@ -117102,7 +117656,8 @@
       }
     },
     "built": "2026-03-29T07:37:03.327587",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "198004",
@@ -117313,7 +117868,8 @@
       }
     },
     "built": "2026-03-29T07:37:09.216687",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "108161",
@@ -117524,7 +118080,8 @@
       }
     },
     "built": "2026-03-29T07:37:26.445320",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65221",
@@ -117735,7 +118292,8 @@
       }
     },
     "built": "2026-03-29T07:37:32.254849",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49471",
@@ -117946,7 +118504,8 @@
       }
     },
     "built": "2026-03-29T07:37:39.110878",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "49474",
@@ -118157,7 +118716,8 @@
       }
     },
     "built": "2026-03-29T07:37:44.961129",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "65957",
@@ -118368,7 +118928,8 @@
       }
     },
     "built": "2026-03-29T07:37:50.897504",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "56275",
@@ -118579,7 +119140,8 @@
       }
     },
     "built": "2026-03-29T07:37:58.440509",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65727",
@@ -118790,7 +119352,8 @@
       }
     },
     "built": "2026-03-29T07:38:05.228627",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "49480",
@@ -119001,7 +119564,8 @@
       }
     },
     "built": "2026-03-29T07:38:12.044250",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "65703",
@@ -119212,7 +119776,8 @@
       }
     },
     "built": "2026-03-29T07:38:17.741041",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "49483",
@@ -119423,7 +119988,8 @@
       }
     },
     "built": "2026-03-29T07:38:23.436576",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "108160",
@@ -119634,7 +120200,8 @@
       }
     },
     "built": "2026-03-29T07:38:30.396734",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "231978",
@@ -119845,7 +120412,8 @@
       }
     },
     "built": "2026-03-29T07:38:37.267111",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "352860",
@@ -120056,7 +120624,8 @@
       }
     },
     "built": "2026-03-29T07:38:43.145686",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "142308",
@@ -120267,7 +120836,8 @@
       }
     },
     "built": "2026-03-29T07:38:53.250026",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": false
   },
   {
     "station_id": "152923",
@@ -120478,7 +121048,8 @@
       }
     },
     "built": "2026-03-29T07:39:00.135126",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "65803",
@@ -120689,7 +121260,8 @@
       }
     },
     "built": "2026-03-29T07:39:09.225944",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "71200",
@@ -120900,7 +121472,8 @@
       }
     },
     "built": "2026-03-29T07:39:15.128049",
-    "lga": "Central Coast"
+    "lga": "Central Coast",
+    "active": true
   },
   {
     "station_id": "66167",
@@ -121111,7 +121684,8 @@
       }
     },
     "built": "2026-03-29T07:39:23.133460",
-    "lga": "Greater Sydney West"
+    "lga": "Greater Sydney West",
+    "active": false
   },
   {
     "station_id": "131073",
@@ -121322,7 +121896,8 @@
       }
     },
     "built": "2026-03-29T07:39:29.006208",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   },
   {
     "station_id": "66539",
@@ -121533,7 +122108,8 @@
       }
     },
     "built": "2026-03-29T07:39:35.979644",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": true
   },
   {
     "station_id": "49504",
@@ -121744,6 +122320,7 @@
       }
     },
     "built": "2026-03-29T07:39:41.880651",
-    "lga": "NSW Other"
+    "lga": "NSW Other",
+    "active": false
   }
 ]
