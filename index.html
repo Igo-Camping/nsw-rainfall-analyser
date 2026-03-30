@@ -695,7 +695,7 @@ function getNbcSubStations() {
   const nbcStations = allStations.filter(s => getLGA(s) === 'Northern Beaches');
   if (sub === 'standard') {
     // Standard 15 - search ALL stations (including inactive) so we always show them
-    return allStationsAll.filter(s => NBC_STANDARD_15.includes(s.name));
+    return allStations.filter(s => NBC_STANDARD_15.includes(s.name));
   }
   if (sub === 'north')    return nbcStations.filter(s => NBC_NORTH.includes(s.name));
   if (sub === 'south')    return nbcStations.filter(s => NBC_SOUTH.includes(s.name));
