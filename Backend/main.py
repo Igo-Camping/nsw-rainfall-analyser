@@ -391,7 +391,9 @@ def get_stations(
             "lat":        s["lat"],
             "lon":        s["lon"],
             "ts_id":      s["ts_id"],
-            "has_ifd":    s.get("ifd") is not None
+            "has_ifd":    s.get("ifd") is not None,
+            "lga":        s.get("lga", "Unknown"),
+            "active":     s.get("active", True)
         })
 
     return {"count": len(result), "stations": result}
