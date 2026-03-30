@@ -208,7 +208,7 @@
       }
     },
     "built": "2026-03-29T05:48:27.626894",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -844,7 +844,7 @@
       }
     },
     "built": "2026-03-29T05:49:03.034773",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -1056,7 +1056,7 @@
       }
     },
     "built": "2026-03-29T05:49:10.455319",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -1268,7 +1268,7 @@
       }
     },
     "built": "2026-03-29T05:49:16.175988",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -1480,7 +1480,7 @@
       }
     },
     "built": "2026-03-29T05:49:21.878160",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -1904,7 +1904,7 @@
       }
     },
     "built": "2026-03-29T05:49:39.600778",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -2116,7 +2116,7 @@
       }
     },
     "built": "2026-03-29T05:49:48.950421",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -2328,7 +2328,7 @@
       }
     },
     "built": "2026-03-29T05:49:54.703524",
-    "lga": "Hunter Valley",
+    "lga": "Newcastle",
     "active": false
   },
   {
@@ -2540,7 +2540,7 @@
       }
     },
     "built": "2026-03-29T05:50:08.711220",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -2752,7 +2752,7 @@
       }
     },
     "built": "2026-03-29T05:50:14.438587",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -2964,7 +2964,7 @@
       }
     },
     "built": "2026-03-29T05:50:20.770011",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -3176,7 +3176,7 @@
       }
     },
     "built": "2026-03-29T05:50:26.460992",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -3388,7 +3388,7 @@
       }
     },
     "built": "2026-03-29T05:50:32.207086",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -3812,7 +3812,7 @@
       }
     },
     "built": "2026-03-29T05:50:43.744977",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -4448,7 +4448,7 @@
       }
     },
     "built": "2026-03-29T05:51:01.735365",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -4660,7 +4660,7 @@
       }
     },
     "built": "2026-03-29T05:51:07.524291",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -4872,7 +4872,7 @@
       }
     },
     "built": "2026-03-29T05:51:13.171302",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -5084,7 +5084,7 @@
       }
     },
     "built": "2026-03-29T05:51:19.155716",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -5296,7 +5296,7 @@
       }
     },
     "built": "2026-03-29T05:51:24.938838",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -5720,7 +5720,7 @@
       }
     },
     "built": "2026-03-29T05:51:36.423443",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -5932,7 +5932,7 @@
       }
     },
     "built": "2026-03-29T05:51:42.178041",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -6144,7 +6144,7 @@
       }
     },
     "built": "2026-03-29T05:51:47.946834",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -6356,7 +6356,7 @@
       }
     },
     "built": "2026-03-29T05:51:53.813494",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -6568,7 +6568,7 @@
       }
     },
     "built": "2026-03-29T05:51:59.518507",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -6780,7 +6780,7 @@
       }
     },
     "built": "2026-03-29T05:52:05.196647",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -12292,7 +12292,7 @@
       }
     },
     "built": "2026-03-29T05:54:47.910107",
-    "lga": "Hunter Valley",
+    "lga": "Newcastle",
     "active": false
   },
   {
@@ -12504,7 +12504,7 @@
       }
     },
     "built": "2026-03-29T05:54:55.656990",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -12716,7 +12716,7 @@
       }
     },
     "built": "2026-03-29T06:01:09.916666",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -12928,7 +12928,7 @@
       }
     },
     "built": "2026-03-29T06:01:19.750395",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -13352,7 +13352,7 @@
       }
     },
     "built": "2026-03-29T06:01:36.869267",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -13564,7 +13564,7 @@
       }
     },
     "built": "2026-03-29T06:01:44.840214",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -13776,7 +13776,7 @@
       }
     },
     "built": "2026-03-29T06:03:26.653061",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -13988,7 +13988,7 @@
       }
     },
     "built": "2026-03-29T06:03:33.857519",
-    "lga": "Greater Sydney West",
+    "lga": "Central Coast",
     "active": false
   },
   {
@@ -14200,7 +14200,7 @@
       }
     },
     "built": "2026-03-29T06:03:47.504777",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -14412,7 +14412,7 @@
       }
     },
     "built": "2026-03-29T06:03:55.876944",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -14624,7 +14624,7 @@
       }
     },
     "built": "2026-03-29T06:04:04.899801",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -14836,7 +14836,7 @@
       }
     },
     "built": "2026-03-29T06:04:17.422579",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -15048,7 +15048,7 @@
       }
     },
     "built": "2026-03-29T06:04:25.023104",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -15896,7 +15896,7 @@
       }
     },
     "built": "2026-03-29T06:04:58.556663",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -16108,7 +16108,7 @@
       }
     },
     "built": "2026-03-29T06:05:11.536920",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -16956,7 +16956,7 @@
       }
     },
     "built": "2026-03-29T06:05:56.166482",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -17168,7 +17168,7 @@
       }
     },
     "built": "2026-03-29T06:06:12.667689",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -17380,7 +17380,7 @@
       }
     },
     "built": "2026-03-29T06:06:24.186453",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -18440,7 +18440,7 @@
       }
     },
     "built": "2026-03-29T06:07:09.621737",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -18652,7 +18652,7 @@
       }
     },
     "built": "2026-03-29T06:07:17.351724",
-    "lga": "Hunter Valley",
+    "lga": "Newcastle",
     "active": true
   },
   {
@@ -18864,7 +18864,7 @@
       }
     },
     "built": "2026-03-29T06:07:26.765691",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -19712,7 +19712,7 @@
       }
     },
     "built": "2026-03-29T06:08:16.389768",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -19924,7 +19924,7 @@
       }
     },
     "built": "2026-03-29T06:08:25.503502",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -20136,7 +20136,7 @@
       }
     },
     "built": "2026-03-29T06:08:33.342711",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -21196,7 +21196,7 @@
       }
     },
     "built": "2026-03-29T06:09:37.757759",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -21408,7 +21408,7 @@
       }
     },
     "built": "2026-03-29T06:10:15.628905",
-    "lga": "Newcastle",
+    "lga": "Hunter Valley",
     "active": false
   },
   {
@@ -21620,7 +21620,7 @@
       }
     },
     "built": "2026-03-29T06:10:25.614237",
-    "lga": "Newcastle",
+    "lga": "Hunter Valley",
     "active": true
   },
   {
@@ -22044,7 +22044,7 @@
       }
     },
     "built": "2026-03-29T06:10:50.406354",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -23316,7 +23316,7 @@
       }
     },
     "built": "2026-03-29T06:11:56.938904",
-    "lga": "Northern Beaches",
+    "lga": "Ku-ring-gai",
     "active": false
   },
   {
@@ -23740,7 +23740,7 @@
       }
     },
     "built": "2026-03-29T06:12:42.359173",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -23952,7 +23952,7 @@
       }
     },
     "built": "2026-03-29T06:12:53.785402",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -24164,7 +24164,7 @@
       }
     },
     "built": "2026-03-29T06:13:07.003693",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -24588,7 +24588,7 @@
       }
     },
     "built": "2026-03-29T06:13:30.811653",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -24800,7 +24800,7 @@
       }
     },
     "built": "2026-03-29T06:13:42.392025",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -25224,7 +25224,7 @@
       }
     },
     "built": "2026-03-29T06:14:29.847437",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -25436,7 +25436,7 @@
       }
     },
     "built": "2026-03-29T06:14:59.349872",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -25648,7 +25648,7 @@
       }
     },
     "built": "2026-03-29T06:15:21.659964",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -25860,7 +25860,7 @@
       }
     },
     "built": "2026-03-29T06:15:29.642278",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -26072,7 +26072,7 @@
       }
     },
     "built": "2026-03-29T06:15:38.050575",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -26284,7 +26284,7 @@
       }
     },
     "built": "2026-03-29T06:15:46.410363",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -26496,7 +26496,7 @@
       }
     },
     "built": "2026-03-29T06:15:56.675221",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -26920,7 +26920,7 @@
       }
     },
     "built": "2026-03-29T06:16:53.458036",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -27132,7 +27132,7 @@
       }
     },
     "built": "2026-03-29T06:17:05.867212",
-    "lga": "NSW Other",
+    "lga": "Central Coast",
     "active": false
   },
   {
@@ -27768,7 +27768,7 @@
       }
     },
     "built": "2026-03-29T06:17:44.378505",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -27980,7 +27980,7 @@
       }
     },
     "built": "2026-03-29T06:17:51.963827",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -28192,7 +28192,7 @@
       }
     },
     "built": "2026-03-29T06:17:58.655752",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -28828,7 +28828,7 @@
       }
     },
     "built": "2026-03-29T06:18:16.791273",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -29040,7 +29040,7 @@
       }
     },
     "built": "2026-03-29T06:18:22.517482",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -29252,7 +29252,7 @@
       }
     },
     "built": "2026-03-29T06:18:28.308377",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -29464,7 +29464,7 @@
       }
     },
     "built": "2026-03-29T06:18:39.694576",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -29676,7 +29676,7 @@
       }
     },
     "built": "2026-03-29T06:18:57.686899",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -30100,7 +30100,7 @@
       }
     },
     "built": "2026-03-29T06:19:16.836747",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -30524,7 +30524,7 @@
       }
     },
     "built": "2026-03-29T06:19:36.305730",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -30736,7 +30736,7 @@
       }
     },
     "built": "2026-03-29T06:19:57.214831",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -30948,7 +30948,7 @@
       }
     },
     "built": "2026-03-29T06:20:03.093562",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -31160,7 +31160,7 @@
       }
     },
     "built": "2026-03-29T06:20:09.888769",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -31584,7 +31584,7 @@
       }
     },
     "built": "2026-03-29T06:20:23.416552",
-    "lga": "Ku-ring-gai",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -31796,7 +31796,7 @@
       }
     },
     "built": "2026-03-29T06:20:30.187562",
-    "lga": "NSW Other",
+    "lga": "Hunter Valley",
     "active": false
   },
   {
@@ -32008,7 +32008,7 @@
       }
     },
     "built": "2026-03-29T06:20:43.609250",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -32432,7 +32432,7 @@
       }
     },
     "built": "2026-03-29T06:20:57.111562",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": true
   },
   {
@@ -32644,7 +32644,7 @@
       }
     },
     "built": "2026-03-29T06:21:02.891118",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -32856,7 +32856,7 @@
       }
     },
     "built": "2026-03-29T06:21:09.828177",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -33068,7 +33068,7 @@
       }
     },
     "built": "2026-03-29T06:21:15.635443",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -33280,7 +33280,7 @@
       }
     },
     "built": "2026-03-29T06:21:22.440487",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -33916,7 +33916,7 @@
       }
     },
     "built": "2026-03-29T06:22:02.445244",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -34128,7 +34128,7 @@
       }
     },
     "built": "2026-03-29T06:22:08.393049",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -34340,7 +34340,7 @@
       }
     },
     "built": "2026-03-29T06:22:17.113187",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -34552,7 +34552,7 @@
       }
     },
     "built": "2026-03-29T06:22:28.803621",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -34976,7 +34976,7 @@
       }
     },
     "built": "2026-03-29T06:23:21.249437",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -35400,7 +35400,7 @@
       }
     },
     "built": "2026-03-29T06:23:45.670553",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -35612,7 +35612,7 @@
       }
     },
     "built": "2026-03-29T06:23:53.802765",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -35824,7 +35824,7 @@
       }
     },
     "built": "2026-03-29T06:24:01.782007",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -36036,7 +36036,7 @@
       }
     },
     "built": "2026-03-29T06:24:15.894769",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -36248,7 +36248,7 @@
       }
     },
     "built": "2026-03-29T06:24:23.897558",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -36460,7 +36460,7 @@
       }
     },
     "built": "2026-03-29T06:25:26.275879",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -36672,7 +36672,7 @@
       }
     },
     "built": "2026-03-29T06:26:00.800432",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -36884,7 +36884,7 @@
       }
     },
     "built": "2026-03-29T06:26:19.830030",
-    "lga": "Northern Beaches",
+    "lga": "Ku-ring-gai",
     "active": true
   },
   {
@@ -37096,7 +37096,7 @@
       }
     },
     "built": "2026-03-29T06:26:27.537017",
-    "lga": "Northern Beaches",
+    "lga": "Ku-ring-gai",
     "active": false
   },
   {
@@ -37308,7 +37308,7 @@
       }
     },
     "built": "2026-03-29T06:26:35.643469",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -37732,7 +37732,7 @@
       }
     },
     "built": "2026-03-29T06:26:53.269594",
-    "lga": "Northern Beaches",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -38792,7 +38792,7 @@
       }
     },
     "built": "2026-03-29T06:27:44.516533",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -39004,7 +39004,7 @@
       }
     },
     "built": "2026-03-29T06:28:06.149483",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -39216,7 +39216,7 @@
       }
     },
     "built": "2026-03-29T06:28:13.911059",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -39428,7 +39428,7 @@
       }
     },
     "built": "2026-03-29T06:28:37.211903",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -39640,7 +39640,7 @@
       }
     },
     "built": "2026-03-29T06:28:58.479986",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -40276,7 +40276,7 @@
       }
     },
     "built": "2026-03-29T06:29:35.625462",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -40488,7 +40488,7 @@
       }
     },
     "built": "2026-03-29T06:29:49.673604",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -40700,7 +40700,7 @@
       }
     },
     "built": "2026-03-29T06:30:02.811169",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -41124,7 +41124,7 @@
       }
     },
     "built": "2026-03-29T06:30:44.300977",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -41336,7 +41336,7 @@
       }
     },
     "built": "2026-03-29T06:30:52.009630",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -41548,7 +41548,7 @@
       }
     },
     "built": "2026-03-29T06:30:59.746501",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -41760,7 +41760,7 @@
       }
     },
     "built": "2026-03-29T06:31:15.538548",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -41972,7 +41972,7 @@
       }
     },
     "built": "2026-03-29T06:31:23.668380",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": false
   },
   {
@@ -42184,7 +42184,7 @@
       }
     },
     "built": "2026-03-29T06:31:31.593191",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -42396,7 +42396,7 @@
       }
     },
     "built": "2026-03-29T06:31:39.641051",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -42608,7 +42608,7 @@
       }
     },
     "built": "2026-03-29T06:31:47.878460",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -42820,7 +42820,7 @@
       }
     },
     "built": "2026-03-29T06:32:28.563696",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -43032,7 +43032,7 @@
       }
     },
     "built": "2026-03-29T06:32:38.847358",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -43244,7 +43244,7 @@
       }
     },
     "built": "2026-03-29T06:32:48.722319",
-    "lga": "Ku-ring-gai",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -43880,7 +43880,7 @@
       }
     },
     "built": "2026-03-29T06:33:20.308668",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -44092,7 +44092,7 @@
       }
     },
     "built": "2026-03-29T06:33:31.497165",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -44304,7 +44304,7 @@
       }
     },
     "built": "2026-03-29T06:33:43.077846",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -44516,7 +44516,7 @@
       }
     },
     "built": "2026-03-29T06:33:50.767777",
-    "lga": "Ku-ring-gai",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -44728,7 +44728,7 @@
       }
     },
     "built": "2026-03-29T06:34:04.510227",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -44940,7 +44940,7 @@
       }
     },
     "built": "2026-03-29T06:34:12.358253",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -45152,7 +45152,7 @@
       }
     },
     "built": "2026-03-29T06:34:22.232687",
-    "lga": "NSW Other",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -45364,7 +45364,7 @@
       }
     },
     "built": "2026-03-29T06:34:30.127137",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -45576,7 +45576,7 @@
       }
     },
     "built": "2026-03-29T06:34:41.963763",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -45788,7 +45788,7 @@
       }
     },
     "built": "2026-03-29T06:35:05.680370",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -46000,7 +46000,7 @@
       }
     },
     "built": "2026-03-29T06:35:13.711807",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -46212,7 +46212,7 @@
       }
     },
     "built": "2026-03-29T06:35:31.720956",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -46424,7 +46424,7 @@
       }
     },
     "built": "2026-03-29T06:35:39.732311",
-    "lga": "Hunter Valley",
+    "lga": "Newcastle",
     "active": false
   },
   {
@@ -46636,7 +46636,7 @@
       }
     },
     "built": "2026-03-29T06:35:51.630441",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -46848,7 +46848,7 @@
       }
     },
     "built": "2026-03-29T06:36:01.374737",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -47272,7 +47272,7 @@
       }
     },
     "built": "2026-03-29T06:36:26.949598",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -47908,7 +47908,7 @@
       }
     },
     "built": "2026-03-29T06:37:00.707281",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -48332,7 +48332,7 @@
       }
     },
     "built": "2026-03-29T06:37:28.845479",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -48544,7 +48544,7 @@
       }
     },
     "built": "2026-03-29T06:37:40.928507",
-    "lga": "Northern Beaches",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -48968,7 +48968,7 @@
       }
     },
     "built": "2026-03-29T06:37:57.957670",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -49180,7 +49180,7 @@
       }
     },
     "built": "2026-03-29T06:38:05.839183",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -49392,7 +49392,7 @@
       }
     },
     "built": "2026-03-29T06:38:27.437992",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -50028,7 +50028,7 @@
       }
     },
     "built": "2026-03-29T06:39:00.765551",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -50452,7 +50452,7 @@
       }
     },
     "built": "2026-03-29T06:39:24.475138",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -51088,7 +51088,7 @@
       }
     },
     "built": "2026-03-29T06:39:53.640574",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -51300,7 +51300,7 @@
       }
     },
     "built": "2026-03-29T06:40:01.679597",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -52360,7 +52360,7 @@
       }
     },
     "built": "2026-03-29T06:41:11.171789",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -52572,7 +52572,7 @@
       }
     },
     "built": "2026-03-29T06:42:57.496805",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -52784,7 +52784,7 @@
       }
     },
     "built": "2026-03-29T06:43:05.548455",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -52996,7 +52996,7 @@
       }
     },
     "built": "2026-03-29T06:43:13.547274",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -53208,7 +53208,7 @@
       }
     },
     "built": "2026-03-29T06:43:21.683300",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -53420,7 +53420,7 @@
       }
     },
     "built": "2026-03-29T06:43:29.768449",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -53632,7 +53632,7 @@
       }
     },
     "built": "2026-03-29T06:43:37.790363",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -53844,7 +53844,7 @@
       }
     },
     "built": "2026-03-29T06:43:45.821957",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -54268,7 +54268,7 @@
       }
     },
     "built": "2026-03-29T06:44:12.402966",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -54480,7 +54480,7 @@
       }
     },
     "built": "2026-03-29T06:44:20.777582",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -54692,7 +54692,7 @@
       }
     },
     "built": "2026-03-29T06:44:50.491058",
-    "lga": "Northern Beaches",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -55116,7 +55116,7 @@
       }
     },
     "built": "2026-03-29T06:45:06.400623",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -55328,7 +55328,7 @@
       }
     },
     "built": "2026-03-29T06:45:14.381777",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -55752,7 +55752,7 @@
       }
     },
     "built": "2026-03-29T06:45:30.676989",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -56176,7 +56176,7 @@
       }
     },
     "built": "2026-03-29T06:45:58.621907",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -56388,7 +56388,7 @@
       }
     },
     "built": "2026-03-29T06:46:06.692067",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -56600,7 +56600,7 @@
       }
     },
     "built": "2026-03-29T06:46:16.869433",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -56812,7 +56812,7 @@
       }
     },
     "built": "2026-03-29T06:46:27.131706",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -57024,7 +57024,7 @@
       }
     },
     "built": "2026-03-29T06:46:39.442773",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -57448,7 +57448,7 @@
       }
     },
     "built": "2026-03-29T06:47:14.052308",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -58296,7 +58296,7 @@
       }
     },
     "built": "2026-03-29T06:49:17.169774",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -58720,7 +58720,7 @@
       }
     },
     "built": "2026-03-29T06:49:33.111136",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -59144,7 +59144,7 @@
       }
     },
     "built": "2026-03-29T06:49:45.084906",
-    "lga": "Ku-ring-gai",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -59356,7 +59356,7 @@
       }
     },
     "built": "2026-03-29T06:49:52.897006",
-    "lga": "Greater Sydney West",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -59568,7 +59568,7 @@
       }
     },
     "built": "2026-03-29T06:49:58.738984",
-    "lga": "Greater Sydney West",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -59780,7 +59780,7 @@
       }
     },
     "built": "2026-03-29T06:50:08.856947",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -59992,7 +59992,7 @@
       }
     },
     "built": "2026-03-29T06:50:31.797249",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -60204,7 +60204,7 @@
       }
     },
     "built": "2026-03-29T06:50:39.776202",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -60416,7 +60416,7 @@
       }
     },
     "built": "2026-03-29T06:50:47.901101",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -60628,7 +60628,7 @@
       }
     },
     "built": "2026-03-29T06:51:00.264291",
-    "lga": "NSW Other",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -60840,7 +60840,7 @@
       }
     },
     "built": "2026-03-29T06:51:16.555683",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -61476,7 +61476,7 @@
       }
     },
     "built": "2026-03-29T06:52:03.565733",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -62112,7 +62112,7 @@
       }
     },
     "built": "2026-03-29T06:52:34.143834",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -62324,7 +62324,7 @@
       }
     },
     "built": "2026-03-29T06:52:42.179456",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -63384,7 +63384,7 @@
       }
     },
     "built": "2026-03-29T06:53:41.832837",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -63596,7 +63596,7 @@
       }
     },
     "built": "2026-03-29T06:53:50.007031",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -63808,7 +63808,7 @@
       }
     },
     "built": "2026-03-29T06:54:02.377040",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -64232,7 +64232,7 @@
       }
     },
     "built": "2026-03-29T06:54:48.558512",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": false
   },
   {
@@ -64656,7 +64656,7 @@
       }
     },
     "built": "2026-03-29T06:55:04.805996",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -64868,7 +64868,7 @@
       }
     },
     "built": "2026-03-29T06:55:15.261327",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -65080,7 +65080,7 @@
       }
     },
     "built": "2026-03-29T06:55:34.065629",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -65292,7 +65292,7 @@
       }
     },
     "built": "2026-03-29T06:55:48.577195",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -65716,7 +65716,7 @@
       }
     },
     "built": "2026-03-29T06:56:30.265883",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -65928,7 +65928,7 @@
       }
     },
     "built": "2026-03-29T06:56:42.522045",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -66140,7 +66140,7 @@
       }
     },
     "built": "2026-03-29T06:57:17.415563",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -66988,7 +66988,7 @@
       }
     },
     "built": "2026-03-29T06:58:10.169507",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -67412,7 +67412,7 @@
       }
     },
     "built": "2026-03-29T06:59:26.096781",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -67624,7 +67624,7 @@
       }
     },
     "built": "2026-03-29T06:59:36.570013",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -68896,7 +68896,7 @@
       }
     },
     "built": "2026-03-29T07:01:21.829720",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -69744,7 +69744,7 @@
       }
     },
     "built": "2026-03-29T07:02:02.543969",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -69956,7 +69956,7 @@
       }
     },
     "built": "2026-03-29T07:02:10.542617",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -70592,7 +70592,7 @@
       }
     },
     "built": "2026-03-29T07:02:49.581051",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -71016,7 +71016,7 @@
       }
     },
     "built": "2026-03-29T07:03:16.654250",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -71228,7 +71228,7 @@
       }
     },
     "built": "2026-03-29T07:03:24.892881",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -71440,7 +71440,7 @@
       }
     },
     "built": "2026-03-29T07:03:35.246451",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -71652,7 +71652,7 @@
       }
     },
     "built": "2026-03-29T07:03:45.260973",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -71864,7 +71864,7 @@
       }
     },
     "built": "2026-03-29T07:03:55.248663",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -72076,7 +72076,7 @@
       }
     },
     "built": "2026-03-29T07:04:03.197091",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -72288,7 +72288,7 @@
       }
     },
     "built": "2026-03-29T07:04:13.039483",
-    "lga": "Ku-ring-gai",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -73136,7 +73136,7 @@
       }
     },
     "built": "2026-03-29T07:05:08.124935",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -73348,7 +73348,7 @@
       }
     },
     "built": "2026-03-29T07:05:16.057741",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -73560,7 +73560,7 @@
       }
     },
     "built": "2026-03-29T07:05:34.498004",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -73772,7 +73772,7 @@
       }
     },
     "built": "2026-03-29T07:06:13.963007",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": true
   },
   {
@@ -73984,7 +73984,7 @@
       }
     },
     "built": "2026-03-29T07:06:22.004538",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -74196,7 +74196,7 @@
       }
     },
     "built": "2026-03-29T07:06:30.090672",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -74408,7 +74408,7 @@
       }
     },
     "built": "2026-03-29T07:06:38.054702",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -74620,7 +74620,7 @@
       }
     },
     "built": "2026-03-29T07:06:46.173402",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -75044,7 +75044,7 @@
       }
     },
     "built": "2026-03-29T07:06:59.805052",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -75468,7 +75468,7 @@
       }
     },
     "built": "2026-03-29T07:07:18.388689",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -75680,7 +75680,7 @@
       }
     },
     "built": "2026-03-29T07:07:24.350043",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -76104,7 +76104,7 @@
       }
     },
     "built": "2026-03-29T07:07:36.022142",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -76316,7 +76316,7 @@
       }
     },
     "built": "2026-03-29T07:07:44.974062",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -76740,7 +76740,7 @@
       }
     },
     "built": "2026-03-29T07:07:56.753270",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -76952,7 +76952,7 @@
       }
     },
     "built": "2026-03-29T07:08:02.676284",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -77164,7 +77164,7 @@
       }
     },
     "built": "2026-03-29T07:08:08.574352",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -77376,7 +77376,7 @@
       }
     },
     "built": "2026-03-29T07:08:21.307356",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -77588,7 +77588,7 @@
       }
     },
     "built": "2026-03-29T07:08:28.211126",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -77800,7 +77800,7 @@
       }
     },
     "built": "2026-03-29T07:08:33.960997",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -78012,7 +78012,7 @@
       }
     },
     "built": "2026-03-29T07:08:41.742007",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -78224,7 +78224,7 @@
       }
     },
     "built": "2026-03-29T07:08:48.724485",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -78436,7 +78436,7 @@
       }
     },
     "built": "2026-03-29T07:08:54.452806",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -78648,7 +78648,7 @@
       }
     },
     "built": "2026-03-29T07:09:12.151842",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -78860,7 +78860,7 @@
       }
     },
     "built": "2026-03-29T07:09:18.167931",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -79072,7 +79072,7 @@
       }
     },
     "built": "2026-03-29T07:09:22.656505",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -79708,7 +79708,7 @@
       }
     },
     "built": "2026-03-29T07:10:29.826173",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -79920,7 +79920,7 @@
       }
     },
     "built": "2026-03-29T07:10:36.634744",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -80556,7 +80556,7 @@
       }
     },
     "built": "2026-03-29T07:11:04.012826",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -80768,7 +80768,7 @@
       }
     },
     "built": "2026-03-29T07:11:13.050431",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -81404,7 +81404,7 @@
       }
     },
     "built": "2026-03-29T07:11:32.204302",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -81616,7 +81616,7 @@
       }
     },
     "built": "2026-03-29T07:11:38.182425",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -82252,7 +82252,7 @@
       }
     },
     "built": "2026-03-29T07:12:00.606227",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -82676,7 +82676,7 @@
       }
     },
     "built": "2026-03-29T07:12:12.318774",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -82888,7 +82888,7 @@
       }
     },
     "built": "2026-03-29T07:12:18.038474",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -83100,7 +83100,7 @@
       }
     },
     "built": "2026-03-29T07:12:24.744208",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -83312,7 +83312,7 @@
       }
     },
     "built": "2026-03-29T07:12:32.745471",
-    "lga": "Northern Beaches",
+    "lga": "Ku-ring-gai",
     "active": false
   },
   {
@@ -83524,7 +83524,7 @@
       }
     },
     "built": "2026-03-29T07:12:39.674688",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": true
   },
   {
@@ -83736,7 +83736,7 @@
       }
     },
     "built": "2026-03-29T07:12:45.505864",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -84160,7 +84160,7 @@
       }
     },
     "built": "2026-03-29T07:12:58.146530",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -84796,7 +84796,7 @@
       }
     },
     "built": "2026-03-29T07:13:58.051596",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -85008,7 +85008,7 @@
       }
     },
     "built": "2026-03-29T07:14:04.039536",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -85220,7 +85220,7 @@
       }
     },
     "built": "2026-03-29T07:14:09.871515",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -86280,7 +86280,7 @@
       }
     },
     "built": "2026-03-29T07:14:48.998079",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -86492,7 +86492,7 @@
       }
     },
     "built": "2026-03-29T07:15:06.123638",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -86704,7 +86704,7 @@
       }
     },
     "built": "2026-03-29T07:15:13.028916",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -86916,7 +86916,7 @@
       }
     },
     "built": "2026-03-29T07:15:20.031717",
-    "lga": "Northern Beaches",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -87128,7 +87128,7 @@
       }
     },
     "built": "2026-03-29T07:15:26.819183",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -87340,7 +87340,7 @@
       }
     },
     "built": "2026-03-29T07:15:35.636626",
-    "lga": "NSW Other",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -87976,7 +87976,7 @@
       }
     },
     "built": "2026-03-29T07:16:00.295278",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -88188,7 +88188,7 @@
       }
     },
     "built": "2026-03-29T07:16:06.058191",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -88400,7 +88400,7 @@
       }
     },
     "built": "2026-03-29T07:16:12.882710",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -88612,7 +88612,7 @@
       }
     },
     "built": "2026-03-29T07:16:18.633994",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -88824,7 +88824,7 @@
       }
     },
     "built": "2026-03-29T07:16:24.551555",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -89036,7 +89036,7 @@
       }
     },
     "built": "2026-03-29T07:16:32.414570",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -89248,7 +89248,7 @@
       }
     },
     "built": "2026-03-29T07:16:54.974145",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -89672,7 +89672,7 @@
       }
     },
     "built": "2026-03-29T07:17:24.938091",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -90732,7 +90732,7 @@
       }
     },
     "built": "2026-03-29T07:17:58.066897",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -91368,7 +91368,7 @@
       }
     },
     "built": "2026-03-29T07:18:17.527998",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -91580,7 +91580,7 @@
       }
     },
     "built": "2026-03-29T07:18:24.443618",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -91792,7 +91792,7 @@
       }
     },
     "built": "2026-03-29T07:18:30.246219",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -92004,7 +92004,7 @@
       }
     },
     "built": "2026-03-29T07:18:36.083681",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -92216,7 +92216,7 @@
       }
     },
     "built": "2026-03-29T07:18:41.902043",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -92428,7 +92428,7 @@
       }
     },
     "built": "2026-03-29T07:18:47.877205",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -92640,7 +92640,7 @@
       }
     },
     "built": "2026-03-29T07:18:53.727462",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -92852,7 +92852,7 @@
       }
     },
     "built": "2026-03-29T07:18:59.512843",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -93064,7 +93064,7 @@
       }
     },
     "built": "2026-03-29T07:19:05.307048",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -93276,7 +93276,7 @@
       }
     },
     "built": "2026-03-29T07:19:13.720344",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -93488,7 +93488,7 @@
       }
     },
     "built": "2026-03-29T07:19:25.322763",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -93700,7 +93700,7 @@
       }
     },
     "built": "2026-03-29T07:19:33.352647",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -93912,7 +93912,7 @@
       }
     },
     "built": "2026-03-29T07:19:42.019491",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -94336,7 +94336,7 @@
       }
     },
     "built": "2026-03-29T07:19:57.402533",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -94548,7 +94548,7 @@
       }
     },
     "built": "2026-03-29T07:20:04.228411",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -94760,7 +94760,7 @@
       }
     },
     "built": "2026-03-29T07:20:34.264524",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -95184,7 +95184,7 @@
       }
     },
     "built": "2026-03-29T07:20:49.286652",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -95396,7 +95396,7 @@
       }
     },
     "built": "2026-03-29T07:20:58.399726",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -95608,7 +95608,7 @@
       }
     },
     "built": "2026-03-29T07:21:04.984397",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -95820,7 +95820,7 @@
       }
     },
     "built": "2026-03-29T07:21:12.885175",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -96032,7 +96032,7 @@
       }
     },
     "built": "2026-03-29T07:21:18.874213",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -96244,7 +96244,7 @@
       }
     },
     "built": "2026-03-29T07:21:27.935963",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -96456,7 +96456,7 @@
       }
     },
     "built": "2026-03-29T07:21:34.916120",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": true
   },
   {
@@ -96668,7 +96668,7 @@
       }
     },
     "built": "2026-03-29T07:21:57.358201",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -96880,7 +96880,7 @@
       }
     },
     "built": "2026-03-29T07:22:16.605596",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -97304,7 +97304,7 @@
       }
     },
     "built": "2026-03-29T07:22:28.215964",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -97516,7 +97516,7 @@
       }
     },
     "built": "2026-03-29T07:22:36.153660",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -97728,7 +97728,7 @@
       }
     },
     "built": "2026-03-29T07:22:41.948940",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -97940,7 +97940,7 @@
       }
     },
     "built": "2026-03-29T07:22:50.861681",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -98152,7 +98152,7 @@
       }
     },
     "built": "2026-03-29T07:22:56.853956",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -98364,7 +98364,7 @@
       }
     },
     "built": "2026-03-29T07:23:02.706613",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -98576,7 +98576,7 @@
       }
     },
     "built": "2026-03-29T07:23:08.924092",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -98788,7 +98788,7 @@
       }
     },
     "built": "2026-03-29T07:23:19.965698",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -99000,7 +99000,7 @@
       }
     },
     "built": "2026-03-29T07:23:26.725184",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -99212,7 +99212,7 @@
       }
     },
     "built": "2026-03-29T07:24:01.274906",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -99636,7 +99636,7 @@
       }
     },
     "built": "2026-03-29T07:24:14.946767",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -99848,7 +99848,7 @@
       }
     },
     "built": "2026-03-29T07:24:20.883416",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -100060,7 +100060,7 @@
       }
     },
     "built": "2026-03-29T07:24:26.750979",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -100272,7 +100272,7 @@
       }
     },
     "built": "2026-03-29T07:24:38.823523",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": true
   },
   {
@@ -100484,7 +100484,7 @@
       }
     },
     "built": "2026-03-29T07:24:45.708022",
-    "lga": "Lane Cove",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -100696,7 +100696,7 @@
       }
     },
     "built": "2026-03-29T07:24:51.567956",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -100908,7 +100908,7 @@
       }
     },
     "built": "2026-03-29T07:24:57.388685",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -101120,7 +101120,7 @@
       }
     },
     "built": "2026-03-29T07:25:03.207618",
-    "lga": "Northern Beaches",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -101332,7 +101332,7 @@
       }
     },
     "built": "2026-03-29T07:25:11.206358",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -101544,7 +101544,7 @@
       }
     },
     "built": "2026-03-29T07:25:17.027261",
-    "lga": "Northern Beaches",
+    "lga": "Lower North Shore",
     "active": false
   },
   {
@@ -101756,7 +101756,7 @@
       }
     },
     "built": "2026-03-29T07:25:23.851058",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -101968,7 +101968,7 @@
       }
     },
     "built": "2026-03-29T07:25:29.645763",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -102604,7 +102604,7 @@
       }
     },
     "built": "2026-03-29T07:25:53.664386",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -102816,7 +102816,7 @@
       }
     },
     "built": "2026-03-29T07:25:59.669888",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -103028,7 +103028,7 @@
       }
     },
     "built": "2026-03-29T07:26:07.567347",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -103240,7 +103240,7 @@
       }
     },
     "built": "2026-03-29T07:26:37.002237",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -103452,7 +103452,7 @@
       }
     },
     "built": "2026-03-29T07:26:52.282382",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -103664,7 +103664,7 @@
       }
     },
     "built": "2026-03-29T07:27:00.479999",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -104088,7 +104088,7 @@
       }
     },
     "built": "2026-03-29T07:27:19.376650",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -104300,7 +104300,7 @@
       }
     },
     "built": "2026-03-29T07:27:28.340431",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -104724,7 +104724,7 @@
       }
     },
     "built": "2026-03-29T07:27:52.869632",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -104936,7 +104936,7 @@
       }
     },
     "built": "2026-03-29T07:27:58.802748",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -105572,7 +105572,7 @@
       }
     },
     "built": "2026-03-29T07:28:18.232894",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -105784,7 +105784,7 @@
       }
     },
     "built": "2026-03-29T07:28:23.950854",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -106208,7 +106208,7 @@
       }
     },
     "built": "2026-03-29T07:28:48.582951",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -106420,7 +106420,7 @@
       }
     },
     "built": "2026-03-29T07:28:54.361705",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -106844,7 +106844,7 @@
       }
     },
     "built": "2026-03-29T07:29:18.186213",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -107056,7 +107056,7 @@
       }
     },
     "built": "2026-03-29T07:29:28.037803",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -107480,7 +107480,7 @@
       }
     },
     "built": "2026-03-29T07:29:46.702418",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -107692,7 +107692,7 @@
       }
     },
     "built": "2026-03-29T07:29:51.157712",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -107904,7 +107904,7 @@
       }
     },
     "built": "2026-03-29T07:29:56.994250",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -108116,7 +108116,7 @@
       }
     },
     "built": "2026-03-29T07:30:03.899141",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": false
   },
   {
@@ -108328,7 +108328,7 @@
       }
     },
     "built": "2026-03-29T07:30:09.646442",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -108540,7 +108540,7 @@
       }
     },
     "built": "2026-03-29T07:30:14.098588",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -108752,7 +108752,7 @@
       }
     },
     "built": "2026-03-29T07:30:20.984734",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -108964,7 +108964,7 @@
       }
     },
     "built": "2026-03-29T07:30:55.305991",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -109176,7 +109176,7 @@
       }
     },
     "built": "2026-03-29T07:31:02.086157",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": false
   },
   {
@@ -109388,7 +109388,7 @@
       }
     },
     "built": "2026-03-29T07:31:16.070361",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -109600,7 +109600,7 @@
       }
     },
     "built": "2026-03-29T07:31:24.444875",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -109812,7 +109812,7 @@
       }
     },
     "built": "2026-03-29T07:31:34.393018",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -110024,7 +110024,7 @@
       }
     },
     "built": "2026-03-29T07:31:40.156960",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -110236,7 +110236,7 @@
       }
     },
     "built": "2026-03-29T07:31:48.116461",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -110660,7 +110660,7 @@
       }
     },
     "built": "2026-03-29T07:32:11.079219",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -110872,7 +110872,7 @@
       }
     },
     "built": "2026-03-29T07:32:16.946500",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -111084,7 +111084,7 @@
       }
     },
     "built": "2026-03-29T07:32:26.162515",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -111296,7 +111296,7 @@
       }
     },
     "built": "2026-03-29T07:32:33.519236",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -111932,7 +111932,7 @@
       }
     },
     "built": "2026-03-29T07:32:51.153920",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -112356,7 +112356,7 @@
       }
     },
     "built": "2026-03-29T07:33:36.721172",
-    "lga": "Hunter Valley",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -112992,7 +112992,7 @@
       }
     },
     "built": "2026-03-29T07:34:03.456993",
-    "lga": "NSW Other",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -113628,7 +113628,7 @@
       }
     },
     "built": "2026-03-29T07:34:25.968008",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -114052,7 +114052,7 @@
       }
     },
     "built": "2026-03-29T07:34:40.699201",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -114264,7 +114264,7 @@
       }
     },
     "built": "2026-03-29T07:34:49.544191",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -114688,7 +114688,7 @@
       }
     },
     "built": "2026-03-29T07:35:08.253917",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -114900,7 +114900,7 @@
       }
     },
     "built": "2026-03-29T07:35:16.260782",
-    "lga": "Hunter Valley",
+    "lga": "Newcastle",
     "active": false
   },
   {
@@ -115324,7 +115324,7 @@
       }
     },
     "built": "2026-03-29T07:35:40.486987",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -115536,7 +115536,7 @@
       }
     },
     "built": "2026-03-29T07:35:46.421551",
-    "lga": "NSW Other",
+    "lga": "Mid North Coast",
     "active": true
   },
   {
@@ -115748,7 +115748,7 @@
       }
     },
     "built": "2026-03-29T07:35:52.181178",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -115960,7 +115960,7 @@
       }
     },
     "built": "2026-03-29T07:35:57.977639",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -116384,7 +116384,7 @@
       }
     },
     "built": "2026-03-29T07:36:19.858940",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -116808,7 +116808,7 @@
       }
     },
     "built": "2026-03-29T07:36:33.348523",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -117020,7 +117020,7 @@
       }
     },
     "built": "2026-03-29T07:36:40.548199",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -117232,7 +117232,7 @@
       }
     },
     "built": "2026-03-29T07:36:50.652913",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -117444,7 +117444,7 @@
       }
     },
     "built": "2026-03-29T07:36:56.483029",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -117656,7 +117656,7 @@
       }
     },
     "built": "2026-03-29T07:37:03.327587",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -117868,7 +117868,7 @@
       }
     },
     "built": "2026-03-29T07:37:09.216687",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -118080,7 +118080,7 @@
       }
     },
     "built": "2026-03-29T07:37:26.445320",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -118292,7 +118292,7 @@
       }
     },
     "built": "2026-03-29T07:37:32.254849",
-    "lga": "Greater Sydney West",
+    "lga": "Illawarra",
     "active": false
   },
   {
@@ -118504,7 +118504,7 @@
       }
     },
     "built": "2026-03-29T07:37:39.110878",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -118928,7 +118928,7 @@
       }
     },
     "built": "2026-03-29T07:37:50.897504",
-    "lga": "NSW Other",
+    "lga": "Central Coast",
     "active": true
   },
   {
@@ -119564,7 +119564,7 @@
       }
     },
     "built": "2026-03-29T07:38:12.044250",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": false
   },
   {
@@ -120412,7 +120412,7 @@
       }
     },
     "built": "2026-03-29T07:38:37.267111",
-    "lga": "NSW Other",
+    "lga": "Central Coast",
     "active": false
   },
   {
@@ -121048,7 +121048,7 @@
       }
     },
     "built": "2026-03-29T07:39:00.135126",
-    "lga": "NSW Other",
+    "lga": "Southern NSW",
     "active": true
   },
   {
@@ -121260,7 +121260,7 @@
       }
     },
     "built": "2026-03-29T07:39:09.225944",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -121684,7 +121684,7 @@
       }
     },
     "built": "2026-03-29T07:39:23.133460",
-    "lga": "Greater Sydney West",
+    "lga": "Greater Sydney",
     "active": false
   },
   {
@@ -121896,7 +121896,7 @@
       }
     },
     "built": "2026-03-29T07:39:29.006208",
-    "lga": "NSW Other",
+    "lga": "North Coast",
     "active": true
   },
   {
@@ -122108,7 +122108,7 @@
       }
     },
     "built": "2026-03-29T07:39:35.979644",
-    "lga": "NSW Other",
+    "lga": "Illawarra",
     "active": true
   },
   {
@@ -122322,5 +122322,217 @@
     "built": "2026-03-29T07:39:41.880651",
     "lga": "NSW Other",
     "active": false
+  },
+  {
+    "station_id": "48372",
+    "station_no": "566152",
+    "name": "Allambie Heights",
+    "lat": -33.759388,
+    "lon": 151.254501,
+    "ts_id": "11282042",
+    "ts_name": "00 - Continuous.P",
+    "ifd": {
+      "1": {
+        "63.2%": 2.53,
+        "50%": 2.83,
+        "20%": 3.8,
+        "10%": 4.48,
+        "5%": 5.17,
+        "2%": 6.11,
+        "1%": 6.86
+      },
+      "2": {
+        "63.2%": 4.28,
+        "50%": 4.74,
+        "20%": 6.2,
+        "10%": 7.23,
+        "5%": 8.25,
+        "2%": 9.71,
+        "1%": 10.9
+      },
+      "3": {
+        "63.2%": 5.92,
+        "50%": 6.56,
+        "20%": 8.63,
+        "10%": 10.1,
+        "5%": 11.5,
+        "2%": 13.6,
+        "1%": 15.3
+      },
+      "4": {
+        "63.2%": 7.38,
+        "50%": 8.21,
+        "20%": 10.9,
+        "10%": 12.7,
+        "5%": 14.6,
+        "2%": 17.3,
+        "1%": 19.4
+      },
+      "5": {
+        "63.2%": 27.5,
+        "50%": 30.6,
+        "20%": 40.8,
+        "10%": 48.0,
+        "5%": 55.2,
+        "2%": 65.2,
+        "1%": 73.2
+      },
+      "10": {
+        "63.2%": 13.6,
+        "50%": 15.3,
+        "20%": 20.6,
+        "10%": 24.3,
+        "5%": 28.1,
+        "2%": 33.3,
+        "1%": 37.4
+      },
+      "20": {
+        "63.2%": 19.6,
+        "50%": 22.0,
+        "20%": 29.6,
+        "10%": 35.0,
+        "5%": 40.4,
+        "2%": 47.8,
+        "1%": 53.6
+      },
+      "30": {
+        "63.2%": 23.4,
+        "50%": 26.2,
+        "20%": 35.1,
+        "10%": 41.4,
+        "5%": 47.8,
+        "2%": 56.4,
+        "1%": 63.3
+      },
+      "60": {
+        "63.2%": 30.6,
+        "50%": 34.0,
+        "20%": 45.1,
+        "10%": 52.9,
+        "5%": 60.8,
+        "2%": 71.8,
+        "1%": 80.5
+      },
+      "90": {
+        "63.2%": 35.3,
+        "50%": 39.2,
+        "20%": 51.6,
+        "10%": 60.5,
+        "5%": 69.5,
+        "2%": 82.0,
+        "1%": 92.1
+      },
+      "120": {
+        "63.2%": 146.0,
+        "50%": 166.0,
+        "20%": 232.0,
+        "10%": 279.0,
+        "5%": 327.0,
+        "2%": 391.0,
+        "1%": 441.0
+      },
+      "180": {
+        "63.2%": 45.3,
+        "50%": 50.0,
+        "20%": 65.6,
+        "10%": 76.8,
+        "5%": 88.4,
+        "2%": 105.0,
+        "1%": 118.0
+      },
+      "270": {
+        "63.2%": 52.6,
+        "50%": 58.1,
+        "20%": 76.4,
+        "10%": 89.7,
+        "5%": 103.0,
+        "2%": 123.0,
+        "1%": 138.0
+      },
+      "360": {
+        "63.2%": 158.0,
+        "50%": 180.0,
+        "20%": 250.0,
+        "10%": 300.0,
+        "5%": 349.0,
+        "2%": 416.0,
+        "1%": 467.0
+      },
+      "540": {
+        "63.2%": 68.8,
+        "50%": 76.3,
+        "20%": 101.0,
+        "10%": 120.0,
+        "5%": 140.0,
+        "2%": 167.0,
+        "1%": 189.0
+      },
+      "1080": {
+        "63.2%": 90.5,
+        "50%": 101.0,
+        "20%": 137.0,
+        "10%": 164.0,
+        "5%": 192.0,
+        "2%": 231.0,
+        "1%": 262.0
+      },
+      "1440": {
+        "63.2%": 101.0,
+        "50%": 114.0,
+        "20%": 155.0,
+        "10%": 186.0,
+        "5%": 219.0,
+        "2%": 263.0,
+        "1%": 298.0
+      },
+      "1800": {
+        "63.2%": 110.0,
+        "50%": 124.0,
+        "20%": 171.0,
+        "10%": 205.0,
+        "5%": 241.0,
+        "2%": 290.0,
+        "1%": 328.0
+      },
+      "2880": {
+        "63.2%": 129.0,
+        "50%": 147.0,
+        "20%": 204.0,
+        "10%": 246.0,
+        "5%": 288.0,
+        "2%": 346.0,
+        "1%": 392.0
+      },
+      "7200": {
+        "63.2%": 166.0,
+        "50%": 189.0,
+        "20%": 262.0,
+        "10%": 313.0,
+        "5%": 364.0,
+        "2%": 431.0,
+        "1%": 482.0
+      },
+      "8640": {
+        "63.2%": 172.0,
+        "50%": 196.0,
+        "20%": 270.0,
+        "10%": 322.0,
+        "5%": 373.0,
+        "2%": 440.0,
+        "1%": 490.0
+      },
+      "10080": {
+        "63.2%": 177.0,
+        "50%": 201.0,
+        "20%": 276.0,
+        "10%": 327.0,
+        "5%": 379.0,
+        "2%": 445.0,
+        "1%": 494.0
+      }
+    },
+    "built": "2026-03-30T02:35:59.315236",
+    "lga": "Northern Beaches",
+    "active": true
   }
 ]
