@@ -248,7 +248,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
       <div id="nbcSubWrap" style="display:none;margin-top:8px">
         <div class="lbl" style="margin-bottom:4px">NBC Gauge Group</div>
         <select id="nbcSub" onchange="onNbcSubChange()">
-          <option value="all">All NBC (57)</option>
+          <option value="all" id="nbcAllOpt">All NBC</option>
           <option value="standard">Standard 15 (Excel tool)</option>
           <option value="north">Northern Beaches North</option>
           <option value="south">Northern Beaches South</option>
@@ -433,7 +433,7 @@ function buildLgaDropdown() {
     ...(lgas.has('NSW Other') ? ['NSW Other'] : [])
   ];
   sorted.forEach(lga => {
-    const count = allStations.filter(s => s.lga === lga).length;
+    const count = allStations.filter(s => s.lga === lga && s.active !== false).length;
     const opt = document.createElement('option');
     opt.value = lga;
     opt.textContent = `${lga} (${count})`;
@@ -1672,50 +1672,47 @@ let lgaBoundaryLayer = null;
 // NSW Spatial Services - public ArcGIS REST API
 const NSW_LGA_API = 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/3/query';
 
-// Hardcoded LGA boundaries (avoids CORS issues with NSW Spatial API)
-// NBC boundary sourced from ABS/NSW Spatial Services, simplified
-const LGA_BOUNDARIES = {
-  'Northern Beaches': [
-    // Barrenjoey / Palm Beach headland (north tip)
-    [151.3243,-33.5778],[151.3215,-33.5801],[151.3190,-33.5842],
-    [151.3178,-33.5889],[151.3165,-33.5952],[151.3140,-33.6008],
-    // West - Pittwater / McCarrs Creek
-    [151.2812,-33.6134],[151.2698,-33.6289],[151.2623,-33.6401],
-    [151.2534,-33.6512],[151.2445,-33.6634],[151.2389,-33.6756],
-    [151.2312,-33.6878],[151.2256,-33.6990],[151.2167,-33.7089],
-    [151.2089,-33.7178],[151.2023,-33.7256],[151.1978,-33.7312],
-    // Ku-ring-gai Chase western edge
-    [151.1912,-33.7389],[151.1845,-33.7445],[151.1789,-33.7523],
-    [151.1734,-33.7634],[151.1712,-33.7723],[151.1756,-33.7812],
-    [151.1823,-33.7867],[151.1878,-33.7934],
-    // South-west boundary
-    [151.1934,-33.8012],[151.1967,-33.8089],[151.1989,-33.8156],
-    [151.2034,-33.8212],[151.2089,-33.8267],[151.2145,-33.8301],
-    [151.2212,-33.8323],[151.2278,-33.8334],[151.2334,-33.8312],
-    // South - Manly / Spit Bridge
-    [151.2389,-33.8289],[151.2434,-33.8256],[151.2478,-33.8223],
-    [151.2523,-33.8201],[151.2578,-33.8189],[151.2634,-33.8201],
-    [151.2678,-33.8223],[151.2712,-33.8256],[151.2734,-33.8289],
-    // South-east - Manly
-    [151.2756,-33.8312],[151.2789,-33.8334],[151.2823,-33.8345],
-    [151.2867,-33.8345],[151.2912,-33.8334],[151.2945,-33.8312],
-    // East coast heading north
-    [151.2978,-33.8256],[151.3001,-33.8189],[151.3012,-33.8112],
-    [151.3001,-33.8034],[151.2978,-33.7967],[151.2967,-33.7889],
-    [151.2978,-33.7812],[151.3001,-33.7734],[151.3034,-33.7656],
-    [151.3056,-33.7578],[151.3067,-33.7501],[151.3056,-33.7423],
-    [151.3034,-33.7356],[151.3012,-33.7289],[151.3001,-33.7212],
-    [151.3012,-33.7134],[151.3034,-33.7056],[151.3056,-33.6978],
-    [151.3078,-33.6901],[151.3089,-33.6823],[151.3078,-33.6745],
-    [151.3056,-33.6667],[151.3034,-33.6590],[151.3023,-33.6512],
-    [151.3034,-33.6434],[151.3056,-33.6356],[151.3089,-33.6278],
-    [151.3123,-33.6201],[151.3156,-33.6134],[151.3189,-33.6067],
-    [151.3212,-33.6001],[151.3234,-33.5934],[151.3243,-33.5867],
-    [151.3243,-33.5778]  // close
-  ]
-};
+// LGA boundary cache (fetched from NSW Spatial API on demand)
+const lgaBoundaryCache = {};
 
-function drawLgaBoundary(lgaName) {
+// NSW Spatial Services - try multiple layer IDs for LGA boundaries
+const NSW_LGA_LAYERS = [
+  'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/3/query',
+  'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/1/query',
+  'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/4/query',
+  'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme_multiCRS/FeatureServer/3/query',
+];
+
+async function fetchLgaBoundary(lgaName) {
+  // Try each layer URL until one works
+  const lgaUpper = lgaName.toUpperCase();
+  
+  for (const url of NSW_LGA_LAYERS) {
+    try {
+      const params = new URLSearchParams({
+        where:          `lganame='${lgaUpper}'`,
+        outFields:      'lganame',
+        returnGeometry: 'true',
+        geometryPrecision: 5,
+        outSR:          '4326',
+        f:              'geojson'
+      });
+      const resp = await fetch(`${url}?${params}`, { signal: AbortSignal.timeout(8000) });
+      if (!resp.ok) continue;
+      const geojson = await resp.json();
+      if (geojson.features && geojson.features.length > 0) {
+        console.log(`Boundary fetched from ${url} for ${lgaName}`);
+        return geojson;
+      }
+    } catch(e) {
+      console.warn(`Layer failed: ${url} - ${e.message}`);
+      continue;
+    }
+  }
+  return null;
+}
+
+async function drawLgaBoundary(lgaName) {
   // Remove existing boundary
   if (lgaBoundaryLayer) {
     map.removeLayer(lgaBoundaryLayer);
@@ -1724,19 +1721,29 @@ function drawLgaBoundary(lgaName) {
 
   if (!lgaName) return;
 
-  const coords = LGA_BOUNDARIES[lgaName];
-  if (!coords) return;  // No hardcoded boundary for this LGA
+  // Use cache if available
+  let geojson = lgaBoundaryCache[lgaName];
 
-  // Convert [lon, lat] pairs to Leaflet [lat, lon]
-  const latLngs = coords.map(([lon, lat]) => [lat, lon]);
+  if (!geojson) {
+    console.log(`Fetching boundary for ${lgaName}...`);
+    geojson = await fetchLgaBoundary(lgaName);
+    if (geojson) {
+      lgaBoundaryCache[lgaName] = geojson;
+    } else {
+      console.warn(`No boundary found for ${lgaName}`);
+      return;
+    }
+  }
 
-  lgaBoundaryLayer = L.polygon(latLngs, {
-    color:       '#00847F',
-    weight:      2.5,
-    opacity:     0.9,
-    fillColor:   '#00847F',
-    fillOpacity: 0.06,
-    dashArray:   '8, 5'
+  lgaBoundaryLayer = L.geoJSON(geojson, {
+    style: {
+      color:       '#00847F',
+      weight:      2.5,
+      opacity:     0.9,
+      fillColor:   '#00847F',
+      fillOpacity: 0.05,
+      dashArray:   '8, 5'
+    }
   }).addTo(map);
 
   console.log(`Boundary drawn for ${lgaName}`);
