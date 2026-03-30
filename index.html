@@ -600,10 +600,12 @@ function aepToARI(aepStr) {
   const pct = parseFloat(clean);
   if (isNaN(pct)) return '—';
   const ari = 1 / (pct/100);
-  if (ari < 2)   return '< 2 yrs';
-  if (ari < 5)   return `1 in ${ari.toFixed(0)} yrs`;
-  if (ari < 100) return `1 in ${Math.round(ari/5)*5} yrs`;
-  return `1 in ${Math.round(ari/10)*10} yrs`;
+  if (ari < 2)      return '< 2 yrs';
+  if (ari < 5)      return `1 in ${ari.toFixed(0)} yrs`;
+  if (ari < 100)    return `1 in ${Math.round(ari/5)*5} yrs`;
+  if (ari < 1000)   return `1 in ${Math.round(ari/10)*10} yrs`;
+  if (ari < 10000)  return `1 in ${Math.round(ari/100)*100} yrs`;
+  return `1 in ${Math.round(ari/1000)*1000} yrs`;
 }
 
 function interpretation(aepStr) {
@@ -851,7 +853,9 @@ async function analyseStationBestDuration(station, fromDt, toDt) {
       const aep = calcAEP(station.station_id, dur, rolling.max_depth_mm);
       if (!aep) continue;
 
-      const pct = parseFloat((aep.aep||'100').replace(/[~<>%]/g,''));
+      const aepRaw = (aep.aep||'100');
+      // Handle '>63.2%' as 63.2, '<1%' as 1, etc.
+      const pct = aepRaw.startsWith('>') ? 63.2 : parseFloat(aepRaw.replace(/[~<>%]/g,''));
       if (isNaN(pct)) continue;
 
       if (pct < bestAepPct) {
