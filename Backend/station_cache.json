@@ -27981,7 +27981,7 @@
     },
     "built": "2026-03-29T06:17:51.963827",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "48520",
@@ -41125,7 +41125,7 @@
     },
     "built": "2026-03-29T06:30:44.300977",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "66535",
@@ -50029,7 +50029,7 @@
     },
     "built": "2026-03-29T06:39:00.765551",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "117719",
@@ -57449,7 +57449,7 @@
     },
     "built": "2026-03-29T06:47:14.052308",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "48819",
@@ -61477,7 +61477,7 @@
     },
     "built": "2026-03-29T06:52:03.565733",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "64289",
@@ -88613,7 +88613,7 @@
     },
     "built": "2026-03-29T07:16:18.633994",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "49140",
@@ -93913,7 +93913,7 @@
     },
     "built": "2026-03-29T07:19:42.019491",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "65265",
@@ -99001,7 +99001,7 @@
     },
     "built": "2026-03-29T07:23:26.725184",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "54180",
@@ -104937,7 +104937,7 @@
     },
     "built": "2026-03-29T07:27:58.802748",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "49351",
@@ -107269,7 +107269,7 @@
     },
     "built": "2026-03-29T07:29:39.878357",
     "lga": "Central Coast",
-    "active": false
+    "active": true
   },
   {
     "station_id": "64423",
@@ -108329,7 +108329,7 @@
     },
     "built": "2026-03-29T07:30:09.646442",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "179201",
@@ -109813,7 +109813,7 @@
     },
     "built": "2026-03-29T07:31:34.393018",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "546650",
@@ -110873,7 +110873,7 @@
     },
     "built": "2026-03-29T07:32:16.946500",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "201318",
@@ -115325,7 +115325,7 @@
     },
     "built": "2026-03-29T07:35:40.486987",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "104542",
@@ -121897,7 +121897,7 @@
     },
     "built": "2026-03-29T07:39:29.006208",
     "lga": "NSW Other",
-    "active": false
+    "active": true
   },
   {
     "station_id": "66539",
