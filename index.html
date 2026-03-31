@@ -773,22 +773,29 @@ async function fetchMhlData(tsId, fromDt, toDt) {
 function calcRollingMax(readings, durationMinutes) {
   if (!readings || !readings.length) return null;
 
-  const intervals = Math.max(1, Math.floor(durationMinutes / 5));
-  const vals = readings.map(r => r.value);
-  const timestamps = readings.map(r => r.timestamp);
+  const durationMs = durationMinutes * 60 * 1000;
+  const n = readings.length;
+
+  // Parse timestamps once
+  const times = readings.map(r => new Date(r.timestamp).getTime());
+  const vals  = readings.map(r => r.value);
+
+  // Prefix sums for O(n) sliding window
+  const prefix = [0];
+  for (let i = 0; i < n; i++) prefix.push(prefix[i] + vals[i]);
 
   let maxDepth = 0, peakStart = null, peakEnd = null;
+  let left = 0;
 
-  // Prefix sum for O(n) rolling window
-  const prefix = [0];
-  for (let i = 0; i < vals.length; i++) prefix.push(prefix[i] + vals[i]);
+  for (let right = 0; right < n; right++) {
+    // Advance left pointer so window stays within durationMs
+    while (left < right && (times[right] - times[left]) > durationMs) left++;
 
-  for (let i = 0; i <= vals.length - intervals; i++) {
-    const windowSum = prefix[i + intervals] - prefix[i];
+    const windowSum = prefix[right + 1] - prefix[left];
     if (windowSum > maxDepth) {
       maxDepth  = windowSum;
-      peakStart = timestamps[i];
-      peakEnd   = timestamps[i + intervals - 1];
+      peakStart = readings[left].timestamp;
+      peakEnd   = readings[right].timestamp;
     }
   }
 
@@ -799,7 +806,7 @@ function calcRollingMax(readings, durationMinutes) {
     peak_start:     peakStart,
     peak_end:       peakEnd,
     total_depth_mm: Math.round(totalDepth * 100) / 100,
-    reading_count:  readings.length
+    reading_count:  n
   };
 }
 
