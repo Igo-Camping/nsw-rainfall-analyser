@@ -617,7 +617,13 @@ function classifyAEP(aepStr) {
   return {cls:'aep-vfreq', label:aepStr};
 }
 
-function aepToARI(aepStr) {
+function aepToARI(aepStrOrObj) {
+  // Accept full aep object with precise ari field (bypasses string rounding)
+  if (aepStrOrObj && typeof aepStrOrObj === 'object') {
+    if (aepStrOrObj.ari != null) return `1 in ${aepStrOrObj.ari.toLocaleString()} yrs`;
+    aepStrOrObj = aepStrOrObj.aep || '';
+  }
+  const aepStr = aepStrOrObj;
   if (!aepStr || aepStr.startsWith('>')) return '< 1 in 2 yrs';
   // Handle "1 in X" format used as IFD column labels
   const inMatch = aepStr.match(/1\s+in\s+(\d+)/i);
@@ -630,7 +636,7 @@ function aepToARI(aepStr) {
   if (ari < 5)    return `1 in ${ari.toFixed(0)} yrs`;
   if (ari < 100)  return `1 in ${Math.round(ari / 5) * 5} yrs`;
   if (ari < 2000) return `1 in ${Math.round(ari / 10) * 10} yrs`;
-  return `1 in ${Math.round(ari / 100) * 100} yrs`;
+  return `1 in ${Math.round(ari).toLocaleString()} yrs`;
 }
 
 function interpretation(aepStr) {
@@ -953,7 +959,7 @@ function renderTopPerSite(results, dur) {
         <td class="r">${depth} mm</td>
         <td><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
-        <td class="r">${aepToARI(aepStr)}</td>
+        <td class="r">${aepToARI(r.aep || aepStr)}</td>
         <td>${rm?.peak_start ? fmtDt(rm.peak_start) : '—'}</td>
       </tr>`;
   }).join('');
@@ -1050,7 +1056,7 @@ function renderTopDurations(results) {
         <td>${DUR_LABELS[r.duration_minutes]||r.duration_minutes+'min'}</td>
         <td class="r">${rm?.max_depth_mm??'—'} mm</td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
-        <td class="r">${aepToARI(aepStr)}</td>
+        <td class="r">${aepToARI(r.aep || aepStr)}</td>
         <td>${rm?.peak_start ? fmtDt(rm.peak_start)+' → '+fmtDt(rm.peak_end) : '—'}</td>
       </tr>`;
   }).join('');
@@ -1159,8 +1165,8 @@ function renderResults(data, temp) {
         <div class="aep-hero-val"><span class="aep-badge ${cls}">${aepStr}</span></div>
       </div>
       <div class="aep-hero-info">
-        <div class="aep-hero-interp">${interpretation(aepStr)}</div>
-        <div class="aep-hero-ari">Return period: ${aepToARI(aepStr)}</div>
+        <div class="aep-hero-interp">${aep?.interpretation || interpretation(aepStr)}</div>
+        <div class="aep-hero-ari">Return period: ${aepToARI(aep || aepStr)}</div>
         ${temp ? `<div class="aep-hero-ari" style="margin-top:4px">
           ${tempIcon(temp.weather_code)} ${temp.temperature_c}°C · ${temp.humidity_pct}% humidity
         </div>` : ''}
@@ -1179,7 +1185,7 @@ function renderResults(data, temp) {
       </div>
       <div class="card">
         <div class="card-lbl">ARI</div>
-        <div class="card-val" style="font-size:16px">${aepToARI(aepStr)}</div>
+        <div class="card-val" style="font-size:16px">${aepToARI(aep || aepStr)}</div>
         <div class="card-sub">Return period</div>
       </div>
       <div class="card">
@@ -1313,12 +1319,12 @@ function exportCSV() {
     sorted.forEach((r, i) => {
       const rm = r.rolling_max;
       const aep = r.aep?.aep || '>63.2%';
-      csv += `${i+1},${r.station_name},${rm?.max_depth_mm||0},${rm?.total_depth_mm||0},${aep},${aepToARI(aep)},${rm?.peak_start||''},${rm?.peak_end||''}\n`;
+      csv += `${i+1},${r.station_name},${rm?.max_depth_mm||0},${rm?.total_depth_mm||0},${aep},${aepToARI(r.aep || aep)},${rm?.peak_start||''},${rm?.peak_end||''}\n`;
     });
   } else if (lastResults?.readings) {
     // Single station export
     csv = `NSW Rainfall Analyser — ${lastResults.station_name}\nGenerated: ${ts}\n\n`;
-    csv += `AEP:,${lastResults.aep?.aep||''}\nReturn Period:,${aepToARI(lastResults.aep?.aep||'')}\n`;
+    csv += `AEP:,${lastResults.aep?.aep||''}\nReturn Period:,${aepToARI(lastResults.aep || lastResults.aep?.aep || '')}\n`;
     csv += `Peak Depth (mm):,${lastResults.rolling_max?.max_depth_mm||''}\n`;
     csv += `Total Depth (mm):,${lastResults.rolling_max?.total_depth_mm||''}\n\n`;
     csv += 'Timestamp,Depth (mm)\n';
@@ -1425,6 +1431,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
     const ari   = Math.round(1 / p);
     return {
       aep: `~${pct}%`,
+      ari,
       bracket_lower_aep: available[n-1],
       ifd_reference: row,
       interpretation: `Extreme event — approximately 1 in ${ari.toLocaleString()} years`
@@ -1440,8 +1447,10 @@ function calcAEP(stationId, durationMinutes, depthMm) {
       const lnP  = lnA + frac * (lnB - lnA);
       const p    = Math.exp(lnP);
       const pct  = Math.round(p * 100000) / 1000;
+      const ari  = Math.round(1 / p);
       return {
         aep: `~${pct}%`,
+        ari,
         bracket_lower_aep: available[i],
         bracket_upper_aep: available[i+1],
         ifd_reference: row,
