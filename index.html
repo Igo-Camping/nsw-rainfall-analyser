@@ -1378,12 +1378,10 @@ function calcAEP(stationId, durationMinutes, depthMm) {
   const ifd = ifdCache[stationId];
   if (!ifd || depthMm <= 0) return { aep: '>63.2%', interpretation: 'Very frequent — less than 2-year ARI' };
 
-  // Find closest duration in IFD table
+  // Require exact duration match — no fallback to nearest (wrong IFD = wrong AEP)
   const availDurs = Object.keys(ifd).map(Number).sort((a,b)=>a-b);
-  let durKey = durationMinutes;
-  if (!ifd[durKey]) {
-    durKey = availDurs.reduce((best, d) => Math.abs(d-durationMinutes) < Math.abs(best-durationMinutes) ? d : best, availDurs[0]);
-  }
+  const durKey = durationMinutes;
+  if (!ifd[durKey] && !ifd[String(durKey)]) return null;
 
   const baseRow = ifd[durKey] || ifd[String(durKey)];
   if (!baseRow) return null;
@@ -1402,7 +1400,8 @@ function calcAEP(stationId, durationMinutes, depthMm) {
 
   // AEP order from most frequent to rarest (10 columns matching Excel tool)
   const AEP_ORDER = ['63.2%','50%','20%','10%','5%','2%','1%','1 in 200','1 in 500','1 in 1000'];
-  const AEP_VALS  = [0.632, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002, 0.001];
+  const AEP_VALS  = [0.632, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01,
+                     1-Math.exp(-1/200), 1-Math.exp(-1/500), 1-Math.exp(-1/1000)];
 
   const available = AEP_ORDER.filter(a => row[a] != null);
   if (!available.length) return null;
@@ -1428,7 +1427,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
     const lnP   = Math.log(probs[n-1]) + slope * (depthMm - depths[n-1]);
     const p     = Math.exp(lnP);
     const pct   = Math.round(p * 100000) / 1000;  // 3 sig figs in %
-    const ari   = Math.round(1 / p);
+    const ari   = Math.round(1 / (-Math.log(1 - p)));
     return {
       aep: `~${pct}%`,
       ari,
@@ -1447,7 +1446,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
       const lnP  = lnA + frac * (lnB - lnA);
       const p    = Math.exp(lnP);
       const pct  = Math.round(p * 100000) / 1000;
-      const ari  = Math.round(1 / p);
+      const ari  = Math.round(1 / (-Math.log(1 - p)));
       const cat  = pct <= 1 ? 'Extreme event' : pct <= 2 ? 'Very rare' : pct <= 5 ? 'Rare' : pct <= 10 ? 'Significant' : pct <= 20 ? 'Moderate' : 'Frequent';
       return {
         aep: `~${pct}%`,
