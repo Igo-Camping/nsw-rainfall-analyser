@@ -915,19 +915,19 @@ async function runTopPerSite(dur, fromDt, toDt) {
 
     // Find the duration with the worst (lowest) AEP
     let bestResult = null;
-    let bestAepVal = Infinity;
+    let bestAepPct = Infinity;
 
     for (const d of allDurs) {
       const rolling = calcRollingMax(readings, d);
       if (!rolling || rolling.max_depth_mm <= 0) continue;
       const aep = calcAEP(s.station_id, d, rolling.max_depth_mm);
-      if (!aep) continue;
+      if (!aep || !aep.aep || aep.aep.startsWith('>')) continue;
 
-      // Convert AEP string to numeric probability for comparison
-      const aepNum = aepStringToProb(aep.aep);
-      if (aepNum < bestAepVal) {
-        bestAepVal = aepNum;
-        bestResult = {
+      // Compare directly on AEP% — lower % = rarer event (matches Excel)
+      const aepPct = parseFloat(aep.aep.replace(/[~<>%]/g, '').trim());
+      if (isNaN(aepPct) || aepPct >= bestAepPct) continue;
+      bestAepPct = aepPct;
+      bestResult = {
           station_id:       s.station_id,
           station_name:     s.name,
           duration_minutes: d,
@@ -964,10 +964,14 @@ function renderTopPerSite(results, dur) {
   document.getElementById('res-sub').textContent =
     `Best duration per station · ${lga || 'All stations'} · Ranked by AEP`;
 
-  // Sort by AEP probability (lowest = rarest = first)
+  // Sort by AEP% ascending (lowest % = rarest = first)
   const sorted = [...results]
     .filter(r => r.rolling_max)
-    .sort((a, b) => aepStringToProb(a.aep?.aep) - aepStringToProb(b.aep?.aep));
+    .sort((a, b) => {
+      const pa = parseFloat((a.aep?.aep || '100').replace(/[~<>%]/g, ''));
+      const pb = parseFloat((b.aep?.aep || '100').replace(/[~<>%]/g, ''));
+      return pa - pb;
+    });
 
   const maxD = Math.max(...sorted.map(r => r.rolling_max?.max_depth_mm||0)) || 1;
 
