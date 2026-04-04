@@ -795,7 +795,7 @@ function calcRollingMax(readings, durationMinutes) {
 
   for (let right = 0; right < n; right++) {
     // Advance left pointer so window spans < durationMs (matches Excel: exactly N/5min readings)
-    while (left < right && (times[right] - times[left]) >= durationMs) left++;
+    while (left < right && (times[right] - times[left]) > durationMs) left++;
 
     const windowSum = prefix[right + 1] - prefix[left];
     if (windowSum > maxDepth) {
