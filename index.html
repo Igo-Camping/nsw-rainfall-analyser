@@ -96,6 +96,7 @@ select:focus,input:focus{border-color:var(--teal)}
 
 /* Result content tabs */
 .rtabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 20px;background:white}
+.results.no-rtabs .rtabs{display:none}
 .rtab{padding:8px 16px;font-size:12px;font-weight:600;color:var(--text-l);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
 .rtab.active{color:var(--teal-d);border-bottom-color:var(--teal)}
 .rpanel{padding:16px 20px;display:none}
@@ -230,7 +231,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 <div class="tab-bar">
   <div class="tab active" onclick="switchTab('map')">🗺 Map View</div>
   <div class="tab" onclick="switchTab('top-site')">📊 Top Intensity Per Site</div>
-  <div class="tab" onclick="switchTab('top-dur')">⏱ Top 5 Durations</div>
+  <div class="tab" onclick="switchTab('top-dur')">⏱ All Durations</div>
   <div class="tab" onclick="switchTab('daily')">📅 Daily Totals</div>
   <div class="tab" onclick="switchTab('monitors')">📡 Other Monitors</div>
 </div>
@@ -953,6 +954,7 @@ function aepStringToProb(aepStr) {
 
 
 function renderTopPerSite(results, dur) {
+  document.getElementById('results').classList.remove('no-rtabs');
   document.getElementById('res-title').textContent = 'Top Intensity Per Site';
   const lga = document.getElementById('lgaSel').value;
   document.getElementById('res-sub').textContent =
@@ -1058,7 +1060,8 @@ async function runTopDurations(fromDt, toDt) {
 }
 
 function renderTopDurations(results) {
-  document.getElementById('res-title').textContent = `Top 5 Durations — ${selected.name}`;
+  document.getElementById('results').classList.add('no-rtabs');
+  document.getElementById('res-title').textContent = `All Durations — ${selected.name}`;
   document.getElementById('res-sub').textContent = 'All durations analysed, ranked by AEP';
 
   const sorted = [...results].sort((a,b) => {
@@ -1067,30 +1070,26 @@ function renderTopDurations(results) {
     return pa - pb;
   });
 
-  const rows = sorted.map((r, i) => {
+  const rows = sorted.map(r => {
     const rm = r.rolling_max;
     const aepStr = r.aep?.aep || '>63.2%';
     const {cls} = classifyAEP(aepStr);
     return `
-      <tr class="${i<5?'highlight':''}">
-        <td>${i+1}</td>
+      <tr>
         <td>${DUR_LABELS[r.duration_minutes]||r.duration_minutes+'min'}</td>
         <td class="r">${rm?.max_depth_mm??'—'} mm</td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
         <td class="r">${aepToARI(r.aep || aepStr)}</td>
-        <td>${rm?.peak_start ? fmtDt(rm.peak_start)+' → '+fmtDt(rm.peak_end) : '—'}</td>
       </tr>`;
   }).join('');
 
   document.getElementById('r-allsite').innerHTML = `
-    <div style="margin-bottom:10px;font-size:11px;color:var(--text-l)">
-      Top 5 highlighted. Sorted by rarity (most extreme first).
-    </div>
     <table>
       <thead><tr>
-        <th>#</th><th>Duration</th>
-        <th class="r">Peak Depth</th>
-        <th>AEP</th><th class="r">Return Period</th><th>Peak Window</th>
+        <th>Duration</th>
+        <th class="r">Depth (mm)</th>
+        <th>AEP</th>
+        <th class="r">ARI</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>
@@ -1116,6 +1115,7 @@ async function runDailyTotals(fromDt, toDt) {
 }
 
 function renderDailyTotals(data) {
+  document.getElementById('results').classList.remove('no-rtabs');
   document.getElementById('res-title').textContent = `Daily Totals — ${data.station_name}`;
   document.getElementById('res-sub').textContent = 'Last 7 days · 24hr periods from midnight';
 
@@ -1167,6 +1167,7 @@ function renderDailyTotals(data) {
 function renderResults(data, temp) {
   const panel = document.getElementById('results');
   panel.classList.add('show');
+  panel.classList.remove('no-rtabs');
 
   const dur = data.duration_minutes;
   document.getElementById('res-title').textContent = data.station_name;
@@ -1537,7 +1538,7 @@ function showLoad(txt) {
 }
 function setLoadTxt(txt) { document.getElementById('load-txt').textContent = txt; }
 function hideLoad() { document.getElementById('loading').classList.remove('show'); }
-function closeResults() { document.getElementById('results').classList.remove('show'); allSiteResults = null; }
+function closeResults() { const r = document.getElementById('results'); r.classList.remove('show','no-rtabs'); allSiteResults = null; }
 
 
 // ── Other Monitors ─────────────────────────────────────────
