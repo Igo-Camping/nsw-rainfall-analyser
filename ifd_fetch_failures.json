@@ -1,17 +1,5 @@
 [
   {
-    "station_id": "185822",
-    "name": "003RMSWakehurst U/S",
-    "lat": -33.717804,
-    "lon": 151.2542
-  },
-  {
-    "station_id": "199478",
-    "name": "007RMS - Jenolan Caves (Rain)",
-    "lat": -33.81809333,
-    "lon": 150.02231013
-  },
-  {
     "station_id": "48369",
     "name": "Alder Park Bowls Club (Rain)",
     "lat": -32.93225277777778,

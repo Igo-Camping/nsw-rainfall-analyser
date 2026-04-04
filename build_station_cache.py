@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup
 # ===================================================
 # SET YOUR OUTPUT FOLDER HERE
 # ===================================================
-OUTPUT_FOLDER = r"D:\Weather App"
+OUTPUT_FOLDER = r"D:\Weather App Folder"
 # ===================================================
 
 MHL_BASE    = "https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS"
@@ -189,14 +189,18 @@ def find_rainfall_ts_id(station_id):
         if not any(kw in combined for kw in RAIN_KEYWORDS):
             continue
 
-        if "5" in ts_name and "min" in ts_name:
+        def _is_5min(n):
+            return ("5min" in n or "5m" in n) and "15" not in n
+
+        def _is_15min_or_model(n):
+            return "15" in n or n.startswith("10 -")
+
+        if _is_5min(ts_name) or _is_5min(ts_short):
             priority = 0
-        elif "5" in ts_short:
-            priority = 1
-        elif "raw" in ts_name or "unchecked" in ts_name:
+        elif _is_15min_or_model(ts_name):
             priority = 2
         else:
-            priority = 3
+            priority = 1
 
         if priority < best_priority:
             best_priority = priority
