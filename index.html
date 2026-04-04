@@ -96,6 +96,9 @@ select:focus,input:focus{border-color:var(--teal)}
 
 /* Result content tabs */
 .rtabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 20px;background:white}
+.d-subtabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:14px}
+.d-subtab{padding:7px 14px;font-size:12px;font-weight:600;color:var(--text-l);cursor:pointer;border-bottom:3px solid transparent}
+.d-subtab.active{color:var(--teal-d);border-bottom-color:var(--teal-d)}
 .results.no-rtabs .rtabs{display:none}
 .rtab{padding:8px 16px;font-size:12px;font-weight:600;color:var(--text-l);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
 .rtab.active{color:var(--teal-d);border-bottom-color:var(--teal)}
@@ -1115,6 +1118,8 @@ async function runDailyTotals(fromDt, toDt) {
   }
 }
 
+let lastDailyData = null;
+
 function renderDailyTotals(data) {
   document.getElementById('results').classList.add('no-rtabs');
   document.getElementById('res-title').textContent = `Daily Totals — ${data.station_name}`;
@@ -1127,10 +1132,13 @@ function renderDailyTotals(data) {
     return;
   }
 
+  lastDailyData = data;
+
+  // Group by day
   const byDay = {};
   data.readings.forEach(r => {
-    const raw = r.timestamp.replace(' ', 'T');
-    const day = new Date(raw).toLocaleDateString('en-CA', {timeZone:'Australia/Sydney'});
+    const day = new Date(r.timestamp.replace(' ','T'))
+      .toLocaleDateString('en-CA', {timeZone:'Australia/Sydney'});
     if (!byDay[day]) byDay[day] = 0;
     byDay[day] += r.value;
   });
@@ -1145,23 +1153,77 @@ function renderDailyTotals(data) {
 
   const maxT = Math.max(...days.map(d => d.total)) || 1;
 
-  const rows = days.map(d => `
+  const dailyRows = days.map(d => `
     <tr>
       <td>${d.label}</td>
       <td class="r"><strong>${d.total} mm</strong></td>
       <td style="width:40%">
         <div class="bar-wrap"><div class="bar" style="width:${d.total/maxT*100}%"></div></div>
       </td>
-    </tr>
-  `).join('');
+    </tr>`).join('');
+
+  const dayOptions = days.map(d =>
+    `<option value="${d.day}">${d.label}</option>`).join('');
 
   document.getElementById('r-allsite').innerHTML = `
-    <table>
-      <thead><tr><th>Date</th><th class="r">Total (mm)</th><th>Relative</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
+    <div class="d-subtabs">
+      <div class="d-subtab active" onclick="showDailySubTab('d-daily')">Daily Rainfall</div>
+      <div class="d-subtab" onclick="showDailySubTab('d-hourly')">Hourly Breakdown</div>
+    </div>
+    <div id="d-daily">
+      <table>
+        <thead><tr><th>Date</th><th class="r">Total (mm)</th><th>Relative</th></tr></thead>
+        <tbody>${dailyRows}</tbody>
+      </table>
+    </div>
+    <div id="d-hourly" style="display:none">
+      <div style="margin-bottom:12px">
+        <select id="hourlyDaySel" onchange="renderHourlyTable()" style="width:auto;max-width:340px">
+          ${dayOptions}
+        </select>
+      </div>
+      <div id="hourly-table"></div>
+    </div>
   `;
   switchRTab('r-allsite');
+}
+
+function showDailySubTab(id) {
+  document.querySelectorAll('.d-subtab').forEach((t,i) =>
+    t.classList.toggle('active', ['d-daily','d-hourly'][i] === id));
+  document.getElementById('d-daily').style.display  = id === 'd-daily'  ? '' : 'none';
+  document.getElementById('d-hourly').style.display = id === 'd-hourly' ? '' : 'none';
+  if (id === 'd-hourly') renderHourlyTable();
+}
+
+function renderHourlyTable() {
+  if (!lastDailyData) return;
+  const day = document.getElementById('hourlyDaySel').value;
+  const byHour = Array(24).fill(0);
+  lastDailyData.readings.forEach(r => {
+    const d = new Date(r.timestamp.replace(' ','T'));
+    const rDay  = d.toLocaleDateString('en-CA', {timeZone:'Australia/Sydney'});
+    const rHour = parseInt(d.toLocaleTimeString('en-AU',
+      {timeZone:'Australia/Sydney', hour:'2-digit', hour12:false}));
+    if (rDay === day && rHour >= 0 && rHour < 24) byHour[rHour] += r.value;
+  });
+
+  const maxH = Math.max(...byHour) || 1;
+  const rows = byHour.map((v, h) => {
+    const mm = Math.round(v * 100) / 100;
+    const label = `${String(h).padStart(2,'0')}:00 – ${String(h+1).padStart(2,'0')}:00`;
+    return `<tr>
+      <td>${label}</td>
+      <td class="r"><strong>${mm} mm</strong></td>
+      <td style="width:40%"><div class="bar-wrap"><div class="bar" style="width:${v/maxH*100}%"></div></div></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('hourly-table').innerHTML = `
+    <table>
+      <thead><tr><th>Hour (local)</th><th class="r">Total (mm)</th><th>Relative</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
 }
 
 // ── Render single station results ──────────────────────────
