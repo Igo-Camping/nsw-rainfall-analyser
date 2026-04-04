@@ -928,16 +928,15 @@ async function runTopPerSite(dur, fromDt, toDt) {
       if (isNaN(aepPct) || aepPct >= bestAepPct) continue;
       bestAepPct = aepPct;
       bestResult = {
-          station_id:       s.station_id,
-          station_name:     s.name,
-          duration_minutes: d,
-          from:             fromDt.toISOString(),
-          to:               toDt.toISOString(),
-          readings,
-          rolling_max:      rolling,
-          aep
-        };
-      }
+        station_id:       s.station_id,
+        station_name:     s.name,
+        duration_minutes: d,
+        from:             fromDt.toISOString(),
+        to:               toDt.toISOString(),
+        readings,
+        rolling_max:      rolling,
+        aep
+      };
     }
 
     if (bestResult) allSiteResults.push(bestResult);
