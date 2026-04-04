@@ -585,7 +585,7 @@ function setMode(m) {
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach((el,i) => {
-    el.classList.toggle('active', ['map','top-site','top-dur','daily'][i] === tab);
+    el.classList.toggle('active', ['map','top-site','top-dur','daily','monitors'][i] === tab);
   });
   if (tab === 'monitors') {
     loadOtherMonitors();
@@ -643,7 +643,7 @@ function interpretation(aepStr) {
   if (!aepStr) return '';
   if (aepStr.startsWith('>')) return 'Very frequent — less than 2-year ARI';
   const clean = parseFloat(aepStr.replace(/[~<>%]/g,''));
-  if (isNaN(clean)) return interpretAEP(clean);
+  if (isNaN(clean)) return '';
   return interpretAEP(clean);
 }
 
