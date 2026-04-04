@@ -415,6 +415,7 @@ const map = L.map('map').setView([-33.75, 151.25], 11);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
   attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
 }).addTo(map);
+loadAllLgaBoundaries();
 
 // ── Startup ────────────────────────────────────────────────
 async function init() {
@@ -1809,6 +1810,24 @@ async function showLevelChart(stationId, stationName, colour) {
 }
 
 // ── LGA Boundary ───────────────────────────────────────────
+// ── All LGA boundaries (background layer) ──────────────────
+async function loadAllLgaBoundaries() {
+  try {
+    const resp = await fetch(
+      'https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/NSW_LGA_POLYGON_SHP/FeatureServer/0/query' +
+      '?where=1%3D1&outFields=NSW_LGA__3&f=geojson'
+    );
+    if (!resp.ok) return;
+    const geojson = await resp.json();
+    L.geoJSON(geojson, {
+      style: { color: '#999', weight: 1, opacity: 0.35, fill: false },
+      interactive: false
+    }).addTo(map).bringToBack();
+  } catch(e) {
+    console.warn('LGA boundaries unavailable:', e.message);
+  }
+}
+
 let lgaBoundaryLayer = null;
 
 // NSW Spatial Services - public ArcGIS REST API
