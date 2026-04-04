@@ -1103,13 +1103,11 @@ function renderTopDurations(results) {
 // ── Daily totals ───────────────────────────────────────────
 async function runDailyTotals(fromDt, toDt) {
   showLoad('Calculating daily totals...');
-  // Use 7-day window
-  const from7 = new Date(toDt - 7 * 24 * 3600000);
   try {
-    const readings = await fetchMhlData(selected.ts_id, from7, toDt);
+    const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
     hideLoad();
     renderDailyTotals({ station_name: selected.name, readings,
-      from: from7.toISOString(), to: toDt.toISOString() });
+      from: fromDt.toISOString(), to: toDt.toISOString() });
     document.getElementById('results').classList.add('show');
   } catch(e) {
     hideLoad();
@@ -1118,9 +1116,9 @@ async function runDailyTotals(fromDt, toDt) {
 }
 
 function renderDailyTotals(data) {
-  document.getElementById('results').classList.remove('no-rtabs');
+  document.getElementById('results').classList.add('no-rtabs');
   document.getElementById('res-title').textContent = `Daily Totals — ${data.station_name}`;
-  document.getElementById('res-sub').textContent = 'Last 7 days · 24hr periods from midnight';
+  document.getElementById('res-sub').textContent = `${fmtDt(data.from)} → ${fmtDt(data.to)} · 24hr periods from midnight`;
 
   if (!data.readings?.length) {
     document.getElementById('r-allsite').innerHTML =
