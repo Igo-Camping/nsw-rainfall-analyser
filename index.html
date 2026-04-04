@@ -679,6 +679,7 @@ async function runAnalysis() {
       // Single station analysis
       const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
       const rolling  = calcRollingMax(readings, dur);
+      window.lastReadings = readings;
       let aep = calcAEP(selected.station_id, dur, rolling?.max_depth_mm || 0);
       let temp = null;
       try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){}
