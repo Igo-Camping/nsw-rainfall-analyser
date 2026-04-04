@@ -778,7 +778,10 @@ function onNbcSubChange() {
 const MHL_BASE = 'https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS';
 
 async function fetchMhlData(tsId, fromDt, toDt) {
-  const fmt = d => d.toISOString().slice(0,19);
+  const fmt = d => {
+    const p = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+  };
   const params = new URLSearchParams({
     service:      'kisters',
     type:         'queryServices',
