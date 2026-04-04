@@ -315,6 +315,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
               <option value="7200">120 hr</option>
               <option value="8640">144 hr</option>
               <option value="10080">168 hr</option>
+              <option value="worst">⚠ Worst duration</option>
             </select>
           </div>
         </div>
@@ -650,9 +651,10 @@ function interpretation(aepStr) {
 // ── Main analysis ──────────────────────────────────────────
 async function runAnalysis() {
   if (!selected) return;
-  const dur = parseInt(mode==='recent'
+  const durRaw = mode==='recent'
     ? document.getElementById('dur').value
-    : document.getElementById('durC').value);
+    : document.getElementById('durC').value;
+  const dur = durRaw === 'worst' ? 'worst' : parseInt(durRaw);
 
   // Build time window
   let fromDt, toDt;
@@ -678,14 +680,36 @@ async function runAnalysis() {
     } else {
       // Single station analysis
       const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
-      const rolling  = calcRollingMax(readings, dur);
       window.lastReadings = readings;
-      let aep = calcAEP(selected.station_id, dur, rolling?.max_depth_mm || 0);
+      let resDur, resRolling, resAep, durationLabel;
+
+      if (dur === 'worst') {
+        const ifd = ifdCache[selected.station_id];
+        const durations = ifd ? Object.keys(ifd).map(Number).sort((a,b)=>a-b) : ALL_DURATIONS;
+        let bestRarity = -1;
+        for (const d of durations) {
+          const rolling = calcRollingMax(readings, d);
+          if (!rolling || rolling.max_depth_mm <= 0) continue;
+          const aep = calcAEP(selected.station_id, d, rolling.max_depth_mm);
+          if (!aep) continue;
+          const rarity = aepRarity(aep);
+          if (rarity > bestRarity) {
+            bestRarity = rarity; resDur = d; resRolling = rolling; resAep = aep;
+          }
+        }
+        if (!resDur) { resDur = durations[0] || 30; resRolling = calcRollingMax(readings, resDur); resAep = null; }
+        durationLabel = 'Worst: ' + (DUR_LABELS[resDur] || resDur + ' min');
+      } else {
+        resDur = dur;
+        resRolling = calcRollingMax(readings, dur);
+        resAep = calcAEP(selected.station_id, dur, resRolling?.max_depth_mm || 0);
+      }
+
       let temp = null;
       try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){}
       lastResults = { station_id: selected.station_id, station_name: selected.name,
         from: fromDt.toISOString(), to: toDt.toISOString(),
-        duration_minutes: dur, readings, rolling_max: rolling, aep };
+        duration_minutes: resDur, durationLabel, readings, rolling_max: resRolling, aep: resAep };
       hideLoad();
       renderResults(lastResults, temp);
     }
@@ -1146,7 +1170,7 @@ function renderResults(data, temp) {
   document.getElementById('res-title').textContent = data.station_name;
   const from = fmtDt(data.from), to = fmtDt(data.to);
   document.getElementById('res-sub').textContent =
-    `${DUR_LABELS[dur]||dur+'min'} duration · ${from} → ${to}`;
+    `${data.durationLabel || ((DUR_LABELS[dur]||dur+'min') + ' duration')} · ${from} → ${to}`;
 
   const rm = data.rolling_max;
   const aep = data.aep;
@@ -1369,6 +1393,16 @@ async function loadIfdData() {
 // Piecewise log-linear interpolation in ln(AEP) space
 // Extends to 1:200, 1:500, 1:1000 for NBC Standard 15 stations
 // Beyond 1:1000: log-linear tail extrapolation using 500→1000 slope
+function aepRarity(aepObj) {
+  // Returns a comparable rarity score: higher = rarer event
+  if (!aepObj) return 0;
+  if (aepObj.ari) return aepObj.ari;
+  const str = aepObj.aep || '';
+  if (str.startsWith('>')) return 0;
+  const pct = parseFloat(str.replace(/[~<>%]/g, ''));
+  return (isNaN(pct) || pct <= 0) ? 0 : 100 / pct;
+}
+
 function calcAEP(stationId, durationMinutes, depthMm) {
   const ifd = ifdCache[stationId];
   if (!ifd || depthMm <= 0) return { aep: '>63.2%', interpretation: 'Very frequent — less than 2-year ARI' };
