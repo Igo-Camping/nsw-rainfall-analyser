@@ -290,7 +290,6 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
           </div>
           <div class="fg"><label>Duration</label>
             <select id="dur">
-              <option value="worst">Worst (all durations)</option>
               <option value="5">5 min</option>
               <option value="10">10 min</option>
               <option value="15">15 min</option>
@@ -327,7 +326,6 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
           <div class="fg"><label>To</label><input type="datetime-local" id="toDt"/></div>
           <div class="fg"><label>Duration</label>
             <select id="durC">
-              <option value="worst">Worst (all durations)</option>
               <option value="5">5 min</option><option value="10">10 min</option>
               <option value="15">15 min</option><option value="20">20 min</option>
               <option value="25">25 min</option><option value="30" selected>30 min</option>
@@ -652,10 +650,9 @@ function interpretation(aepStr) {
 // ── Main analysis ──────────────────────────────────────────
 async function runAnalysis() {
   if (!selected) return;
-  const durRaw = mode==='recent'
+  const dur = parseInt(mode==='recent'
     ? document.getElementById('dur').value
-    : document.getElementById('durC').value;
-  const dur = parseInt(durRaw);
+    : document.getElementById('durC').value);
 
   // Build time window
   let fromDt, toDt;
@@ -681,44 +678,15 @@ async function runAnalysis() {
     } else {
       // Single station analysis
       const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
-
-      if (durRaw === 'worst') {
-        // Find worst AEP across all durations — matches Top Intensity Per Site logic
-        let bestResult = null, bestAepVal = Infinity;
-        for (const d of ALL_DURATIONS) {
-          const rolling = calcRollingMax(readings, d);
-          if (!rolling || rolling.max_depth_mm <= 0) continue;
-          const aep = calcAEP(selected.station_id, d, rolling.max_depth_mm);
-          if (!aep) continue;
-          const aepNum = aepStringToProb(aep.aep);
-          if (aepNum < bestAepVal) {
-            bestAepVal = aepNum;
-            bestResult = { station_id: selected.station_id, station_name: selected.name,
-              from: fromDt.toISOString(), to: toDt.toISOString(),
-              duration_minutes: d, readings, rolling_max: rolling, aep };
-          }
-        }
-        if (bestResult) {
-          lastResults = bestResult;
-          let temp = null;
-          try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){}
-          hideLoad();
-          renderResults(lastResults, temp);
-        } else {
-          hideLoad();
-          alert('No IFD data available for any duration at this station.');
-        }
-      } else {
-        const rolling  = calcRollingMax(readings, dur);
-        let aep = calcAEP(selected.station_id, dur, rolling?.max_depth_mm || 0);
-        let temp = null;
-        try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){}
-        lastResults = { station_id: selected.station_id, station_name: selected.name,
-          from: fromDt.toISOString(), to: toDt.toISOString(),
-          duration_minutes: dur, readings, rolling_max: rolling, aep };
-        hideLoad();
-        renderResults(lastResults, temp);
-      }
+      const rolling  = calcRollingMax(readings, dur);
+      let aep = calcAEP(selected.station_id, dur, rolling?.max_depth_mm || 0);
+      let temp = null;
+      try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){}
+      lastResults = { station_id: selected.station_id, station_name: selected.name,
+        from: fromDt.toISOString(), to: toDt.toISOString(),
+        duration_minutes: dur, readings, rolling_max: rolling, aep };
+      hideLoad();
+      renderResults(lastResults, temp);
     }
   } catch(e) {
     hideLoad();
@@ -811,9 +779,11 @@ async function fetchMhlData(tsId, fromDt, toDt) {
 function calcRollingMax(readings, durationMinutes) {
   if (!readings || !readings.length) return null;
 
+  const durationMs = durationMinutes * 60 * 1000;
   const n = readings.length;
-  // Fixed count window: matches Excel exactly (each reading = one 5-min bucket)
-  const count = Math.round(durationMinutes / 5);
+
+  // Parse timestamps once
+  const times = readings.map(r => new Date(r.timestamp).getTime());
   const vals  = readings.map(r => r.value);
 
   // Prefix sums for O(n) sliding window
@@ -821,9 +791,12 @@ function calcRollingMax(readings, durationMinutes) {
   for (let i = 0; i < n; i++) prefix.push(prefix[i] + vals[i]);
 
   let maxDepth = 0, peakStart = null, peakEnd = null;
+  let left = 0;
 
-  for (let right = count - 1; right < n; right++) {
-    const left = right - count + 1;
+  for (let right = 0; right < n; right++) {
+    // Advance left pointer so window spans < durationMs (matches Excel: exactly N/5min readings)
+    while (left < right && (times[right] - times[left]) >= durationMs) left++;
+
     const windowSum = prefix[right + 1] - prefix[left];
     if (windowSum > maxDepth) {
       maxDepth  = windowSum;
@@ -915,28 +888,29 @@ async function runTopPerSite(dur, fromDt, toDt) {
 
     // Find the duration with the worst (lowest) AEP
     let bestResult = null;
-    let bestAepPct = Infinity;
+    let bestAepVal = Infinity;
 
     for (const d of allDurs) {
       const rolling = calcRollingMax(readings, d);
       if (!rolling || rolling.max_depth_mm <= 0) continue;
       const aep = calcAEP(s.station_id, d, rolling.max_depth_mm);
-      if (!aep || !aep.aep || aep.aep.startsWith('>')) continue;
+      if (!aep) continue;
 
-      // Compare directly on AEP% — lower % = rarer event (matches Excel)
-      const aepPct = parseFloat(aep.aep.replace(/[~<>%]/g, '').trim());
-      if (isNaN(aepPct) || aepPct >= bestAepPct) continue;
-      bestAepPct = aepPct;
-      bestResult = {
-        station_id:       s.station_id,
-        station_name:     s.name,
-        duration_minutes: d,
-        from:             fromDt.toISOString(),
-        to:               toDt.toISOString(),
-        readings,
-        rolling_max:      rolling,
-        aep
-      };
+      // Convert AEP string to numeric probability for comparison
+      const aepNum = aepStringToProb(aep.aep);
+      if (aepNum < bestAepVal) {
+        bestAepVal = aepNum;
+        bestResult = {
+          station_id:       s.station_id,
+          station_name:     s.name,
+          duration_minutes: d,
+          from:             fromDt.toISOString(),
+          to:               toDt.toISOString(),
+          readings,
+          rolling_max:      rolling,
+          aep
+        };
+      }
     }
 
     if (bestResult) allSiteResults.push(bestResult);
@@ -963,14 +937,10 @@ function renderTopPerSite(results, dur) {
   document.getElementById('res-sub').textContent =
     `Best duration per station · ${lga || 'All stations'} · Ranked by AEP`;
 
-  // Sort by AEP% ascending (lowest % = rarest = first)
+  // Sort by AEP probability (lowest = rarest = first)
   const sorted = [...results]
     .filter(r => r.rolling_max)
-    .sort((a, b) => {
-      const pa = parseFloat((a.aep?.aep || '100').replace(/[~<>%]/g, ''));
-      const pb = parseFloat((b.aep?.aep || '100').replace(/[~<>%]/g, ''));
-      return pa - pb;
-    });
+    .sort((a, b) => aepStringToProb(a.aep?.aep) - aepStringToProb(b.aep?.aep));
 
   const maxD = Math.max(...sorted.map(r => r.rolling_max?.max_depth_mm||0)) || 1;
 
