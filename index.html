@@ -327,6 +327,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
           <div class="fg"><label>To</label><input type="datetime-local" id="toDt"/></div>
           <div class="fg"><label>Duration</label>
             <select id="durC">
+              <option value="worst">⚠ Worst duration</option>
               <option value="5">5 min</option><option value="10">10 min</option>
               <option value="15">15 min</option><option value="20">20 min</option>
               <option value="25">25 min</option><option value="30" selected>30 min</option>
@@ -340,7 +341,6 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
               <option value="4320">72 hr</option><option value="5760">96 hr</option>
               <option value="7200">120 hr</option><option value="8640">144 hr</option>
               <option value="10080">168 hr</option>
-              <option value="worst">⚠ Worst duration</option>
             </select>
           </div>
         </div>
