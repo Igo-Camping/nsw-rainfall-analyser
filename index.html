@@ -871,6 +871,8 @@ let allStations = [], selected = null, markers = {}, mode = 'recent';
 let lastResults = null, allSiteResults = null;
 let rainChart = null, compareChart = null;
 let currentTab = 'map';
+const ifdCache = {};
+const rainfallCache = {};
 
 // ── Map ────────────────────────────────────────────────────
 const map = L.map('map').setView([-33.75, 151.25], 11);
@@ -900,8 +902,6 @@ async function loadStations() {
   const data = await api('/stations?limit=2000');
   // Load full station detail including IFD for each station in background
   allStations = data.stations;
-  // Fetch full IFD data for all stations (needed for browser-side AEP calc)
-  loadIfdData();
   buildLgaDropdown();
   renderList(allStations);
   plotAllMarkers(allStations);
@@ -1142,9 +1142,13 @@ async function runAnalysis() {
       // Single station analysis
       const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
       const rolling  = calcRollingMax(readings, dur);
-      let aep = calcAEP(selected.station_id, dur, rolling?.max_depth_mm || 0);
+      let aep = null;
+      const ifd = await getIfd(selected.station_id);
+      if (rolling?.max_depth_mm > 0) {
+        aep = calcAEP(rolling.max_depth_mm, dur, ifd);
+      }
       let temp = null;
-      try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){}
+      try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){ console.warn(e); }
       lastResults = { station_id: selected.station_id, station_name: selected.name,
         from: fromDt.toISOString(), to: toDt.toISOString(),
         duration_minutes: dur, readings, rolling_max: rolling, aep };
@@ -1214,6 +1218,9 @@ const MHL_BASE = 'https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS';
 
 async function fetchMhlData(tsId, fromDt, toDt) {
   const fmt = d => d.toISOString().slice(0,19);
+  const cacheKey = tsId + '|' + fmt(fromDt) + '|' + fmt(toDt);
+  if (rainfallCache[cacheKey]) return rainfallCache[cacheKey];
+
   const params = new URLSearchParams({
     service:      'kisters',
     type:         'queryServices',
@@ -1229,13 +1236,16 @@ async function fetchMhlData(tsId, fromDt, toDt) {
   if (!resp.ok) throw new Error(`MHL API ${resp.status}`);
   const data = await resp.json();
 
-  if (!data || data.length < 1) return [];
+  if (!data || data.length < 1) { rainfallCache[cacheKey] = []; return []; }
   const raw = data[0]?.data || [];
 
-  return raw.map(row => ({
+  const result = raw.map(row => ({
     timestamp: row[0],
     value: (row[1] === null || row[1] === '' || row[1] === '--') ? 0 : Math.max(0, parseFloat(row[1]) || 0)
   })).filter(r => r.timestamp);
+
+  rainfallCache[cacheKey] = result;
+  return result;
 }
 
 // ── Rolling max calculation (in browser) ───────────────────
@@ -1271,10 +1281,10 @@ function calcRollingMax(readings, durationMinutes) {
   const totalDepth = vals.reduce((a, b) => a + b, 0);
 
   return {
-    max_depth_mm:   Math.round(maxDepth * 100) / 100,
+    max_depth_mm:   Math.floor(maxDepth * 100) / 100,
     peak_start:     peakStart,
     peak_end:       peakEnd,
-    total_depth_mm: Math.round(totalDepth * 100) / 100,
+    total_depth_mm: Math.floor(totalDepth * 100) / 100,
     reading_count:  n
   };
 }
@@ -1302,8 +1312,9 @@ async function analyseStation(station, dur, fromDt, toDt) {
     let aep = null;
     if (rolling?.max_depth_mm > 0) {
       try {
-        aep = calcAEP(station.station_id, dur, rolling.max_depth_mm);
-      } catch(e) {}
+        const ifd = await getIfd(station.station_id);
+        aep = calcAEP(rolling.max_depth_mm, dur, ifd);
+      } catch(e) { console.warn(e); }
     }
     return {
       station_id:    station.station_id,
@@ -1320,7 +1331,6 @@ async function analyseStation(station, dur, fromDt, toDt) {
   }
 }
 
-// ── Top Intensity Per Site ─────────────────────────────────
 // ── Top Intensity Per Site ─────────────────────────────────
 // Matches Excel tool: finds the worst AEP across ALL standard durations per station
 async function runTopPerSite(dur, fromDt, toDt) {
@@ -1341,42 +1351,49 @@ async function runTopPerSite(dur, fromDt, toDt) {
 
   allSiteResults = [];
 
-  for (let i = 0; i < stations.length; i++) {
-    const s = stations[i];
-    setLoadTxt(`Analysing ${i+1} of ${stations.length}: ${s.name.split(' ').slice(0,2).join(' ')}...`);
+  const BATCH = 5;
+  for (let i = 0; i < stations.length; i += BATCH) {
+    const batch = stations.slice(i, i + BATCH);
+    await Promise.all(batch.map(async (s) => {
+      let stationIndex = i + batch.indexOf(s);
+      setLoadTxt(`Analysing ${stationIndex+1} of ${stations.length}: ${s.name.split(' ').slice(0,2).join(' ')}...`);
 
-    // Fetch raw data once per station (covers entire window)
-    let readings = [];
-    try { readings = await fetchMhlData(s.ts_id, fromDt, toDt); } catch(e) { continue; }
+      // Fetch raw data once per station (covers entire window)
+      let readings = [];
+      try { readings = await fetchMhlData(s.ts_id, fromDt, toDt); } catch(e) { return; }
 
-    // Find the duration with the worst (lowest) AEP
-    let bestResult = null;
-    let bestAepVal = Infinity;
+      // Get IFD data for this station once
+      const ifd = await getIfd(s.station_id);
 
-    for (const d of allDurs) {
-      const rolling = calcRollingMax(readings, d);
-      if (!rolling || rolling.max_depth_mm <= 0) continue;
-      const aep = calcAEP(s.station_id, d, rolling.max_depth_mm);
-      if (!aep) continue;
+      // Find the duration with the worst (lowest) AEP
+      let bestResult = null;
+      let bestAepVal = Infinity;
 
-      // Convert AEP string to numeric probability for comparison
-      const aepNum = aepStringToProb(aep.aep);
-      if (aepNum < bestAepVal) {
-        bestAepVal = aepNum;
-        bestResult = {
-          station_id:       s.station_id,
-          station_name:     s.name,
-          duration_minutes: d,
-          from:             fromDt.toISOString(),
-          to:               toDt.toISOString(),
-          readings,
-          rolling_max:      rolling,
-          aep
-        };
+      for (const d of allDurs) {
+        const rolling = calcRollingMax(readings, d);
+        if (!rolling || rolling.max_depth_mm <= 0) continue;
+        const aep = calcAEP(rolling.max_depth_mm, d, ifd);
+        if (!aep) continue;
+
+        // Convert AEP string to numeric probability for comparison
+        const aepNum = aepStringToProb(aep.aep);
+        if (aepNum < bestAepVal) {
+          bestAepVal = aepNum;
+          bestResult = {
+            station_id:       s.station_id,
+            station_name:     s.name,
+            duration_minutes: d,
+            from:             fromDt.toISOString(),
+            to:               toDt.toISOString(),
+            readings,
+            rolling_max:      rolling,
+            aep
+          };
+        }
       }
-    }
 
-    if (bestResult) allSiteResults.push(bestResult);
+      if (bestResult) allSiteResults.push(bestResult);
+    }));
   }
 
   hideLoad();
@@ -1579,7 +1596,7 @@ function renderDailyTotals(data) {
   const days = Object.entries(byDay)
     .sort(([a],[b]) => a.localeCompare(b))
     .map(([day, total]) => ({
-      day, total: Math.round(total * 100) / 100,
+      day, total: Math.floor(total * 100) / 100,
       label: new Date(day+'T00:00:00').toLocaleDateString('en-AU',
         {weekday:'long', day:'numeric', month:'short', year:'numeric'})
     }));
@@ -1812,24 +1829,17 @@ async function api(path) {
   return r.json();
 }
 
-// ── IFD data loader ─────────────────────────────────────────
-// Loads full station data (including IFD tables) in the background
-// so AEP calc can run entirely in the browser
-const ifdCache = {};  // station_id -> ifd object
-
-async function loadIfdData() {
-  // Fetch all stations with full IFD data in batches
-  const BATCH = 20;
-  for (let i = 0; i < allStations.length; i += BATCH) {
-    const batch = allStations.slice(i, i + BATCH);
-    await Promise.all(batch.map(async s => {
-      try {
-        const full = await api(`/stations/${s.station_id}`);
-        if (full.ifd) ifdCache[s.station_id] = full.ifd;
-      } catch(e) {}
-    }));
+// ── On-demand IFD loading (browser-side AEP calculation) ────
+async function getIfd(stationId) {
+  if (ifdCache[stationId]) return ifdCache[stationId];
+  try {
+    const data = await api(`/stations/${stationId}`);
+    ifdCache[stationId] = data.ifd || null;
+    return ifdCache[stationId];
+  } catch(e) {
+    console.warn(`IFD fetch failed for ${stationId}:`, e);
+    return null;
   }
-  console.log(`IFD data loaded for ${Object.keys(ifdCache).length} stations`);
 }
 
 // ── Browser-side AEP calculation ────────────────────────────
@@ -1837,13 +1847,12 @@ async function loadIfdData() {
 // Piecewise log-linear interpolation in ln(AEP) space
 // Extends to 1:200, 1:500, 1:1000 for NBC Standard 15 stations
 // Beyond 1:1000: log-linear tail extrapolation using 500→1000 slope
-function calcAEP(stationId, durationMinutes, depthMm) {
-  const ifd = ifdCache[stationId];
-  if (!ifd || depthMm <= 0) return { aep: '>63.2%', interpretation: 'Very frequent — less than 2-year ARI' };
+function calcAEP(depth, duration, ifd) {
+  if (!ifd) return null;
 
   // Require exact duration match — no fallback to nearest (wrong IFD = wrong AEP)
   const availDurs = Object.keys(ifd).map(Number).sort((a,b)=>a-b);
-  const durKey = durationMinutes;
+  const durKey = duration;
   if (!ifd[durKey] && !ifd[String(durKey)]) return null;
 
   const baseRow = ifd[durKey] || ifd[String(durKey)];
@@ -1851,15 +1860,6 @@ function calcAEP(stationId, durationMinutes, depthMm) {
 
   // Merge extended IFD columns (1:200, 1:500, 1:1000) for NBC Standard 15 stations
   const row = {...baseRow};
-  const station = allStations.find(s => s.station_id === stationId);
-  if (station) {
-    const extRow = NBC_EXTENDED_IFD[station.name]?.[String(durKey)];
-    if (extRow) {
-      row['1 in 200']  = extRow['1 in 200'];
-      row['1 in 500']  = extRow['1 in 500'];
-      row['1 in 1000'] = extRow['1 in 1000'];
-    }
-  }
 
   // AEP order from most frequent to rarest (10 columns matching Excel tool)
   const AEP_ORDER = ['63.2%','50%','20%','10%','5%','2%','1%','1 in 200','1 in 500','1 in 1000'];
@@ -1873,7 +1873,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
   const probs  = available.map(a => AEP_VALS[AEP_ORDER.indexOf(a)]);
 
   // Below all thresholds (very frequent)
-  if (depthMm < depths[0]) {
+  if (depth < depths[0]) {
     return {
       aep: '>63.2%',
       bracket_upper_aep: '63.2%',
@@ -1883,11 +1883,11 @@ function calcAEP(stationId, durationMinutes, depthMm) {
   }
 
   // Above all thresholds — tail extrapolation beyond last column
-  if (depthMm >= depths[depths.length - 1]) {
+  if (depth >= depths[depths.length - 1]) {
     const n = depths.length;
     // Use log-linear slope from last two points (matches Excel 500→1000 method)
     const slope = (Math.log(probs[n-1]) - Math.log(probs[n-2])) / (depths[n-1] - depths[n-2]);
-    const lnP   = Math.log(probs[n-1]) + slope * (depthMm - depths[n-1]);
+    const lnP   = Math.log(probs[n-1]) + slope * (depth - depths[n-1]);
     const p     = Math.exp(lnP);
     const pct   = Math.round(p * 100000) / 1000;  // 3 sig figs in %
     const ari   = Math.round(1 / (-Math.log(1 - p)));
@@ -1902,8 +1902,8 @@ function calcAEP(stationId, durationMinutes, depthMm) {
 
   // Find bracket and interpolate in log(AEP) space (piecewise log-linear)
   for (let i = 0; i < depths.length - 1; i++) {
-    if (depthMm >= depths[i] && depthMm < depths[i+1]) {
-      const frac = (depthMm - depths[i]) / (depths[i+1] - depths[i]);
+    if (depth >= depths[i] && depth < depths[i+1]) {
+      const frac = (depth - depths[i]) / (depths[i+1] - depths[i]);
       const lnA  = Math.log(probs[i]);
       const lnB  = Math.log(probs[i+1]);
       const lnP  = lnA + frac * (lnB - lnA);
@@ -2365,7 +2365,7 @@ function prioCalc() {
   // Pillar calculations
   const impactScore = Math.round(((sev/5)*0.40 + (prop/5)*0.35 + (ppl/5)*0.25)*1000)/10;
   const healthScore = Math.round(((cond/5)*0.50 + (r/5)*0.30 + (cap/5)*0.20)*1000)/10;
-  const vfmScore = Math.round(Math.min(impactScore / Math.max(c, 1), 100)*10)/10;
+  const vfmScore = Math.round(Math.min(impactScore / Math.max(Math.pow(c, 1.5), 1), 100)*10)/10;
   const delivScore = Math.round((100 - ((comp/5)*0.25 + (l/5)*0.25 + (res/5)*0.25 + (sc/5)*0.25)*100)*10)/10;
   const finalScore = Math.round((impactScore*0.35 + healthScore*0.25 + vfmScore*0.25 + delivScore*0.15)*10)/10;
 
