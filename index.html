@@ -191,9 +191,9 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 .hc-badge.soon{background:var(--panel);color:var(--text-l)}
 
 /* ── Prioritisation Tool ── */
-#page-prioritisation{flex:1;min-height:0;display:none;flex-direction:row;overflow:hidden}
-.pri-sidebar{width:260px;flex-shrink:0;min-height:0;background:white;border-right:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
-.pri-main{flex:1;min-height:0;overflow-y:auto;padding:20px;background:var(--panel);display:flex;flex-direction:column;gap:16px}
+#page-prioritisation{flex:1;min-height:0;display:none;flex-direction:row;overflow-y:auto;align-items:flex-start}
+.pri-sidebar{width:260px;flex-shrink:0;min-height:0;background:white;border-right:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;position:sticky;top:0;max-height:100vh}
+.pri-main{flex:1;min-height:0;padding:20px;background:var(--panel);display:flex;flex-direction:column;gap:16px}
 .pri-section{background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .pri-sec-hdr{background:var(--navy);color:white;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
 .pri-sec-hdr span{font-size:13px;font-weight:700}
