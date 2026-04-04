@@ -780,24 +780,18 @@ async function fetchMhlData(tsId, fromDt, toDt) {
 function calcRollingMax(readings, durationMinutes) {
   if (!readings || !readings.length) return null;
 
-  const durationMs = durationMinutes * 60 * 1000;
   const n = readings.length;
-
-  // Parse timestamps once
-  const times = readings.map(r => new Date(r.timestamp).getTime());
-  const vals  = readings.map(r => r.value);
+  const vals = readings.map(r => r.value);
 
   // Prefix sums for O(n) sliding window
   const prefix = [0];
   for (let i = 0; i < n; i++) prefix.push(prefix[i] + vals[i]);
 
+  const count = Math.round(durationMinutes / 5);
   let maxDepth = 0, peakStart = null, peakEnd = null;
-  let left = 0;
 
-  for (let right = 0; right < n; right++) {
-    // Advance left pointer so window spans < durationMs (matches Excel: exactly N/5min readings)
-    while (left < right && (times[right] - times[left]) > durationMs) left++;
-
+  for (let right = count - 1; right < n; right++) {
+    const left = right - count + 1;
     const windowSum = prefix[right + 1] - prefix[left];
     if (windowSum > maxDepth) {
       maxDepth  = windowSum;
