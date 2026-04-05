@@ -807,7 +807,9 @@ function buildLgaDropdown() {
 }
 
 function getLGA(station) {
-  return station.lga || 'Unknown';
+  if (station.lga) return station.lga;
+  if (NBC_STANDARD_15.includes(station.name)) return 'Northern Beaches';
+  return 'Unknown';
 }
 
 function onLgaChange() {
