@@ -596,16 +596,16 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         <div class="pri-field"><label>Capital Cost Band</label>
           <select id="pri-cost" onchange="priCalc()">
             <option value="1">&lt; $50k</option>
-            <option value="2">$50k â€“ $250k</option>
-            <option value="3">$250k â€“ $500k</option>
-            <option value="4">$500k â€“ $1M</option>
-            <option value="5">$1M â€“ $2M</option>
-            <option value="6">$2M â€“ $5M</option>
+            <option value="2">$50k - $250k</option>
+            <option value="3">$250k - $500k</option>
+            <option value="4">$500k - $1M</option>
+            <option value="5">$1M - $2M</option>
+            <option value="6">$2M - $5M</option>
             <option value="7">&gt; $5M</option>
           </select>
         </div>
         <div style="font-size:11px;color:var(--text-l);padding:4px 0">
-          VFM = Impact Score Ã· Cost Index (capped at 100)
+          VFM = Impact Score / Cost Index (capped at 100)
         </div>
         <div class="pri-pillar-result">
           <span class="pri-pillar-lbl">Value for Money Score</span>
@@ -631,24 +631,24 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         </div>
         <div class="pri-field"><label>Land / Easement Requirement</label>
           <select id="pri-land" onchange="priCalc()">
-            <option value="0">Not required â€” all works within public land</option>
-            <option value="2">Possible â€” minor encroachment likely</option>
-            <option value="4">Likely â€” significant acquisition needed</option>
-            <option value="5">Certain â€” complex multi-party acquisition</option>
+            <option value="0">Not required - all works within public land</option>
+            <option value="2">Possible - minor encroachment likely</option>
+            <option value="4">Likely - significant acquisition needed</option>
+            <option value="5">Certain - complex multi-party acquisition</option>
           </select>
         </div>
         <div class="pri-field"><label>Resource Availability</label>
           <select id="pri-res" onchange="priCalc()">
-            <option value="1">High â€” resources readily available</option>
-            <option value="3">Medium â€” some constraints expected</option>
-            <option value="5">Low â€” significant resource constraints</option>
+            <option value="1">High - resources readily available</option>
+            <option value="3">Medium - some constraints expected</option>
+            <option value="5">Low - significant resource constraints</option>
           </select>
         </div>
         <div class="pri-field"><label>Scope Uncertainty</label>
           <select id="pri-scope" onchange="priCalc()">
-            <option value="1">Low â€” scope well-defined, minimal risk of expansion</option>
-            <option value="3">Medium â€” some unknowns, moderate expansion risk</option>
-            <option value="5">High â€” significant unknowns, high expansion risk</option>
+            <option value="1">Low - scope well-defined, minimal risk of expansion</option>
+            <option value="3">Medium - some unknowns, moderate expansion risk</option>
+            <option value="5">High - significant unknowns, high expansion risk</option>
           </select>
         </div>
         <div class="pri-pillar-result">
@@ -661,10 +661,10 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 
     <!-- Results Hero -->
     <div class="pri-hero" id="pri-hero">
-      <div class="pri-hero-score" id="pri-final-score">â€”</div>
+      <div class="pri-hero-score" id="pri-final-score">-</div>
       <div class="pri-hero-info">
         <div class="pri-hero-lbl">Final Priority Score</div>
-        <div class="pri-priority" id="pri-priority-lbl">â€”</div>
+        <div class="pri-priority" id="pri-priority-lbl">-</div>
         <div style="font-size:11px;opacity:.7;margin-top:4px" id="pri-breakdown">Complete all sections above</div>
       </div>
       <button onclick="priSave()" style="padding:10px 18px;background:var(--teal);border:none;border-radius:var(--r);color:white;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">Save to List</button>
@@ -674,22 +674,22 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
     <div class="pillar-bars">
       <div class="pillar-bar-item">
         <div class="pillar-bar-lbl">Impact (35%)</div>
-        <div class="pillar-bar-val" id="pb-impact">â€”</div>
+        <div class="pillar-bar-val" id="pb-impact">-</div>
         <div class="pri-score-bar"><div class="pri-score-fill" id="pb-impact-bar" style="width:0%"></div></div>
       </div>
       <div class="pillar-bar-item">
         <div class="pillar-bar-lbl">Asset Health (25%)</div>
-        <div class="pillar-bar-val" id="pb-health">â€”</div>
+        <div class="pillar-bar-val" id="pb-health">-</div>
         <div class="pri-score-bar"><div class="pri-score-fill" id="pb-health-bar" style="width:0%"></div></div>
       </div>
       <div class="pillar-bar-item">
         <div class="pillar-bar-lbl">Value for Money (25%)</div>
-        <div class="pillar-bar-val" id="pb-vfm">â€”</div>
+        <div class="pillar-bar-val" id="pb-vfm">-</div>
         <div class="pri-score-bar"><div class="pri-score-fill" id="pb-vfm-bar" style="width:0%"></div></div>
       </div>
       <div class="pillar-bar-item">
         <div class="pillar-bar-lbl">Deliverability (15%)</div>
-        <div class="pillar-bar-val" id="pb-deliv">â€”</div>
+        <div class="pillar-bar-val" id="pb-deliv">-</div>
         <div class="pri-score-bar"><div class="pri-score-fill" id="pb-deliv-bar" style="width:0%"></div></div>
       </div>
     </div>
@@ -698,7 +698,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
     <div class="pri-list-section" id="pri-list-wrap" style="display:none">
       <div class="pri-list-hdr">
         <div style="font-size:13px;font-weight:700;color:var(--navy)">Saved Projects</div>
-        <button onclick="priExportCSV()" style="padding:6px 12px;background:var(--navy);color:white;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">â¬‡ Export CSV</button>
+        <button onclick="priExportCSV()" style="padding:6px 12px;background:var(--navy);color:white;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">Export CSV</button>
       </div>
       <div id="pri-list-table"></div>
     </div>
@@ -709,7 +709,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 <!-- Relining Packaging Page (placeholder) -->
 <div id="page-relining" style="display:none;flex:1;align-items:center;justify-content:center;background:var(--panel)">
   <div style="text-align:center;color:var(--text-l)">
-    <div style="font-size:48px;margin-bottom:16px">ðŸ”§</div>
+    <div style="font-size:48px;margin-bottom:16px">Packaging</div>
     <div style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px">Relining Packaging Tool</div>
     <div style="font-size:13px">Coming soon</div>
   </div>
