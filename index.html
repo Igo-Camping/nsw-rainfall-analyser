@@ -165,6 +165,7 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 /* IFD reference row highlight */
 .obs-row td{background:rgba(0,132,127,.1)!important;font-weight:700;color:var(--teal-d)}
 .bracket-hi td{background:rgba(241,196,15,.15)!important}
+.leaflet-tooltip.station-label{background:rgba(26,43,60,.82);border:none;box-shadow:none;color:#fff;font-size:10px;font-weight:600;padding:2px 6px;white-space:nowrap;pointer-events:none}.leaflet-tooltip.station-label::before{display:none}
 
 /* â”€â”€ Page nav â”€â”€ */
 #page-nav{background:var(--navy-l);display:flex;align-items:center;gap:0;padding:0 8px;flex-shrink:0;border-bottom:2px solid var(--teal)}
@@ -901,7 +902,7 @@ function plotAllMarkers(stations) {
     const m = L.circleMarker([s.lat, s.lon], {
       radius: 5, color: 'white', weight: 1.5,
       fillColor: '#00847F', fillOpacity: 0.85
-    }).addTo(map).bindPopup(`<b>${escapeHtml(s.name)}</b><br><small>${escapeHtml(getLGA(s))}</small>`);
+    }).addTo(map).bindPopup(`<b>${escapeHtml(s.name)}</b><br><small>${escapeHtml(getLGA(s))}</small>`).bindTooltip(s.name,{permanent:true,direction:'right',className:'station-label',offset:[4,0]});
     m.on('click', () => selectStation(s.station_id));
     markers[s.station_id] = m;
   });
@@ -1070,13 +1071,14 @@ async function runAnalysis() {
         resAep = calcAEP(selected.station_id, dur, resRolling?.max_depth_mm || 0);
       }
 
-      let temp = null;
-      try { temp = await fetchTemperature(selected.lat, selected.lon); } catch(e){}
+      let wx = null, rainToday = null;
+      try { wx = await fetchWeather(selected.lat, selected.lon); } catch(e){ console.warn(e); }
+      try { rainToday = await fetchRainfallSinceMidnight(selected.ts_id); } catch(e){ console.warn(e); }
       lastResults = { station_id: selected.station_id, station_name: selected.name,
         from: fromDt.toISOString(), to: toDt.toISOString(),
         duration_minutes: resDur, durationLabel, readings, rolling_max: resRolling, aep: resAep };
       hideLoad();
-      renderResults(lastResults, temp);
+      renderResults(lastResults, wx, rainToday);
     }
   } catch(e) {
     hideLoad();
@@ -1194,18 +1196,34 @@ function calcRollingMax(readings, durationMinutes) {
 }
 
 // â”€â”€ Temperature (browser â†’ Open-Meteo directly) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-async function fetchTemperature(lat, lon) {
+async function fetchWeather(lat, lon) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-    `&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Australia/Sydney`;
+    `&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m&timezone=Australia/Sydney`;
   const resp = await fetch(url);
-  if (!resp.ok) throw new Error('temp fetch failed');
+  if (!resp.ok) throw new Error('weather fetch failed');
   const data = await resp.json();
   const cur = data.current || {};
   return {
-    temperature_c: cur.temperature_2m,
-    humidity_pct:  cur.relative_humidity_2m,
-    weather_code:  cur.weather_code
+    temperature_c:  cur.temperature_2m,
+    humidity_pct:   cur.relative_humidity_2m,
+    weather_code:   cur.weather_code,
+    wind_speed_kmh: cur.wind_speed_10m,
+    wind_dir_deg:   cur.wind_direction_10m
   };
+}
+function degToCompass(d){const a=['N','NE','E','SE','S','SW','W','NW'];return a[Math.round(d/45)%8];}
+async function fetchRainfallSinceMidnight(tsId) {
+  const now=new Date(), mid=new Date(now);
+  mid.setHours(0,0,0,0);
+  const pad=n=>String(n).padStart(2,'0');
+  const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+  const params=new URLSearchParams({service:'kisters',type:'queryServices',request:'getTimeseriesValues',
+    datasource:'0',format:'json',ts_id:tsId,from:fmt(mid),to:fmt(now),returnfields:'Timestamp,Value'});
+  const resp=await fetch(`${MHL_BASE}?${params}`);
+  if(!resp.ok) throw new Error('MHL midnight fetch failed');
+  const data=await resp.json();
+  if(!Array.isArray(data)||data.length<2) return 0;
+  return data.slice(1).reduce((s,r)=>{const v=parseFloat(r[1]);return s+(isFinite(v)&&v>0?v:0);},0);
 }
 
 // â”€â”€ Analyse one station (used by multi-site analysis) â”€â”€â”€â”€â”€â”€â”€
@@ -1578,7 +1596,7 @@ function renderHourlyTable() {
 }
 
 // â”€â”€ Render single station results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function renderResults(data, temp) {
+function renderResults(data, wx, rainToday) {
   const panel = document.getElementById('results');
   panel.classList.add('show');
   panel.classList.remove('no-rtabs');
@@ -1603,8 +1621,8 @@ function renderResults(data, temp) {
       <div class="aep-hero-info">
         <div class="aep-hero-interp">${aep?.interpretation || interpretation(aepStr)}</div>
         <div class="aep-hero-ari">Return period: ${aepToARI(aep || aepStr)}</div>
-        ${temp ? `<div class="aep-hero-ari" style="margin-top:4px">
-          ${tempIcon(temp.weather_code)} ${temp.temperature_c} C - ${temp.humidity_pct}% humidity
+        ${wx ? `<div class="aep-hero-ari" style="margin-top:4px">
+          ${tempIcon(wx.weather_code)} ${wx.temperature_c}°C · 💨 ${wx.wind_speed_kmh} km/h ${degToCompass(wx.wind_dir_deg)} · 🌧 ${rainToday!=null?rainToday.toFixed(1)+' mm':'—'} since midnight
         </div>` : ''}
       </div>
     </div>
