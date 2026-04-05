@@ -1213,17 +1213,28 @@ async function fetchWeather(lat, lon) {
 }
 function degToCompass(d){const a=['N','NE','E','SE','S','SW','W','NW'];return a[Math.round(d/45)%8];}
 async function fetchRainfallSinceMidnight(tsId) {
-  const now=new Date(), mid=new Date(now);
-  mid.setHours(0,0,0,0);
-  const pad=n=>String(n).padStart(2,'0');
-  const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
-  const params=new URLSearchParams({service:'kisters',type:'queryServices',request:'getTimeseriesValues',
-    datasource:'0',format:'json',ts_id:tsId,from:fmt(mid),to:fmt(now),returnfields:'Timestamp,Value'});
-  const resp=await fetch(`${MHL_BASE}?${params}`);
-  if(!resp.ok) throw new Error('MHL midnight fetch failed');
-  const data=await resp.json();
-  if(!Array.isArray(data)||data.length<2) return 0;
-  return data.slice(1).reduce((s,r)=>{const v=parseFloat(r[1]);return s+(isFinite(v)&&v>0?v:0);},0);
+  const now = new Date();
+  const mid = new Date(now);
+  mid.setHours(0, 0, 0, 0);
+  const fmt = d => d.toISOString().slice(0, 19);
+  const params = new URLSearchParams({
+    service:      'kisters',
+    type:         'queryServices',
+    request:      'getTimeseriesValues',
+    ts_id:        tsId,
+    from:         fmt(mid),
+    to:           fmt(now),
+    format:       'json',
+    returnfields: 'Timestamp,Value'
+  });
+  const resp = await fetch(`${MHL_BASE}?${params}`);
+  if (!resp.ok) throw new Error(`MHL midnight fetch ${resp.status}`);
+  const data = await resp.json();
+  const rows = data?.[0]?.data || [];
+  return rows.reduce((sum, r) => {
+    const v = parseFloat(r[1]);
+    return sum + (isFinite(v) && v > 0 ? v : 0);
+  }, 0);
 }
 
 // â”€â”€ Analyse one station (used by multi-site analysis) â”€â”€â”€â”€â”€â”€â”€
