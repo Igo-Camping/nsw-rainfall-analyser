@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NBC Stormwater Tools Â· Northern Beaches Council</title>
+<title>NBC Stormwater Tools - Northern Beaches Council</title>
 <!-- v3 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -71,7 +71,7 @@ select:focus,input:focus{border-color:var(--teal)}
 .run-btn:disabled{background:var(--border);color:var(--text-l);cursor:not-allowed}
 
 /* Station list */
-.slist{flex:1 1 auto;min-height:120px;overflow-y:auto}
+.slist{flex:0 1 auto;min-height:140px;max-height:clamp(180px,36vh,320px);overflow-y:auto}
 .sitem{padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;display:flex;align-items:center;gap:8px}
 .sitem:hover{background:var(--panel)}
 .sitem.active{background:#E8F5F4;border-left:3px solid var(--teal)}
@@ -226,9 +226,9 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 <!-- Password Gate -->
 <div id="gate" style="position:fixed;inset:0;background:#1A2B3C;display:flex;align-items:center;justify-content:center;z-index:9999">
   <div style="background:white;border-radius:12px;padding:40px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
-    <div style="width:52px;height:52px;background:#00847F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px">ðŸŒŠ</div>
+    <div style="width:52px;height:52px;background:#00847F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;margin:0 auto 16px">NBC</div>
     <div style="font-size:18px;font-weight:700;color:#1A2B3C;margin-bottom:4px">NBC Stormwater Tools</div>
-    <div style="font-size:11px;color:#5A6B7A;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em">Northern Beaches Council Â· Stormwater</div>
+    <div style="font-size:11px;color:#5A6B7A;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em">Northern Beaches Council - Stormwater</div>
     <input type="password" id="pw-input" placeholder="Enter password"
       style="width:100%;padding:11px 14px;border:1.5px solid #DDE3E8;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;text-align:center;letter-spacing:.15em;color:#1A2B3C"
       onkeydown="if(event.key==='Enter')checkPW()"/>
@@ -243,7 +243,7 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 </div>
 
 <script>
-// â”€â”€ Password â€” change this to whatever you want â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Password - change this to whatever you want
 const APP_PASSWORD = 'NBC2024';
 const SESSION_KEY  = 'nbc_rain_auth';
 
@@ -254,7 +254,7 @@ function checkPW() {
     document.getElementById('gate').style.display = 'none';
   } else {
     const err = document.getElementById('pw-err');
-    err.textContent = 'Incorrect password â€” try again';
+    err.textContent = 'Incorrect password - try again';
     document.getElementById('pw-input').value = '';
     document.getElementById('pw-input').focus();
     setTimeout(() => err.textContent = '', 3000);
@@ -273,10 +273,10 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 
 <header>
   <div class="h-left">
-    <div class="logo">ðŸŒŠ</div>
+    <div class="logo" style="font-size:11px;font-weight:700">NBC</div>
     <div>
       <div class="h-title">NBC Stormwater Tools</div>
-      <div class="h-sub">Northern Beaches Council Â· Stormwater</div>
+      <div class="h-sub">Northern Beaches Council - Stormwater</div>
     </div>
   </div>
   <div class="h-status">
@@ -287,34 +287,34 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 
 <!-- Page Nav (hidden on home) -->
 <div id="page-nav" style="display:none">
-  <button class="pnav-btn active" onclick="switchPage('aep')">ðŸŒ§ AEP Rainfall Calculator</button>
-  <button class="pnav-btn" onclick="switchPage('prioritisation')">ðŸ“‹ Prioritisation Tool</button>
-  <button class="pnav-btn" onclick="switchPage('relining')">ðŸ”§ Relining Packaging</button>
-  <button class="pnav-btn pnav-home" onclick="switchPage('home')">âŒ‚ Home</button>
+  <button class="pnav-btn active" onclick="switchPage('aep')">Rainfall Calculator</button>
+  <button class="pnav-btn" onclick="switchPage('prioritisation')">Prioritisation Tool</button>
+  <button class="pnav-btn" onclick="switchPage('relining')">Relining Packaging</button>
+  <button class="pnav-btn pnav-home" onclick="switchPage('home')">Home</button>
 </div>
 
 <!-- Home Screen -->
 <div id="page-home" style="display:none">
   <div class="home-hero">
     <h1>NBC Stormwater Tools</h1>
-    <p>Northern Beaches Council Â· Stormwater Engineering</p>
+    <p>Northern Beaches Council - Stormwater Engineering</p>
   </div>
   <div class="home-cards">
     <div class="home-card" onclick="switchPage('aep')">
       <div class="hc-icon">Rain</div>
-      <div class="hc-title">AEP Rainfall Calculator</div>
+      <div class="hc-title">Rainfall</div>
       <div class="hc-desc">Live 5-minute gauge data with BoM IFD AEP analysis across all MHL stations.</div>
       <div><span class="hc-badge live">Live</span></div>
     </div>
     <div class="home-card" onclick="switchPage('prioritisation')">
       <div class="hc-icon">Score</div>
-      <div class="hc-title">Prioritisation Tool</div>
+      <div class="hc-title">Prioritisation</div>
       <div class="hc-desc">Score and rank stormwater capital works projects across four weighted pillars.</div>
       <div><span class="hc-badge live">Live</span></div>
     </div>
     <div class="home-card soon">
-      <div class="hc-icon">Pipe</div>
-      <div class="hc-title">Relining Packaging</div>
+      <div class="hc-icon">Pack</div>
+      <div class="hc-title">Packaging</div>
       <div class="hc-desc">Pipe relining scope packaging and cost estimation tool.</div>
       <div><span class="hc-badge soon">Coming Soon</span></div>
     </div>
@@ -324,11 +324,11 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 <!-- AEP Tool (display:flex so Leaflet map inits with correct dimensions) -->
 <div id="page-aep" style="flex-direction:column;flex:1;overflow:hidden;display:flex">
 <div class="tab-bar">
-  <div class="tab active" onclick="switchTab('map')">ðŸ—º Map View</div>
-  <div class="tab" onclick="switchTab('top-site')">ðŸ“Š Top Intensity Per Site</div>
-  <div class="tab" onclick="switchTab('top-dur')">â± All Durations</div>
-  <div class="tab" onclick="switchTab('daily')">ðŸ“… Daily Totals</div>
-  <div class="tab" onclick="switchTab('monitors')">ðŸ“¡ Other Monitors</div>
+  <div class="tab active" onclick="switchTab('map')">Map View</div>
+  <div class="tab" onclick="switchTab('top-site')">Top Intensity Per Site</div>
+  <div class="tab" onclick="switchTab('top-dur')">All Durations</div>
+  <div class="tab" onclick="switchTab('daily')">Daily Totals</div>
+  <div class="tab" onclick="switchTab('monitors')">Other Monitors</div>
 </div>
 
 <div class="body">
@@ -465,8 +465,8 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
           <div class="res-sub" id="res-sub"></div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
-          <button class="export-btn" onclick="exportCSV()">â¬‡ Export CSV</button>
-          <button class="close-btn" onclick="closeResults()">âœ•</button>
+          <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+          <button class="close-btn" onclick="closeResults()">Close</button>
         </div>
       </div>
 
@@ -1562,7 +1562,7 @@ function renderHourlyTable() {
   const maxH = Math.max(...byHour) || 1;
   const rows = byHour.map((v, h) => {
     const mm = Math.round(v * 100) / 100;
-    const label = `${String(h).padStart(2,'0')}:00 â€“ ${String(h+1).padStart(2,'0')}:00`;
+    const label = `${String(h).padStart(2,'0')}:00 - ${String(h+1).padStart(2,'0')}:00`;
     return `<tr>
       <td>${label}</td>
       <td class="r"><strong>${mm} mm</strong></td>
@@ -1587,7 +1587,7 @@ function renderResults(data, temp) {
   document.getElementById('res-title').textContent = data.station_name;
   const from = fmtDt(data.from), to = fmtDt(data.to);
   document.getElementById('res-sub').textContent =
-    `${data.durationLabel || ((DUR_LABELS[dur]||dur+'min') + ' duration')} Â· ${from} â†’ ${to}`;
+    `${data.durationLabel || ((DUR_LABELS[dur]||dur+'min') + ' duration')} - ${from} -> ${to}`;
 
   const rm = data.rolling_max;
   const aep = data.aep;
@@ -1604,19 +1604,19 @@ function renderResults(data, temp) {
         <div class="aep-hero-interp">${aep?.interpretation || interpretation(aepStr)}</div>
         <div class="aep-hero-ari">Return period: ${aepToARI(aep || aepStr)}</div>
         ${temp ? `<div class="aep-hero-ari" style="margin-top:4px">
-          ${tempIcon(temp.weather_code)} ${temp.temperature_c}Â°C Â· ${temp.humidity_pct}% humidity
+          ${tempIcon(temp.weather_code)} ${temp.temperature_c} C - ${temp.humidity_pct}% humidity
         </div>` : ''}
       </div>
     </div>
     <div class="cards">
       <div class="card">
         <div class="card-lbl">Peak Depth</div>
-        <div class="card-val">${rm?.max_depth_mm??'â€”'}<span class="card-unit">mm</span></div>
+        <div class="card-val">${rm?.max_depth_mm??'-'}<span class="card-unit">mm</span></div>
         <div class="card-sub">${DUR_LABELS[dur]||dur+'min'} rolling max</div>
       </div>
       <div class="card">
         <div class="card-lbl">Total Depth</div>
-        <div class="card-val">${rm?.total_depth_mm??'â€”'}<span class="card-unit">mm</span></div>
+        <div class="card-val">${rm?.total_depth_mm??'-'}<span class="card-unit">mm</span></div>
         <div class="card-sub">Event total</div>
       </div>
       <div class="card">
@@ -1626,12 +1626,12 @@ function renderResults(data, temp) {
       </div>
       <div class="card">
         <div class="card-lbl">Readings</div>
-        <div class="card-val">${rm?.reading_count??'â€”'}</div>
+        <div class="card-val">${rm?.reading_count??'-'}</div>
         <div class="card-sub">5-min intervals</div>
       </div>
     </div>
     ${rm?.peak_start ? `<div style="font-size:11px;color:var(--text-l);margin-top:-4px;margin-bottom:12px">
-      Peak window: <strong>${fmtDt(rm.peak_start)}</strong> â†’ <strong>${fmtDt(rm.peak_end)}</strong>
+      Peak window: <strong>${fmtDt(rm.peak_start)}</strong> -> <strong>${fmtDt(rm.peak_end)}</strong>
     </div>` : ''}
     ${!rm || rm.reading_count === 0 ? '<div style="color:var(--text-l);font-size:13px;padding:20px 0;text-align:center">No rainfall data for this period.</div>' : ''}
   `;
@@ -1713,7 +1713,7 @@ function renderIFDTable(aep, observedDepth, dur) {
   }
 
   el.innerHTML = `
-    <div class="chart-title">IFD Reference â€” ${DUR_LABELS[dur]||dur+' min'} Duration</div>
+    <div class="chart-title">IFD Reference - ${DUR_LABELS[dur]||dur+' min'} Duration</div>
     <table>
       <thead><tr>
         <th>AEP</th>
@@ -1722,7 +1722,7 @@ function renderIFDTable(aep, observedDepth, dur) {
       <tbody>
         <tr class="${observedDepth>0?'obs-row':''}">
           <td><strong>Observed</strong></td>
-          ${aeps.map(()=>`<td class="r"><strong>${observedDepth??'â€”'} mm</strong></td>`).join('')}
+          ${aeps.map(()=>`<td class="r"><strong>${observedDepth??'-'} mm</strong></td>`).join('')}
         </tr>
         <tr>
           <td>IFD Depth (mm)</td>
@@ -1957,13 +1957,13 @@ function fmtTime(iso) {
 }
 
 function tempIcon(code) {
-  if (!code) return 'ðŸŒ¡ï¸';
-  if (code===0) return 'â˜€ï¸';
-  if (code<=3) return 'â›…';
-  if (code<=49) return 'ðŸŒ«ï¸';
-  if (code<=67) return 'ðŸŒ§ï¸';
-  if (code<=82) return 'ðŸŒ¦ï¸';
-  return 'â›ˆï¸';
+  if (!code) return 'Temp';
+  if (code===0) return 'Clear';
+  if (code<=3) return 'Cloud';
+  if (code<=49) return 'Fog';
+  if (code<=67) return 'Rain';
+  if (code<=82) return 'Showers';
+  return 'Storm';
 }
 
 function showLoad(txt) {
