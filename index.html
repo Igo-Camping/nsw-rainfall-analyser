@@ -342,13 +342,10 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
       <select id="lgaSel" onchange="onLgaChange()">
         <option value="">All stations</option>
       </select>
-      <div id="nbcSubWrap" style="display:none;margin-top:8px">
+      <div id="nbcSubWrap" style="margin-top:8px">
         <div class="lbl" style="margin-bottom:4px">NBC Gauge Group</div>
         <select id="nbcSub" onchange="onNbcSubChange()">
-          <option value="all" id="nbcAllOpt">All NBC</option>
           <option value="standard">Standard 15 (Excel tool)</option>
-          <option value="north">Northern Beaches North</option>
-          <option value="south">Northern Beaches South</option>
         </select>
       </div>
     </div>
@@ -782,7 +779,7 @@ async function loadStations() {
   loadIfdData();
   buildLgaDropdown();
   renderList(allStations);
-  plotAllMarkers(allStations);
+  plotAllMarkers(allStations.filter(s => NBC_STANDARD_15.includes(s.name)));
 }
 
 // â”€â”€ LGA dropdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -805,6 +802,8 @@ function buildLgaDropdown() {
   });
   lgaSel.value = 'Northern Beaches';
   onLgaChange();
+  document.getElementById('nbcSub').value = 'standard';
+  onNbcSubChange();
 }
 
 function getLGA(station) {
