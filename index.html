@@ -45,11 +45,11 @@ header{background:var(--navy);color:white;padding:0 16px;height:52px;display:fle
 .tab:hover:not(.active){color:rgba(255,255,255,.8)}
 
 /* Body layout */
-.body{display:flex;flex:1;overflow:hidden}
+.body{display:flex;flex:1;overflow:hidden;min-height:0}
 
 /* Sidebar */
-.sidebar{width:320px;flex-shrink:0;background:white;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-.sb-section{padding:14px;border-bottom:1px solid var(--border)}
+.sidebar{width:320px;flex-shrink:0;background:white;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.sb-section{padding:12px;border-bottom:1px solid var(--border);flex-shrink:0}
 .sb-section:last-child{border-bottom:none}
 .lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-l);margin-bottom:8px}
 
@@ -71,7 +71,7 @@ select:focus,input:focus{border-color:var(--teal)}
 .run-btn:disabled{background:var(--border);color:var(--text-l);cursor:not-allowed}
 
 /* Station list */
-.slist{flex:1;overflow-y:auto}
+.slist{flex:1 1 auto;min-height:120px;overflow-y:auto}
 .sitem{padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;display:flex;align-items:center;gap:8px}
 .sitem:hover{background:var(--panel)}
 .sitem.active{background:#E8F5F4;border-left:3px solid var(--teal)}
@@ -301,19 +301,19 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
   </div>
   <div class="home-cards">
     <div class="home-card" onclick="switchPage('aep')">
-      <div class="hc-icon">ðŸŒ§</div>
+      <div class="hc-icon">Rain</div>
       <div class="hc-title">AEP Rainfall Calculator</div>
       <div class="hc-desc">Live 5-minute gauge data with BoM IFD AEP analysis across all MHL stations.</div>
-      <div><span class="hc-badge live">â— Live</span></div>
+      <div><span class="hc-badge live">Live</span></div>
     </div>
     <div class="home-card" onclick="switchPage('prioritisation')">
-      <div class="hc-icon">ðŸ“‹</div>
+      <div class="hc-icon">Score</div>
       <div class="hc-title">Prioritisation Tool</div>
       <div class="hc-desc">Score and rank stormwater capital works projects across four weighted pillars.</div>
-      <div><span class="hc-badge live">â— Live</span></div>
+      <div><span class="hc-badge live">Live</span></div>
     </div>
     <div class="home-card soon">
-      <div class="hc-icon">ðŸ”§</div>
+      <div class="hc-icon">Pipe</div>
       <div class="hc-title">Relining Packaging</div>
       <div class="hc-desc">Pipe relining scope packaging and cost estimation tool.</div>
       <div><span class="hc-badge soon">Coming Soon</span></div>
