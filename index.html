@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NBC Stormwater Tools · Northern Beaches Council</title>
+<title>NBC Stormwater Tools Â· Northern Beaches Council</title>
 <!-- v3 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -166,14 +166,14 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 .obs-row td{background:rgba(0,132,127,.1)!important;font-weight:700;color:var(--teal-d)}
 .bracket-hi td{background:rgba(241,196,15,.15)!important}
 
-/* ── Page nav ── */
+/* â”€â”€ Page nav â”€â”€ */
 #page-nav{background:var(--navy-l);display:flex;align-items:center;gap:0;padding:0 8px;flex-shrink:0;border-bottom:2px solid var(--teal)}
 .pnav-btn{padding:10px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.65);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;letter-spacing:.02em;white-space:nowrap}
 .pnav-btn:hover{color:white}
 .pnav-btn.active{color:white;border-bottom-color:var(--teal-l)}
 .pnav-home{margin-left:auto}
 
-/* ── Home screen ── */
+/* â”€â”€ Home screen â”€â”€ */
 #page-home{flex:1;overflow-y:auto;background:var(--panel);display:flex;flex-direction:column;align-items:center;padding:48px 24px}
 .home-hero{text-align:center;margin-bottom:40px}
 .home-hero h1{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:6px}
@@ -190,7 +190,7 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 .hc-badge.live{background:#E8F8F5;color:#00847F}
 .hc-badge.soon{background:var(--panel);color:var(--text-l)}
 
-/* ── Prioritisation Tool ── */
+/* â”€â”€ Prioritisation Tool â”€â”€ */
 #page-prioritisation{flex:1;min-height:0;display:none;flex-direction:row;overflow-y:auto;align-items:flex-start}
 .pri-sidebar{width:260px;flex-shrink:0;min-height:0;background:white;border-right:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;position:sticky;top:0;max-height:100vh}
 .pri-main{flex:1;min-height:0;padding:20px;background:var(--panel);display:flex;flex-direction:column;gap:16px}
@@ -226,9 +226,9 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 <!-- Password Gate -->
 <div id="gate" style="position:fixed;inset:0;background:#1A2B3C;display:flex;align-items:center;justify-content:center;z-index:9999">
   <div style="background:white;border-radius:12px;padding:40px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
-    <div style="width:52px;height:52px;background:#00847F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px">🌊</div>
+    <div style="width:52px;height:52px;background:#00847F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px">ðŸŒŠ</div>
     <div style="font-size:18px;font-weight:700;color:#1A2B3C;margin-bottom:4px">NBC Stormwater Tools</div>
-    <div style="font-size:11px;color:#5A6B7A;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em">Northern Beaches Council · Stormwater</div>
+    <div style="font-size:11px;color:#5A6B7A;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em">Northern Beaches Council Â· Stormwater</div>
     <input type="password" id="pw-input" placeholder="Enter password"
       style="width:100%;padding:11px 14px;border:1.5px solid #DDE3E8;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;text-align:center;letter-spacing:.15em;color:#1A2B3C"
       onkeydown="if(event.key==='Enter')checkPW()"/>
@@ -243,7 +243,7 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 </div>
 
 <script>
-// ── Password — change this to whatever you want ─────────────
+// â”€â”€ Password â€” change this to whatever you want â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const APP_PASSWORD = 'NBC2024';
 const SESSION_KEY  = 'nbc_rain_auth';
 
@@ -254,7 +254,7 @@ function checkPW() {
     document.getElementById('gate').style.display = 'none';
   } else {
     const err = document.getElementById('pw-err');
-    err.textContent = 'Incorrect password — try again';
+    err.textContent = 'Incorrect password â€” try again';
     document.getElementById('pw-input').value = '';
     document.getElementById('pw-input').focus();
     setTimeout(() => err.textContent = '', 3000);
@@ -273,10 +273,10 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 
 <header>
   <div class="h-left">
-    <div class="logo">🌊</div>
+    <div class="logo">ðŸŒŠ</div>
     <div>
       <div class="h-title">NBC Stormwater Tools</div>
-      <div class="h-sub">Northern Beaches Council · Stormwater</div>
+      <div class="h-sub">Northern Beaches Council Â· Stormwater</div>
     </div>
   </div>
   <div class="h-status">
@@ -287,33 +287,33 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 
 <!-- Page Nav (hidden on home) -->
 <div id="page-nav" style="display:none">
-  <button class="pnav-btn active" onclick="switchPage('aep')">🌧 AEP Rainfall Calculator</button>
-  <button class="pnav-btn" onclick="switchPage('prioritisation')">📋 Prioritisation Tool</button>
-  <button class="pnav-btn" onclick="switchPage('relining')">🔧 Relining Packaging</button>
-  <button class="pnav-btn pnav-home" onclick="switchPage('home')">⌂ Home</button>
+  <button class="pnav-btn active" onclick="switchPage('aep')">ðŸŒ§ AEP Rainfall Calculator</button>
+  <button class="pnav-btn" onclick="switchPage('prioritisation')">ðŸ“‹ Prioritisation Tool</button>
+  <button class="pnav-btn" onclick="switchPage('relining')">ðŸ”§ Relining Packaging</button>
+  <button class="pnav-btn pnav-home" onclick="switchPage('home')">âŒ‚ Home</button>
 </div>
 
 <!-- Home Screen -->
 <div id="page-home" style="display:none">
   <div class="home-hero">
     <h1>NBC Stormwater Tools</h1>
-    <p>Northern Beaches Council · Stormwater Engineering</p>
+    <p>Northern Beaches Council Â· Stormwater Engineering</p>
   </div>
   <div class="home-cards">
     <div class="home-card" onclick="switchPage('aep')">
-      <div class="hc-icon">🌧</div>
+      <div class="hc-icon">ðŸŒ§</div>
       <div class="hc-title">AEP Rainfall Calculator</div>
       <div class="hc-desc">Live 5-minute gauge data with BoM IFD AEP analysis across all MHL stations.</div>
-      <div><span class="hc-badge live">● Live</span></div>
+      <div><span class="hc-badge live">â— Live</span></div>
     </div>
     <div class="home-card" onclick="switchPage('prioritisation')">
-      <div class="hc-icon">📋</div>
+      <div class="hc-icon">ðŸ“‹</div>
       <div class="hc-title">Prioritisation Tool</div>
       <div class="hc-desc">Score and rank stormwater capital works projects across four weighted pillars.</div>
-      <div><span class="hc-badge live">● Live</span></div>
+      <div><span class="hc-badge live">â— Live</span></div>
     </div>
     <div class="home-card soon">
-      <div class="hc-icon">🔧</div>
+      <div class="hc-icon">ðŸ”§</div>
       <div class="hc-title">Relining Packaging</div>
       <div class="hc-desc">Pipe relining scope packaging and cost estimation tool.</div>
       <div><span class="hc-badge soon">Coming Soon</span></div>
@@ -324,11 +324,11 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 <!-- AEP Tool (display:flex so Leaflet map inits with correct dimensions) -->
 <div id="page-aep" style="flex-direction:column;flex:1;overflow:hidden;display:flex">
 <div class="tab-bar">
-  <div class="tab active" onclick="switchTab('map')">🗺 Map View</div>
-  <div class="tab" onclick="switchTab('top-site')">📊 Top Intensity Per Site</div>
-  <div class="tab" onclick="switchTab('top-dur')">⏱ All Durations</div>
-  <div class="tab" onclick="switchTab('daily')">📅 Daily Totals</div>
-  <div class="tab" onclick="switchTab('monitors')">📡 Other Monitors</div>
+  <div class="tab active" onclick="switchTab('map')">ðŸ—º Map View</div>
+  <div class="tab" onclick="switchTab('top-site')">ðŸ“Š Top Intensity Per Site</div>
+  <div class="tab" onclick="switchTab('top-dur')">â± All Durations</div>
+  <div class="tab" onclick="switchTab('daily')">ðŸ“… Daily Totals</div>
+  <div class="tab" onclick="switchTab('monitors')">ðŸ“¡ Other Monitors</div>
 </div>
 
 <div class="body">
@@ -386,12 +386,13 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
           </div>
           <div class="fg"><label>Duration</label>
             <select id="dur">
+              <option value="worst" selected>Worst duration</option>
               <option value="5">5 min</option>
               <option value="10">10 min</option>
               <option value="15">15 min</option>
               <option value="20">20 min</option>
               <option value="25">25 min</option>
-              <option value="30" selected>30 min</option>
+              <option value="30">30 min</option>
               <option value="45">45 min</option>
               <option value="60">1 hr</option>
               <option value="90">1.5 hr</option>
@@ -411,7 +412,6 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
               <option value="7200">120 hr</option>
               <option value="8640">144 hr</option>
               <option value="10080">168 hr</option>
-              <option value="worst">⚠ Worst duration</option>
             </select>
           </div>
         </div>
@@ -423,10 +423,10 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
           <div class="fg"><label>To</label><input type="datetime-local" id="toDt"/></div>
           <div class="fg"><label>Duration</label>
             <select id="durC">
-              <option value="worst">⚠ Worst duration</option>
+              <option value="worst" selected>Worst duration</option>
               <option value="5">5 min</option><option value="10">10 min</option>
               <option value="15">15 min</option><option value="20">20 min</option>
-              <option value="25">25 min</option><option value="30" selected>30 min</option>
+              <option value="25">25 min</option><option value="30">30 min</option>
               <option value="45">45 min</option><option value="60">1 hr</option>
               <option value="90">1.5 hr</option><option value="120">2 hr</option>
               <option value="180">3 hr</option><option value="270">4.5 hr</option>
@@ -465,8 +465,8 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
           <div class="res-sub" id="res-sub"></div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
-          <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
-          <button class="close-btn" onclick="closeResults()">✕</button>
+          <button class="export-btn" onclick="exportCSV()">â¬‡ Export CSV</button>
+          <button class="close-btn" onclick="closeResults()">âœ•</button>
         </div>
       </div>
 
@@ -515,23 +515,23 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         <div class="pri-field"><label>Overland Flow / Flood Severity</label>
           <select id="pri-flow" onchange="priCalc()">
             <option value="0">No observable impact</option>
-            <option value="1">Very minor — isolated ponding only</option>
-            <option value="2">Minor — road flooding, no property entry</option>
-            <option value="3">Moderate — property entry or road closed</option>
-            <option value="4">Significant — habitable floor flooding</option>
-            <option value="5">Severe — major habitable floor or safety hazard</option>
+            <option value="1">Very minor â€” isolated ponding only</option>
+            <option value="2">Minor â€” road flooding, no property entry</option>
+            <option value="3">Moderate â€” property entry or road closed</option>
+            <option value="4">Significant â€” habitable floor flooding</option>
+            <option value="5">Severe â€” major habitable floor or safety hazard</option>
           </select>
         </div>
         <div class="pri-field"><label>Properties with Habitable Floor at Risk</label>
           <select id="pri-props" onchange="priCalc()">
-            <option value="0">0</option><option value="1">1–2</option><option value="2">3–5</option>
-            <option value="3">6–15</option><option value="4">16–40</option><option value="5">&gt; 40</option>
+            <option value="0">0</option><option value="1">1â€“2</option><option value="2">3â€“5</option>
+            <option value="3">6â€“15</option><option value="4">16â€“40</option><option value="5">&gt; 40</option>
           </select>
         </div>
         <div class="pri-field"><label>People at Safety Risk</label>
           <select id="pri-people" onchange="priCalc()">
-            <option value="0">0</option><option value="1">1–5</option><option value="2">6–20</option>
-            <option value="3">21–50</option><option value="4">51–150</option><option value="5">&gt; 150</option>
+            <option value="0">0</option><option value="1">1â€“5</option><option value="2">6â€“20</option>
+            <option value="3">21â€“50</option><option value="4">51â€“150</option><option value="5">&gt; 150</option>
           </select>
         </div>
         <div class="pri-pillar-result">
@@ -551,30 +551,30 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
       <div class="pri-sec-body">
         <div class="pri-field"><label>Structural Condition</label>
           <select id="pri-struct" onchange="priCalc()">
-            <option value="1">1–2 (New / Very Good)</option>
-            <option value="2">3–4 (Good)</option>
-            <option value="3">5–6 (Fair)</option>
-            <option value="4">7–8 (Poor)</option>
-            <option value="5">9–10 (Failed / Critical)</option>
+            <option value="1">1â€“2 (New / Very Good)</option>
+            <option value="2">3â€“4 (Good)</option>
+            <option value="3">5â€“6 (Fair)</option>
+            <option value="4">7â€“8 (Poor)</option>
+            <option value="5">9â€“10 (Failed / Critical)</option>
           </select>
         </div>
         <div class="pri-field"><label>Remaining Useful Life</label>
           <select id="pri-life" onchange="priCalc()">
             <option value="1">&gt; 40 years</option>
-            <option value="2">21–40 years</option>
-            <option value="3">11–20 years</option>
-            <option value="4">5–10 years</option>
+            <option value="2">21â€“40 years</option>
+            <option value="3">11â€“20 years</option>
+            <option value="4">5â€“10 years</option>
             <option value="5">&lt; 5 years</option>
           </select>
         </div>
         <div class="pri-field"><label>Capacity Deficiency</label>
           <select id="pri-cap" onchange="priCalc()">
-            <option value="0">No deficiency — at or above design standard</option>
-            <option value="1">Minor — slightly under capacity</option>
-            <option value="2">Moderate — undersized for current demand</option>
-            <option value="3">Significant — regular surcharge</option>
-            <option value="4">Severe — surcharge in minor events</option>
-            <option value="5">Critical — overflows in very minor events</option>
+            <option value="0">No deficiency â€” at or above design standard</option>
+            <option value="1">Minor â€” slightly under capacity</option>
+            <option value="2">Moderate â€” undersized for current demand</option>
+            <option value="3">Significant â€” regular surcharge</option>
+            <option value="4">Severe â€” surcharge in minor events</option>
+            <option value="5">Critical â€” overflows in very minor events</option>
           </select>
         </div>
         <div class="pri-pillar-result">
@@ -595,16 +595,16 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         <div class="pri-field"><label>Capital Cost Band</label>
           <select id="pri-cost" onchange="priCalc()">
             <option value="1">&lt; $50k</option>
-            <option value="2">$50k – $250k</option>
-            <option value="3">$250k – $500k</option>
-            <option value="4">$500k – $1M</option>
-            <option value="5">$1M – $2M</option>
-            <option value="6">$2M – $5M</option>
+            <option value="2">$50k â€“ $250k</option>
+            <option value="3">$250k â€“ $500k</option>
+            <option value="4">$500k â€“ $1M</option>
+            <option value="5">$1M â€“ $2M</option>
+            <option value="6">$2M â€“ $5M</option>
             <option value="7">&gt; $5M</option>
           </select>
         </div>
         <div style="font-size:11px;color:var(--text-l);padding:4px 0">
-          VFM = Impact Score ÷ Cost Index (capped at 100)
+          VFM = Impact Score Ã· Cost Index (capped at 100)
         </div>
         <div class="pri-pillar-result">
           <span class="pri-pillar-lbl">Value for Money Score</span>
@@ -630,24 +630,24 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         </div>
         <div class="pri-field"><label>Land / Easement Requirement</label>
           <select id="pri-land" onchange="priCalc()">
-            <option value="0">Not required — all works within public land</option>
-            <option value="2">Possible — minor encroachment likely</option>
-            <option value="4">Likely — significant acquisition needed</option>
-            <option value="5">Certain — complex multi-party acquisition</option>
+            <option value="0">Not required â€” all works within public land</option>
+            <option value="2">Possible â€” minor encroachment likely</option>
+            <option value="4">Likely â€” significant acquisition needed</option>
+            <option value="5">Certain â€” complex multi-party acquisition</option>
           </select>
         </div>
         <div class="pri-field"><label>Resource Availability</label>
           <select id="pri-res" onchange="priCalc()">
-            <option value="1">High — resources readily available</option>
-            <option value="3">Medium — some constraints expected</option>
-            <option value="5">Low — significant resource constraints</option>
+            <option value="1">High â€” resources readily available</option>
+            <option value="3">Medium â€” some constraints expected</option>
+            <option value="5">Low â€” significant resource constraints</option>
           </select>
         </div>
         <div class="pri-field"><label>Scope Uncertainty</label>
           <select id="pri-scope" onchange="priCalc()">
-            <option value="1">Low — scope well-defined, minimal risk of expansion</option>
-            <option value="3">Medium — some unknowns, moderate expansion risk</option>
-            <option value="5">High — significant unknowns, high expansion risk</option>
+            <option value="1">Low â€” scope well-defined, minimal risk of expansion</option>
+            <option value="3">Medium â€” some unknowns, moderate expansion risk</option>
+            <option value="5">High â€” significant unknowns, high expansion risk</option>
           </select>
         </div>
         <div class="pri-pillar-result">
@@ -660,10 +660,10 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 
     <!-- Results Hero -->
     <div class="pri-hero" id="pri-hero">
-      <div class="pri-hero-score" id="pri-final-score">—</div>
+      <div class="pri-hero-score" id="pri-final-score">â€”</div>
       <div class="pri-hero-info">
         <div class="pri-hero-lbl">Final Priority Score</div>
-        <div class="pri-priority" id="pri-priority-lbl">—</div>
+        <div class="pri-priority" id="pri-priority-lbl">â€”</div>
         <div style="font-size:11px;opacity:.7;margin-top:4px" id="pri-breakdown">Complete all sections above</div>
       </div>
       <button onclick="priSave()" style="padding:10px 18px;background:var(--teal);border:none;border-radius:var(--r);color:white;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">Save to List</button>
@@ -673,22 +673,22 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
     <div class="pillar-bars">
       <div class="pillar-bar-item">
         <div class="pillar-bar-lbl">Impact (35%)</div>
-        <div class="pillar-bar-val" id="pb-impact">—</div>
+        <div class="pillar-bar-val" id="pb-impact">â€”</div>
         <div class="pri-score-bar"><div class="pri-score-fill" id="pb-impact-bar" style="width:0%"></div></div>
       </div>
       <div class="pillar-bar-item">
         <div class="pillar-bar-lbl">Asset Health (25%)</div>
-        <div class="pillar-bar-val" id="pb-health">—</div>
+        <div class="pillar-bar-val" id="pb-health">â€”</div>
         <div class="pri-score-bar"><div class="pri-score-fill" id="pb-health-bar" style="width:0%"></div></div>
       </div>
       <div class="pillar-bar-item">
         <div class="pillar-bar-lbl">Value for Money (25%)</div>
-        <div class="pillar-bar-val" id="pb-vfm">—</div>
+        <div class="pillar-bar-val" id="pb-vfm">â€”</div>
         <div class="pri-score-bar"><div class="pri-score-fill" id="pb-vfm-bar" style="width:0%"></div></div>
       </div>
       <div class="pillar-bar-item">
         <div class="pillar-bar-lbl">Deliverability (15%)</div>
-        <div class="pillar-bar-val" id="pb-deliv">—</div>
+        <div class="pillar-bar-val" id="pb-deliv">â€”</div>
         <div class="pri-score-bar"><div class="pri-score-fill" id="pb-deliv-bar" style="width:0%"></div></div>
       </div>
     </div>
@@ -697,7 +697,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
     <div class="pri-list-section" id="pri-list-wrap" style="display:none">
       <div class="pri-list-hdr">
         <div style="font-size:13px;font-weight:700;color:var(--navy)">Saved Projects</div>
-        <button onclick="priExportCSV()" style="padding:6px 12px;background:var(--navy);color:white;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">⬇ Export CSV</button>
+        <button onclick="priExportCSV()" style="padding:6px 12px;background:var(--navy);color:white;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">â¬‡ Export CSV</button>
       </div>
       <div id="pri-list-table"></div>
     </div>
@@ -708,14 +708,14 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 <!-- Relining Packaging Page (placeholder) -->
 <div id="page-relining" style="display:none;flex:1;align-items:center;justify-content:center;background:var(--panel)">
   <div style="text-align:center;color:var(--text-l)">
-    <div style="font-size:48px;margin-bottom:16px">🔧</div>
+    <div style="font-size:48px;margin-bottom:16px">ðŸ”§</div>
     <div style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px">Relining Packaging Tool</div>
     <div style="font-size:13px">Coming soon</div>
   </div>
 </div>
 
 <script>
-// ── Config ─────────────────────────────────────────────────
+// â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
 
 // All durations the tool supports (matching NBC tool)
@@ -729,29 +729,42 @@ const DUR_LABELS = {
   8640:'144 hr',10080:'168 hr'
 };
 
-// ── State ──────────────────────────────────────────────────
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function encodeInlineArg(value) {
+  return encodeURIComponent(String(value ?? ''));
+}
+
+// â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let allStations = [], selected = null, markers = {}, mode = 'recent';
 let lastResults = null, allSiteResults = null;
 let rainChart = null, compareChart = null;
 let currentTab = 'map';
 
-// ── Map ────────────────────────────────────────────────────
+// â”€â”€ Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const map = L.map('map').setView([-33.75, 151.25], 11);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
-  attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
+  attribution:'Â© OpenStreetMap Â© CARTO',subdomains:'abcd',maxZoom:19
 }).addTo(map);
 loadAllLgaBoundaries();
 
-// ── Startup ────────────────────────────────────────────────
+// â”€â”€ Startup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function init() {
   try {
     const h = await api('/health');
     setStatus(true, `${h.stations_loaded.toLocaleString()} stations`);
     await loadStations();
   } catch(e) {
-    setStatus(false, 'API offline — start backend on port 8000');
+    setStatus(false, 'API offline â€” start backend on port 8000');
     document.getElementById('slist').innerHTML =
-      '<div style="padding:20px;font-size:12px;color:var(--text-l);text-align:center">⚠ Cannot connect to API.<br>Run: py -m uvicorn main:app --reload</div>';
+      '<div style="padding:20px;font-size:12px;color:var(--text-l);text-align:center">âš  Cannot connect to API.<br>Run: py -m uvicorn main:app --reload</div>';
   }
 }
 
@@ -771,7 +784,7 @@ async function loadStations() {
   plotAllMarkers(allStations);
 }
 
-// ── LGA dropdown ───────────────────────────────────────────
+// â”€â”€ LGA dropdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function buildLgaDropdown() {
   const lgaSel = document.getElementById('lgaSel');
   const priority = ['Northern Beaches','Central Coast','Ku-ring-gai','Newcastle','Hunter Valley','Greater Sydney West','Lane Cove'];
@@ -804,19 +817,17 @@ function onLgaChange() {
   const nbcWrap = document.getElementById('nbcSubWrap');
   if (nbcWrap) nbcWrap.style.display = lga === 'Northern Beaches' ? '' : 'none';
 
-  filterList();
-
-  // Update map markers visibility
-  Object.entries(markers).forEach(([id, m]) => {
-    const s = allStations.find(s => s.station_id === id);
-    if (!s) return;
-    const match = !lga || getLGA(s) === lga;
-    if (match) { if (!map.hasLayer(m)) m.addTo(map); }
-    else { if (map.hasLayer(m)) map.removeLayer(m); }
-  });
+  const filtered = getFilteredStations();
+  syncFilteredStationViews(filtered);
 
   // Fit map to visible stations
-  if (lga) {
+  if (filtered.length) {
+    const visible = lga ? filtered : allStations;
+    if (visible.length) {
+      const bounds = L.latLngBounds(visible.map(s => [s.lat, s.lon]));
+      map.fitBounds(bounds, { padding: [40, 40] });
+    }
+  } else if (lga) {
     const visible = allStations.filter(s => getLGA(s) === lga);
     if (visible.length) {
       const bounds = L.latLngBounds(visible.map(s => [s.lat, s.lon]));
@@ -828,17 +839,41 @@ function onLgaChange() {
   drawLgaBoundary(lga);
 }
 
-function filterList() {
-  const q = document.getElementById('search').value.toLowerCase();
-  const lga = document.getElementById('lgaSel').value;
-  const filtered = allStations.filter(s =>
-    (!q || s.name.toLowerCase().includes(q)) &&
-    (!lga || getLGA(s) === lga)
-  );
-  renderList(filtered);
+function stationMatchesFilters(station, q, lga) {
+  if (q && !station.name.toLowerCase().includes(q)) return false;
+  if (lga && getLGA(station) !== lga) return false;
+  if (lga === 'Northern Beaches') {
+    const sub = document.getElementById('nbcSub')?.value || 'all';
+    if (sub === 'standard' && !NBC_STANDARD_15.includes(station.name)) return false;
+    if (sub === 'north' && !NBC_NORTH.includes(station.name)) return false;
+    if (sub === 'south' && !NBC_SOUTH.includes(station.name)) return false;
+  }
+  return true;
 }
 
-// ── Station list ───────────────────────────────────────────
+function getFilteredStations() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const lga = document.getElementById('lgaSel').value;
+  return allStations.filter(s => stationMatchesFilters(s, q, lga));
+}
+
+function syncFilteredStationViews(stations) {
+  const visibleIds = new Set(stations.map(s => s.station_id));
+  renderList(stations);
+  Object.entries(markers).forEach(([id, m]) => {
+    if (visibleIds.has(id)) {
+      if (!map.hasLayer(m)) m.addTo(map);
+    } else if (map.hasLayer(m)) {
+      map.removeLayer(m);
+    }
+  });
+}
+
+function filterList() {
+  syncFilteredStationViews(getFilteredStations());
+}
+
+// â”€â”€ Station list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderList(stations) {
   const el = document.getElementById('slist');
   if (!stations.length) {
@@ -847,12 +882,12 @@ function renderList(stations) {
   }
   el.innerHTML = stations.map(s => `
     <div class="sitem ${selected?.station_id===s.station_id?'active':''}"
-         id="si-${s.station_id}" onclick="selectStation('${s.station_id}')">
+         id="si-${escapeHtml(s.station_id)}" onclick="selectStation(decodeURIComponent('${encodeInlineArg(s.station_id)}'))">
       <div class="sdot" style="${selected?.station_id===s.station_id?'background:var(--navy)':''}"></div>
       <div class="sinfo">
-        <div class="sname">${s.name}</div>
+        <div class="sname">${escapeHtml(s.name)}</div>
         <div class="smeta">
-          <span class="s-lga">${getLGA(s)}</span>
+          <span class="s-lga">${escapeHtml(getLGA(s))}</span>
           ${s.lat.toFixed(3)}, ${s.lon.toFixed(3)}
         </div>
       </div>
@@ -860,13 +895,13 @@ function renderList(stations) {
   `).join('');
 }
 
-// ── Map markers ────────────────────────────────────────────
+// â”€â”€ Map markers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function plotAllMarkers(stations) {
   stations.forEach(s => {
     const m = L.circleMarker([s.lat, s.lon], {
       radius: 5, color: 'white', weight: 1.5,
       fillColor: '#00847F', fillOpacity: 0.85
-    }).addTo(map).bindPopup(`<b>${s.name}</b><br><small>${getLGA(s)}</small>`);
+    }).addTo(map).bindPopup(`<b>${escapeHtml(s.name)}</b><br><small>${escapeHtml(getLGA(s))}</small>`);
     m.on('click', () => selectStation(s.station_id));
     markers[s.station_id] = m;
   });
@@ -880,7 +915,7 @@ function setMarkerStyle(id, style) {
   else m.setStyle({fillColor:'#00847F', radius:5, weight:1.5});
 }
 
-// ── Station selection ──────────────────────────────────────
+// â”€â”€ Station selection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function selectStation(id) {
   if (selected) setMarkerStyle(selected.station_id, 'default');
   selected = allStations.find(s => s.station_id === id);
@@ -896,10 +931,10 @@ function selectStation(id) {
 
   const btn = document.getElementById('runBtn');
   btn.disabled = false;
-  btn.textContent = `▶ Analyse ${selected.name.split(' ').slice(0,3).join(' ')}`;
+  btn.textContent = `â–¶ Analyse ${selected.name.split(' ').slice(0,3).join(' ')}`;
 }
 
-// ── Mode ───────────────────────────────────────────────────
+// â”€â”€ Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function setMode(m) {
   mode = m;
   document.getElementById('m-recent').classList.toggle('active', m==='recent');
@@ -908,7 +943,7 @@ function setMode(m) {
   document.getElementById('p-custom').style.display = m==='custom'?'':'none';
 }
 
-// ── Tab switching ──────────────────────────────────────────
+// â”€â”€ Tab switching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach((el,i) => {
@@ -930,7 +965,7 @@ function switchRTab(id) {
   document.getElementById(id).classList.add('active');
 }
 
-// ── AEP classification ─────────────────────────────────────
+// â”€â”€ AEP classification â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function classifyAEP(aepStr) {
   if (!aepStr) return {cls:'aep-vfreq', label:'> 63.2%'};
   const clean = aepStr.replace(/[~<>%]/g,'').trim();
@@ -957,7 +992,7 @@ function aepToARI(aepStrOrObj) {
   if (inMatch) return `1 in ${inMatch[1]} yrs`;
   const clean = aepStr.replace(/[~<>%]/g,'').trim();
   const pct = parseFloat(clean);
-  if (isNaN(pct)) return '—';
+  if (isNaN(pct)) return 'â€”';
   const ari = 1 / (pct / 100);
   if (ari < 2)    return '< 1 in 2 yrs';
   if (ari < 5)    return `1 in ${ari.toFixed(0)} yrs`;
@@ -968,13 +1003,13 @@ function aepToARI(aepStrOrObj) {
 
 function interpretation(aepStr) {
   if (!aepStr) return '';
-  if (aepStr.startsWith('>')) return 'Very frequent — less than 2-year ARI';
+  if (aepStr.startsWith('>')) return 'Very frequent â€” less than 2-year ARI';
   const clean = parseFloat(aepStr.replace(/[~<>%]/g,''));
   if (isNaN(clean)) return '';
   return interpretAEP(clean);
 }
 
-// ── Main analysis ──────────────────────────────────────────
+// â”€â”€ Main analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function runAnalysis() {
   if (!selected) return;
   const durRaw = mode==='recent'
@@ -1006,6 +1041,10 @@ async function runAnalysis() {
     } else {
       // Single station analysis
       const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
+      if (dur === 'worst' || (typeof dur === 'number' && dur > 0)) {
+        setLoadTxt('Loading IFD data...');
+        await loadStationIfd(selected);
+      }
       window.lastReadings = readings;
       let resDur, resRolling, resAep, durationLabel;
 
@@ -1047,7 +1086,7 @@ async function runAnalysis() {
 }
 
 
-// ── NBC Standard 15 gauges (from NBC_Rainfall_Calculator.xlsm) ─
+// â”€â”€ NBC Standard 15 gauges (from NBC_Rainfall_Calculator.xlsm) â”€
 const NBC_STANDARD_15 = [
   'Avalon Rain', 'Cromer Depot', 'Great Mackerel Rain',
   'Middle Creek', 'Mona Vale Rain', 'Newport Rain',
@@ -1084,20 +1123,10 @@ function getNbcSubStations() {
 }
 
 function onNbcSubChange() {
-  const stations = getNbcSubStations();
-  // Update station list
-  renderList(stations);
-  // Update map markers
-  Object.entries(markers).forEach(([id, m]) => {
-    const s = allStations.find(s => s.station_id === id);
-    if (!s) return;
-    const match = stations.find(st => st.station_id === id);
-    if (match) { if (!map.hasLayer(m)) m.addTo(map); }
-    else { if (map.hasLayer(m)) map.removeLayer(m); }
-  });
+  syncFilteredStationViews(getFilteredStations());
 }
 
-// ── MHL data fetch (browser → MHL directly, no backend) ────
+// â”€â”€ MHL data fetch (browser â†’ MHL directly, no backend) â”€â”€â”€â”€
 const MHL_BASE = 'https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS';
 
 async function fetchMhlData(tsId, fromDt, toDt) {
@@ -1129,7 +1158,7 @@ async function fetchMhlData(tsId, fromDt, toDt) {
   })).filter(r => r.timestamp);
 }
 
-// ── Rolling max calculation (in browser) ───────────────────
+// â”€â”€ Rolling max calculation (in browser) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function calcRollingMax(readings, durationMinutes) {
   if (!readings || !readings.length) return null;
 
@@ -1164,7 +1193,7 @@ function calcRollingMax(readings, durationMinutes) {
   };
 }
 
-// ── Temperature (browser → Open-Meteo directly) ────────────
+// â”€â”€ Temperature (browser â†’ Open-Meteo directly) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function fetchTemperature(lat, lon) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
     `&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Australia/Sydney`;
@@ -1179,10 +1208,11 @@ async function fetchTemperature(lat, lon) {
   };
 }
 
-// ── Analyse one station (used by multi-site analysis) ───────
+// â”€â”€ Analyse one station (used by multi-site analysis) â”€â”€â”€â”€â”€â”€â”€
 async function analyseStation(station, dur, fromDt, toDt) {
   try {
     const readings = await fetchMhlData(station.ts_id, fromDt, toDt);
+    await loadStationIfd(station);
     const rolling  = calcRollingMax(readings, dur);
     let aep = null;
     if (rolling?.max_depth_mm > 0) {
@@ -1205,8 +1235,8 @@ async function analyseStation(station, dur, fromDt, toDt) {
   }
 }
 
-// ── Top Intensity Per Site ─────────────────────────────────
-// ── Top Intensity Per Site ─────────────────────────────────
+// â”€â”€ Top Intensity Per Site â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ Top Intensity Per Site â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Matches Excel tool: finds the worst AEP across ALL standard durations per station
 async function runTopPerSite(dur, fromDt, toDt) {
   const lga = document.getElementById('lgaSel').value;
@@ -1221,7 +1251,7 @@ async function runTopPerSite(dur, fromDt, toDt) {
 
   if (!stations.length) { hideLoad(); alert('No stations in selected area.'); return; }
 
-  // All 25 standard durations — same as Excel tool
+  // All 25 standard durations â€” same as Excel tool
   const allDurs = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
 
   allSiteResults = [];
@@ -1233,6 +1263,7 @@ async function runTopPerSite(dur, fromDt, toDt) {
     // Fetch raw data once per station (covers entire window)
     let readings = [];
     try { readings = await fetchMhlData(s.ts_id, fromDt, toDt); } catch(e) { continue; }
+    await loadStationIfd(s);
 
     // Find the duration with the worst (lowest) AEP
     let bestResult = null;
@@ -1284,7 +1315,7 @@ function renderTopPerSite(results, dur) {
   document.getElementById('res-title').textContent = 'Top Intensity Per Site';
   const lga = document.getElementById('lgaSel').value;
   document.getElementById('res-sub').textContent =
-    `Best duration per station · ${lga || 'All stations'} · Ranked by AEP`;
+    `Best duration per station Â· ${lga || 'All stations'} Â· Ranked by AEP`;
 
   // Sort by AEP probability (lowest = rarest = first)
   const sorted = [...results]
@@ -1295,7 +1326,7 @@ function renderTopPerSite(results, dur) {
 
   const rows = sorted.map((r, i) => {
     const rm = r.rolling_max;
-    const aepStr = r.aep?.aep || '>63.2%';
+    const aepStr = r.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
     const {cls} = classifyAEP(aepStr);
     const depth = rm?.max_depth_mm || 0;
     const pct = depth / maxD * 100;
@@ -1309,12 +1340,12 @@ function renderTopPerSite(results, dur) {
         <td><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
         <td class="r">${aepToARI(r.aep || aepStr)}</td>
-        <td>${rm?.peak_start ? fmtDt(rm.peak_start) : '—'}</td>
+        <td>${rm?.peak_start ? fmtDt(rm.peak_start) : 'â€”'}</td>
       </tr>`;
   }).join('');
 
   document.getElementById('r-allsite').innerHTML = `
-    <div style="margin-bottom:12px;font-size:12px;color:var(--text-l)">${sorted.length} stations analysed · all 25 durations per station</div>
+    <div style="margin-bottom:12px;font-size:12px;color:var(--text-l)">${sorted.length} stations analysed Â· all 25 durations per station</div>
     <table>
       <thead><tr>
         <th>#</th><th>Station</th>
@@ -1335,7 +1366,7 @@ function renderCompareChart(results, dur) {
   const el = document.getElementById('r-chart');
   const top10 = results.slice(0, 10);
   el.innerHTML = `
-    <div class="chart-title">Peak Depth Comparison — ${DUR_LABELS[dur]||dur+'min'} (Top 10)</div>
+    <div class="chart-title">Peak Depth Comparison â€” ${DUR_LABELS[dur]||dur+'min'} (Top 10)</div>
     <div class="chart-wrap"><canvas id="cc"></canvas></div>
   `;
   if (compareChart) compareChart.destroy();
@@ -1366,7 +1397,7 @@ function renderCompareChart(results, dur) {
   });
 }
 
-// ── Top 5 Durations ────────────────────────────────────────
+// â”€â”€ Top 5 Durations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function runTopDurations(fromDt, toDt) {
   if (!selected) return;
   showLoad('Analysing all durations...');
@@ -1387,7 +1418,7 @@ async function runTopDurations(fromDt, toDt) {
 
 function renderTopDurations(results) {
   document.getElementById('results').classList.add('no-rtabs');
-  document.getElementById('res-title').textContent = `All Durations — ${selected.name}`;
+  document.getElementById('res-title').textContent = `All Durations â€” ${selected.name}`;
   document.getElementById('res-sub').textContent = 'All durations analysed, ranked by AEP';
 
   const sorted = [...results].sort((a,b) => {
@@ -1398,12 +1429,12 @@ function renderTopDurations(results) {
 
   const rows = sorted.map(r => {
     const rm = r.rolling_max;
-    const aepStr = r.aep?.aep || '>63.2%';
+    const aepStr = r.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
     const {cls} = classifyAEP(aepStr);
     return `
       <tr>
         <td>${DUR_LABELS[r.duration_minutes]||r.duration_minutes+'min'}</td>
-        <td class="r">${rm?.max_depth_mm??'—'} mm</td>
+        <td class="r">${rm?.max_depth_mm??'â€”'} mm</td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
         <td class="r">${aepToARI(r.aep || aepStr)}</td>
       </tr>`;
@@ -1423,7 +1454,7 @@ function renderTopDurations(results) {
   switchRTab('r-allsite');
 }
 
-// ── Daily totals ───────────────────────────────────────────
+// â”€â”€ Daily totals â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function runDailyTotals(fromDt, toDt) {
   showLoad('Calculating daily totals...');
   try {
@@ -1442,8 +1473,8 @@ let lastDailyData = null;
 
 function renderDailyTotals(data) {
   document.getElementById('results').classList.add('no-rtabs');
-  document.getElementById('res-title').textContent = `Daily Totals — ${data.station_name}`;
-  document.getElementById('res-sub').textContent = `${fmtDt(data.from)} → ${fmtDt(data.to)} · 24hr periods from midnight`;
+  document.getElementById('res-title').textContent = `Daily Totals â€” ${data.station_name}`;
+  document.getElementById('res-sub').textContent = `${fmtDt(data.from)} â†’ ${fmtDt(data.to)} Â· 24hr periods from midnight`;
 
   if (!data.readings?.length) {
     document.getElementById('r-allsite').innerHTML =
@@ -1531,7 +1562,7 @@ function renderHourlyTable() {
   const maxH = Math.max(...byHour) || 1;
   const rows = byHour.map((v, h) => {
     const mm = Math.round(v * 100) / 100;
-    const label = `${String(h).padStart(2,'0')}:00 – ${String(h+1).padStart(2,'0')}:00`;
+    const label = `${String(h).padStart(2,'0')}:00 â€“ ${String(h+1).padStart(2,'0')}:00`;
     return `<tr>
       <td>${label}</td>
       <td class="r"><strong>${mm} mm</strong></td>
@@ -1546,7 +1577,7 @@ function renderHourlyTable() {
     </table>`;
 }
 
-// ── Render single station results ──────────────────────────
+// â”€â”€ Render single station results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderResults(data, temp) {
   const panel = document.getElementById('results');
   panel.classList.add('show');
@@ -1556,11 +1587,11 @@ function renderResults(data, temp) {
   document.getElementById('res-title').textContent = data.station_name;
   const from = fmtDt(data.from), to = fmtDt(data.to);
   document.getElementById('res-sub').textContent =
-    `${data.durationLabel || ((DUR_LABELS[dur]||dur+'min') + ' duration')} · ${from} → ${to}`;
+    `${data.durationLabel || ((DUR_LABELS[dur]||dur+'min') + ' duration')} Â· ${from} â†’ ${to}`;
 
   const rm = data.rolling_max;
   const aep = data.aep;
-  const aepStr = aep?.aep || (rm?.max_depth_mm > 0 ? '>63.2%' : '>63.2%');
+  const aepStr = aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
   const {cls} = classifyAEP(aepStr);
 
   document.getElementById('r-summary').innerHTML = `
@@ -1573,19 +1604,19 @@ function renderResults(data, temp) {
         <div class="aep-hero-interp">${aep?.interpretation || interpretation(aepStr)}</div>
         <div class="aep-hero-ari">Return period: ${aepToARI(aep || aepStr)}</div>
         ${temp ? `<div class="aep-hero-ari" style="margin-top:4px">
-          ${tempIcon(temp.weather_code)} ${temp.temperature_c}°C · ${temp.humidity_pct}% humidity
+          ${tempIcon(temp.weather_code)} ${temp.temperature_c}Â°C Â· ${temp.humidity_pct}% humidity
         </div>` : ''}
       </div>
     </div>
     <div class="cards">
       <div class="card">
         <div class="card-lbl">Peak Depth</div>
-        <div class="card-val">${rm?.max_depth_mm??'—'}<span class="card-unit">mm</span></div>
+        <div class="card-val">${rm?.max_depth_mm??'â€”'}<span class="card-unit">mm</span></div>
         <div class="card-sub">${DUR_LABELS[dur]||dur+'min'} rolling max</div>
       </div>
       <div class="card">
         <div class="card-lbl">Total Depth</div>
-        <div class="card-val">${rm?.total_depth_mm??'—'}<span class="card-unit">mm</span></div>
+        <div class="card-val">${rm?.total_depth_mm??'â€”'}<span class="card-unit">mm</span></div>
         <div class="card-sub">Event total</div>
       </div>
       <div class="card">
@@ -1595,12 +1626,12 @@ function renderResults(data, temp) {
       </div>
       <div class="card">
         <div class="card-lbl">Readings</div>
-        <div class="card-val">${rm?.reading_count??'—'}</div>
+        <div class="card-val">${rm?.reading_count??'â€”'}</div>
         <div class="card-sub">5-min intervals</div>
       </div>
     </div>
     ${rm?.peak_start ? `<div style="font-size:11px;color:var(--text-l);margin-top:-4px;margin-bottom:12px">
-      Peak window: <strong>${fmtDt(rm.peak_start)}</strong> → <strong>${fmtDt(rm.peak_end)}</strong>
+      Peak window: <strong>${fmtDt(rm.peak_start)}</strong> â†’ <strong>${fmtDt(rm.peak_end)}</strong>
     </div>` : ''}
     ${!rm || rm.reading_count === 0 ? '<div style="color:var(--text-l);font-size:13px;padding:20px 0;text-align:center">No rainfall data for this period.</div>' : ''}
   `;
@@ -1611,7 +1642,7 @@ function renderResults(data, temp) {
   switchRTab('r-summary');
 }
 
-// ── Rainfall chart ─────────────────────────────────────────
+// â”€â”€ Rainfall chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderChart(readings, peakStart, peakEnd) {
   const el = document.getElementById('r-chart');
 
@@ -1662,7 +1693,7 @@ function renderChart(readings, peakStart, peakEnd) {
   });
 }
 
-// ── IFD reference table ────────────────────────────────────
+// â”€â”€ IFD reference table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderIFDTable(aep, observedDepth, dur) {
   const el = document.getElementById('r-ifd');
   if (!aep?.ifd_reference) {
@@ -1682,7 +1713,7 @@ function renderIFDTable(aep, observedDepth, dur) {
   }
 
   el.innerHTML = `
-    <div class="chart-title">IFD Reference — ${DUR_LABELS[dur]||dur+' min'} Duration</div>
+    <div class="chart-title">IFD Reference â€” ${DUR_LABELS[dur]||dur+' min'} Duration</div>
     <table>
       <thead><tr>
         <th>AEP</th>
@@ -1691,7 +1722,7 @@ function renderIFDTable(aep, observedDepth, dur) {
       <tbody>
         <tr class="${observedDepth>0?'obs-row':''}">
           <td><strong>Observed</strong></td>
-          ${aeps.map(()=>`<td class="r"><strong>${observedDepth??'—'} mm</strong></td>`).join('')}
+          ${aeps.map(()=>`<td class="r"><strong>${observedDepth??'â€”'} mm</strong></td>`).join('')}
         </tr>
         <tr>
           <td>IFD Depth (mm)</td>
@@ -1709,14 +1740,14 @@ function renderIFDTable(aep, observedDepth, dur) {
   `;
 }
 
-// ── Export CSV ─────────────────────────────────────────────
+// â”€â”€ Export CSV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function exportCSV() {
   let csv = '';
   const ts = new Date().toLocaleString('en-AU');
 
   if (allSiteResults?.length) {
     // All sites export
-    csv = `NSW Rainfall Analyser — All Sites Export\nGenerated: ${ts}\n\n`;
+    csv = `NSW Rainfall Analyser â€” All Sites Export\nGenerated: ${ts}\n\n`;
     csv += 'Rank,Station,Peak Depth (mm),Total Depth (mm),AEP%,Return Period,Peak Start,Peak End\n';
     const sorted = [...allSiteResults]
       .filter(r => r.rolling_max)
@@ -1728,7 +1759,7 @@ function exportCSV() {
     });
   } else if (lastResults?.readings) {
     // Single station export
-    csv = `NSW Rainfall Analyser — ${lastResults.station_name}\nGenerated: ${ts}\n\n`;
+    csv = `NSW Rainfall Analyser â€” ${lastResults.station_name}\nGenerated: ${ts}\n\n`;
     csv += `AEP:,${lastResults.aep?.aep||''}\nReturn Period:,${aepToARI(lastResults.aep || lastResults.aep?.aep || '')}\n`;
     csv += `Peak Depth (mm):,${lastResults.rolling_max?.max_depth_mm||''}\n`;
     csv += `Total Depth (mm):,${lastResults.rolling_max?.total_depth_mm||''}\n\n`;
@@ -1747,38 +1778,57 @@ function exportCSV() {
   a.click();
 }
 
-// ── Helpers ────────────────────────────────────────────────
+// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function api(path) {
   const r = await fetch(API + path);
   if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
   return r.json();
 }
 
-// ── IFD data loader ─────────────────────────────────────────
+// â”€â”€ IFD data loader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Loads full station data (including IFD tables) in the background
 // so AEP calc can run entirely in the browser
 const ifdCache = {};  // station_id -> ifd object
+const ifdLoadPromises = {};
+
+function loadStationIfd(station) {
+  if (!station?.station_id) return Promise.resolve(null);
+  if (ifdCache[station.station_id]) return Promise.resolve(ifdCache[station.station_id]);
+  if (ifdLoadPromises[station.station_id]) return ifdLoadPromises[station.station_id];
+
+  ifdLoadPromises[station.station_id] = (async () => {
+    try {
+      const full = await api(`/stations/${station.station_id}`);
+      if (full.ifd) {
+        ifdCache[station.station_id] = full.ifd;
+        return full.ifd;
+      }
+      return null;
+    } catch(e) {
+      return null;
+    } finally {
+      delete ifdLoadPromises[station.station_id];
+    }
+  })();
+
+  return ifdLoadPromises[station.station_id];
+}
 
 async function loadIfdData() {
   // Fetch all stations with full IFD data in batches
   const BATCH = 20;
   for (let i = 0; i < allStations.length; i += BATCH) {
     const batch = allStations.slice(i, i + BATCH);
-    await Promise.all(batch.map(async s => {
-      try {
-        const full = await api(`/stations/${s.station_id}`);
-        if (full.ifd) ifdCache[s.station_id] = full.ifd;
-      } catch(e) {}
-    }));
+    await Promise.all(batch.map(s => loadStationIfd(s)));
   }
   console.log(`IFD data loaded for ${Object.keys(ifdCache).length} stations`);
 }
 
-// ── Browser-side AEP calculation ────────────────────────────
+// â”€â”€ Browser-side AEP calculation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Replicates the IFD_Rare_Compat logic from the Excel tool
 // Piecewise log-linear interpolation in ln(AEP) space
 // Extends to 1:200, 1:500, 1:1000 for NBC Standard 15 stations
-// Beyond 1:1000: log-linear tail extrapolation using 500→1000 slope
+// Beyond 1:1000: log-linear tail extrapolation using 500â†’1000 slope
 function aepRarity(aepObj) {
   // Returns a comparable rarity score: higher = rarer event
   if (!aepObj) return 0;
@@ -1791,9 +1841,10 @@ function aepRarity(aepObj) {
 
 function calcAEP(stationId, durationMinutes, depthMm) {
   const ifd = ifdCache[stationId];
-  if (!ifd || depthMm <= 0) return { aep: '>63.2%', interpretation: 'Very frequent — less than 2-year ARI' };
+  if (!ifd) return null;
+  if (depthMm <= 0) return { aep: '>63.2%', interpretation: 'Very frequent â€” less than 2-year ARI' };
 
-  // Require exact duration match — no fallback to nearest (wrong IFD = wrong AEP)
+  // Require exact duration match â€” no fallback to nearest (wrong IFD = wrong AEP)
   const availDurs = Object.keys(ifd).map(Number).sort((a,b)=>a-b);
   const durKey = durationMinutes;
   if (!ifd[durKey] && !ifd[String(durKey)]) return null;
@@ -1830,14 +1881,14 @@ function calcAEP(stationId, durationMinutes, depthMm) {
       aep: '>63.2%',
       bracket_upper_aep: '63.2%',
       ifd_reference: row,
-      interpretation: 'Very frequent — less than 2-year ARI'
+      interpretation: 'Very frequent â€” less than 2-year ARI'
     };
   }
 
-  // Above all thresholds — tail extrapolation beyond last column
+  // Above all thresholds â€” tail extrapolation beyond last column
   if (depthMm >= depths[depths.length - 1]) {
     const n = depths.length;
-    // Use log-linear slope from last two points (matches Excel 500→1000 method)
+    // Use log-linear slope from last two points (matches Excel 500â†’1000 method)
     const slope = (Math.log(probs[n-1]) - Math.log(probs[n-2])) / (depths[n-1] - depths[n-2]);
     const lnP   = Math.log(probs[n-1]) + slope * (depthMm - depths[n-1]);
     const p     = Math.exp(lnP);
@@ -1848,7 +1899,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
       ari,
       bracket_lower_aep: available[n-1],
       ifd_reference: row,
-      interpretation: `Extreme event — approximately 1 in ${ari.toLocaleString()} years`
+      interpretation: `Extreme event â€” approximately 1 in ${ari.toLocaleString()} years`
     };
   }
 
@@ -1869,7 +1920,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
         bracket_lower_aep: available[i],
         bracket_upper_aep: available[i+1],
         ifd_reference: row,
-        interpretation: `${cat} — approximately 1 in ${ari.toLocaleString()} years`
+        interpretation: `${cat} â€” approximately 1 in ${ari.toLocaleString()} years`
       };
     }
   }
@@ -1878,19 +1929,19 @@ function calcAEP(stationId, durationMinutes, depthMm) {
 }
 
 function interpretAEP(pct) {
-  if (pct <= 0.1)  return 'Extreme event — approximately 1 in 1000 years';
-  if (pct <= 0.2)  return 'Extreme event — approximately 1 in 500 years';
-  if (pct <= 0.5)  return 'Extreme event — approximately 1 in 200 years';
-  if (pct <= 1)    return 'Extreme event — approximately 1 in 100 years';
-  if (pct <= 2)    return 'Very rare — approximately 1 in 50 years';
-  if (pct <= 5)    return 'Rare — approximately 1 in 20 years';
-  if (pct <= 10)   return 'Significant — approximately 1 in 10 years';
-  if (pct <= 20)   return 'Moderate — approximately 1 in 5 years';
-  return 'Frequent — less than 1 in 5 years';
+  if (pct <= 0.1)  return 'Extreme event â€” approximately 1 in 1000 years';
+  if (pct <= 0.2)  return 'Extreme event â€” approximately 1 in 500 years';
+  if (pct <= 0.5)  return 'Extreme event â€” approximately 1 in 200 years';
+  if (pct <= 1)    return 'Extreme event â€” approximately 1 in 100 years';
+  if (pct <= 2)    return 'Very rare â€” approximately 1 in 50 years';
+  if (pct <= 5)    return 'Rare â€” approximately 1 in 20 years';
+  if (pct <= 10)   return 'Significant â€” approximately 1 in 10 years';
+  if (pct <= 20)   return 'Moderate â€” approximately 1 in 5 years';
+  return 'Frequent â€” less than 1 in 5 years';
 }
 
 function fmtDt(iso) {
-  if (!iso) return '—';
+  if (!iso) return 'â€”';
   return new Date(iso).toLocaleString('en-AU',{
     timeZone:'Australia/Sydney',
     day:'2-digit',month:'2-digit',year:'numeric',
@@ -1906,13 +1957,13 @@ function fmtTime(iso) {
 }
 
 function tempIcon(code) {
-  if (!code) return '🌡️';
-  if (code===0) return '☀️';
-  if (code<=3) return '⛅';
-  if (code<=49) return '🌫️';
-  if (code<=67) return '🌧️';
-  if (code<=82) return '🌦️';
-  return '⛈️';
+  if (!code) return 'ðŸŒ¡ï¸';
+  if (code===0) return 'â˜€ï¸';
+  if (code<=3) return 'â›…';
+  if (code<=49) return 'ðŸŒ«ï¸';
+  if (code<=67) return 'ðŸŒ§ï¸';
+  if (code<=82) return 'ðŸŒ¦ï¸';
+  return 'â›ˆï¸';
 }
 
 function showLoad(txt) {
@@ -1924,9 +1975,9 @@ function hideLoad() { document.getElementById('loading').classList.remove('show'
 function closeResults() { const r = document.getElementById('results'); r.classList.remove('show','no-rtabs'); allSiteResults = null; }
 
 
-// ── Other Monitors ─────────────────────────────────────────
+// â”€â”€ Other Monitors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Stream/river gauges, tide, estuary from MHL KiWIS
-// These are fetched live — not in the station cache
+// These are fetched live â€” not in the station cache
 
 const MONITOR_PARAM_TYPES = [
   { key: 'stream',  label: 'Stream & River',  params: ['Water Level','Stage','Flow','Discharge'], colour: '#2980B9' },
@@ -1941,7 +1992,7 @@ async function loadOtherMonitors() {
   const panel = document.getElementById('results');
   panel.classList.add('show');
   document.getElementById('res-title').textContent = 'Other Monitors';
-  document.getElementById('res-sub').textContent = 'Stream, tide and estuary gauges — MHL network';
+  document.getElementById('res-sub').textContent = 'Stream, tide and estuary gauges â€” MHL network';
 
   // Show placeholder tabs
   document.getElementById('r-summary').innerHTML = `
@@ -2056,7 +2107,7 @@ function filterMonitors(typeKey) {
   }
 
   listEl.innerHTML = `
-    <div style="font-size:11px;color:var(--text-l);margin-bottom:10px">${filtered.length} stations — click to view level chart</div>
+    <div style="font-size:11px;color:var(--text-l);margin-bottom:10px">${filtered.length} stations â€” click to view level chart</div>
     <table>
       <thead><tr>
         <th>Station</th><th>Location</th><th style="text-align:center">Action</th>
@@ -2064,10 +2115,10 @@ function filterMonitors(typeKey) {
       <tbody>
         ${filtered.map(s => `
           <tr>
-            <td><strong>${s.name}</strong></td>
+            <td><strong>${escapeHtml(s.name)}</strong></td>
             <td style="font-size:11px;color:var(--text-l)">${s.lat.toFixed(3)}, ${s.lon.toFixed(3)}</td>
             <td style="text-align:center">
-              <button onclick="showLevelChart('${s.station_id}','${s.name.replace(/'/g,"\'")}','${typeInfo.colour}')"
+              <button onclick="showLevelChart(decodeURIComponent('${encodeInlineArg(s.station_id)}'),decodeURIComponent('${encodeInlineArg(s.name)}'),decodeURIComponent('${encodeInlineArg(typeInfo.colour)}'))"
                 style="padding:4px 12px;background:${typeInfo.colour};color:white;border:none;
                        border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
                 View Chart
@@ -2146,9 +2197,9 @@ async function showLevelChart(stationId, stationName, colour) {
                    levelTs.ts_name?.includes('mm') ? 'mm' : 'm AHD';
 
     chartEl.innerHTML = `
-      <div class="chart-title">${stationName} — Level (${unit}) — Last 7 Days</div>
+      <div class="chart-title">${stationName} â€” Level (${unit}) â€” Last 7 Days</div>
       <div style="font-size:11px;color:var(--text-l);margin-bottom:8px">
-        Timeseries: ${levelTs.ts_name} · ${readings.length} readings
+        Timeseries: ${levelTs.ts_name} Â· ${readings.length} readings
       </div>
       <div class="chart-wrap" style="height:220px"><canvas id="lc"></canvas></div>
       <div style="margin-top:10px;display:flex;gap:16px;font-size:12px">
@@ -2186,7 +2237,7 @@ async function showLevelChart(stationId, stationName, colour) {
 
     switchRTab('r-chart');
     document.getElementById('res-title').textContent = stationName;
-    document.getElementById('res-sub').textContent = `Water level · Last 7 days · ${levelTs.ts_name}`;
+    document.getElementById('res-sub').textContent = `Water level Â· Last 7 days Â· ${levelTs.ts_name}`;
 
   } catch(e) {
     hideLoad();
@@ -2194,8 +2245,8 @@ async function showLevelChart(stationId, stationName, colour) {
   }
 }
 
-// ── LGA Boundary ───────────────────────────────────────────
-// ── All LGA boundaries (background layer) ──────────────────
+// â”€â”€ LGA Boundary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€ All LGA boundaries (background layer) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadAllLgaBoundaries() {
   try {
     const resp = await fetch(
@@ -2252,7 +2303,7 @@ function drawLgaBoundary(lgaName) {
   console.log(`Boundary drawn for ${lgaName}`);
 }
 
-// ── Page navigation ────────────────────────────────────────
+// â”€â”€ Page navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const PAGES = ['home','aep','prioritisation','relining'];
 let currentPage = 'home';
 
@@ -2276,7 +2327,7 @@ function switchPage(page) {
 // Show home on load
 document.addEventListener('DOMContentLoaded', () => switchPage('home'));
 
-// ── Prioritisation Tool ─────────────────────────────────────
+// â”€â”€ Prioritisation Tool â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let priList = [];
 
 function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
@@ -2318,7 +2369,7 @@ function priCalc() {
   pl.textContent = priority + ' PRIORITY';
   pl.className = 'pri-priority ' + pCls;
   document.getElementById('pri-breakdown').textContent =
-    `Impact ${impact} × 35% + Health ${health} × 25% + VFM ${vfm} × 25% + Deliv ${deliv} × 15%`;
+    `Impact ${impact} Ã— 35% + Health ${health} Ã— 25% + VFM ${vfm} Ã— 25% + Deliv ${deliv} Ã— 15%`;
 
   ['impact','health','vfm','deliv'].forEach((k,i) => {
     const v = [impact,health,vfm,deliv][i];
@@ -2347,7 +2398,7 @@ function renderPriList() {
     const cls = r.priority === 'HIGH' ? '#2ECC71' : r.priority === 'MEDIUM' ? '#F39C12' : '#E74C3C';
     return `<tr>
       <td>${i+1}</td>
-      <td><strong>${r.name}</strong><br><small style="color:var(--text-l)">${r.asset}${r.location ? ' · '+r.location : ''}</small></td>
+      <td><strong>${r.name}</strong><br><small style="color:var(--text-l)">${r.asset}${r.location ? ' Â· '+r.location : ''}</small></td>
       <td><span style="font-weight:700;color:${cls}">${r.priority}</span></td>
       <td class="r"><strong>${r.final.toFixed(1)}</strong></td>
       <td class="r">${r.impact.toFixed(1)}</td>
