@@ -165,7 +165,7 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 /* IFD reference row highlight */
 .obs-row td{background:rgba(0,132,127,.1)!important;font-weight:700;color:var(--teal-d)}
 .bracket-hi td{background:rgba(241,196,15,.15)!important}
-.leaflet-tooltip.station-label{background:rgba(26,43,60,.82);border:none;box-shadow:none;color:#fff;font-size:10px;font-weight:600;padding:2px 6px;white-space:nowrap;pointer-events:none}.leaflet-tooltip.station-label::before{display:none}
+.leaflet-tooltip.station-label{background:rgba(26,43,60,.82);border:none;box-shadow:none;color:#fff;font-size:10px;font-weight:600;padding:2px 6px;white-space:nowrap;cursor:pointer}.leaflet-tooltip.station-label::before{display:none}
 
 /* â”€â”€ Page nav â”€â”€ */
 #page-nav{background:var(--navy-l);display:flex;align-items:center;gap:0;padding:0 8px;flex-shrink:0;border-bottom:2px solid var(--teal)}
@@ -903,7 +903,30 @@ function plotAllMarkers(stations) {
       radius: 5, color: 'white', weight: 1.5,
       fillColor: '#00847F', fillOpacity: 0.85
     }).addTo(map).bindPopup(`<b>${escapeHtml(s.name)}</b><br><small>${escapeHtml(getLGA(s))}</small>`).bindTooltip(s.name,{permanent:true,direction:'right',className:'station-label',offset:[4,0]});
+    m.on('tooltipopen', evt => {
+      const el = evt.tooltip.getElement();
+      if (el) el.addEventListener('click', () => selectStation(s.station_id));
+    });
     m.on('click', () => selectStation(s.station_id));
+    m.on('mouseover', async () => {
+      m.openPopup();
+      const cached = wxCache[s.station_id];
+      if (cached && (Date.now() - cached.ts) < 600000) { m.setPopupContent(cached.html); return; }
+      m.setPopupContent(`<b>${s.name}</b><br><small>${getLGA(s)}</small><br><small style="color:#888">Loading…</small>`);
+      try {
+        const [wxRes, rainRes] = await Promise.allSettled([
+          fetchWeather(s.lat, s.lon),
+          fetchRainfallSinceMidnight(s.ts_id)
+        ]);
+        const wx = wxRes.status==='fulfilled' ? wxRes.value : null;
+        const rain = rainRes.status==='fulfilled' ? rainRes.value : null;
+        const html = `<b>${s.name}</b><br><small>${getLGA(s)}</small>`
+          + (wx ? `<br><small>${tempIcon(wx.weather_code)} ${wx.temperature_c}°C &nbsp;💨 ${wx.wind_speed_kmh} km/h ${degToCompass(wx.wind_dir_deg)}<br>🌧 ${rain!=null?rain.toFixed(1)+' mm':'—'} since midnight</small>` : '');
+        wxCache[s.station_id] = { html, ts: Date.now() };
+        m.setPopupContent(html);
+      } catch(e) {}
+    });
+    m.on('mouseout', () => m.closePopup());
     markers[s.station_id] = m;
   });
 }
@@ -1819,6 +1842,8 @@ async function api(path) {
 // so AEP calc can run entirely in the browser
 const ifdCache = {};  // station_id -> ifd object
 const ifdLoadPromises = {};
+const rainfallCache = {};
+const wxCache = {};
 
 function loadStationIfd(station) {
   if (!station?.station_id) return Promise.resolve(null);
