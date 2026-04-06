@@ -204,10 +204,10 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 .placeholder-inner p{font-size:13px;color:var(--text-l);line-height:1.6}
 
 /* Prioritisation Tool */
-.prio-page{display:none;flex:1;overflow-y:auto;background:var(--panel)}
-.prio-page.active{display:flex;align-items:flex-start}
-.prio-sidebar{width:320px;flex-shrink:0;background:white;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;position:sticky;top:0;max-height:100vh}
-.prio-main{flex:1;padding:0}
+.prio-page{display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel)}
+.prio-page.active{display:flex;align-items:stretch;min-height:0}
+.prio-sidebar{width:320px;flex-shrink:0;background:white;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;position:sticky;top:0;height:100%;max-height:none}
+.prio-main{flex:1;padding:0;min-height:0;overflow-y:auto}
 .prio-section{background:white;margin:12px;border-radius:var(--r);border:1px solid var(--border);overflow:hidden}
 .prio-section-hdr{padding:12px 16px;background:var(--navy);color:white;display:flex;align-items:center;justify-content:space-between}
 .prio-section-hdr h3{font-size:13px;font-weight:700;margin:0}
@@ -1335,23 +1335,29 @@ async function analyseStation(station, dur, fromDt, toDt) {
 // Matches Excel tool: finds the worst AEP across ALL standard durations per station
 async function runTopPerSite(dur, fromDt, toDt) {
   const lga = document.getElementById('lgaSel').value;
+  const q = document.getElementById('search').value.toLowerCase().trim();
   let stations;
   if (lga === 'Northern Beaches') {
     stations = getNbcSubStations();
   } else if (lga) {
     stations = allStations.filter(s => getLGA(s) === lga);
   } else {
-    stations = selected ? [selected] : allStations.slice(0, 15);
+    stations = allStations.slice();
+  }
+
+  if (q) {
+    stations = stations.filter(s => s.name.toLowerCase().includes(q));
   }
 
   if (!stations.length) { hideLoad(); alert('No stations in selected area.'); return; }
 
   // All 25 standard durations — same as Excel tool
   const allDurs = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
+  const rangeDays = Math.max(1, Math.ceil((toDt - fromDt) / 86400000));
+  const BATCH = rangeDays > 180 ? 1 : rangeDays > 31 ? 2 : 5;
+  const failedStations = [];
 
   allSiteResults = [];
-
-  const BATCH = 5;
   for (let i = 0; i < stations.length; i += BATCH) {
     const batch = stations.slice(i, i + BATCH);
     await Promise.all(batch.map(async (s) => {
@@ -1360,7 +1366,22 @@ async function runTopPerSite(dur, fromDt, toDt) {
 
       // Fetch raw data once per station (covers entire window)
       let readings = [];
-      try { readings = await fetchMhlData(s.ts_id, fromDt, toDt); } catch(e) { return; }
+      try {
+        readings = await fetchMhlData(s.ts_id, fromDt, toDt);
+      } catch(e) {
+        if (rangeDays > 31) {
+          await new Promise(resolve => setTimeout(resolve, 250));
+          try {
+            readings = await fetchMhlData(s.ts_id, fromDt, toDt);
+          } catch(e2) {
+            failedStations.push(s.name);
+            return;
+          }
+        } else {
+          failedStations.push(s.name);
+          return;
+        }
+      }
 
       // Get IFD data for this station once
       const ifd = await getIfd(s.station_id);
@@ -1397,6 +1418,14 @@ async function runTopPerSite(dur, fromDt, toDt) {
   }
 
   hideLoad();
+  if (!allSiteResults.length) {
+    alert('Top Intensity Per Site could not load any station results for that date range. Try a shorter range or narrower area.');
+    return;
+  }
+  if (failedStations.length && allSiteResults.length === 1 && selected && allSiteResults[0]?.station_id === selected.station_id) {
+    console.warn('Large-range analysis failed for most stations:', failedStations);
+    alert(`Large date range warning: only ${selected.name} returned successfully. Try a shorter date range or narrower LGA.`);
+  }
   renderTopPerSite(allSiteResults, null);
   document.getElementById('results').classList.add('show');
   switchRTab('r-allsite');
