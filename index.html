@@ -49,7 +49,7 @@ header{background:var(--navy);color:white;padding:0 16px;height:52px;display:fle
 .body{display:flex;flex:1;overflow:hidden;min-height:0}
 
 /* Sidebar */
-.sidebar{width:320px;flex-shrink:0;background:white;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.sidebar{width:320px;flex-shrink:0;background:white;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0;height:100%}
 .sb-section{padding:12px;border-bottom:1px solid var(--border);flex-shrink:0}
 .sb-section:last-child{border-bottom:none}
 .lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-l);margin-bottom:8px}
@@ -72,7 +72,7 @@ select:focus,input:focus{border-color:var(--teal)}
 .run-btn:disabled{background:var(--border);color:var(--text-l);cursor:not-allowed}
 
 /* Station list */
-.slist{flex:0 1 auto;min-height:140px;max-height:clamp(180px,36vh,320px);overflow-y:auto}
+.slist{flex:1 1 auto;min-height:120px;max-height:clamp(160px,30vh,260px);overflow-y:auto}
 .sitem{padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;display:flex;align-items:center;gap:8px}
 .sitem:hover{background:var(--panel)}
 .sitem.active{background:#E8F5F4;border-left:3px solid var(--teal)}
@@ -87,7 +87,7 @@ select:focus,input:focus{border-color:var(--teal)}
 #map{flex:1}
 
 /* Results panel */
-.results{background:white;border-top:2px solid var(--teal);display:none;overflow-y:auto;max-height:60vh}
+.results{background:white;border-top:2px solid var(--teal);display:none;overflow-y:auto;flex:0 0 auto;max-height:min(42vh,360px)}
 .results.show{display:block}
 .res-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:white;z-index:10}
 .res-title{font-size:14px;font-weight:700}
@@ -114,6 +114,20 @@ td{padding:7px 12px;border-bottom:1px solid var(--border)}
 td.r{text-align:right;font-variant-numeric:tabular-nums}
 tr:nth-child(even) td{background:var(--panel)}
 tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
+.results-table-wrap{overflow:auto;max-width:100%}
+.results-table{width:auto;min-width:0;table-layout:auto;display:inline-table}
+.results-table.compact th,.results-table.compact td{padding:5px 10px}
+.results-table.compact td,.results-table.compact th{white-space:nowrap}
+.results-table.compact td.wrap,.results-table.compact th.wrap{white-space:normal}
+.sortable-th{cursor:pointer;user-select:none;position:relative;padding-right:22px}
+.sortable-th::after{content:'↕';position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;opacity:.55}
+.sortable-th.active-asc::after{content:'↑';opacity:1}
+.sortable-th.active-desc::after{content:'↓';opacity:1}
+.station-link{background:none;border:none;padding:0;color:var(--navy);font:inherit;font-weight:700;cursor:pointer;text-align:left}
+.station-link:hover{text-decoration:underline;color:var(--teal-d)}
+.day-link{background:none;border:none;padding:0;color:var(--navy);font:inherit;cursor:pointer;text-align:left}
+.day-link:hover{text-decoration:underline;color:var(--teal-d)}
+.daily-highlight td{background:rgba(0,132,127,.14)!important;font-weight:700}
 .aep-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;color:white}
 
 /* AEP colours */
@@ -351,7 +365,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 </div>
 
 <!-- AEP Tool (display:flex so Leaflet map inits with correct dimensions) -->
-<div id="page-aep" style="flex-direction:column;flex:1;overflow:hidden;display:flex">
+<div id="page-aep" style="flex-direction:column;flex:1;min-height:0;overflow:hidden;display:flex">
 <div class="tab-bar">
   <div class="tab active" onclick="switchTab('map')">Map View</div>
   <div class="tab" onclick="switchTab('top-site')">Top Intensity Per Site</div>
@@ -543,8 +557,8 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
             <option value="0">No observable impact</option>
             <option value="1">Very minor - isolated ponding only</option>
             <option value="2">Minor â€” road flooding, no property entry</option>
-            <option value="3">Moderate â€” property entry or road closed</option>
-            <option value="4">Significant â€” habitable floor flooding</option>
+            <option value="3">Moderate - property entry or road closed</option>
+            <option value="4">Significant - habitable floor flooding</option>
             <option value="5">Severe â€” major habitable floor or safety hazard</option>
           </select>
         </div>
@@ -597,8 +611,8 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
           <select id="pri-cap" onchange="priCalc()">
             <option value="0">No deficiency - at or above design standard</option>
             <option value="1">Minor â€” slightly under capacity</option>
-            <option value="2">Moderate â€” undersized for current demand</option>
-            <option value="3">Significant â€” regular surcharge</option>
+            <option value="2">Moderate - undersized for current demand</option>
+            <option value="3">Significant - regular surcharge</option>
             <option value="4">Severe â€” surcharge in minor events</option>
             <option value="5">Critical - overflows in very minor events</option>
           </select>
@@ -858,11 +872,13 @@ let rainChart = null, compareChart = null;
 let currentTab = 'map';
 let packagingConfig = null;
 let lastPackagingGeneration = null;
+let topSiteResultsCache = [];
+let topSiteSort = { key: 'aep', dir: 'asc' };
 
 // â”€â”€ Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const map = L.map('map').setView([-33.75, 151.25], 11);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
-  attribution:'Â© OpenStreetMap Â© CARTO',subdomains:'abcd',maxZoom:19
+  attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
 }).addTo(map);
 loadAllLgaBoundaries();
 
@@ -1086,14 +1102,14 @@ function setMode(m) {
 }
 
 // â”€â”€ Tab switching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function switchTab(tab) {
+function switchTab(tab, skipRun = false) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach((el,i) => {
     el.classList.toggle('active', ['map','top-site','top-dur','daily','monitors'][i] === tab);
   });
   if (tab === 'monitors') {
     loadOtherMonitors();
-  } else if (tab !== 'map') {
+  } else if (tab !== 'map' && !skipRun) {
     if (selected) runAnalysis();
   }
 }
@@ -1479,18 +1495,108 @@ function aepStringToProb(aepStr) {
   return isNaN(pct) ? 1 : pct / 100;
 }
 
+function durationLabelToMinutes(label) {
+  if (!label) return 0;
+  const minEntry = Object.entries(DUR_LABELS).find(([, v]) => v === label);
+  return minEntry ? Number(minEntry[0]) : 0;
+}
 
-function renderTopPerSite(results, dur) {
+function getTopSiteSortValue(result, key) {
+  const rm = result.rolling_max || {};
+  const aepStr = result.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
+  switch (key) {
+    case 'rank':
+      return aepStringToProb(aepStr);
+    case 'station':
+      return String(result.station_name || '').toLowerCase();
+    case 'duration':
+      return Number(result.duration_minutes || durationLabelToMinutes(DUR_LABELS[result.duration_minutes]));
+    case 'peak':
+      return Number(rm.max_depth_mm || 0);
+    case 'aep':
+      return aepStringToProb(aepStr);
+    case 'ari': {
+      const ariText = aepToARI(result.aep || aepStr);
+      const match = String(ariText).match(/1 in ([\d,]+)/i);
+      return match ? Number(match[1].replace(/,/g, '')) : 0;
+    }
+    case 'peakTime':
+      return rm.peak_start ? new Date(rm.peak_start).getTime() : 0;
+    default:
+      return 0;
+  }
+}
+
+function sortTopPerSiteBy(key) {
+  const defaultDirs = {
+    rank: 'asc',
+    station: 'asc',
+    duration: 'desc',
+    peak: 'desc',
+    aep: 'asc',
+    ari: 'desc',
+    peakTime: 'desc'
+  };
+  if (topSiteSort.key === key) {
+    topSiteSort.dir = topSiteSort.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    topSiteSort = { key, dir: defaultDirs[key] || 'asc' };
+  }
+  renderTopPerSite();
+}
+
+function topSiteHeader(label, key, alignRight = false) {
+  const classes = ['sortable-th'];
+  if (topSiteSort.key === key) classes.push(topSiteSort.dir === 'asc' ? 'active-asc' : 'active-desc');
+  return `<th class="${classes.join(' ')}${alignRight ? ' r' : ''}" onclick="sortTopPerSiteBy('${key}')">${label}</th>`;
+}
+
+async function openTopSiteDailyTotals(stationId) {
+  const decodedId = decodeInlineArg(stationId);
+  const result = topSiteResultsCache.find(r => r.station_id === decodedId);
+  if (!result) return;
+  selectStation(decodedId);
+  switchTab('daily', true);
+  const fromDt = new Date(result.from);
+  const toDt = new Date(result.to);
+  try {
+    showLoad(`Loading daily totals for ${result.station_name}...`);
+    const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
+    hideLoad();
+    renderDailyTotals({
+      station_name: selected.name,
+      readings,
+      from: fromDt.toISOString(),
+      to: toDt.toISOString(),
+      highlightMaxDay: true,
+      scrollToHighlight: true
+    });
+    document.getElementById('results').classList.add('show');
+  } catch (e) {
+    hideLoad();
+    alert('Daily totals failed: ' + e.message);
+  }
+}
+
+function renderTopPerSite(results = null, dur = null) {
+  if (results) topSiteResultsCache = [...results];
   document.getElementById('results').classList.remove('no-rtabs');
   document.getElementById('res-title').textContent = 'Top Intensity Per Site';
   const lga = document.getElementById('lgaSel').value;
   document.getElementById('res-sub').textContent =
     `Best duration per station - ${lga || 'All stations'} - Ranked by AEP`;
 
-  // Sort by AEP probability (lowest = rarest = first)
-  const sorted = [...results]
-    .filter(r => r.rolling_max)
-    .sort((a, b) => aepStringToProb(a.aep?.aep) - aepStringToProb(b.aep?.aep));
+  const sortable = [...topSiteResultsCache].filter(r => r.rolling_max);
+  const sorted = sortable.sort((a, b) => {
+    const av = getTopSiteSortValue(a, topSiteSort.key);
+    const bv = getTopSiteSortValue(b, topSiteSort.key);
+    if (typeof av === 'string' || typeof bv === 'string') {
+      const cmp = String(av).localeCompare(String(bv), undefined, { numeric: true, sensitivity: 'base' });
+      return topSiteSort.dir === 'asc' ? cmp : -cmp;
+    }
+    const cmp = (Number(av) || 0) - (Number(bv) || 0);
+    return topSiteSort.dir === 'asc' ? cmp : -cmp;
+  });
 
   const maxD = Math.max(...sorted.map(r => r.rolling_max?.max_depth_mm||0)) || 1;
 
@@ -1504,7 +1610,7 @@ function renderTopPerSite(results, dur) {
     return `
       <tr>
         <td>${i+1}</td>
-        <td><strong>${r.station_name}</strong></td>
+        <td class="wrap"><button class="station-link" onclick="openTopSiteDailyTotals('${encodeInlineArg(r.station_id)}')">${escapeHtml(r.station_name)}</button></td>
         <td class="r">${durLabel}</td>
         <td class="r">${depth} mm</td>
         <td><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
@@ -1516,17 +1622,21 @@ function renderTopPerSite(results, dur) {
 
   document.getElementById('r-allsite').innerHTML = `
     <div style="margin-bottom:12px;font-size:12px;color:var(--text-l)">${sorted.length} stations analysed - all 25 durations per station</div>
-    <table>
+    <div class="results-table-wrap">
+    <table class="results-table compact">
       <thead><tr>
-        <th>#</th><th>Station</th>
-        <th class="r">Best Duration</th>
-        <th class="r">Peak (mm)</th>
-        <th style="min-width:100px">Intensity</th>
-        <th>AEP</th><th class="r">Return Period</th>
-        <th>Peak Time</th>
+        ${topSiteHeader('#', 'rank')}
+        ${topSiteHeader('Station', 'station')}
+        ${topSiteHeader('Best Duration', 'duration', true)}
+        ${topSiteHeader('Peak (mm)', 'peak', true)}
+        <th style="min-width:88px">Intensity</th>
+        ${topSiteHeader('AEP', 'aep')}
+        ${topSiteHeader('Return Period', 'ari', true)}
+        ${topSiteHeader('Peak Time', 'peakTime')}
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>
+    </div>
   `;
 
   renderCompareChart(sorted, dur);
@@ -1536,7 +1646,7 @@ function renderCompareChart(results, dur) {
   const el = document.getElementById('r-chart');
   const top10 = results.slice(0, 10);
   el.innerHTML = `
-    <div class="chart-title">Peak Depth Comparison â€” ${DUR_LABELS[dur]||dur+'min'} (Top 10)</div>
+    <div class="chart-title">Peak Depth Comparison - ${DUR_LABELS[dur]||dur+'min'} (Top 10)</div>
     <div class="chart-wrap"><canvas id="cc"></canvas></div>
   `;
   if (compareChart) compareChart.destroy();
@@ -1588,7 +1698,7 @@ async function runTopDurations(fromDt, toDt) {
 
 function renderTopDurations(results) {
   document.getElementById('results').classList.add('no-rtabs');
-  document.getElementById('res-title').textContent = `All Durations â€” ${selected.name}`;
+  document.getElementById('res-title').textContent = `All Durations - ${selected.name}`;
   document.getElementById('res-sub').textContent = 'All durations analysed, ranked by AEP';
 
   const sorted = [...results].sort((a,b) => {
@@ -1643,7 +1753,7 @@ let lastDailyData = null;
 
 function renderDailyTotals(data) {
   document.getElementById('results').classList.add('no-rtabs');
-  document.getElementById('res-title').textContent = `Daily Totals â€” ${data.station_name}`;
+  document.getElementById('res-title').textContent = `Daily Totals - ${data.station_name}`;
   document.getElementById('res-sub').textContent = `${fmtDt(data.from)} -> ${fmtDt(data.to)} - 24hr periods from midnight`;
 
   if (!data.readings?.length) {
@@ -1673,10 +1783,12 @@ function renderDailyTotals(data) {
     }));
 
   const maxT = Math.max(...days.map(d => d.total)) || 1;
+  const maxDay = days.reduce((best, day) => !best || day.total > best.total ? day : best, null);
+  const highlightDay = data.highlightDay || maxDay?.day || null;
 
   const dailyRows = days.map(d => `
-    <tr>
-      <td>${d.label}</td>
+    <tr id="daily-row-${d.day}" class="${d.day === highlightDay ? 'daily-highlight' : ''}">
+      <td><button class="day-link" onclick="openHourlyBreakdown('${d.day}')">${d.label}</button></td>
       <td class="r"><strong>${d.total} mm</strong></td>
       <td style="width:40%">
         <div class="bar-wrap"><div class="bar" style="width:${d.total/maxT*100}%"></div></div>
@@ -1692,10 +1804,12 @@ function renderDailyTotals(data) {
       <div class="d-subtab" onclick="showDailySubTab('d-hourly')">Hourly Breakdown</div>
     </div>
     <div id="d-daily">
-      <table>
+      <div class="results-table-wrap">
+      <table class="results-table compact">
         <thead><tr><th>Date</th><th class="r">Total (mm)</th><th>Relative</th></tr></thead>
         <tbody>${dailyRows}</tbody>
       </table>
+      </div>
     </div>
     <div id="d-hourly" style="display:none">
       <div style="margin-bottom:12px">
@@ -1706,7 +1820,16 @@ function renderDailyTotals(data) {
       <div id="hourly-table"></div>
     </div>
   `;
+  if (highlightDay) {
+    const hourlySel = document.getElementById('hourlyDaySel');
+    if (hourlySel) hourlySel.value = highlightDay;
+  }
   switchRTab('r-allsite');
+  if (data.scrollToHighlight && highlightDay) {
+    requestAnimationFrame(() => {
+      document.getElementById(`daily-row-${highlightDay}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+  }
 }
 
 function showDailySubTab(id) {
@@ -1715,6 +1838,15 @@ function showDailySubTab(id) {
   document.getElementById('d-daily').style.display  = id === 'd-daily'  ? '' : 'none';
   document.getElementById('d-hourly').style.display = id === 'd-hourly' ? '' : 'none';
   if (id === 'd-hourly') renderHourlyTable();
+}
+
+function openHourlyBreakdown(day) {
+  const hourlySel = document.getElementById('hourlyDaySel');
+  if (hourlySel) hourlySel.value = day;
+  showDailySubTab('d-hourly');
+  requestAnimationFrame(() => {
+    document.getElementById('hourly-table')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
 }
 
 function renderHourlyTable() {
@@ -1741,10 +1873,12 @@ function renderHourlyTable() {
   }).join('');
 
   document.getElementById('hourly-table').innerHTML = `
-    <table>
+    <div class="results-table-wrap">
+    <table class="results-table compact">
       <thead><tr><th>Hour (local)</th><th class="r">Total (mm)</th><th>Relative</th></tr></thead>
       <tbody>${rows}</tbody>
-    </table>`;
+    </table>
+    </div>`;
 }
 
 // â”€â”€ Render single station results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -2339,9 +2473,9 @@ function interpretAEP(pct) {
   if (pct <= 0.2)  return 'Extreme event - approximately 1 in 500 years';
   if (pct <= 0.5)  return 'Extreme event - approximately 1 in 200 years';
   if (pct <= 1)    return 'Extreme event - approximately 1 in 100 years';
-  if (pct <= 2)    return 'Very rare â€” approximately 1 in 50 years';
-  if (pct <= 5)    return 'Rare â€” approximately 1 in 20 years';
-  if (pct <= 10)   return 'Significant â€” approximately 1 in 10 years';
+  if (pct <= 2)    return 'Very rare - approximately 1 in 50 years';
+  if (pct <= 5)    return 'Rare - approximately 1 in 20 years';
+  if (pct <= 10)   return 'Significant - approximately 1 in 10 years';
   if (pct <= 20)   return 'Moderate - approximately 1 in 5 years';
   return 'Frequent - less than 1 in 5 years';
 }
