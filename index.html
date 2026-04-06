@@ -281,6 +281,15 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .pkg-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r)}
 .pkg-table-wrap table td{vertical-align:top}
 .pkg-empty{font-size:12px;color:var(--text-l);padding:16px;background:white;border:1px dashed var(--border);border-radius:var(--r)}
+.cost-shell{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px;overflow:auto;width:100%;min-height:0}
+.cost-hero{background:var(--navy);color:white;border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:10px}
+.cost-title{font-size:24px;font-weight:800}
+.cost-sub{font-size:12px;color:rgba(255,255,255,.76);line-height:1.6;max-width:760px}
+.cost-panel{background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.cost-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.cost-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.cost-card .k{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-l);margin-bottom:6px}
+.cost-card .v{font-size:18px;font-weight:800;color:var(--navy)}
 @media (max-width: 820px){
   .pkg-grid{grid-template-columns:1fr}
   .pkg-hero{flex-direction:column}
@@ -355,6 +364,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 <div id="page-nav" style="display:none">
   <button class="pnav-btn active" onclick="switchPage('aep')">Rainfall Calculator</button>
   <button class="pnav-btn" onclick="switchPage('prioritisation')">Prioritisation Tool</button>
+  <button class="pnav-btn" onclick="switchPage('costing')">Costing Tool</button>
   <button class="pnav-btn" onclick="switchPage('relining')">Relining Packaging</button>
   <button class="pnav-btn pnav-home" onclick="switchPage('home')">Home</button>
 </div>
@@ -378,11 +388,17 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
       <div class="hc-desc">Score and rank stormwater capital works projects across four weighted pillars.</div>
       <div><span class="hc-badge live">Live</span></div>
     </div>
-    <div class="home-card soon">
+    <div class="home-card" onclick="switchPage('costing')">
+      <div class="hc-icon">Costing</div>
+      <div class="hc-title">Costing Tool</div>
+      <div class="hc-desc">Browser port of the stormwater costing workbook with cascading BOQ selections and rate lookups.</div>
+      <div><span class="hc-badge live">In Progress</span></div>
+    </div>
+    <div class="home-card" onclick="switchPage('relining')">
       <div class="hc-icon">Packaging</div>
       <div class="hc-title">Packaging</div>
       <div class="hc-desc">Pipe relining scope packaging and cost estimation tool.</div>
-      <div><span class="hc-badge soon">Coming Soon</span></div>
+      <div><span class="hc-badge live">Live</span></div>
     </div>
   </div>
 </div>
@@ -951,6 +967,47 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
     </div>
   </div>
 </div><!-- /page-prioritisation -->
+
+<div id="page-costing" style="display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel);padding:20px">
+  <div class="cost-shell">
+    <div class="cost-hero">
+      <div class="cost-title">Costing Tool</div>
+      <div class="cost-sub">This will be the full web port of <strong>Master Costing Tool - Stormwater.xlsm</strong>, including its cascading BOQ selectors, confidential rate lookups, IPART modifiers, and export workflow. I’ve inspected the workbook and confirmed it includes VBA plus several large lookup tables, so this will be implemented as a proper app workflow rather than a stripped-down mock-up.</div>
+    </div>
+    <div class="cost-grid">
+      <div class="cost-card">
+        <div class="k">Workbook Type</div>
+        <div class="v">Macro Workbook</div>
+      </div>
+      <div class="cost-card">
+        <div class="k">Sheets</div>
+        <div class="v">8</div>
+      </div>
+      <div class="cost-card">
+        <div class="k">Lookup Rows</div>
+        <div class="v">3,000+</div>
+      </div>
+      <div class="cost-card">
+        <div class="k">Port Strategy</div>
+        <div class="v">Full Logic Port</div>
+      </div>
+    </div>
+    <div class="cost-panel">
+      <div class="lbl">What Will Transfer</div>
+      <div style="font-size:12px;color:var(--text-l);line-height:1.7">
+        The target is the full costing workflow, not just a simple calculator. That means:
+        workbook-style BOQ line entry, cascading `Asset Class → Category → Item → Component → Type → Size/Descriptor`,
+        unit and rate lookups, IPART modifier support, and browser export.
+      </div>
+    </div>
+    <div class="cost-panel">
+      <div class="lbl">Current Status</div>
+      <div style="font-size:12px;color:var(--text-l);line-height:1.7">
+        The workbook has now been inspected and the site shell is in place. The next implementation step is to extract the workbook tables into a web-friendly data model and then build the interactive BOQ form on top of it.
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="page-relining">
   <div class="pkg-shell">
@@ -3348,12 +3405,12 @@ function drawLgaBoundary(lgaName) {
 }
 
 // â”€â”€ Page navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const PAGES = ['home','aep','prioritisation','relining'];
+const PAGES = ['home','aep','prioritisation','costing','relining'];
 let currentPage = 'home';
 
 function switchPage(page) {
   currentPage = page;
-  const flexPages = new Set(['aep','prioritisation','relining']);
+  const flexPages = new Set(['aep','prioritisation','costing','relining']);
   PAGES.forEach(p => {
     const el = document.getElementById('page-' + p);
     if (!el) return;
@@ -3361,7 +3418,7 @@ function switchPage(page) {
   });
   document.getElementById('page-nav').style.display = page === 'home' ? 'none' : 'flex';
   document.querySelectorAll('.pnav-btn').forEach((b, i) =>
-    b.classList.toggle('active', ['aep','prioritisation','relining'][i] === page));
+    b.classList.toggle('active', ['aep','prioritisation','costing','relining'][i] === page));
   if (page === 'aep') {
     if (!window._aepInited) { window._aepInited = true; init(); }
     setTimeout(() => map.invalidateSize(), 50);
