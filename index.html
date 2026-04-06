@@ -858,11 +858,11 @@ function escapeHtml(value) {
 }
 
 function encodeInlineArg(value) {
-  return encodeURIComponent(String(value  -  ''));
+  return encodeURIComponent(String(value ?? ''));
 }
 
 function decodeInlineArg(value) {
-  return decodeURIComponent(String(value  -  ''));
+  return decodeURIComponent(String(value ?? ''));
 }
 
 // â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -874,6 +874,12 @@ let packagingConfig = null;
 let lastPackagingGeneration = null;
 let topSiteResultsCache = [];
 let topSiteSort = { key: 'aep', dir: 'asc' };
+const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
+const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
+const ACTIVE_GAUGE_CACHE_KEY = 'activeGaugeCache.v1';
+const ACTIVE_GAUGE_CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+const activeGaugeCache = loadActiveGaugeCache();
+const activeGaugePromises = {};
 
 // â”€â”€ Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const map = L.map('map').setView([-33.75, 151.25], 11);
@@ -901,13 +907,128 @@ function setStatus(ok, txt) {
 }
 
 async function loadStations() {
+  setStatus(true, 'Loading stations...');
   const data = await api('/stations?limit=2000');
-  // Load full station detail including IFD for each station in background
-  allStations = data.stations;
+  const stations = data.stations || [];
+  setStatus(true, `Checking active gauges... 0/${stations.length}`);
+  allStations = await filterStationsByRecentReadings(stations);
   // Fetch full IFD data for all stations (needed for browser-side AEP calc)
   loadIfdData();
   plotAllMarkers(allStations);
   buildLgaDropdown();
+  setStatus(true, `${allStations.length.toLocaleString()} active gauges`);
+}
+
+function loadActiveGaugeCache() {
+  try {
+    const raw = localStorage.getItem(ACTIVE_GAUGE_CACHE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch(e) {
+    return {};
+  }
+}
+
+function persistActiveGaugeCache() {
+  try {
+    localStorage.setItem(ACTIVE_GAUGE_CACHE_KEY, JSON.stringify(activeGaugeCache));
+  } catch(e) {}
+}
+
+function getCachedActiveGaugeState(tsId) {
+  const cached = activeGaugeCache[tsId];
+  if (!cached) return null;
+  if ((Date.now() - (cached.checked_at || 0)) > ACTIVE_GAUGE_CACHE_MAX_AGE_MS) return null;
+  return !!cached.active;
+}
+
+function setCachedActiveGaugeState(tsId, active) {
+  activeGaugeCache[tsId] = { active: !!active, checked_at: Date.now() };
+  persistActiveGaugeCache();
+}
+
+async function fetchMhlTimestampPresence(tsId, fromDt, toDt) {
+  const fmt = d => {
+    const p = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+  };
+  const params = new URLSearchParams({
+    service:      'kisters',
+    type:         'queryServices',
+    request:      'getTimeseriesValues',
+    ts_id:        tsId,
+    from:         fmt(fromDt),
+    to:           fmt(toDt),
+    format:       'json',
+    returnfields: 'Timestamp'
+  });
+
+  const resp = await fetch(`${MHL_BASE}?${params}`);
+  if (!resp.ok) throw new Error(`MHL activity fetch ${resp.status}`);
+  const data = await resp.json();
+  return Number(data?.[0]?.rows || 0) > 0;
+}
+
+async function hasRecentGaugeReadings(station) {
+  if (!station?.ts_id) return false;
+  const cached = getCachedActiveGaugeState(station.ts_id);
+  if (cached !== null) return cached;
+  if (activeGaugePromises[station.ts_id]) return activeGaugePromises[station.ts_id];
+
+  activeGaugePromises[station.ts_id] = (async () => {
+    const now = new Date();
+    try {
+      for (const days of ACTIVE_GAUGE_WINDOWS_DAYS) {
+        const from = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+        if (await fetchMhlTimestampPresence(station.ts_id, from, now)) {
+          setCachedActiveGaugeState(station.ts_id, true);
+          return true;
+        }
+      }
+      setCachedActiveGaugeState(station.ts_id, false);
+      return false;
+    } catch(e) {
+      const fallback = station.active !== false;
+      setCachedActiveGaugeState(station.ts_id, fallback);
+      return fallback;
+    } finally {
+      delete activeGaugePromises[station.ts_id];
+    }
+  })();
+
+  return activeGaugePromises[station.ts_id];
+}
+
+async function filterStationsByRecentReadings(stations) {
+  const ordered = Array.isArray(stations) ? stations.slice() : [];
+  const keepIds = new Set();
+  const queue = ordered.slice();
+  const total = queue.length;
+  let checked = 0;
+
+  if (!total) return [];
+
+  const updateProgress = () => {
+    if (checked === total || checked % 10 === 0) {
+      setStatus(true, `Checking active gauges... ${checked}/${total}`);
+    }
+  };
+
+  const workers = Array.from({ length: Math.min(8, total) }, async () => {
+    while (queue.length) {
+      const station = queue.shift();
+      if (!station) continue;
+      if (isProtectedNbcStation(station) || await hasRecentGaugeReadings(station)) {
+        keepIds.add(station.station_id);
+      }
+      checked += 1;
+      updateProgress();
+    }
+  });
+
+  await Promise.all(workers);
+  return ordered.filter(station => keepIds.has(station.station_id));
 }
 
 // â”€â”€ LGA dropdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -1266,6 +1387,14 @@ const NBC_SOUTH = [
   'Curl Curl', 'Manly CBD Rain', 'Manly Dam',
   'Queenscliff', 'Spit Bridge'
 ];
+
+function isProtectedNbcStation(station) {
+  if (!station) return false;
+  return station.lga === 'Northern Beaches'
+    || NBC_STANDARD_15.includes(station.name)
+    || NBC_NORTH.includes(station.name)
+    || NBC_SOUTH.includes(station.name);
+}
 
 // Extended IFD data (1:200, 1:500, 1:1000) for NBC Standard 15 stations
 // Source: BoM IFD 2016 via NBC_Rainfall_Calculator.xlsm
