@@ -211,6 +211,12 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 
 /* Prioritisation Tool */
 #page-prioritisation{flex:1;min-height:0;display:none;flex-direction:row;overflow:auto;align-items:flex-start}
+.pri-tool-shell{display:flex;flex-direction:column;flex:1;min-height:0}
+.pri-tool-tabs{display:flex;gap:0;background:var(--navy-l);border-bottom:2px solid var(--teal)}
+.pri-tool-tab{padding:11px 18px;border:none;background:none;color:rgba(255,255,255,.62);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.03em;border-bottom:3px solid transparent}
+.pri-tool-tab.active{color:white;border-bottom-color:var(--teal-l)}
+.pri-tool-panel{display:none;flex:1;min-height:0}
+.pri-tool-panel.active{display:flex}
 .pri-sidebar{width:260px;flex-shrink:0;min-height:0;background:white;border-right:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;position:sticky;top:0;max-height:100vh}
 .pri-main{flex:1;min-height:0;padding:20px;background:var(--panel);display:flex;flex-direction:column;gap:16px;overflow:visible}
 .pri-section{background:white;border:1px solid var(--border);border-radius:var(--r);overflow:visible}
@@ -238,6 +244,20 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .pillar-bar-val{font-size:16px;font-weight:800;color:var(--teal-d);margin-bottom:4px}
 .pri-list-section{background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px}
 .pri-list-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.opri-sidebar{width:320px;flex-shrink:0;min-height:0;background:white;border-right:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;position:sticky;top:0;max-height:100vh}
+.opri-main{flex:1;min-height:0;padding:20px;background:var(--panel);display:flex;flex-direction:column;gap:16px}
+.opri-note{font-size:11px;color:var(--text-l);line-height:1.5;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+.opri-grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.opri-grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.opri-matrix{display:grid;gap:6px}
+.opri-matrix-row{display:grid;grid-template-columns:1.4fr repeat(4,minmax(72px,1fr));gap:8px;align-items:center}
+.opri-matrix-head{font-size:10px;font-weight:700;color:var(--text-l);text-transform:uppercase;letter-spacing:.06em}
+.opri-row-lbl{font-size:11px;font-weight:600;color:var(--text)}
+.opri-summary{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:12px}
+.opri-card{background:white;border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.opri-card .k{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-l);margin-bottom:6px}
+.opri-card .v{font-size:22px;font-weight:800;color:var(--navy)}
+.opri-actions{display:flex;gap:10px;flex-wrap:wrap}
 
 /* Packaging */
 #page-relining{flex:1;min-height:0;display:none;overflow:hidden;background:var(--panel);padding:20px}
@@ -534,21 +554,201 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 
 <!-- Prioritisation Tool Page -->
 <div id="page-prioritisation" style="display:none">
-  <div class="pri-sidebar">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-l);margin-bottom:4px">Project Details</div>
-    <div class="pri-field"><label>Project Name</label><input type="text" id="pri-name" placeholder="e.g. Curl Curl Creek Upgrade" oninput="priCalc()"/></div>
-    <div class="pri-field"><label>Asset Type</label>
-      <select id="pri-asset" onchange="priCalc()">
-        <option>Culvert</option><option>Pipe / Drain</option><option>Open Channel</option>
-        <option>Detention Basin</option><option>Gross Pollutant Trap</option><option>Other</option>
-      </select>
+  <div class="pri-tool-shell">
+    <div class="pri-tool-tabs">
+      <button class="pri-tool-tab active" id="pri-tab-original" onclick="switchPriTool('original')">Original Tool</button>
+      <button class="pri-tool-tab" id="pri-tab-new" onclick="switchPriTool('new')">New Tool</button>
     </div>
-    <div class="pri-field"><label>Asset ID / Reference</label><input type="text" id="pri-assetid" placeholder="TechnologyOne asset ID"/></div>
-    <div class="pri-field"><label>Location</label><input type="text" id="pri-location" placeholder="Street / suburb"/></div>
-    <div class="pri-field"><label>Notes</label><textarea id="pri-notes" rows="4" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:var(--r);font-size:12px;resize:vertical"></textarea></div>
-  </div>
 
-  <div class="pri-main">
+    <div class="pri-tool-panel active" id="pri-panel-original">
+      <div class="opri-sidebar">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-l);margin-bottom:4px">Project Definition</div>
+        <div class="pri-field"><label>Project Name</label><input type="text" id="opri-project-name" placeholder="Fill out the accurate Project Name" oninput="origPriUpdate()"/></div>
+        <div class="pri-field"><label>ID</label><input type="text" id="opri-project-id" placeholder="Leave blank if not known" oninput="origPriUpdate()"/></div>
+        <div class="pri-field"><label>Document Location</label><input type="text" id="opri-doc-location" placeholder="SharePoint link or folder path" oninput="origPriUpdate()"/></div>
+        <div class="pri-field"><label>Project Description</label><textarea id="opri-description" rows="5" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:var(--r);font-size:12px;resize:vertical" oninput="origPriUpdate()"></textarea></div>
+        <div class="opri-grid-2">
+          <div class="pri-field"><label>Total Site Area (m²)</label><input type="text" id="opri-site-area" value="0" oninput="origPriUpdate()"/></div>
+          <div class="pri-field"><label>Total Flood Area (m²)</label><input type="text" id="opri-flood-area" value="0" oninput="origPriUpdate()"/></div>
+        </div>
+        <div class="pri-field"><label>Site / Zoning Notes</label><textarea id="opri-site-notes" rows="4" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:var(--r);font-size:12px;resize:vertical" oninput="origPriUpdate()"></textarea></div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-l);margin:8px 0 4px">Additional Information</div>
+        <div class="opri-grid-2">
+          <div class="pri-field"><label>Ward</label><input type="text" id="opri-ward" placeholder="Pittwater" oninput="origPriUpdate()"/></div>
+          <div class="pri-field"><label>Suburb</label><input type="text" id="opri-suburb" placeholder="Mona Vale" oninput="origPriUpdate()"/></div>
+          <div class="pri-field"><label>Catchment</label><input type="text" id="opri-catchment" placeholder="North Harbour" oninput="origPriUpdate()"/></div>
+          <div class="pri-field"><label>Street</label><input type="text" id="opri-street" placeholder="Main Street" oninput="origPriUpdate()"/></div>
+        </div>
+        <div class="pri-field"><label>Accurate Cost Estimate</label><input type="text" id="opri-accurate-cost" value="0" oninput="origPriUpdate()"/></div>
+        <div class="opri-actions">
+          <button class="export-btn" onclick="origPriExportJson()">Export JSON</button>
+          <button class="export-btn" onclick="origPriExportCsv()">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="opri-main">
+        <div class="opri-note">This is the original workbook-aligned capture form from <strong>Master Prioritisation Tool V1.1</strong>. It mirrors the workbook inputs for staff data entry in the browser, while leaving your newer weighted tool available separately under <strong>New Tool</strong>.</div>
+
+        <div class="opri-summary">
+          <div class="opri-card"><div class="k">Project</div><div class="v" id="opri-sum-project">Unnamed</div></div>
+          <div class="opri-card"><div class="k">Sections Enabled</div><div class="v" id="opri-sum-enabled">5</div></div>
+          <div class="opri-card"><div class="k">Fields Completed</div><div class="v" id="opri-sum-complete">0%</div></div>
+          <div class="opri-card"><div class="k">Estimated Cost</div><div class="v" id="opri-sum-cost">$0</div></div>
+        </div>
+
+        <div class="pri-section">
+          <div class="pri-sec-hdr"><span>1. Project Definition</span><span class="weight">Workbook Inputs</span></div>
+          <div class="pri-sec-body">
+            <div class="opri-grid-2">
+              <div class="pri-field"><label>Image of Site with Zoning Type</label><input type="text" id="opri-zoning-image" placeholder="Paste image / file reference" oninput="origPriUpdate()"/></div>
+              <div class="pri-field"><label>Image of Site Showing Flood Extent</label><input type="text" id="opri-flood-image" placeholder="Paste image / file reference" oninput="origPriUpdate()"/></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pri-section">
+          <div class="pri-sec-hdr"><span>2. Safety</span><span class="weight">Enable / Disable</span></div>
+          <div class="pri-sec-body">
+            <div class="opri-grid-2">
+              <div class="pri-field"><label>Section Status</label><select id="opri-enabled-safety" onchange="origPriUpdate()"><option>Enabled</option><option>Disabled</option></select></div>
+              <div class="pri-field"><label>Stormwater Criticality Rating</label><input type="text" id="opri-criticality" value="2" oninput="origPriUpdate()"/></div>
+            </div>
+            <div class="opri-matrix">
+              <div class="opri-matrix-row opri-matrix-head"><div>Flood Hazard Rating (m²)</div><div>20% AEP</div><div>10% AEP</div><div>5% AEP</div><div>1% AEP</div></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">H1 or H2</div><input id="opri-h12-20" value="0" oninput="origPriUpdate()"/><input id="opri-h12-10" value="0" oninput="origPriUpdate()"/><input id="opri-h12-5" value="0" oninput="origPriUpdate()"/><input id="opri-h12-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">H3 or H4</div><input id="opri-h34-20" value="0" oninput="origPriUpdate()"/><input id="opri-h34-10" value="0" oninput="origPriUpdate()"/><input id="opri-h34-5" value="0" oninput="origPriUpdate()"/><input id="opri-h34-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">H5 or H6</div><input id="opri-h56-20" value="0" oninput="origPriUpdate()"/><input id="opri-h56-10" value="0" oninput="origPriUpdate()"/><input id="opri-h56-5" value="0" oninput="origPriUpdate()"/><input id="opri-h56-1" value="0" oninput="origPriUpdate()"/></div>
+            </div>
+            <div class="opri-matrix">
+              <div class="opri-matrix-row opri-matrix-head"><div>Land Use Flooded (m²)</div><div>20% AEP</div><div>10% AEP</div><div>5% AEP</div><div>1% AEP</div></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Low Density Residential</div><input id="opri-ldr-20" value="0" oninput="origPriUpdate()"/><input id="opri-ldr-10" value="0" oninput="origPriUpdate()"/><input id="opri-ldr-5" value="0" oninput="origPriUpdate()"/><input id="opri-ldr-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Medium Density Residential</div><input id="opri-mdr-20" value="0" oninput="origPriUpdate()"/><input id="opri-mdr-10" value="0" oninput="origPriUpdate()"/><input id="opri-mdr-5" value="0" oninput="origPriUpdate()"/><input id="opri-mdr-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Commercial</div><input id="opri-com-20" value="0" oninput="origPriUpdate()"/><input id="opri-com-10" value="0" oninput="origPriUpdate()"/><input id="opri-com-5" value="0" oninput="origPriUpdate()"/><input id="opri-com-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Industrial</div><input id="opri-ind-20" value="0" oninput="origPriUpdate()"/><input id="opri-ind-10" value="0" oninput="origPriUpdate()"/><input id="opri-ind-5" value="0" oninput="origPriUpdate()"/><input id="opri-ind-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Natural</div><input id="opri-nat-20" value="0" oninput="origPriUpdate()"/><input id="opri-nat-10" value="0" oninput="origPriUpdate()"/><input id="opri-nat-5" value="0" oninput="origPriUpdate()"/><input id="opri-nat-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Other</div><input id="opri-other-20" value="0" oninput="origPriUpdate()"/><input id="opri-other-10" value="0" oninput="origPriUpdate()"/><input id="opri-other-5" value="0" oninput="origPriUpdate()"/><input id="opri-other-1" value="0" oninput="origPriUpdate()"/></div>
+            </div>
+            <div class="opri-grid-4">
+              <div class="pri-field"><label>Structural Condition Rating</label><input type="text" id="opri-struct-cond" value="1" oninput="origPriUpdate()"/></div>
+              <div class="pri-field"><label>Capacity Rating</label><input type="text" id="opri-capacity-rating" value="1" oninput="origPriUpdate()"/></div>
+              <div class="pri-field"><label>Calculation Approach</label><select id="opri-calc-approach" onchange="origPriUpdate()"><option>Maximum</option><option>Average</option></select></div>
+              <div class="pri-field"><label>Notes</label><input type="text" id="opri-safety-notes" placeholder="Guidance notes" oninput="origPriUpdate()"/></div>
+            </div>
+            <div class="opri-grid-3">
+              <div class="opri-matrix-head">NBC Asset Risk (CIA)</div><div class="opri-matrix-head">Likelihood</div><div class="opri-matrix-head">Consequence</div><div class="opri-matrix-head"></div><div class="opri-matrix-head"></div>
+            </div>
+            <div class="opri-grid-2">
+              <div class="pri-field"><label>Community and Staff Safety</label><select id="opri-risk-safety" onchange="origPriUpdate()"><option>Rare</option><option>Unlikely</option><option>Possible</option><option>Likely</option><option>Almost Certain</option></select></div>
+              <div class="pri-field"><label>Consequence</label><select id="opri-risk-safety-cons" onchange="origPriUpdate()"><option>Minor</option><option>Moderate</option><option>Major</option><option>Severe</option><option>Catastrophic</option></select></div>
+              <div class="pri-field"><label>Service Delivery</label><select id="opri-risk-service" onchange="origPriUpdate()"><option>Rare</option><option>Unlikely</option><option>Possible</option><option>Likely</option><option>Almost Certain</option></select></div>
+              <div class="pri-field"><label>Consequence</label><select id="opri-risk-service-cons" onchange="origPriUpdate()"><option>Minor</option><option>Moderate</option><option>Major</option><option>Severe</option><option>Catastrophic</option></select></div>
+              <div class="pri-field"><label>Financial</label><select id="opri-risk-fin" onchange="origPriUpdate()"><option>Rare</option><option>Unlikely</option><option>Possible</option><option>Likely</option><option>Almost Certain</option></select></div>
+              <div class="pri-field"><label>Consequence</label><select id="opri-risk-fin-cons" onchange="origPriUpdate()"><option>Minor</option><option>Moderate</option><option>Major</option><option>Severe</option><option>Catastrophic</option></select></div>
+              <div class="pri-field"><label>Image and Reputation</label><select id="opri-risk-image" onchange="origPriUpdate()"><option>Rare</option><option>Unlikely</option><option>Possible</option><option>Likely</option><option>Almost Certain</option></select></div>
+              <div class="pri-field"><label>Consequence</label><select id="opri-risk-image-cons" onchange="origPriUpdate()"><option>Minor</option><option>Moderate</option><option>Major</option><option>Severe</option><option>Catastrophic</option></select></div>
+              <div class="pri-field"><label>Environment</label><select id="opri-risk-env" onchange="origPriUpdate()"><option>Rare</option><option>Unlikely</option><option>Possible</option><option>Likely</option><option>Almost Certain</option></select></div>
+              <div class="pri-field"><label>Consequence</label><select id="opri-risk-env-cons" onchange="origPriUpdate()"><option>Minor</option><option>Moderate</option><option>Major</option><option>Severe</option><option>Catastrophic</option></select></div>
+              <div class="pri-field"><label>Legal and Compliance</label><select id="opri-risk-legal" onchange="origPriUpdate()"><option>Rare</option><option>Unlikely</option><option>Possible</option><option>Likely</option><option>Almost Certain</option></select></div>
+              <div class="pri-field"><label>Consequence</label><select id="opri-risk-legal-cons" onchange="origPriUpdate()"><option>Minor</option><option>Moderate</option><option>Major</option><option>Severe</option><option>Catastrophic</option></select></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pri-section">
+          <div class="pri-sec-hdr"><span>3. Property and Infrastructure</span><span class="weight">Enable / Disable</span></div>
+          <div class="pri-sec-body">
+            <div class="opri-grid-2">
+              <div class="pri-field"><label>Section Status</label><select id="opri-enabled-property" onchange="origPriUpdate()"><option>Enabled</option><option>Disabled</option></select></div>
+              <div class="pri-field"><label>Frequency of Local Road Closures</label><select id="opri-local-closures" onchange="origPriUpdate()"><option>Never / not applicable</option><option>&lt; 1 per year</option><option>1-2 per year</option><option>3-5 per year</option><option>&gt; 5 per year</option></select></div>
+            </div>
+            <div class="opri-matrix">
+              <div class="opri-matrix-row opri-matrix-head"><div>Buildings at Risk</div><div>20% AEP</div><div>10% AEP</div><div>5% AEP</div><div>1% AEP</div></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Low Density Residential</div><input id="opri-bld-ldr-20" value="0" oninput="origPriUpdate()"/><input id="opri-bld-ldr-10" value="0" oninput="origPriUpdate()"/><input id="opri-bld-ldr-5" value="0" oninput="origPriUpdate()"/><input id="opri-bld-ldr-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Medium Density Residential</div><input id="opri-bld-mdr-20" value="0" oninput="origPriUpdate()"/><input id="opri-bld-mdr-10" value="0" oninput="origPriUpdate()"/><input id="opri-bld-mdr-5" value="0" oninput="origPriUpdate()"/><input id="opri-bld-mdr-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Commercial</div><input id="opri-bld-com-20" value="0" oninput="origPriUpdate()"/><input id="opri-bld-com-10" value="0" oninput="origPriUpdate()"/><input id="opri-bld-com-5" value="0" oninput="origPriUpdate()"/><input id="opri-bld-com-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Industrial</div><input id="opri-bld-ind-20" value="0" oninput="origPriUpdate()"/><input id="opri-bld-ind-10" value="0" oninput="origPriUpdate()"/><input id="opri-bld-ind-5" value="0" oninput="origPriUpdate()"/><input id="opri-bld-ind-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Other</div><input id="opri-bld-other-20" value="0" oninput="origPriUpdate()"/><input id="opri-bld-other-10" value="0" oninput="origPriUpdate()"/><input id="opri-bld-other-5" value="0" oninput="origPriUpdate()"/><input id="opri-bld-other-1" value="0" oninput="origPriUpdate()"/></div>
+              <div class="opri-matrix-row"><div class="opri-row-lbl">Road Segments</div><input id="opri-road-20" value="0" oninput="origPriUpdate()"/><input id="opri-road-10" value="0" oninput="origPriUpdate()"/><input id="opri-road-5" value="0" oninput="origPriUpdate()"/><input id="opri-road-1" value="0" oninput="origPriUpdate()"/></div>
+            </div>
+            <div class="opri-grid-2">
+              <div class="pri-field"><label>Frequency of Regional Road Closures</label><select id="opri-regional-closures" onchange="origPriUpdate()"><option>Never / not applicable</option><option>&lt; 1 per year</option><option>1-2 per year</option><option>3-5 per year</option><option>&gt; 5 per year</option></select></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pri-section">
+          <div class="pri-sec-hdr"><span>4. Customer Service</span><span class="weight">Enable / Disable</span></div>
+          <div class="pri-sec-body">
+            <div class="opri-grid-2">
+              <div class="pri-field"><label>Section Status</label><select id="opri-enabled-customer" onchange="origPriUpdate()"><option>Enabled</option><option>Disabled</option></select></div>
+              <div class="pri-field"><label>Number of Independent Complaints</label><input type="text" id="opri-complaints" value="0" oninput="origPriUpdate()"/></div>
+              <div class="pri-field"><label>Date of First Complaint</label><input type="date" id="opri-first-complaint" oninput="origPriUpdate()"/></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pri-section">
+          <div class="pri-sec-hdr"><span>5. Environmental Protection</span><span class="weight">Enable / Disable</span></div>
+          <div class="pri-sec-body">
+            <div class="opri-grid-4">
+              <div class="pri-field"><label>Section Status</label><select id="opri-enabled-env" onchange="origPriUpdate()"><option>Enabled</option><option>Disabled</option></select></div>
+              <div class="pri-field"><label>Nutrients Removed</label><input type="text" id="opri-nutrients" value="0" oninput="origPriUpdate()"/></div>
+              <div class="pri-field"><label>TSS Removed</label><input type="text" id="opri-tss" value="0" oninput="origPriUpdate()"/></div>
+              <div class="pri-field"><label>Gross Pollutants Removed</label><input type="text" id="opri-gross" value="0" oninput="origPriUpdate()"/></div>
+              <div class="pri-field"><label>Predominant Land Use (Nutrients)</label><select id="opri-landuse-nutrients" onchange="origPriUpdate()"><option>Not applicable</option><option>Residential</option><option>Commercial</option><option>Industrial</option><option>Natural</option><option>Other</option></select></div>
+              <div class="pri-field"><label>Predominant Land Use (TSS)</label><select id="opri-landuse-tss" onchange="origPriUpdate()"><option>Not applicable</option><option>Residential</option><option>Commercial</option><option>Industrial</option><option>Natural</option><option>Other</option></select></div>
+              <div class="pri-field"><label>Predominant Land Use (Gross Pollutants)</label><select id="opri-landuse-gross" onchange="origPriUpdate()"><option>Not applicable</option><option>Residential</option><option>Commercial</option><option>Industrial</option><option>Natural</option><option>Other</option></select></div>
+              <div class="pri-field"><label>Beach Closure Length (days)</label><input type="text" id="opri-beach-days" value="0" oninput="origPriUpdate()"/></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pri-section">
+          <div class="pri-sec-hdr"><span>6. Cost</span><span class="weight">Enable / Disable</span></div>
+          <div class="pri-sec-body">
+            <div class="opri-grid-4">
+              <div class="pri-field"><label>Section Status</label><select id="opri-enabled-cost" onchange="origPriUpdate()"><option>Enabled</option><option>Disabled</option></select></div>
+              <div class="pri-field"><label>Investigation / Planning / Design Cost</label><select id="opri-invest-cost" onchange="origPriUpdate()"><option>&lt; $20k</option><option>$20k - $50k</option><option>$50k - $100k</option><option>$100k - $250k</option><option>&gt; $250k</option></select></div>
+              <div class="pri-field"><label>Capital Expenditure Estimate</label><select id="opri-capex" onchange="origPriUpdate()"><option>&lt;$50k</option><option>$50k - $250k</option><option>$250k - $500k</option><option>$500k - $1M</option><option>$1M - $2M</option><option>$2M - $5M</option><option>&gt; $5M</option></select></div>
+              <div class="pri-field"><label>Project Type</label><select id="opri-project-type" onchange="origPriUpdate()"><option>Planned stormwater renewal</option><option>Planned stormwater new</option><option>Reactive stormwater renewal</option><option>Gross pollutant trap</option></select></div>
+              <div class="pri-field"><label>Asset Type</label><select id="opri-asset-type" onchange="origPriUpdate()"><option>Pipe</option><option>Pit</option><option>Culvert</option><option>Open Channel</option><option>Basin</option><option>Other</option></select></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pri-section">
+          <div class="pri-sec-hdr"><span>7. Deliverability and Uncertainty</span><span class="weight">Enable / Disable</span></div>
+          <div class="pri-sec-body">
+            <div class="opri-grid-4">
+              <div class="pri-field"><label>Section Status</label><select id="opri-enabled-delivery" onchange="origPriUpdate()"><option>Enabled</option><option>Disabled</option></select></div>
+              <div class="pri-field"><label>Solution Complexity</label><select id="opri-solution-complexity" onchange="origPriUpdate()"><option>High complexity</option><option>Moderate complexity</option><option>Low complexity</option></select></div>
+              <div class="pri-field"><label>Is Land Acquisition Needed?</label><select id="opri-land-acquisition" onchange="origPriUpdate()"><option>Low likelihood</option><option>Possible</option><option>High likelihood</option></select></div>
+              <div class="pri-field"><label>Will the Community Support the Solution?</label><select id="opri-community-support" onchange="origPriUpdate()"><option>Low likelihood</option><option>Possible</option><option>High likelihood</option></select></div>
+              <div class="pri-field"><label>Will Enough Resources Be Available?</label><select id="opri-resources" onchange="origPriUpdate()"><option>Low likelihood</option><option>Possible</option><option>High likelihood</option></select></div>
+              <div class="pri-field"><label>Likelihood of Scope Expanding</label><select id="opri-scope-expand" onchange="origPriUpdate()"><option>High likelihood</option><option>Possible</option><option>Low likelihood</option></select></div>
+              <div class="pri-field"><label>Solution Effectiveness</label><select id="opri-effectiveness" onchange="origPriUpdate()"><option>Ineffective</option><option>Effective</option><option>Very effective</option></select></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pri-tool-panel" id="pri-panel-new">
+      <div class="pri-sidebar">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-l);margin-bottom:4px">Project Details</div>
+        <div class="pri-field"><label>Project Name</label><input type="text" id="pri-name" placeholder="e.g. Curl Curl Creek Upgrade" oninput="priCalc()"/></div>
+        <div class="pri-field"><label>Asset Type</label>
+          <select id="pri-asset" onchange="priCalc()">
+            <option>Culvert</option><option>Pipe / Drain</option><option>Open Channel</option>
+            <option>Detention Basin</option><option>Gross Pollutant Trap</option><option>Other</option>
+          </select>
+        </div>
+        <div class="pri-field"><label>Asset ID / Reference</label><input type="text" id="pri-assetid" placeholder="TechnologyOne asset ID"/></div>
+        <div class="pri-field"><label>Location</label><input type="text" id="pri-location" placeholder="Street / suburb"/></div>
+        <div class="pri-field"><label>Notes</label><textarea id="pri-notes" rows="4" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:var(--r);font-size:12px;resize:vertical"></textarea></div>
+      </div>
+
+      <div class="pri-main">
 
     <!-- Impact -->
     <div class="pri-section">
@@ -747,6 +947,8 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
       <div id="pri-list-table"></div>
     </div>
 
+      </div>
+    </div>
   </div>
 </div><!-- /page-prioritisation -->
 
@@ -3172,13 +3374,109 @@ function switchPage(page) {
       refreshPackagingConnection();
     }
   }
+  if (page === 'prioritisation') {
+    origPriUpdate();
+    priCalc();
+  }
 }
 
 // Show home on load
 document.addEventListener('DOMContentLoaded', () => switchPage('home'));
 
 // â”€â”€ Prioritisation Tool â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+let currentPriTool = 'original';
 let priList = [];
+
+function switchPriTool(tool) {
+  currentPriTool = tool;
+  ['original','new'].forEach(name => {
+    const panel = document.getElementById(`pri-panel-${name}`);
+    const tab = document.getElementById(`pri-tab-${name}`);
+    if (panel) panel.classList.toggle('active', name === tool);
+    if (tab) tab.classList.toggle('active', name === tool);
+  });
+}
+
+function origNumber(id) {
+  const el = document.getElementById(id);
+  if (!el) return 0;
+  const num = parseFloat(String(el.value || '0').replace(/[^0-9.-]/g, ''));
+  return Number.isFinite(num) ? num : 0;
+}
+
+function origText(id) {
+  const el = document.getElementById(id);
+  return el ? String(el.value || '').trim() : '';
+}
+
+function origCollect() {
+  const fields = {};
+  document.querySelectorAll('#pri-panel-original input, #pri-panel-original select, #pri-panel-original textarea').forEach(el => {
+    fields[el.id] = el.value;
+  });
+  const enabledSections = ['opri-enabled-safety','opri-enabled-property','opri-enabled-customer','opri-enabled-env','opri-enabled-cost','opri-enabled-delivery']
+    .filter(id => origText(id) !== 'Disabled').length;
+  const relevant = Object.entries(fields).filter(([id]) => !id.startsWith('opri-enabled-'));
+  const completed = relevant.filter(([, value]) => String(value || '').trim() !== '' && String(value).trim() !== '0').length;
+  const completionPct = relevant.length ? Math.round((completed / relevant.length) * 100) : 0;
+  return {
+    projectName: origText('opri-project-name') || 'Unnamed',
+    projectId: origText('opri-project-id'),
+    suburb: origText('opri-suburb'),
+    ward: origText('opri-ward'),
+    street: origText('opri-street'),
+    catchment: origText('opri-catchment'),
+    enabledSections,
+    completionPct,
+    estimatedCost: origNumber('opri-accurate-cost'),
+    fields
+  };
+}
+
+function origPriUpdate() {
+  const data = origCollect();
+  const costLabel = data.estimatedCost ? `$${Math.round(data.estimatedCost).toLocaleString()}` : '$0';
+  document.getElementById('opri-sum-project').textContent = data.projectName;
+  document.getElementById('opri-sum-enabled').textContent = String(data.enabledSections);
+  document.getElementById('opri-sum-complete').textContent = `${data.completionPct}%`;
+  document.getElementById('opri-sum-cost').textContent = costLabel;
+}
+
+function origPriDownload(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function origPriExportJson() {
+  const data = origCollect();
+  origPriDownload(`original_prioritisation_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(data, null, 2), 'application/json');
+}
+
+function origPriExportCsv() {
+  const data = origCollect();
+  const rows = [
+    ['Field','Value'],
+    ['projectName', data.projectName],
+    ['projectId', data.projectId],
+    ['suburb', data.suburb],
+    ['ward', data.ward],
+    ['street', data.street],
+    ['catchment', data.catchment],
+    ['enabledSections', data.enabledSections],
+    ['completionPct', data.completionPct],
+    ['estimatedCost', data.estimatedCost],
+    ...Object.entries(data.fields)
+  ];
+  const csv = rows.map(([k,v]) => `"${String(k).replace(/"/g,'""')}","${String(v ?? '').replace(/"/g,'""')}"`).join('\n');
+  origPriDownload(`original_prioritisation_${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
+}
 
 function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
@@ -3277,6 +3575,9 @@ function priExportCSV() {
   a.download = 'nbc_prioritisation_' + new Date().toISOString().slice(0,10) + '.csv';
   a.click();
 }
+
+origPriUpdate();
+priCalc();
 
 // init() is called lazily by switchPage('aep') on first visit
 </script>
