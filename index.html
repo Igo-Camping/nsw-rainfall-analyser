@@ -886,7 +886,7 @@ const map = L.map('map').setView([-33.75, 151.25], 11);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
   attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
 }).addTo(map);
-loadAllLgaBoundaries();
+const lgaBoundaryLoadPromise = loadAllLgaBoundaries();
 
 // â”€â”€ Startup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function init() {
@@ -908,10 +908,12 @@ function setStatus(ok, txt) {
 
 async function loadStations() {
   setStatus(true, 'Loading stations...');
+  await lgaBoundaryLoadPromise;
   const data = await api('/stations?limit=2000');
   const stations = data.stations || [];
   setStatus(true, `Checking active gauges... 0/${stations.length}`);
   allStations = await filterStationsByRecentReadings(stations);
+  assignStationsToLgas(allStations);
   // Fetch full IFD data for all stations (needed for browser-side AEP calc)
   loadIfdData();
   plotAllMarkers(allStations);
@@ -1078,8 +1080,11 @@ function onLgaChange() {
   const filtered = getFilteredStations();
   syncFilteredStationViews(filtered);
 
-  // Fit map to visible stations
-  if (filtered.length) {
+  // Fit map to the true LGA polygon when available, otherwise fall back to stations.
+  const lgaBounds = lga ? getLgaLatLngBounds(lga) : null;
+  if (lgaBounds) {
+    map.fitBounds(lgaBounds, { padding: [40, 40] });
+  } else if (filtered.length) {
     const visible = lga ? filtered : allStations;
     if (visible.length) {
       const bounds = L.latLngBounds(visible.map(s => [s.lat, s.lon]));
@@ -2943,13 +2948,25 @@ async function showLevelChart(stationId, stationName, colour) {
 // â”€â”€ All LGA boundaries (background layer) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadAllLgaBoundaries() {
   try {
-    const resp = await fetch(
-      'https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/NSW_LGA_POLYGON_SHP/FeatureServer/0/query' +
-      '?where=1%3D1&outFields=NSW_LGA__3&f=geojson'
-    );
-    if (!resp.ok) return;
+    const params = new URLSearchParams({
+      where: '1=1',
+      outFields: 'lganame,councilname,abscode',
+      returnGeometry: 'true',
+      f: 'geojson'
+    });
+    const resp = await fetch(`${NSW_LGA_API}?${params.toString()}`);
+    if (!resp.ok) throw new Error(`LGA API ${resp.status}`);
     const geojson = await resp.json();
-    L.geoJSON(geojson, {
+    const features = (geojson.features || []).filter(f => {
+      const name = getFeatureLgaName(f);
+      return name && f.geometry;
+    });
+    features.forEach(feature => {
+      const name = getFeatureLgaName(feature);
+      lgaBoundaryCache[name] = feature;
+      lgaBoundaryMeta[name] = { bbox: getFeatureBounds(feature) };
+    });
+    L.geoJSON({ type: 'FeatureCollection', features }, {
       style: { color: '#999', weight: 1, opacity: 0.35, fill: false },
       interactive: false
     }).addTo(map).bringToBack();
@@ -2961,7 +2978,7 @@ async function loadAllLgaBoundaries() {
 let lgaBoundaryLayer = null;
 
 // NSW Spatial Services - public ArcGIS REST API
-const NSW_LGA_API = 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/3/query';
+const NSW_LGA_API = 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/8/query';
 
 // NBC boundary embedded directly (avoids CORS issues with external APIs)
 // Source: NSW Spatial Services / ABS LGA boundaries
@@ -2970,6 +2987,89 @@ const NBC_BOUNDARY_GEOJSON = {"type":"Feature","geometry":{"type":"MultiPolygon"
 const lgaBoundaryCache = {
   'Northern Beaches': NBC_BOUNDARY_GEOJSON
 };
+const lgaBoundaryMeta = {};
+
+function getFeatureLgaName(feature) {
+  return feature?.properties?.lganame || feature?.properties?.name || feature?.properties?.councilname || '';
+}
+
+function getFeatureBounds(feature) {
+  const coords = feature?.geometry?.coordinates || [];
+  let minLat = Infinity, maxLat = -Infinity, minLon = Infinity, maxLon = -Infinity;
+  const visit = arr => {
+    if (!Array.isArray(arr)) return;
+    if (typeof arr[0] === 'number' && typeof arr[1] === 'number') {
+      const [lon, lat] = arr;
+      minLat = Math.min(minLat, lat);
+      maxLat = Math.max(maxLat, lat);
+      minLon = Math.min(minLon, lon);
+      maxLon = Math.max(maxLon, lon);
+      return;
+    }
+    arr.forEach(visit);
+  };
+  visit(coords);
+  return (isFinite(minLat) && isFinite(minLon)) ? { minLat, maxLat, minLon, maxLon } : null;
+}
+
+function getLgaLatLngBounds(lgaName) {
+  const feature = lgaBoundaryCache[lgaName];
+  if (!feature) return null;
+  if (!lgaBoundaryMeta[lgaName]?.bbox) {
+    lgaBoundaryMeta[lgaName] = { bbox: getFeatureBounds(feature) };
+  }
+  const bbox = lgaBoundaryMeta[lgaName]?.bbox;
+  if (!bbox) return null;
+  return L.latLngBounds(
+    [bbox.minLat, bbox.minLon],
+    [bbox.maxLat, bbox.maxLon]
+  );
+}
+
+function pointInRing(lat, lon, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i][0], yi = ring[i][1];
+    const xj = ring[j][0], yj = ring[j][1];
+    const intersects = ((yi > lat) !== (yj > lat)) &&
+      (lon < ((xj - xi) * (lat - yi)) / ((yj - yi) || 1e-12) + xi);
+    if (intersects) inside = !inside;
+  }
+  return inside;
+}
+
+function pointInGeometry(lat, lon, geometry) {
+  if (!geometry) return false;
+  if (geometry.type === 'Polygon') {
+    if (!pointInRing(lat, lon, geometry.coordinates[0] || [])) return false;
+    return !(geometry.coordinates.slice(1).some(ring => pointInRing(lat, lon, ring)));
+  }
+  if (geometry.type === 'MultiPolygon') {
+    return geometry.coordinates.some(poly => pointInGeometry(lat, lon, { type: 'Polygon', coordinates: poly }));
+  }
+  return false;
+}
+
+function lookupLgaByPoint(lat, lon) {
+  for (const [name, feature] of Object.entries(lgaBoundaryCache)) {
+    const bbox = lgaBoundaryMeta[name]?.bbox;
+    if (bbox && (lat < bbox.minLat || lat > bbox.maxLat || lon < bbox.minLon || lon > bbox.maxLon)) continue;
+    if (pointInGeometry(lat, lon, feature.geometry)) return name;
+  }
+  return null;
+}
+
+function assignStationsToLgas(stations) {
+  stations.forEach(station => {
+    if (isProtectedNbcStation(station)) {
+      station.lga = 'Northern Beaches';
+      return;
+    }
+    const matched = lookupLgaByPoint(station.lat, station.lon);
+    if (matched) station.lga = matched;
+    else if (!station.lga) station.lga = 'Unknown';
+  });
+}
 
 function drawLgaBoundary(lgaName) {
   // Remove existing boundary
