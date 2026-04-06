@@ -1003,11 +1003,14 @@ async function hasRecentGaugeReadings(station) {
 async function filterStationsByRecentReadings(stations) {
   const ordered = Array.isArray(stations) ? stations.slice() : [];
   const keepIds = new Set();
-  const queue = ordered.slice();
-  const total = queue.length;
+  ordered.filter(isProtectedNbcStation).forEach(station => keepIds.add(station.station_id));
+  const queue = ordered.filter(station => !isProtectedNbcStation(station));
+  const total = ordered.length;
   let checked = 0;
 
   if (!total) return [];
+
+  checked = keepIds.size;
 
   const updateProgress = () => {
     if (checked === total || checked % 10 === 0) {
@@ -1019,7 +1022,7 @@ async function filterStationsByRecentReadings(stations) {
     while (queue.length) {
       const station = queue.shift();
       if (!station) continue;
-      if (isProtectedNbcStation(station) || await hasRecentGaugeReadings(station)) {
+      if (await hasRecentGaugeReadings(station)) {
         keepIds.add(station.station_id);
       }
       checked += 1;
