@@ -26,6 +26,7 @@
   --sh:         0 2px 12px rgba(0,0,0,0.08);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--panel);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
 /* Header */
@@ -167,15 +168,15 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 .bracket-hi td{background:rgba(241,196,15,.15)!important}
 .leaflet-tooltip.station-label{background:rgba(26,43,60,.82);border:none;box-shadow:none;color:#fff;font-size:10px;font-weight:600;padding:2px 6px;white-space:nowrap;cursor:pointer}.leaflet-tooltip.station-label::before{display:none}
 
-/* â”€â”€ Page nav â”€â”€ */
+/* Page nav */
 #page-nav{background:var(--navy-l);display:flex;align-items:center;gap:0;padding:0 8px;flex-shrink:0;border-bottom:2px solid var(--teal)}
 .pnav-btn{padding:10px 18px;font-size:12px;font-weight:600;color:rgba(255,255,255,.65);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;letter-spacing:.02em;white-space:nowrap}
 .pnav-btn:hover{color:white}
 .pnav-btn.active{color:white;border-bottom-color:var(--teal-l)}
 .pnav-home{margin-left:auto}
 
-/* â”€â”€ Home screen â”€â”€ */
-#page-home{flex:1;overflow-y:auto;background:var(--panel);display:flex;flex-direction:column;align-items:center;padding:48px 24px}
+/* Home screen */
+#page-home{flex:1;min-height:0;overflow:auto;background:var(--panel);display:flex;flex-direction:column;align-items:center;padding:32px 24px}
 .home-hero{text-align:center;margin-bottom:40px}
 .home-hero h1{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:6px}
 .home-hero p{font-size:13px;color:var(--text-l)}
@@ -191,10 +192,10 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 .hc-badge.live{background:#E8F8F5;color:#00847F}
 .hc-badge.soon{background:var(--panel);color:var(--text-l)}
 
-/* â”€â”€ Prioritisation Tool â”€â”€ */
-#page-prioritisation{flex:1;min-height:0;display:none;flex-direction:row;overflow-y:auto;align-items:flex-start}
-.pri-sidebar{width:260px;flex-shrink:0;min-height:0;background:white;border-right:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;position:sticky;top:0;max-height:100vh}
-.pri-main{flex:1;min-height:0;padding:20px;background:var(--panel);display:flex;flex-direction:column;gap:16px}
+/* Prioritisation Tool */
+#page-prioritisation{flex:1;min-height:0;display:none;flex-direction:row;overflow:hidden;align-items:stretch}
+.pri-sidebar{width:260px;flex-shrink:0;min-height:0;background:white;border-right:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.pri-main{flex:1;min-height:0;padding:20px;background:var(--panel);display:flex;flex-direction:column;gap:16px;overflow:auto}
 .pri-section{background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .pri-sec-hdr{background:var(--navy);color:white;padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
 .pri-sec-hdr span{font-size:13px;font-weight:700}
@@ -222,8 +223,8 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 .pri-list-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 
 /* Packaging */
-#page-relining{flex:1;min-height:0;display:none;overflow:auto;background:var(--panel);padding:20px}
-.pkg-shell{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+#page-relining{flex:1;min-height:0;display:none;overflow:hidden;background:var(--panel);padding:20px}
+.pkg-shell{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px;overflow:auto;width:100%;min-height:0}
 .pkg-hero{background:var(--navy);color:white;border-radius:var(--r);padding:22px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .pkg-title{font-size:24px;font-weight:800;margin-bottom:4px}
 .pkg-sub{font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;max-width:700px}
@@ -540,7 +541,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         <div class="pri-field"><label>Overland Flow / Flood Severity</label>
           <select id="pri-flow" onchange="priCalc()">
             <option value="0">No observable impact</option>
-            <option value="1">Very minor â€” isolated ponding only</option>
+            <option value="1">Very minor - isolated ponding only</option>
             <option value="2">Minor â€” road flooding, no property entry</option>
             <option value="3">Moderate â€” property entry or road closed</option>
             <option value="4">Significant â€” habitable floor flooding</option>
@@ -594,12 +595,12 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         </div>
         <div class="pri-field"><label>Capacity Deficiency</label>
           <select id="pri-cap" onchange="priCalc()">
-            <option value="0">No deficiency â€” at or above design standard</option>
+            <option value="0">No deficiency - at or above design standard</option>
             <option value="1">Minor â€” slightly under capacity</option>
             <option value="2">Moderate â€” undersized for current demand</option>
             <option value="3">Significant â€” regular surcharge</option>
             <option value="4">Severe â€” surcharge in minor events</option>
-            <option value="5">Critical â€” overflows in very minor events</option>
+            <option value="5">Critical - overflows in very minor events</option>
           </select>
         </div>
         <div class="pri-pillar-result">
@@ -834,7 +835,7 @@ const DUR_LABELS = {
 };
 
 function escapeHtml(value) {
-  return String(value ?? '')
+  return String(value  -  '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -843,11 +844,11 @@ function escapeHtml(value) {
 }
 
 function encodeInlineArg(value) {
-  return encodeURIComponent(String(value ?? ''));
+  return encodeURIComponent(String(value  -  ''));
 }
 
 function decodeInlineArg(value) {
-  return decodeURIComponent(String(value ?? ''));
+  return decodeURIComponent(String(value  -  ''));
 }
 
 // â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -1029,7 +1030,7 @@ function plotAllMarkers(stations) {
         const wx = wxRes.status==='fulfilled' ? wxRes.value : null;
         const rain = rainRes.status==='fulfilled' ? rainRes.value : null;
         const html = `<b>${s.name}</b><br><small>${getLGA(s)}</small>`
-          + (wx ? `<br><small>${tempIcon(wx.weather_code)} ${wx.temperature_c}°C &nbsp;💨 ${wx.wind_speed_kmh} km/h ${degToCompass(wx.wind_dir_deg)}<br>🌧 ${rain!=null?rain.toFixed(1)+' mm':'—'} since midnight</small>` : '');
+          + (wx ? `<br><small>${tempIcon(wx.weather_code)} ${wx.temperature_c}°C &nbsp;Wind ${wx.wind_speed_kmh} km/h ${degToCompass(wx.wind_dir_deg)}<br>Rain ${rain!=null?rain.toFixed(1)+' mm':'-'} since midnight</small>` : '');
         wxCache[s.station_id] = { html, ts: Date.now() };
         m.setPopupContent(html);
       } catch(e) {}
@@ -1072,7 +1073,7 @@ function selectStation(id) {
 
   const btn = document.getElementById('runBtn');
   btn.disabled = false;
-  btn.textContent = `â–¶ Analyse ${selected.name.split(' ').slice(0,3).join(' ')}`;
+  btn.textContent = `Analyse ${selected.name.split(' ').slice(0,3).join(' ')}`;
 }
 
 // â”€â”€ Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -1144,7 +1145,7 @@ function aepToARI(aepStrOrObj) {
 
 function interpretation(aepStr) {
   if (!aepStr) return '';
-  if (aepStr.startsWith('>')) return 'Very frequent â€” less than 2-year ARI';
+if (aepStr.startsWith('>')) return 'Very frequent - less than 2-year ARI';
   const clean = parseFloat(aepStr.replace(/[~<>%]/g,''));
   if (isNaN(clean)) return '';
   return interpretAEP(clean);
@@ -1484,7 +1485,7 @@ function renderTopPerSite(results, dur) {
   document.getElementById('res-title').textContent = 'Top Intensity Per Site';
   const lga = document.getElementById('lgaSel').value;
   document.getElementById('res-sub').textContent =
-    `Best duration per station Â· ${lga || 'All stations'} Â· Ranked by AEP`;
+    `Best duration per station - ${lga || 'All stations'} - Ranked by AEP`;
 
   // Sort by AEP probability (lowest = rarest = first)
   const sorted = [...results]
@@ -1509,12 +1510,12 @@ function renderTopPerSite(results, dur) {
         <td><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
         <td class="r">${aepToARI(r.aep || aepStr)}</td>
-        <td>${rm?.peak_start ? fmtDt(rm.peak_start) : 'â€”'}</td>
+        <td>${rm?.peak_start ? fmtDt(rm.peak_start) : '-'}</td>
       </tr>`;
   }).join('');
 
   document.getElementById('r-allsite').innerHTML = `
-    <div style="margin-bottom:12px;font-size:12px;color:var(--text-l)">${sorted.length} stations analysed Â· all 25 durations per station</div>
+    <div style="margin-bottom:12px;font-size:12px;color:var(--text-l)">${sorted.length} stations analysed - all 25 durations per station</div>
     <table>
       <thead><tr>
         <th>#</th><th>Station</th>
@@ -1603,7 +1604,7 @@ function renderTopDurations(results) {
     return `
       <tr>
         <td>${DUR_LABELS[r.duration_minutes]||r.duration_minutes+'min'}</td>
-        <td class="r">${rm?.max_depth_mm??'â€”'} mm</td>
+        <td class="r">${rm?.max_depth_mm ?? '-'} mm</td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
         <td class="r">${aepToARI(r.aep || aepStr)}</td>
       </tr>`;
@@ -1643,7 +1644,7 @@ let lastDailyData = null;
 function renderDailyTotals(data) {
   document.getElementById('results').classList.add('no-rtabs');
   document.getElementById('res-title').textContent = `Daily Totals â€” ${data.station_name}`;
-  document.getElementById('res-sub').textContent = `${fmtDt(data.from)} â†’ ${fmtDt(data.to)} Â· 24hr periods from midnight`;
+  document.getElementById('res-sub').textContent = `${fmtDt(data.from)} -> ${fmtDt(data.to)} - 24hr periods from midnight`;
 
   if (!data.readings?.length) {
     document.getElementById('r-allsite').innerHTML =
@@ -1773,19 +1774,19 @@ function renderResults(data, wx, rainToday) {
         <div class="aep-hero-interp">${aep?.interpretation || interpretation(aepStr)}</div>
         <div class="aep-hero-ari">Return period: ${aepToARI(aep || aepStr)}</div>
         ${wx ? `<div class="aep-hero-ari" style="margin-top:4px">
-          ${tempIcon(wx.weather_code)} ${wx.temperature_c}°C · 💨 ${wx.wind_speed_kmh} km/h ${degToCompass(wx.wind_dir_deg)} · 🌧 ${rainToday!=null?rainToday.toFixed(1)+' mm':'—'} since midnight
+          ${tempIcon(wx.weather_code)} ${wx.temperature_c}°C - Wind ${wx.wind_speed_kmh} km/h ${degToCompass(wx.wind_dir_deg)} - Rain ${rainToday!=null?rainToday.toFixed(1)+' mm':'-'} since midnight
         </div>` : ''}
       </div>
     </div>
     <div class="cards">
       <div class="card">
         <div class="card-lbl">Peak Depth</div>
-        <div class="card-val">${rm?.max_depth_mm??'-'}<span class="card-unit">mm</span></div>
+        <div class="card-val">${rm?.max_depth_mm ?? '-'}<span class="card-unit">mm</span></div>
         <div class="card-sub">${DUR_LABELS[dur]||dur+'min'} rolling max</div>
       </div>
       <div class="card">
         <div class="card-lbl">Total Depth</div>
-        <div class="card-val">${rm?.total_depth_mm??'-'}<span class="card-unit">mm</span></div>
+        <div class="card-val">${rm?.total_depth_mm ?? '-'}<span class="card-unit">mm</span></div>
         <div class="card-sub">Event total</div>
       </div>
       <div class="card">
@@ -1795,7 +1796,7 @@ function renderResults(data, wx, rainToday) {
       </div>
       <div class="card">
         <div class="card-lbl">Readings</div>
-        <div class="card-val">${rm?.reading_count??'-'}</div>
+        <div class="card-val">${rm?.reading_count ?? '-'}</div>
         <div class="card-sub">5-min intervals</div>
       </div>
     </div>
@@ -1891,7 +1892,7 @@ function renderIFDTable(aep, observedDepth, dur) {
       <tbody>
         <tr class="${observedDepth>0?'obs-row':''}">
           <td><strong>Observed</strong></td>
-          ${aeps.map(()=>`<td class="r"><strong>${observedDepth??'-'} mm</strong></td>`).join('')}
+          ${aeps.map(()=>`<td class="r"><strong>${observedDepth - '-'} mm</strong></td>`).join('')}
         </tr>
         <tr>
           <td>IFD Depth (mm)</td>
@@ -2247,7 +2248,7 @@ function aepRarity(aepObj) {
 function calcAEP(stationId, durationMinutes, depthMm) {
   const ifd = ifdCache[stationId];
   if (!ifd) return null;
-  if (depthMm <= 0) return { aep: '>63.2%', interpretation: 'Very frequent â€” less than 2-year ARI' };
+  if (depthMm <= 0) return { aep: '>63.2%', interpretation: 'Very frequent - less than 2-year ARI' };
 
   // Require exact duration match â€” no fallback to nearest (wrong IFD = wrong AEP)
   const availDurs = Object.keys(ifd).map(Number).sort((a,b)=>a-b);
@@ -2286,7 +2287,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
       aep: '>63.2%',
       bracket_upper_aep: '63.2%',
       ifd_reference: row,
-      interpretation: 'Very frequent â€” less than 2-year ARI'
+      interpretation: 'Very frequent - less than 2-year ARI'
     };
   }
 
@@ -2304,7 +2305,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
       ari,
       bracket_lower_aep: available[n-1],
       ifd_reference: row,
-      interpretation: `Extreme event â€” approximately 1 in ${ari.toLocaleString()} years`
+      interpretation: `Extreme event - approximately 1 in ${ari.toLocaleString()} years`
     };
   }
 
@@ -2334,19 +2335,19 @@ function calcAEP(stationId, durationMinutes, depthMm) {
 }
 
 function interpretAEP(pct) {
-  if (pct <= 0.1)  return 'Extreme event â€” approximately 1 in 1000 years';
-  if (pct <= 0.2)  return 'Extreme event â€” approximately 1 in 500 years';
-  if (pct <= 0.5)  return 'Extreme event â€” approximately 1 in 200 years';
-  if (pct <= 1)    return 'Extreme event â€” approximately 1 in 100 years';
+  if (pct <= 0.1)  return 'Extreme event - approximately 1 in 1000 years';
+  if (pct <= 0.2)  return 'Extreme event - approximately 1 in 500 years';
+  if (pct <= 0.5)  return 'Extreme event - approximately 1 in 200 years';
+  if (pct <= 1)    return 'Extreme event - approximately 1 in 100 years';
   if (pct <= 2)    return 'Very rare â€” approximately 1 in 50 years';
   if (pct <= 5)    return 'Rare â€” approximately 1 in 20 years';
   if (pct <= 10)   return 'Significant â€” approximately 1 in 10 years';
-  if (pct <= 20)   return 'Moderate â€” approximately 1 in 5 years';
-  return 'Frequent â€” less than 1 in 5 years';
+  if (pct <= 20)   return 'Moderate - approximately 1 in 5 years';
+  return 'Frequent - less than 1 in 5 years';
 }
 
 function fmtDt(iso) {
-  if (!iso) return 'â€”';
+  if (!iso) return '-';
   return new Date(iso).toLocaleString('en-AU',{
     timeZone:'Australia/Sydney',
     day:'2-digit',month:'2-digit',year:'numeric',
@@ -2397,7 +2398,7 @@ async function loadOtherMonitors() {
   const panel = document.getElementById('results');
   panel.classList.add('show');
   document.getElementById('res-title').textContent = 'Other Monitors';
-  document.getElementById('res-sub').textContent = 'Stream, tide and estuary gauges â€” MHL network';
+  document.getElementById('res-sub').textContent = 'Stream, tide and estuary gauges - MHL network';
 
   // Show placeholder tabs
   document.getElementById('r-summary').innerHTML = `
@@ -2811,7 +2812,7 @@ function renderPriList() {
     const cls = r.priority === 'HIGH' ? '#2ECC71' : r.priority === 'MEDIUM' ? '#F39C12' : '#E74C3C';
     return `<tr>
       <td>${i+1}</td>
-      <td><strong>${r.name}</strong><br><small style="color:var(--text-l)">${r.asset}${r.location ? ' Â· '+r.location : ''}</small></td>
+      <td><strong>${r.name}</strong><br><small style="color:var(--text-l)">${r.asset}${r.location ? ' - '+r.location : ''}</small></td>
       <td><span style="font-weight:700;color:${cls}">${r.priority}</span></td>
       <td class="r"><strong>${r.final.toFixed(1)}</strong></td>
       <td class="r">${r.impact.toFixed(1)}</td>
@@ -2845,5 +2846,3 @@ function priExportCSV() {
 </script>
 </body>
 </html>
-
-
