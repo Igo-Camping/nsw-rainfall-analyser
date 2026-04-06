@@ -159,11 +159,14 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 .chart-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-l);margin-bottom:8px}
 
 /* Loading */
-.loading{position:absolute;inset:0;background:rgba(255,255,255,.92);display:none;align-items:center;justify-content:center;z-index:100;flex-direction:column;gap:12px}
+.loading{position:fixed;inset:0;background:rgba(26,43,60,.28);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:12px}
 .loading.show{display:flex}
-.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+.loading-card{background:white;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.18);padding:18px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;min-width:220px}
+.spinner{width:40px;height:40px;border:4px solid rgba(0,132,127,.16);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.load-txt{font-size:13px;color:var(--text-l);font-weight:600}
+.load-txt{font-size:13px;color:var(--text);font-weight:700;text-align:center}
+body.busy-ui{cursor:progress}
+body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progress}
 
 /* Export btn */
 .export-btn{padding:7px 14px;background:var(--teal);color:white;border:none;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
@@ -493,8 +496,10 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 
     <!-- Loading overlay -->
     <div class="loading" id="loading">
-      <div class="spinner"></div>
-      <div class="load-txt" id="load-txt">Fetching data...</div>
+      <div class="loading-card">
+        <div class="spinner"></div>
+        <div class="load-txt" id="load-txt">Fetching data...</div>
+      </div>
     </div>
 
     <!-- Results -->
@@ -2433,6 +2438,7 @@ function renderGeneratedPackages(data) {
 
 async function refreshPackagingConnection() {
   syncPackagingApiInput();
+  showLoad('Testing packaging backend...');
   try {
     const [health, config] = await Promise.all([
       packagingApi('/health'),
@@ -2452,12 +2458,15 @@ async function refreshPackagingConnection() {
       assets_path: `Check ${getPackagingApiBase()}`,
       suburb_column: '-'
     });
+  } finally {
+    hideLoad();
   }
 }
 
 async function loadPackagingPreview() {
   const mode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
   setPackagingStatus(false, 'Loading preview...');
+  showLoad('Loading packaging preview...');
   try {
     const data = await packagingApi('/packaging/split-streams', {
       method: 'POST',
@@ -2478,6 +2487,8 @@ async function loadPackagingPreview() {
       area.className = 'pkg-empty';
       area.textContent = String(e.message || e);
     }
+  } finally {
+    hideLoad();
   }
 }
 
@@ -2488,6 +2499,7 @@ async function generateReliningPackages() {
   const pipesPerPackage = Number(String(document.getElementById('pkgPipeCount')?.value || '25').replace(/,/g, ''));
   const groupBySuburb = (document.getElementById('pkgGroupSuburb')?.value || 'yes') === 'yes';
   setPackagingStatus(false, 'Generating packages...');
+  showLoad('Generating relining packages...');
   try {
     const data = await packagingApi('/packaging/generate-relining-packages', {
       method: 'POST',
@@ -2509,6 +2521,8 @@ async function generateReliningPackages() {
       area.className = 'pkg-empty';
       area.textContent = String(e.message || e);
     }
+  } finally {
+    hideLoad();
   }
 }
 
@@ -2698,9 +2712,13 @@ function tempIcon(code) {
 function showLoad(txt) {
   document.getElementById('load-txt').textContent = txt;
   document.getElementById('loading').classList.add('show');
+  document.body.classList.add('busy-ui');
 }
 function setLoadTxt(txt) { document.getElementById('load-txt').textContent = txt; }
-function hideLoad() { document.getElementById('loading').classList.remove('show'); }
+function hideLoad() {
+  document.getElementById('loading').classList.remove('show');
+  document.body.classList.remove('busy-ui');
+}
 function closeResults() { const r = document.getElementById('results'); r.classList.remove('show','no-rtabs'); allSiteResults = null; }
 
 
