@@ -220,6 +220,33 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 .pillar-bar-val{font-size:16px;font-weight:800;color:var(--teal-d);margin-bottom:4px}
 .pri-list-section{background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px}
 .pri-list-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+
+/* Packaging */
+#page-relining{flex:1;min-height:0;display:none;overflow:auto;background:var(--panel);padding:20px}
+.pkg-shell{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.pkg-hero{background:var(--navy);color:white;border-radius:var(--r);padding:22px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.pkg-title{font-size:24px;font-weight:800;margin-bottom:4px}
+.pkg-sub{font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;max-width:700px}
+.pkg-status-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.pkg-dot{width:8px;height:8px;border-radius:50%;background:#E74C3C}
+.pkg-panel{background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.pkg-grid{display:grid;grid-template-columns:2fr auto auto;gap:10px;align-items:end}
+.pkg-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.pkg-card{background:white;border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.pkg-card-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-l);margin-bottom:6px}
+.pkg-card-val{font-size:28px;font-weight:900;color:var(--teal-d);line-height:1}
+.pkg-card-sub{font-size:11px;color:var(--text-l);margin-top:6px}
+.pkg-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.pkg-meta-item{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:12px}
+.pkg-meta-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-l);margin-bottom:4px}
+.pkg-meta-val{font-size:13px;font-weight:700;color:var(--navy);word-break:break-word}
+.pkg-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r)}
+.pkg-table-wrap table td{vertical-align:top}
+.pkg-empty{font-size:12px;color:var(--text-l);padding:16px;background:white;border:1px dashed var(--border);border-radius:var(--r)}
+@media (max-width: 820px){
+  .pkg-grid{grid-template-columns:1fr}
+  .pkg-hero{flex-direction:column}
+}
 </style>
 </head>
 <body>
@@ -703,18 +730,97 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
   </div>
 </div><!-- /page-prioritisation -->
 
-<!-- Relining Packaging Page (placeholder) -->
-<div id="page-relining" style="display:none;flex:1;align-items:center;justify-content:center;background:var(--panel)">
-  <div style="text-align:center;color:var(--text-l)">
-    <div style="font-size:48px;margin-bottom:16px">Packaging</div>
-    <div style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px">Relining Packaging Tool</div>
-    <div style="font-size:13px">Coming soon</div>
+<div id="page-relining">
+  <div class="pkg-shell">
+    <div class="pkg-hero">
+      <div>
+        <div class="pkg-title">Packaging</div>
+        <div class="pkg-sub">Connect this page to the Python packaging backend running on your personal laptop, then use the work laptop browser to verify the data path and stream split before we port the full workflow.</div>
+      </div>
+      <div class="pkg-status-chip"><span class="pkg-dot" id="pkgDot"></span><span id="pkgStatusText">Backend not checked</span></div>
+    </div>
+
+    <div class="pkg-panel">
+      <div class="lbl">Backend Connection</div>
+      <div class="pkg-grid">
+        <div class="fg">
+          <label for="pkgApiUrl">Packaging API Base URL</label>
+          <input type="text" id="pkgApiUrl" placeholder="http://localhost:8001"/>
+        </div>
+        <button class="export-btn" onclick="savePackagingApiUrl()">Save URL</button>
+        <button class="export-btn" onclick="refreshPackagingConnection()">Test Connection</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">For cross-device testing, replace `localhost` with your personal laptop IP, for example `http://192.168.1.50:8001`.</div>
+    </div>
+
+    <div class="pkg-panel">
+      <div class="row2" style="align-items:end">
+        <div class="fg">
+          <label for="pkgReliningMode">Relining Preview Mode</label>
+          <select id="pkgReliningMode">
+            <option>Condition 8 only</option>
+            <option>Condition 7 only</option>
+            <option selected>Condition 7 and 8</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>&nbsp;</label>
+          <button class="run-btn" style="margin-top:0" onclick="loadPackagingPreview()">Load Stream Preview</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">This first pass shows backend health and the asset split only. We can layer the full packaging workflow on top of this once the work-laptop connection is proven.</div>
+    </div>
+
+    <div class="pkg-panel">
+      <div class="lbl">Relining Package Generation</div>
+      <div class="pkg-grid" style="grid-template-columns:1.2fr 1fr 1fr auto">
+        <div class="fg">
+          <label for="pkgMethod">Packaging Method</label>
+          <select id="pkgMethod" onchange="togglePackagingInputs()">
+            <option value="value" selected>Value based</option>
+            <option value="count">Pipe count based</option>
+          </select>
+        </div>
+        <div class="fg" id="pkgValueWrap">
+          <label for="pkgMaxValue">Max Package Value ($)</label>
+          <input type="text" id="pkgMaxValue" value="500000"/>
+        </div>
+        <div class="fg" id="pkgCountWrap" style="display:none">
+          <label for="pkgPipeCount">Pipes Per Package</label>
+          <input type="text" id="pkgPipeCount" value="25"/>
+        </div>
+        <div class="fg">
+          <label for="pkgGroupSuburb">Group by Suburb</label>
+          <select id="pkgGroupSuburb">
+            <option value="yes" selected>Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>&nbsp;</label>
+          <button class="run-btn" style="margin-top:0" onclick="generateReliningPackages()">Generate Packages</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">This uses your existing Python relining rates and package split logic, but keeps the output to summary tables for now.</div>
+    </div>
+
+    <div class="pkg-meta" id="pkgMeta"></div>
+    <div class="pkg-card-grid" id="pkgCards"></div>
+    <div class="pkg-panel">
+      <div class="lbl">Sample Assets</div>
+      <div id="pkgSampleArea" class="pkg-empty">Run the stream preview to see sample assets from each packaging stream.</div>
+    </div>
+    <div class="pkg-panel">
+      <div class="lbl">Generated Packages</div>
+      <div id="pkgPackagesArea" class="pkg-empty">Generate relining packages to see package counts, cost totals, and sample package rows.</div>
+    </div>
   </div>
 </div>
 
 <script>
 // â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
+const DEFAULT_PACKAGING_API = 'http://localhost:8001';
 
 // All durations the tool supports (matching NBC tool)
 const ALL_DURATIONS = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
@@ -740,11 +846,17 @@ function encodeInlineArg(value) {
   return encodeURIComponent(String(value ?? ''));
 }
 
+function decodeInlineArg(value) {
+  return decodeURIComponent(String(value ?? ''));
+}
+
 // â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let allStations = [], selected = null, markers = {}, mode = 'recent';
 let lastResults = null, allSiteResults = null;
 let rainChart = null, compareChart = null;
 let currentTab = 'map';
+let packagingConfig = null;
+let lastPackagingGeneration = null;
 
 // â”€â”€ Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const map = L.map('map').setView([-33.75, 151.25], 11);
@@ -1145,7 +1257,7 @@ const NBC_EXTENDED_IFD = {"Palm Beach Golf Rain":{"5":{"1 in 200":26.3,"1 in 500
 
 function getNbcSubStations() {
   const sub = document.getElementById('nbcSub')?.value || 'all';
-  const nbcStations = allStations.filter(s => getLGA(s) === 'Northern Beaches');
+  const nbcStations = allStations.filter(s => getLGA(s) === 'Northern Beaches' || NBC_STANDARD_15.includes(s.name));
   if (sub === 'standard') return nbcStations.filter(s => NBC_STANDARD_15.includes(s.name));
   if (sub === 'north')    return nbcStations.filter(s => NBC_NORTH.includes(s.name));
   if (sub === 'south')    return nbcStations.filter(s => NBC_SOUTH.includes(s.name));
@@ -1842,6 +1954,240 @@ async function api(path) {
   return r.json();
 }
 
+function getPackagingApiBase() {
+  return (localStorage.getItem('nbc_packaging_api') || DEFAULT_PACKAGING_API).replace(/\/+$/,'');
+}
+
+function syncPackagingApiInput() {
+  const input = document.getElementById('pkgApiUrl');
+  if (input) input.value = getPackagingApiBase();
+}
+
+function savePackagingApiUrl() {
+  const input = document.getElementById('pkgApiUrl');
+  if (!input) return;
+  const value = input.value.trim().replace(/\/+$/,'');
+  if (!value) return;
+  localStorage.setItem('nbc_packaging_api', value);
+  refreshPackagingConnection();
+}
+
+async function packagingApi(path, options = {}) {
+  const base = getPackagingApiBase();
+  const r = await fetch(base + path, {
+    headers: {'Content-Type':'application/json', ...(options.headers || {})},
+    ...options
+  });
+  if (!r.ok) {
+    const txt = await r.text();
+    throw new Error(txt || `${r.status} ${r.statusText}`);
+  }
+  return r.json();
+}
+
+function setPackagingStatus(ok, text) {
+  const dot = document.getElementById('pkgDot');
+  const label = document.getElementById('pkgStatusText');
+  if (dot) dot.style.background = ok ? '#27AE60' : '#E74C3C';
+  if (label) label.textContent = text;
+}
+
+function renderPackagingMeta(meta) {
+  const el = document.getElementById('pkgMeta');
+  if (!el) return;
+  const rows = [
+    ['Backend URL', getPackagingApiBase()],
+    ['Assets Loaded', meta?.asset_count?.toLocaleString?.() ?? '-'],
+    ['Assets Path', meta?.assets_path || '-'],
+    ['Suburb Column', meta?.suburb_column || '-']
+  ];
+  el.innerHTML = rows.map(([label, value]) => `
+    <div class="pkg-meta-item">
+      <div class="pkg-meta-lbl">${escapeHtml(label)}</div>
+      <div class="pkg-meta-val">${escapeHtml(value)}</div>
+    </div>
+  `).join('');
+}
+
+function renderPackagingCards(streams) {
+  const el = document.getElementById('pkgCards');
+  if (!el) return;
+  el.innerHTML = (streams || []).map(stream => `
+    <div class="pkg-card">
+      <div class="pkg-card-title">${escapeHtml(stream.name)}</div>
+      <div class="pkg-card-val">${Number(stream.pipe_count || 0).toLocaleString()}</div>
+      <div class="pkg-card-sub">${Number(stream.total_length_m || 0).toLocaleString()} m total length</div>
+    </div>
+  `).join('');
+}
+
+function renderPackagingSamples(streams) {
+  const area = document.getElementById('pkgSampleArea');
+  if (!area) return;
+  const firstWithSamples = (streams || []).find(s => (s.sample_assets || []).length);
+  if (!firstWithSamples) {
+    area.className = 'pkg-empty';
+    area.textContent = 'No sample assets available for the current preview.';
+    return;
+  }
+
+  const headers = Object.keys(firstWithSamples.sample_assets[0]);
+  area.className = 'pkg-table-wrap';
+  area.innerHTML = `
+    <div style="padding:12px;font-size:12px;font-weight:700;color:var(--navy);background:white;border-bottom:1px solid var(--border)">
+      ${escapeHtml(firstWithSamples.name)}
+    </div>
+    <table>
+      <thead>
+        <tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>
+      </thead>
+      <tbody>
+        ${firstWithSamples.sample_assets.map(row => `
+          <tr>${headers.map(h => `<td>${escapeHtml(row[h])}</td>`).join('')}</tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function togglePackagingInputs() {
+  const method = document.getElementById('pkgMethod')?.value || 'value';
+  const valueWrap = document.getElementById('pkgValueWrap');
+  const countWrap = document.getElementById('pkgCountWrap');
+  if (valueWrap) valueWrap.style.display = method === 'value' ? '' : 'none';
+  if (countWrap) countWrap.style.display = method === 'count' ? '' : 'none';
+}
+
+function renderGeneratedPackages(data) {
+  const area = document.getElementById('pkgPackagesArea');
+  if (!area) return;
+  if (!data || !data.packages || !data.packages.length) {
+    area.className = 'pkg-empty';
+    area.textContent = 'No packages were generated with the current settings.';
+    return;
+  }
+
+  const packageHeaders = Object.keys(data.packages[0]);
+  const sampleHeaders = data.sample_assets?.length ? Object.keys(data.sample_assets[0]) : [];
+  area.className = 'pkg-table-wrap';
+  area.innerHTML = `
+    <div style="padding:12px;background:white;border-bottom:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">
+        ${Number(data.package_count || 0).toLocaleString()} packages · ${Number(data.costed_pipe_count || 0).toLocaleString()} costed pipes · ${Number(data.uncosted_pipe_count || 0).toLocaleString()} uncosted pipes
+      </div>
+      <div style="font-size:11px;color:var(--text-l)">
+        Total length ${Number(data.total_length_m || 0).toLocaleString()} m · Total cost $${Number(data.total_cost || 0).toLocaleString(undefined, {maximumFractionDigits: 2})}
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>${packageHeaders.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>
+      </thead>
+      <tbody>
+        ${data.packages.map(row => `
+          <tr>${packageHeaders.map(h => `<td>${escapeHtml(Array.isArray(row[h]) ? row[h].join(', ') : row[h])}</td>`).join('')}</tr>
+        `).join('')}
+      </tbody>
+    </table>
+    ${sampleHeaders.length ? `
+      <div style="padding:12px;font-size:12px;font-weight:700;color:var(--navy);background:white;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+        Sample package assets
+      </div>
+      <table>
+        <thead>
+          <tr>${sampleHeaders.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>
+        </thead>
+        <tbody>
+          ${data.sample_assets.map(row => `
+            <tr>${sampleHeaders.map(h => `<td>${escapeHtml(row[h])}</td>`).join('')}</tr>
+          `).join('')}
+        </tbody>
+      </table>
+    ` : ''}
+  `;
+}
+
+async function refreshPackagingConnection() {
+  syncPackagingApiInput();
+  try {
+    const [health, config] = await Promise.all([
+      packagingApi('/health'),
+      packagingApi('/packaging/config')
+    ]);
+    packagingConfig = config;
+    setPackagingStatus(true, `${(health.assets_loaded || 0).toLocaleString()} assets online`);
+    renderPackagingMeta({
+      asset_count: health.assets_loaded,
+      assets_path: health.assets_path,
+      suburb_column: config.suburb_column
+    });
+  } catch (e) {
+    setPackagingStatus(false, 'Backend unreachable');
+    renderPackagingMeta({
+      asset_count: '-',
+      assets_path: `Check ${getPackagingApiBase()}`,
+      suburb_column: '-'
+    });
+  }
+}
+
+async function loadPackagingPreview() {
+  const mode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
+  setPackagingStatus(false, 'Loading preview...');
+  try {
+    const data = await packagingApi('/packaging/split-streams', {
+      method: 'POST',
+      body: JSON.stringify({ relining_mode: mode })
+    });
+    setPackagingStatus(true, `${data.asset_count.toLocaleString()} assets previewed`);
+    renderPackagingMeta({
+      asset_count: data.asset_count,
+      assets_path: packagingConfig?.assets_path || '-',
+      suburb_column: data.suburb_column
+    });
+    renderPackagingCards(data.streams);
+    renderPackagingSamples(data.streams);
+  } catch (e) {
+    setPackagingStatus(false, 'Preview failed');
+    const area = document.getElementById('pkgSampleArea');
+    if (area) {
+      area.className = 'pkg-empty';
+      area.textContent = String(e.message || e);
+    }
+  }
+}
+
+async function generateReliningPackages() {
+  const method = document.getElementById('pkgMethod')?.value || 'value';
+  const reliningMode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
+  const maxPackageValue = Number(String(document.getElementById('pkgMaxValue')?.value || '500000').replace(/,/g, ''));
+  const pipesPerPackage = Number(String(document.getElementById('pkgPipeCount')?.value || '25').replace(/,/g, ''));
+  const groupBySuburb = (document.getElementById('pkgGroupSuburb')?.value || 'yes') === 'yes';
+  setPackagingStatus(false, 'Generating packages...');
+  try {
+    const data = await packagingApi('/packaging/generate-relining-packages', {
+      method: 'POST',
+      body: JSON.stringify({
+        relining_mode: reliningMode,
+        package_method: method,
+        max_package_value: Number.isFinite(maxPackageValue) ? maxPackageValue : 500000,
+        pipes_per_package: Number.isFinite(pipesPerPackage) ? pipesPerPackage : 25,
+        group_by_suburb: groupBySuburb
+      })
+    });
+    lastPackagingGeneration = data;
+    setPackagingStatus(true, `${data.package_count.toLocaleString()} packages generated`);
+    renderGeneratedPackages(data);
+  } catch (e) {
+    setPackagingStatus(false, 'Package generation failed');
+    const area = document.getElementById('pkgPackagesArea');
+    if (area) {
+      area.className = 'pkg-empty';
+      area.textContent = String(e.message || e);
+    }
+  }
+}
+
 // â”€â”€ IFD data loader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Loads full station data (including IFD tables) in the background
 // so AEP calc can run entirely in the browser
@@ -2380,6 +2726,14 @@ function switchPage(page) {
   if (page === 'aep') {
     if (!window._aepInited) { window._aepInited = true; init(); }
     setTimeout(() => map.invalidateSize(), 50);
+  }
+  if (page === 'relining') {
+    if (!window._packagingInited) {
+      window._packagingInited = true;
+      syncPackagingApiInput();
+      togglePackagingInputs();
+      refreshPackagingConnection();
+    }
   }
 }
 
