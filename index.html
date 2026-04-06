@@ -1158,8 +1158,15 @@ function plotAllMarkers(stations) {
   stations.forEach(s => {
     const m = L.circleMarker([s.lat, s.lon], {
       radius: 5, color: 'white', weight: 1.5,
+      interactive: true, bubblingMouseEvents: false,
       fillColor: '#00847F', fillOpacity: 0.85
-    }).bindPopup(`<b>${escapeHtml(s.name)}</b><br><small>${escapeHtml(getLGA(s))}</small>`).bindTooltip(s.name,{permanent:true,direction: s.name === 'Great Mackerel Rain' ? 'left' : 'right',className:'station-label',offset:[4,0]});
+    }).bindPopup(`<b>${escapeHtml(s.name)}</b><br><small>${escapeHtml(getLGA(s))}</small>`).bindTooltip(s.name,{
+      permanent:true,
+      interactive:true,
+      direction: s.name === 'Great Mackerel Rain' ? 'left' : 'right',
+      className:'station-label',
+      offset:[4,0]
+    });
     async function doHover() {
       m.openPopup();
       const cached = wxCache[s.station_id];
@@ -1178,16 +1185,28 @@ function plotAllMarkers(stations) {
         m.setPopupContent(html);
       } catch(e) {}
     }
-    m.on('click', () => selectStation(s.station_id));
-    m.on('mouseover', doHover);
-    m.on('mouseout', () => m.closePopup());
-    m.on('tooltipopen', evt => {
-      const el = evt.tooltip.getElement();
-      if (!el) return;
-      el.addEventListener('click', () => selectStation(s.station_id));
+    function doSelect(evt) {
+      if (evt?.originalEvent) L.DomEvent.stop(evt.originalEvent);
+      selectStation(s.station_id);
+    }
+    function wireTooltipInteractions() {
+      const el = m.getTooltip()?.getElement();
+      if (!el || el.dataset.stationBound === '1') return;
+      el.dataset.stationBound = '1';
+      el.addEventListener('click', evt => {
+        evt.preventDefault();
+        evt.stopPropagation();
+        selectStation(s.station_id);
+      });
       el.addEventListener('mouseenter', doHover);
       el.addEventListener('mouseleave', () => m.closePopup());
-    });
+    }
+    m.on('click', doSelect);
+    m.on('mousedown', doSelect);
+    m.on('mouseover', doHover);
+    m.on('mouseout', () => m.closePopup());
+    m.on('tooltipopen', wireTooltipInteractions);
+    m.on('add', wireTooltipInteractions);
     markers[s.station_id] = m;
   });
 }
