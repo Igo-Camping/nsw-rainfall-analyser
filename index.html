@@ -1039,14 +1039,17 @@ function buildLgaDropdown() {
   const lgaSel = document.getElementById('lgaSel');
   const priority = ['Northern Beaches','Central Coast','Ku-ring-gai','Newcastle','Hunter Valley','Greater Sydney West','Lane Cove'];
   const lgas = new Set();
-  allStations.forEach(s => { if (s.lga) lgas.add(s.lga); });
+  allStations.forEach(s => {
+    const lga = getLGA(s);
+    if (lga) lgas.add(lga);
+  });
   const sorted = [
     ...priority.filter(l => lgas.has(l)),
     ...[...lgas].filter(l => !priority.includes(l) && l !== 'NSW Other').sort(),
     ...(lgas.has('NSW Other') ? ['NSW Other'] : [])
   ];
   sorted.forEach(lga => {
-    const count = allStations.filter(s => s.lga === lga && s.active !== false).length;
+    const count = allStations.filter(s => getLGA(s) === lga && s.active !== false).length;
     const opt = document.createElement('option');
     opt.value = lga;
     opt.textContent = `${lga} (${count})`;
@@ -1059,8 +1062,9 @@ function buildLgaDropdown() {
 }
 
 function getLGA(station) {
+  if (isProtectedNbcStation(station)) return 'Northern Beaches';
+  if (station.lga && station.lga !== 'Unknown') return station.lga;
   if (station.lga) return station.lga;
-  if (NBC_STANDARD_15.includes(station.name)) return 'Northern Beaches';
   return 'Unknown';
 }
 
