@@ -1399,6 +1399,7 @@ let futureWorksReliningFileName = '';
 let futureWorksExtraFileName = '';
 let topSiteResultsCache = [];
 let topSiteResultsKey = null;
+let lastAnalysisContext = null;
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
@@ -1900,7 +1901,7 @@ function getTopSiteAnalysisKey(fromDt, toDt) {
 }
 
 function renderCachedCurrentTab(context = null) {
-  const ctx = context || getCurrentAnalysisContext(true);
+  const ctx = context || lastAnalysisContext || getCurrentAnalysisContext(true);
   if (!ctx || !selected) return;
 
   if (currentTab === 'map') {
@@ -2014,6 +2015,7 @@ async function runAnalysis() {
   const ctx = getCurrentAnalysisContext();
   if (!ctx || !selected) return;
   const { dur, fromDt, toDt, baseKey, summaryKey } = ctx;
+  lastAnalysisContext = { ...ctx };
 
   showLoad('Fetching rainfall data...');
 
