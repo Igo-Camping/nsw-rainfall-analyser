@@ -281,17 +281,18 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .pkg-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r)}
 .pkg-table-wrap table td{vertical-align:top}
 .pkg-empty{font-size:12px;color:var(--text-l);padding:16px;background:white;border:1px dashed var(--border);border-radius:var(--r)}
-.cost-shell{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px;overflow:auto;width:100%;min-height:0}
+.cost-shell{max-width:none;margin:0;display:flex;flex-direction:column;gap:16px;overflow:auto;width:100%;min-height:0}
 .cost-hero{background:var(--navy);color:white;border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:10px}
 .cost-title{font-size:24px;font-weight:800}
 .cost-sub{font-size:12px;color:rgba(255,255,255,.76);line-height:1.6;max-width:760px}
 .cost-panel{background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.cost-panel.flat{background:transparent;border:none;border-radius:0;padding:0}
 .cost-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
 .cost-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:14px}
 .cost-card .k{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-l);margin-bottom:6px}
 .cost-card .v{font-size:18px;font-weight:800;color:var(--navy)}
 .cost-actions{display:flex;gap:10px;flex-wrap:wrap}
-.cost-boq-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r);background:white}
+.cost-boq-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r);background:white;max-height:none}
 .cost-boq{width:100%;min-width:1250px;border-collapse:collapse}
 .cost-boq th{padding:8px 10px;background:var(--navy);color:white;font-weight:700;text-align:left;font-size:11px}
 .cost-boq td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
@@ -1021,7 +1022,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         </div>
       </div>
     </div>
-    <div class="cost-panel">
+    <div class="cost-panel flat">
       <div class="lbl">BOQ Entry</div>
       <div class="cost-actions" style="margin-bottom:12px">
         <button class="export-btn" onclick="addCostingRow()">Add Row</button>
@@ -2855,7 +2856,11 @@ async function initCostingTool() {
     }
     document.getElementById('costMetaRows').textContent = (costingLookup.meta?.rowCount || 0).toLocaleString();
     document.getElementById('costMetaClasses').textContent = (costingLookup.meta?.assetClassCount || 0).toLocaleString();
-    addCostingRow();
+    if (!costingRows.length) {
+      for (let i = 0; i < 5; i++) addCostingRow();
+      return;
+    }
+    renderCostingTable();
   } catch (e) {
     const rowsEl = document.getElementById('costRows');
     if (rowsEl) {
