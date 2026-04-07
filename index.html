@@ -587,8 +587,10 @@ window.addEventListener('keydown', (event) => {
 
       <div style="display:flex;gap:8px;align-items:center">
         <button class="run-btn" id="runBtn" onclick="runAnalysis()" disabled style="flex:1">Select a station</button>
+        <button class="export-btn" onclick="document.getElementById('rainTemplateFile').click()">Load Excel Template</button>
         <button class="export-btn" id="exportAllBtn" onclick="exportAllXlsx()" disabled>Export All</button>
       </div>
+      <input type="file" id="rainTemplateFile" accept=".xlsm,.xlsx" style="display:none" onchange="loadRainfallTemplate(event)"/>
     </div>
 
   </div><!-- /sidebar -->
@@ -1403,6 +1405,8 @@ let futureWorksExtraFileName = '';
 let topSiteResultsCache = [];
 let topSiteResultsKey = null;
 let lastAnalysisContext = null;
+let rainfallTemplateBytes = null;
+let rainfallTemplateName = '';
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
@@ -1796,6 +1800,16 @@ function selectStation(id) {
   btn.textContent = `Analyse ${selected.name.split(' ').slice(0,3).join(' ')}`;
   const exportBtn = document.getElementById('exportAllBtn');
   if (exportBtn) exportBtn.disabled = true;
+}
+
+async function loadRainfallTemplate(event) {
+  const file = event.target?.files?.[0];
+  if (!file) return;
+  const buffer = await file.arrayBuffer();
+  rainfallTemplateBytes = Array.from(new Uint8Array(buffer));
+  rainfallTemplateName = file.name;
+  alert(`Loaded rainfall export template: ${file.name}`);
+  event.target.value = '';
 }
 
 // â”€â”€ Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -3186,6 +3200,101 @@ function buildGaugeDataRows() {
   return [...timestampMap.values()].sort((a, b) => String(a.Date).localeCompare(String(b.Date)));
 }
 
+function normaliseGaugeName(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/\(rain\)|\(precipitation\)|\(precpitation\)|club|golf/gi, '')
+    .replace(/rain|precipitation/gi, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function getTemplateGaugeName(siteName) {
+  const explicit = {
+    'Avalon Rain': 'Avalon (Rain)',
+    'Belrose Rain': 'Belrose (Rain)',
+    'Cromer Depot': 'Cromer Depot (Precipitation)',
+    'Curl Curl': 'Curl Curl (Rain)',
+    'Great Mackerel Rain': 'Great Mackerel (Rain)',
+    'Manly CBD Rain': 'Manly CBD (Rain)',
+    'Manly Dam': 'Manly Dam (Rain)',
+    'Middle Creek': 'Middle Creek (Rain)',
+    'Mona Vale Rain': 'Mona Vale (Rain)',
+    'Newport Rain': 'Newport (Rain)',
+    'Palm Beach Golf Rain': 'Palm Beach Golf Club (Rain)',
+    'Queenscliff': 'Queenscliff (Rain)',
+    'Spit Bridge': 'Spit Bridge (Rain)',
+    'Warriewood Rain': 'Warriewood (Rain)',
+    'Allambie Heights': 'Allambie Heights (Rain)'
+  };
+  return explicit[siteName] || siteName;
+}
+
+function exportAllUsingTemplate() {
+  if (!rainfallTemplateBytes?.length || typeof XLSX === 'undefined') return false;
+  const bytes = Uint8Array.from(rainfallTemplateBytes);
+  const wb = XLSX.read(bytes, { type: 'array', bookVBA: true, cellStyles: true });
+  const mainWs = wb.Sheets['Main'];
+  const gaugeWs = wb.Sheets['Gauge_Data'];
+  if (!mainWs || !gaugeWs) return false;
+
+  const selectedGaugeName = getTemplateGaugeName(lastResults.station_name || selected?.name || '');
+  mainWs.E3 = { t: 's', v: selectedGaugeName };
+  mainWs.E4 = { t: 'n', v: Number(lastResults.duration_minutes || 0) };
+
+  const templateHeaders = [];
+  let col = 0;
+  while (true) {
+    const addr = XLSX.utils.encode_cell({ r: 0, c: col });
+    const val = gaugeWs[addr]?.v;
+    if (col === 0) {
+      templateHeaders.push('Date');
+      col += 1;
+      continue;
+    }
+    if (!val) break;
+    templateHeaders.push(String(val));
+    col += 1;
+  }
+
+  const sourceMap = new Map();
+  const allSources = [...topSiteResultsCache];
+  if (lastResults && !allSources.some(r => r.station_id === lastResults.station_id)) allSources.push(lastResults);
+  allSources.forEach(r => {
+    sourceMap.set(getTemplateGaugeName(r.station_name), r.readings || []);
+  });
+
+  const allTimestamps = new Set();
+  sourceMap.forEach(readings => readings.forEach(r => allTimestamps.add(r.timestamp)));
+  const sortedTimestamps = [...allTimestamps].sort((a, b) => String(a).localeCompare(String(b)));
+  const stationLookup = {};
+  sourceMap.forEach((readings, name) => {
+    stationLookup[name] = new Map(readings.map(r => [r.timestamp, r.value]));
+  });
+
+  const aoa = [templateHeaders];
+  sortedTimestamps.forEach(ts => {
+    const row = [new Date(ts.replace(' ', 'T'))];
+    for (let i = 1; i < templateHeaders.length; i++) {
+      const header = templateHeaders[i];
+      row.push(stationLookup[header]?.get(ts) ?? '');
+    }
+    aoa.push(row);
+  });
+
+  const newGaugeWs = XLSX.utils.aoa_to_sheet(aoa);
+  newGaugeWs['!cols'] = gaugeWs['!cols'];
+  wb.Sheets['Gauge_Data'] = newGaugeWs;
+
+  const outNameBase = String(lastResults.station_name || 'rainfall')
+    .replace(/[^\w\s-]+/g, '')
+    .trim()
+    .replace(/\s+/g, '_');
+  const outType = String(rainfallTemplateName || '').toLowerCase().endsWith('.xlsm') ? 'xlsm' : 'xlsx';
+  XLSX.writeFile(wb, `rainfall_analysis_${outNameBase || 'station'}_${new Date().toISOString().slice(0,10)}.${outType}`, { bookType: outType, bookVBA: outType === 'xlsm' });
+  return true;
+}
+
 function buildMainDisplaySheet() {
   const dailyRows = buildDailyRows(lastDailyData?.readings || lastResults?.readings || []);
   const topDurRows = getSortedTopDurationResults();
@@ -3248,8 +3357,8 @@ function buildMainDisplaySheet() {
   const ws = XLSX.utils.aoa_to_sheet(wsData);
   ws['!merges'] = [
     XLSX.utils.decode_range('C13:F13'),
-    XLSX.utils.decode_range('C24:F24'),
-    XLSX.utils.decode_range('C33:F33')
+    XLSX.utils.decode_range('C21:F21'),
+    XLSX.utils.decode_range('C30:F30')
   ];
   ws['!cols'] = [
     { wch: 3 }, { wch: 3 }, { wch: 18 }, { wch: 24 }, { wch: 18 },
@@ -3291,6 +3400,8 @@ function exportAllXlsx() {
     alert('Run an analysis first.');
     return;
   }
+
+  if (exportAllUsingTemplate()) return;
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, buildMainDisplaySheet(), 'Main');
