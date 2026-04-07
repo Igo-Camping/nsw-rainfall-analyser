@@ -283,6 +283,22 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .pkg-empty{font-size:12px;color:var(--text-l);padding:16px;background:white;border:1px dashed var(--border);border-radius:var(--r)}
 .pkg-assumptions{margin-top:12px;font-size:11px;color:var(--text-l);line-height:1.7}
 .pkg-assumptions code{font-size:11px}
+.fw-shell{max-width:none;margin:0;display:flex;flex-direction:column;gap:16px;overflow:auto;width:100%;min-height:0}
+.fw-hero{background:var(--navy);color:white;border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:10px}
+.fw-title{font-size:24px;font-weight:800}
+.fw-sub{font-size:12px;color:rgba(255,255,255,.76);line-height:1.6;max-width:860px}
+.fw-panel{background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.fw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.fw-actions{display:flex;gap:10px;flex-wrap:wrap}
+.fw-note{font-size:11px;color:var(--text-l);line-height:1.7}
+.fw-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:var(--r);background:white}
+.fw-table{width:100%;min-width:1600px;border-collapse:collapse}
+.fw-table th{padding:8px 10px;background:var(--navy);color:white;font-weight:700;text-align:left;font-size:11px;white-space:nowrap}
+.fw-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.fw-table td input,.fw-table td select,.fw-table td textarea{width:100%;padding:7px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--panel);font-size:12px}
+.fw-table td textarea{min-height:52px;resize:vertical}
+.fw-empty{font-size:12px;color:var(--text-l);padding:18px;background:white;border:1px dashed var(--border);border-radius:var(--r)}
+.fw-link{color:var(--teal-d);font-weight:700;cursor:pointer;text-decoration:underline}
 .cost-shell{max-width:none;margin:0;display:flex;flex-direction:column;gap:16px;overflow:auto;width:100%;min-height:0}
 .cost-hero{background:var(--navy);color:white;border-radius:var(--r);padding:22px 24px;display:flex;flex-direction:column;gap:10px}
 .cost-title{font-size:24px;font-weight:800}
@@ -377,6 +393,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
   <button class="pnav-btn" onclick="switchPage('prioritisation')">Prioritisation Tool</button>
   <button class="pnav-btn" onclick="switchPage('costing')">Costing Tool</button>
   <button class="pnav-btn" onclick="switchPage('relining')">Relining Packaging</button>
+  <button class="pnav-btn" onclick="switchPage('futureworks')">Future Works Plan</button>
   <button class="pnav-btn pnav-home" onclick="switchPage('home')">Home</button>
 </div>
 
@@ -410,6 +427,12 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
       <div class="hc-title">Packaging</div>
       <div class="hc-desc">Pipe relining scope packaging and cost estimation tool.</div>
       <div><span class="hc-badge live">Live</span></div>
+    </div>
+    <div class="home-card" onclick="switchPage('futureworks')">
+      <div class="hc-icon">Future Works</div>
+      <div class="hc-title">Future Works Plan</div>
+      <div class="hc-desc">Backlog and delivery planning workspace that will become the SharePoint-backed program sheet.</div>
+      <div><span class="hc-badge live">In Progress</span></div>
     </div>
   </div>
 </div>
@@ -1154,6 +1177,84 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
   </div>
 </div>
 
+<div id="page-futureworks" style="display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel);padding:20px">
+  <div class="fw-shell">
+    <div class="fw-hero">
+      <div class="fw-title">Future Works Plan</div>
+      <div class="fw-sub">This is the web-side staging view for the SharePoint workbook. It is shaped around the <code>15) Pipe Renewal Backlog</code> sheet so we can review and edit relining package rows here first, then wire the same row shape into SharePoint and Excel.</div>
+    </div>
+
+    <div class="fw-panel">
+      <div class="lbl">Workbook Target</div>
+      <div class="fw-grid">
+        <div class="pkg-meta-item">
+          <div class="pkg-meta-lbl">Workbook</div>
+          <div class="pkg-meta-val">2027-2031 CAPEX Project Brief - Program of Works Details - E&amp;R - Rolling.xlsx</div>
+        </div>
+        <div class="pkg-meta-item">
+          <div class="pkg-meta-lbl">Sheet</div>
+          <div class="pkg-meta-val">15) Pipe Renewal Backlog</div>
+        </div>
+        <div class="pkg-meta-item">
+          <div class="pkg-meta-lbl">Source</div>
+          <div class="pkg-meta-val">Latest relining package generation</div>
+        </div>
+      </div>
+      <div class="fw-note" style="margin-top:12px">Direct SharePoint workbook editing is the next step. This first pass keeps the row structure aligned with the backlog sheet so the later Graph sync can write the same fields into a machine-managed table.</div>
+    </div>
+
+    <div class="fw-panel">
+      <div class="lbl">Relining Mapping Defaults</div>
+      <div class="fw-grid">
+        <div class="fg">
+          <label for="fwProgramDescription">Program Description</label>
+          <input type="text" id="fwProgramDescription" value="Pipe Relining Program"/>
+        </div>
+        <div class="fg">
+          <label for="fwBriefRequired">Brief Required?</label>
+          <select id="fwBriefRequired">
+            <option selected>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label for="fwDefaultWard">Default Ward</label>
+          <select id="fwDefaultWard">
+            <option>Curl Curl</option>
+            <option>Frenchs Forest</option>
+            <option>Manly</option>
+            <option>Narrabeen</option>
+            <option>Pittwater</option>
+            <option selected>LGA Wide</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label for="fwDefaultStage">Stage by end of FY26/27</label>
+          <select id="fwDefaultStage">
+            <option>Planning</option>
+            <option>Design</option>
+            <option>Concept Design</option>
+            <option>Detailed Design</option>
+            <option>Design and Construct</option>
+            <option>Construction</option>
+            <option selected>Post Delivery</option>
+          </select>
+        </div>
+      </div>
+      <div class="fw-actions" style="margin-top:12px">
+        <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Latest Relining Packages</button>
+        <button class="export-btn" onclick="exportFutureWorksCsv()">Export CSV</button>
+        <button class="export-btn" onclick="switchPage('relining')">Open Relining Tool</button>
+      </div>
+    </div>
+
+    <div class="fw-panel">
+      <div class="lbl">Backlog Preview</div>
+      <div id="fwTableArea" class="fw-empty">Generate relining packages first, then click <strong>Load Latest Relining Packages</strong> here to stage them into the future works backlog format.</div>
+    </div>
+  </div>
+</div>
+
 <script>
 // â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
@@ -1197,10 +1298,31 @@ let packagingConfig = null;
 let lastPackagingGeneration = null;
 let costingLookup = null;
 let costingRows = [];
+let futureWorksRows = [];
 let topSiteResultsCache = [];
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
+const FUTURE_WORKS_COLUMNS = [
+  { key: 'exhibition', label: 'In exhibition map?' },
+  { key: 'packageId', label: 'Package' },
+  { key: 'programDescription', label: 'Program Description' },
+  { key: 'briefRequired', label: 'Brief Required?' },
+  { key: 'budget', label: 'Budget' },
+  { key: 'shortDescription', label: 'Short description of work' },
+  { key: 'suburbs', label: 'Suburb(s)' },
+  { key: 'streets', label: 'Street(s)' },
+  { key: 'lengthM', label: 'Length (m)' },
+  { key: 'ward', label: 'Ward' },
+  { key: 'stage', label: 'Stage by end of FY26/27' },
+  { key: 'assetNumbers', label: 'Asset number' },
+  { key: 'lat', label: 'Latitude' },
+  { key: 'lon', label: 'Longitude' },
+  { key: 'q1_2728', label: '27/28 Q1' },
+  { key: 'q2_2728', label: '27/28 Q2' },
+  { key: 'q3_2728', label: '27/28 Q3' },
+  { key: 'q4_2728', label: '27/28 Q4' }
+];
 const ACTIVE_GAUGE_CACHE_KEY = 'activeGaugeCache.v1';
 const ACTIVE_GAUGE_CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const activeGaugeCache = loadActiveGaugeCache();
@@ -2748,6 +2870,9 @@ function renderGeneratedPackages(data) {
       <div style="font-size:11px;color:var(--text-l)">
         Total length ${Number(data.total_length_m || 0).toLocaleString()} m · Total cost $${Number(data.total_cost || 0).toLocaleString(undefined, {maximumFractionDigits: 2})}
       </div>
+      <div style="margin-top:10px">
+        <button class="export-btn" onclick="loadFutureWorksFromRelining(true)">Load Into Future Works Plan</button>
+      </div>
     </div>
     <table>
       <thead>
@@ -2775,6 +2900,117 @@ function renderGeneratedPackages(data) {
       </table>
     ` : ''}
   `;
+}
+
+function getFutureWorksDefaults() {
+  return {
+    programDescription: document.getElementById('fwProgramDescription')?.value?.trim() || 'Pipe Relining Program',
+    briefRequired: document.getElementById('fwBriefRequired')?.value || 'Yes',
+    ward: document.getElementById('fwDefaultWard')?.value || 'LGA Wide',
+    stage: document.getElementById('fwDefaultStage')?.value || 'Post Delivery'
+  };
+}
+
+function mapReliningPackagesToFutureWorksRows(packages) {
+  const defaults = getFutureWorksDefaults();
+  return (packages || []).map((pkg, idx) => {
+    const suburb = pkg.suburb || 'LGA Wide';
+    const packageId = pkg.package_id || `RLN_${String(idx + 1).padStart(3, '0')}`;
+    const pipeCount = Number(pkg.pipe_count || 0);
+    const totalLength = Number(pkg.total_length_m || 0);
+    const totalCost = Number(pkg.total_cost || 0);
+    return {
+      exhibition: '',
+      packageId,
+      programDescription: defaults.programDescription,
+      briefRequired: defaults.briefRequired,
+      budget: totalCost ? totalCost.toFixed(2) : '',
+      shortDescription: `Relining package ${packageId} covering ${pipeCount} pipe${pipeCount === 1 ? '' : 's'} in ${suburb}.`,
+      suburbs: suburb,
+      streets: '',
+      lengthM: totalLength ? totalLength.toFixed(1) : '',
+      ward: defaults.ward,
+      stage: defaults.stage,
+      assetNumbers: '',
+      lat: '',
+      lon: '',
+      q1_2728: '',
+      q2_2728: '',
+      q3_2728: '',
+      q4_2728: ''
+    };
+  });
+}
+
+function updateFutureWorksCell(idx, key, value) {
+  if (!futureWorksRows[idx]) return;
+  futureWorksRows[idx][key] = value;
+}
+
+function renderFutureWorksTable() {
+  const area = document.getElementById('fwTableArea');
+  if (!area) return;
+  if (!futureWorksRows.length) {
+    area.className = 'fw-empty';
+    area.innerHTML = 'Generate relining packages first, then click <strong>Load Latest Relining Packages</strong> here to stage them into the future works backlog format.';
+    return;
+  }
+
+  area.className = 'fw-table-wrap';
+  area.innerHTML = `
+    <table class="fw-table">
+      <thead>
+        <tr>${FUTURE_WORKS_COLUMNS.map(col => `<th>${escapeHtml(col.label)}</th>`).join('')}</tr>
+      </thead>
+      <tbody>
+        ${futureWorksRows.map((row, idx) => `
+          <tr>
+            ${FUTURE_WORKS_COLUMNS.map(col => {
+              const value = row[col.key] ?? '';
+              if (col.key === 'packageId') {
+                return `<td><span class="fw-link" onclick="switchPage('relining')">${escapeHtml(value)}</span></td>`;
+              }
+              if (col.key === 'shortDescription' || col.key === 'assetNumbers') {
+                return `<td><textarea oninput="updateFutureWorksCell(${idx},'${col.key}',this.value)">${escapeHtml(value)}</textarea></td>`;
+              }
+              if (['briefRequired','ward','stage'].includes(col.key)) {
+                const options = col.key === 'briefRequired'
+                  ? ['Yes','No']
+                  : (col.key === 'ward'
+                    ? ['Curl Curl','Frenchs Forest','Manly','Narrabeen','Pittwater','LGA Wide']
+                    : ['Planning','Design','Concept Design','Detailed Design','Design and Construct','Construction','Post Delivery']);
+                return `<td><select onchange="updateFutureWorksCell(${idx},'${col.key}',this.value)">${options.map(opt => `<option ${String(value) === opt ? 'selected' : ''}>${escapeHtml(opt)}</option>`).join('')}</select></td>`;
+              }
+              return `<td><input type="text" value="${escapeHtml(value)}" oninput="updateFutureWorksCell(${idx},'${col.key}',this.value)"/></td>`;
+            }).join('')}
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function loadFutureWorksFromRelining(shouldSwitch = false) {
+  if (!lastPackagingGeneration?.packages?.length) {
+    alert('Generate relining packages first, then try again.');
+    return;
+  }
+  futureWorksRows = mapReliningPackagesToFutureWorksRows(lastPackagingGeneration.packages);
+  renderFutureWorksTable();
+  if (shouldSwitch) switchPage('futureworks');
+}
+
+function exportFutureWorksCsv() {
+  if (!futureWorksRows.length) {
+    alert('No future works rows available to export yet.');
+    return;
+  }
+  const rows = [
+    FUTURE_WORKS_COLUMNS.map(col => col.label),
+    ...futureWorksRows.map(row => FUTURE_WORKS_COLUMNS.map(col => row[col.key] ?? ''))
+  ];
+  const csv = rows.map(r => r.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+  origPriDownload(`future_works_backlog_${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
 }
 
 async function refreshPackagingConnection() {
@@ -3692,12 +3928,12 @@ function drawLgaBoundary(lgaName) {
 }
 
 // â”€â”€ Page navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const PAGES = ['home','aep','prioritisation','costing','relining'];
+const PAGES = ['home','aep','prioritisation','costing','relining','futureworks'];
 let currentPage = 'home';
 
 function switchPage(page) {
   currentPage = page;
-  const flexPages = new Set(['aep','prioritisation','costing','relining']);
+  const flexPages = new Set(['aep','prioritisation','costing','relining','futureworks']);
   PAGES.forEach(p => {
     const el = document.getElementById('page-' + p);
     if (!el) return;
@@ -3705,7 +3941,7 @@ function switchPage(page) {
   });
   document.getElementById('page-nav').style.display = page === 'home' ? 'none' : 'flex';
   document.querySelectorAll('.pnav-btn').forEach((b, i) =>
-    b.classList.toggle('active', ['aep','prioritisation','costing','relining'][i] === page));
+    b.classList.toggle('active', ['aep','prioritisation','costing','relining','futureworks'][i] === page));
   if (page === 'aep') {
     if (!window._aepInited) { window._aepInited = true; init(); }
     setTimeout(() => map.invalidateSize(), 50);
@@ -3725,6 +3961,9 @@ function switchPage(page) {
       togglePackagingInputs();
       refreshPackagingConnection();
     }
+  }
+  if (page === 'futureworks') {
+    renderFutureWorksTable();
   }
   if (page === 'prioritisation') {
     origPriUpdate();
