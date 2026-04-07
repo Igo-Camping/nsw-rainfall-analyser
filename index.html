@@ -1385,6 +1385,7 @@ function decodeInlineArg(value) {
 // â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let allStations = [], selected = null, markers = {}, mode = 'recent';
 let lastResults = null, allSiteResults = null;
+let lastTopDurResults = null;
 let rainChart = null, compareChart = null;
 let currentTab = 'map';
 let packagingConfig = null;
@@ -1715,9 +1716,9 @@ function plotAllMarkers(stations) {
     }).bindPopup(`<b>${escapeHtml(s.name)}</b><br><small>${escapeHtml(getLGA(s))}</small>`).bindTooltip(s.name,{
       permanent:true,
       interactive:true,
-      direction: s.name === 'Great Mackerel Rain' ? 'left' : 'right',
+      direction: ['Great Mackerel Rain', 'Spit Bridge', 'Manly Dam', 'Allambie Heights', 'Middle Creek'].includes(s.name) ? 'left' : 'right',
       className:'station-label',
-      offset:[4,0]
+      offset:[['Great Mackerel Rain', 'Spit Bridge', 'Manly Dam', 'Allambie Heights', 'Middle Creek'].includes(s.name) ? -4 : 4,0]
     });
     async function doHover() {
       m.openPopup();
@@ -1816,8 +1817,8 @@ function switchTab(tab, skipRun = false) {
     } else if (!skipRun && selected) {
       showTopSiteReadyState();
     }
-  } else if (tab !== 'map' && !skipRun) {
-    if (selected) runAnalysis();
+  } else if (!skipRun && selected) {
+    renderCachedCurrentTab();
   }
 }
 
@@ -1825,6 +1826,19 @@ function updateRecalcButton() {
   const btn = document.getElementById('recalcBtn');
   if (!btn) return;
   btn.style.display = currentTab === 'top-site' ? '' : 'none';
+}
+
+function showSelectedAnalysisReadyState(title, subtitle, message) {
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results').classList.add('no-rtabs');
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-sub').textContent = subtitle;
+  document.getElementById('r-allsite').innerHTML = `
+    <div style="padding:24px;color:var(--text-l);font-size:13px;text-align:center">
+      ${message}
+    </div>
+  `;
+  switchRTab('r-allsite');
 }
 
 function showTopSiteReadyState() {
@@ -1850,6 +1864,83 @@ function recalcCurrentTab() {
       return;
     }
     runAnalysis();
+  }
+}
+
+function getAnalysisWindow(quiet = false) {
+  let fromDt, toDt;
+  if (mode === 'recent') {
+    toDt = new Date();
+    fromDt = new Date(toDt - parseInt(document.getElementById('hoursBack').value) * 3600000);
+  } else {
+    const f = document.getElementById('fromDt').value;
+    const t = document.getElementById('toDt').value;
+    if (!f || !t) {
+      if (!quiet) alert('Please set a date range.');
+      return null;
+    }
+    fromDt = new Date(f);
+    toDt = new Date(t);
+  }
+  return { fromDt, toDt };
+}
+
+function getCurrentAnalysisContext(quiet = false) {
+  if (!selected) return null;
+  const durRaw = mode === 'recent'
+    ? document.getElementById('dur').value
+    : document.getElementById('durC').value;
+  const dur = durRaw === 'worst' ? 'worst' : parseInt(durRaw);
+  const window = getAnalysisWindow(quiet);
+  if (!window) return null;
+  const { fromDt, toDt } = window;
+  const baseKey = `${selected.station_id}|${fromDt.toISOString()}|${toDt.toISOString()}`;
+  const summaryKey = `${baseKey}|${dur}`;
+  return { dur, fromDt, toDt, baseKey, summaryKey };
+}
+
+function renderCachedCurrentTab(context = null) {
+  const ctx = context || getCurrentAnalysisContext(true);
+  if (!ctx || !selected) return;
+
+  if (currentTab === 'map') {
+    if (lastResults?.analysisKey === ctx.summaryKey) {
+      renderResults(lastResults, lastResults.weather, lastResults.rainToday);
+    } else {
+      showSelectedAnalysisReadyState(
+        selected.name,
+        'No analysis cached for the current settings',
+        'Use the <strong>Analyse</strong> button to run this location first.'
+      );
+    }
+    return;
+  }
+
+  if (currentTab === 'top-dur') {
+    if (lastTopDurResults?.analysisKey === ctx.baseKey) {
+      renderTopDurations(lastTopDurResults.results);
+      document.getElementById('results').classList.add('show');
+    } else {
+      showSelectedAnalysisReadyState(
+        `All Durations - ${selected.name}`,
+        'No duration ranking cached for the current settings',
+        'Use the <strong>Analyse</strong> button to calculate all durations for this location.'
+      );
+    }
+    return;
+  }
+
+  if (currentTab === 'daily') {
+    if (lastDailyData?.analysisKey === ctx.baseKey) {
+      renderDailyTotals(lastDailyData);
+      document.getElementById('results').classList.add('show');
+    } else {
+      showSelectedAnalysisReadyState(
+        `Daily Totals - ${selected.name}`,
+        'No daily totals cached for the current settings',
+        'Use the <strong>Analyse</strong> button to build daily totals for this location.'
+      );
+    }
   }
 }
 
@@ -1908,74 +1999,111 @@ if (aepStr.startsWith('>')) return 'Very frequent - less than 2-year ARI';
 
 // â”€â”€ Main analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function runAnalysis() {
-  if (!selected) return;
-  const durRaw = mode==='recent'
-    ? document.getElementById('dur').value
-    : document.getElementById('durC').value;
-  const dur = durRaw === 'worst' ? 'worst' : parseInt(durRaw);
-
-  // Build time window
-  let fromDt, toDt;
-  if (mode === 'recent') {
-    toDt   = new Date();
-    fromDt = new Date(toDt - parseInt(document.getElementById('hoursBack').value) * 3600000);
-  } else {
-    const f = document.getElementById('fromDt').value;
-    const t = document.getElementById('toDt').value;
-    if (!f || !t) { alert('Please set a date range.'); return; }
-    fromDt = new Date(f); toDt = new Date(t);
-  }
+  const ctx = getCurrentAnalysisContext();
+  if (!ctx || !selected) return;
+  const { dur, fromDt, toDt, baseKey, summaryKey } = ctx;
 
   showLoad('Fetching rainfall data...');
 
   try {
-    if (currentTab === 'top-site') {
-      await runTopPerSite(dur, fromDt, toDt);
-    } else if (currentTab === 'top-dur') {
-      await runTopDurations(fromDt, toDt);
-    } else if (currentTab === 'daily') {
-      await runDailyTotals(fromDt, toDt);
-    } else {
-      // Single station analysis
-      const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
-      if (dur === 'worst' || (typeof dur === 'number' && dur > 0)) {
-        setLoadTxt('Loading IFD data...');
-        await loadStationIfd(selected);
-      }
-      window.lastReadings = readings;
-      let resDur, resRolling, resAep, durationLabel;
+    const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
+    setLoadTxt('Loading IFD data...');
+    await loadStationIfd(selected);
+    window.lastReadings = readings;
 
-      if (dur === 'worst') {
-        const ifd = ifdCache[selected.station_id];
-        const durations = ifd ? Object.keys(ifd).map(Number).sort((a,b)=>a-b) : ALL_DURATIONS;
-        let bestRarity = -1;
-        for (const d of durations) {
-          const rolling = calcRollingMax(readings, d);
-          if (!rolling || rolling.max_depth_mm <= 0) continue;
-          const aep = calcAEP(selected.station_id, d, rolling.max_depth_mm);
-          if (!aep) continue;
-          const rarity = aepRarity(aep);
-          if (rarity > bestRarity) {
-            bestRarity = rarity; resDur = d; resRolling = rolling; resAep = aep;
-          }
+    let resDur, resRolling, resAep, durationLabel;
+    if (dur === 'worst') {
+      const ifd = ifdCache[selected.station_id];
+      const durations = ifd ? Object.keys(ifd).map(Number).sort((a,b)=>a-b) : ALL_DURATIONS;
+      let bestRarity = -1;
+      for (const d of durations) {
+        const rolling = calcRollingMax(readings, d);
+        if (!rolling || rolling.max_depth_mm <= 0) continue;
+        const aep = calcAEP(selected.station_id, d, rolling.max_depth_mm);
+        if (!aep) continue;
+        const rarity = aepRarity(aep);
+        if (rarity > bestRarity) {
+          bestRarity = rarity;
+          resDur = d;
+          resRolling = rolling;
+          resAep = aep;
         }
-        if (!resDur) { resDur = durations[0] || 30; resRolling = calcRollingMax(readings, resDur); resAep = null; }
-        durationLabel = 'Worst: ' + (DUR_LABELS[resDur] || resDur + ' min');
-      } else {
-        resDur = dur;
-        resRolling = calcRollingMax(readings, dur);
-        resAep = calcAEP(selected.station_id, dur, resRolling?.max_depth_mm || 0);
       }
-
-      let wx = null, rainToday = null;
-      try { wx = await fetchWeather(selected.lat, selected.lon); } catch(e){ console.warn(e); }
-      try { rainToday = await fetchRainfallSinceMidnight(selected.ts_id); } catch(e){ console.warn(e); }
-      lastResults = { station_id: selected.station_id, station_name: selected.name,
-        from: fromDt.toISOString(), to: toDt.toISOString(),
-        duration_minutes: resDur, durationLabel, readings, rolling_max: resRolling, aep: resAep };
-      hideLoad();
-      renderResults(lastResults, wx, rainToday);
+      if (!resDur) {
+        resDur = durations[0] || 30;
+        resRolling = calcRollingMax(readings, resDur);
+        resAep = null;
+      }
+      durationLabel = 'Worst: ' + (DUR_LABELS[resDur] || resDur + ' min');
+    } else {
+      resDur = dur;
+      resRolling = calcRollingMax(readings, dur);
+      resAep = calcAEP(selected.station_id, dur, resRolling?.max_depth_mm || 0);
     }
+
+    setLoadTxt('Calculating all durations...');
+    const topDurationResults = ALL_DURATIONS.map(d => {
+      const rolling = calcRollingMax(readings, d);
+      let aep = null;
+      if (rolling?.max_depth_mm > 0) {
+        try {
+          aep = calcAEP(selected.station_id, d, rolling.max_depth_mm);
+        } catch (e) {}
+      }
+      return {
+        station_id: selected.station_id,
+        station_name: selected.name,
+        duration_minutes: d,
+        from: fromDt.toISOString(),
+        to: toDt.toISOString(),
+        readings,
+        rolling_max: rolling,
+        aep
+      };
+    });
+
+    let wx = null, rainToday = null;
+    try { wx = await fetchWeather(selected.lat, selected.lon); } catch(e){ console.warn(e); }
+    try { rainToday = await fetchRainfallSinceMidnight(selected.ts_id); } catch(e){ console.warn(e); }
+
+    lastResults = {
+      station_id: selected.station_id,
+      station_name: selected.name,
+      from: fromDt.toISOString(),
+      to: toDt.toISOString(),
+      duration_minutes: resDur,
+      durationLabel,
+      readings,
+      rolling_max: resRolling,
+      aep: resAep,
+      weather: wx,
+      rainToday,
+      analysisKey: summaryKey
+    };
+    lastTopDurResults = {
+      station_id: selected.station_id,
+      station_name: selected.name,
+      from: fromDt.toISOString(),
+      to: toDt.toISOString(),
+      results: topDurationResults,
+      analysisKey: baseKey
+    };
+    lastDailyData = {
+      station_name: selected.name,
+      readings,
+      from: fromDt.toISOString(),
+      to: toDt.toISOString(),
+      analysisKey: baseKey
+    };
+
+    if (currentTab === 'top-site') {
+      hideLoad();
+      await runTopPerSite(dur, fromDt, toDt);
+      return;
+    }
+
+    hideLoad();
+    renderCachedCurrentTab(ctx);
   } catch(e) {
     hideLoad();
     console.error('Analysis error:', e);
@@ -2459,17 +2587,23 @@ function renderCompareChart(results, dur) {
 async function runTopDurations(fromDt, toDt) {
   if (!selected) return;
   showLoad('Analysing all durations...');
-
-  const durs = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
   const results = [];
 
-  for (let i = 0; i < durs.length; i++) {
-    setLoadTxt(`Duration ${i+1}/${durs.length}: ${DUR_LABELS[durs[i]]}...`);
-    const r = await analyseStation(selected, durs[i], fromDt, toDt);
+  for (let i = 0; i < ALL_DURATIONS.length; i++) {
+    setLoadTxt(`Duration ${i+1}/${ALL_DURATIONS.length}: ${DUR_LABELS[ALL_DURATIONS[i]]}...`);
+    const r = await analyseStation(selected, ALL_DURATIONS[i], fromDt, toDt);
     if (r) results.push(r);
   }
 
   hideLoad();
+  lastTopDurResults = {
+    station_id: selected.station_id,
+    station_name: selected.name,
+    from: fromDt.toISOString(),
+    to: toDt.toISOString(),
+    results,
+    analysisKey: `${selected.station_id}|${fromDt.toISOString()}|${toDt.toISOString()}`
+  };
   renderTopDurations(results);
   document.getElementById('results').classList.add('show');
 }
@@ -2518,9 +2652,15 @@ async function runDailyTotals(fromDt, toDt) {
   showLoad('Calculating daily totals...');
   try {
     const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
+    lastDailyData = {
+      station_name: selected.name,
+      readings,
+      from: fromDt.toISOString(),
+      to: toDt.toISOString(),
+      analysisKey: `${selected.station_id}|${fromDt.toISOString()}|${toDt.toISOString()}`
+    };
     hideLoad();
-    renderDailyTotals({ station_name: selected.name, readings,
-      from: fromDt.toISOString(), to: toDt.toISOString() });
+    renderDailyTotals(lastDailyData);
     document.getElementById('results').classList.add('show');
   } catch(e) {
     hideLoad();
@@ -2542,8 +2682,6 @@ function renderDailyTotals(data) {
     switchRTab('r-allsite');
     return;
   }
-
-  lastDailyData = data;
 
   // Group by day
   const byDay = {};
