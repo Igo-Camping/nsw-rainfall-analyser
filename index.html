@@ -587,10 +587,8 @@ window.addEventListener('keydown', (event) => {
 
       <div style="display:flex;gap:8px;align-items:center">
         <button class="run-btn" id="runBtn" onclick="runAnalysis()" disabled style="flex:1">Select a station</button>
-        <button class="export-btn" onclick="document.getElementById('rainTemplateFile').click()">Load Excel Template</button>
         <button class="export-btn" id="exportAllBtn" onclick="exportAllXlsx()" disabled>Export All</button>
       </div>
-      <input type="file" id="rainTemplateFile" accept=".xlsm,.xlsx" style="display:none" onchange="loadRainfallTemplate(event)"/>
     </div>
 
   </div><!-- /sidebar -->
@@ -1406,7 +1404,7 @@ let topSiteResultsCache = [];
 let topSiteResultsKey = null;
 let lastAnalysisContext = null;
 let rainfallTemplateBytes = null;
-let rainfallTemplateName = '';
+const RAINFALL_TEMPLATE_URL = 'templates/NBC Rainfall Calculator.xlsm';
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
@@ -1802,14 +1800,13 @@ function selectStation(id) {
   if (exportBtn) exportBtn.disabled = true;
 }
 
-async function loadRainfallTemplate(event) {
-  const file = event.target?.files?.[0];
-  if (!file) return;
-  const buffer = await file.arrayBuffer();
+async function ensureRainfallTemplateLoaded() {
+  if (rainfallTemplateBytes?.length) return true;
+  const resp = await fetch(RAINFALL_TEMPLATE_URL);
+  if (!resp.ok) throw new Error(`template fetch failed (${resp.status})`);
+  const buffer = await resp.arrayBuffer();
   rainfallTemplateBytes = Array.from(new Uint8Array(buffer));
-  rainfallTemplateName = file.name;
-  alert(`Loaded rainfall export template: ${file.name}`);
-  event.target.value = '';
+  return true;
 }
 
 // â”€â”€ Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -3290,8 +3287,8 @@ function exportAllUsingTemplate() {
     .replace(/[^\w\s-]+/g, '')
     .trim()
     .replace(/\s+/g, '_');
-  const outType = String(rainfallTemplateName || '').toLowerCase().endsWith('.xlsm') ? 'xlsm' : 'xlsx';
-  XLSX.writeFile(wb, `rainfall_analysis_${outNameBase || 'station'}_${new Date().toISOString().slice(0,10)}.${outType}`, { bookType: outType, bookVBA: outType === 'xlsm' });
+  const outType = 'xlsm';
+  XLSX.writeFile(wb, `rainfall_analysis_${outNameBase || 'station'}_${new Date().toISOString().slice(0,10)}.${outType}`, { bookType: outType, bookVBA: true });
   return true;
 }
 
@@ -3391,13 +3388,23 @@ function appendWorkbookSheet(wb, name, rows) {
   XLSX.utils.book_append_sheet(wb, ws, name.slice(0, 31));
 }
 
-function exportAllXlsx() {
+async function exportAllXlsx() {
   if (typeof XLSX === 'undefined') {
     alert('Excel export library did not load.');
     return;
   }
   if (!lastResults) {
     alert('Run an analysis first.');
+    return;
+  }
+
+  try {
+    showLoad('Preparing Excel export...');
+    await ensureRainfallTemplateLoaded();
+    hideLoad();
+  } catch (e) {
+    hideLoad();
+    alert(`Workbook template could not be loaded automatically: ${e.message}`);
     return;
   }
 
