@@ -1199,8 +1199,20 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
           <div class="pkg-meta-lbl">Source</div>
           <div class="pkg-meta-val">Latest relining package generation</div>
         </div>
+        <div class="pkg-meta-item">
+          <div class="pkg-meta-lbl">Council Program Folder</div>
+          <div class="pkg-meta-val" id="fwLocalFolderPath">%USERPROFILE%\OneDrive - Northern Beaches Council\Stormwater Engineering - General\Program</div>
+        </div>
+        <div class="pkg-meta-item">
+          <div class="pkg-meta-lbl">Expected Workbook Path</div>
+          <div class="pkg-meta-val" id="fwLocalWorkbookPath">%USERPROFILE%\OneDrive - Northern Beaches Council\Stormwater Engineering - General\Program\2027-2031 CAPEX Project Brief - Program of Works Details - E&amp;R - Rolling.xlsx</div>
+        </div>
       </div>
-      <div class="fw-note" style="margin-top:12px">Direct SharePoint workbook editing is the next step. This first pass keeps the row structure aligned with the backlog sheet so the later Graph sync can write the same fields into a machine-managed table.</div>
+      <div class="fw-actions" style="margin-top:12px">
+        <button class="export-btn" onclick="copyFutureWorksLocalPath('folder')">Copy Folder Path</button>
+        <button class="export-btn" onclick="copyFutureWorksLocalPath('workbook')">Copy Workbook Path</button>
+      </div>
+      <div class="fw-note" style="margin-top:12px">Direct SharePoint workbook editing is the next step. This first pass keeps the row structure aligned with the backlog sheet so the later Graph sync can write the same fields into a machine-managed table. The local OneDrive path above is the expected Council-synced location for normal Excel editing.</div>
     </div>
 
     <div class="fw-panel">
@@ -1325,6 +1337,8 @@ let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
 const FUTURE_WORKS_URL_KEY = 'nbc_futureworks_workbook_url';
+const FUTURE_WORKS_WORKBOOK_NAME = '2027-2031 CAPEX Project Brief - Program of Works Details - E&R - Rolling.xlsx';
+const FUTURE_WORKS_LOCAL_FOLDER_TEMPLATE = '%USERPROFILE%\\OneDrive - Northern Beaches Council\\Stormwater Engineering - General\\Program';
 const FUTURE_WORKS_COLUMNS = [
   { key: 'exhibition', label: 'In exhibition map?' },
   { key: 'packageId', label: 'Package' },
@@ -2937,9 +2951,25 @@ function getFutureWorksWorkbookUrl() {
   return (localStorage.getItem(FUTURE_WORKS_URL_KEY) || '').trim();
 }
 
+function getFutureWorksLocalFolderTemplate() {
+  return FUTURE_WORKS_LOCAL_FOLDER_TEMPLATE;
+}
+
+function getFutureWorksLocalWorkbookTemplate() {
+  return `${getFutureWorksLocalFolderTemplate()}\\${FUTURE_WORKS_WORKBOOK_NAME}`;
+}
+
+function syncFutureWorksLocalPathLabels() {
+  const folderEl = document.getElementById('fwLocalFolderPath');
+  const workbookEl = document.getElementById('fwLocalWorkbookPath');
+  if (folderEl) folderEl.textContent = getFutureWorksLocalFolderTemplate();
+  if (workbookEl) workbookEl.textContent = getFutureWorksLocalWorkbookTemplate();
+}
+
 function syncFutureWorksWorkbookInput() {
   const input = document.getElementById('fwWorkbookUrl');
   if (input) input.value = getFutureWorksWorkbookUrl();
+  syncFutureWorksLocalPathLabels();
 }
 
 function saveFutureWorksWorkbookUrl() {
@@ -2971,6 +3001,22 @@ function openFutureWorksWorkbookInExcel() {
     return;
   }
   window.location.href = `ms-excel:ofe|u|${url}`;
+}
+
+async function copyFutureWorksLocalPath(kind) {
+  const value = kind === 'folder'
+    ? getFutureWorksLocalFolderTemplate()
+    : getFutureWorksLocalWorkbookTemplate();
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = value;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  }
 }
 
 function normaliseImportedFutureWorksRows(rows) {
