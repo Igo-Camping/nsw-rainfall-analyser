@@ -617,10 +617,10 @@ window.addEventListener('keydown', (event) => {
       </div>
 
       <div class="rtabs">
-        <div class="rtab active" onclick="switchRTab('r-summary')">Summary</div>
-        <div class="rtab" onclick="switchRTab('r-chart')">Chart</div>
-        <div class="rtab" onclick="switchRTab('r-ifd')">IFD Table</div>
-        <div class="rtab" onclick="switchRTab('r-allsite')">All Sites</div>
+        <div class="rtab active" id="rtab-summary" onclick="switchRTab('r-summary')">Summary</div>
+        <div class="rtab" id="rtab-chart" onclick="switchRTab('r-chart')">Chart</div>
+        <div class="rtab" id="rtab-ifd" onclick="switchRTab('r-ifd')">IFD Table</div>
+        <div class="rtab" id="rtab-allsite" onclick="switchRTab('r-allsite')">All Sites</div>
       </div>
 
       <div class="rpanel active" id="r-summary"></div>
@@ -1822,9 +1822,40 @@ function updateRecalcButton() {
   btn.style.display = currentTab === 'top-site' ? '' : 'none';
 }
 
+function setResultsTabMode(mode) {
+  const results = document.getElementById('results');
+  const tabs = {
+    summary: document.getElementById('rtab-summary'),
+    chart: document.getElementById('rtab-chart'),
+    ifd: document.getElementById('rtab-ifd'),
+    allsite: document.getElementById('rtab-allsite')
+  };
+  if (!results || !tabs.summary || !tabs.chart || !tabs.ifd || !tabs.allsite) return;
+
+  tabs.summary.style.display = '';
+  tabs.chart.style.display = '';
+  tabs.ifd.style.display = '';
+  tabs.allsite.style.display = '';
+  tabs.summary.textContent = 'Summary';
+  tabs.chart.textContent = 'Chart';
+  tabs.ifd.textContent = 'IFD Table';
+  tabs.allsite.textContent = 'All Sites';
+  results.classList.remove('no-rtabs');
+
+  if (mode === 'map') {
+    results.classList.add('no-rtabs');
+  } else if (mode === 'top-site') {
+    tabs.summary.style.display = 'none';
+    tabs.ifd.style.display = 'none';
+    tabs.allsite.textContent = 'Top Intensity';
+  } else if (mode === 'single-table') {
+    results.classList.add('no-rtabs');
+  }
+}
+
 function showSelectedAnalysisReadyState(title, subtitle, message) {
+  setResultsTabMode('single-table');
   document.getElementById('results').classList.add('show');
-  document.getElementById('results').classList.add('no-rtabs');
   document.getElementById('res-title').textContent = title;
   document.getElementById('res-sub').textContent = subtitle;
   document.getElementById('r-allsite').innerHTML = `
@@ -1836,7 +1867,7 @@ function showSelectedAnalysisReadyState(title, subtitle, message) {
 }
 
 function showTopSiteReadyState() {
-  document.getElementById('results').classList.remove('no-rtabs');
+  setResultsTabMode('top-site');
   document.getElementById('results').classList.add('show');
   document.getElementById('res-title').textContent = 'Top Intensity Per Site';
   const lga = document.getElementById('lgaSel').value;
@@ -2508,7 +2539,7 @@ async function openTopSiteDailyTotals(stationId) {
 function renderTopPerSite(results = null, dur = null) {
   if (results) topSiteResultsCache = [...results];
   updateRecalcButton();
-  document.getElementById('results').classList.remove('no-rtabs');
+  setResultsTabMode('top-site');
   document.getElementById('res-title').textContent = 'Top Intensity Per Site';
   const lga = document.getElementById('lgaSel').value;
   document.getElementById('res-sub').textContent =
@@ -2632,7 +2663,7 @@ async function runTopDurations(fromDt, toDt) {
 
 function renderTopDurations(results) {
   updateRecalcButton();
-  document.getElementById('results').classList.add('no-rtabs');
+  setResultsTabMode('single-table');
   document.getElementById('res-title').textContent = `All Durations - ${selected.name}`;
   document.getElementById('res-sub').textContent = 'All durations analysed, ranked by AEP';
 
@@ -2694,7 +2725,7 @@ let lastDailyData = null;
 
 function renderDailyTotals(data) {
   updateRecalcButton();
-  document.getElementById('results').classList.add('no-rtabs');
+  setResultsTabMode('single-table');
   document.getElementById('res-title').textContent = `Daily Totals - ${data.station_name}`;
   document.getElementById('res-sub').textContent = `${fmtDt(data.from)} -> ${fmtDt(data.to)} - 24hr periods from midnight`;
 
@@ -2825,8 +2856,8 @@ function renderHourlyTable() {
 function renderResults(data, wx, rainToday) {
   const panel = document.getElementById('results');
   updateRecalcButton();
+  setResultsTabMode('map');
   panel.classList.add('show');
-  panel.classList.remove('no-rtabs');
 
   const dur = data.duration_minutes;
   document.getElementById('res-title').textContent = data.station_name;
@@ -4038,7 +4069,12 @@ function hideLoad() {
   document.getElementById('loading').classList.remove('show');
   document.body.classList.remove('busy-ui');
 }
-function closeResults() { const r = document.getElementById('results'); r.classList.remove('show','no-rtabs'); allSiteResults = null; }
+function closeResults() {
+  const r = document.getElementById('results');
+  r.classList.remove('show', 'no-rtabs');
+  setResultsTabMode('map');
+  allSiteResults = null;
+}
 
 
 // â”€â”€ Other Monitors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
