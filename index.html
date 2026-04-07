@@ -3283,6 +3283,77 @@ function exportAllUsingTemplate() {
   newGaugeWs['!cols'] = gaugeWs['!cols'];
   wb.Sheets['Gauge_Data'] = newGaugeWs;
 
+  const writeCell = (addr, value, type = 's') => {
+    if (value === '' || value == null) {
+      delete mainWs[addr];
+      return;
+    }
+    mainWs[addr] = { t: type, v: value };
+  };
+  const clearMainRange = (startRow, endRow) => {
+    for (let r = startRow; r <= endRow; r++) {
+      for (const col of ['C','D','E','F','G','H','I','J']) {
+        delete mainWs[`${col}${r}`];
+      }
+    }
+  };
+  const eventWindowText = (start, end) => {
+    if (!start || !end) return '';
+    return `${fmtDt(start)} to ${fmtDt(end)}`;
+  };
+
+  writeCell('E3', selectedGaugeName);
+  writeCell('E4', Number(lastResults.duration_minutes || 0), 'n');
+  writeCell('G4', lastResults.durationLabel || (DUR_LABELS[lastResults.duration_minutes] || `${lastResults.duration_minutes} min`));
+  writeCell('E5', eventWindowText(lastResults.rolling_max?.peak_start, lastResults.rolling_max?.peak_end));
+  writeCell('F5', eventWindowText(lastResults.rolling_max?.peak_start, lastResults.rolling_max?.peak_end));
+  writeCell('D7', Number(lastResults.rolling_max?.max_depth_mm || 0), 'n');
+  writeCell('F7', lastResults.aep?.aep || '');
+  writeCell('K8', getIfdDepthForAep(lastResults.station_id, lastResults.duration_minutes, '10%'), 'n');
+  writeCell('K9', getIfdDepthForAep(lastResults.station_id, lastResults.duration_minutes, '1%'), 'n');
+
+  const dailyRows = buildDailyRows(lastDailyData?.readings || lastResults.readings || []);
+  const topDay = dailyRows.reduce((best, row) => !best || row['Total (mm)'] > best['Total (mm)'] ? row : best, null);
+  writeCell('C14', `Top Rainfall Day — ${selectedGaugeName}`);
+  writeCell('C16', topDay?.Date || '');
+  writeCell('D16', topDay?.Label ? topDay.Label.split(',')[0] : '');
+  writeCell('E16', topDay ? Number(topDay['Total (mm)']) : '', topDay ? 'n' : 's');
+  writeCell('F16', topDay ? '24hr Period from 12am - 11:59pm' : '');
+
+  const topDurRows = getSortedTopDurationResults().slice(0, 5);
+  writeCell('C24', `Top 5 Durations — ${selectedGaugeName}`);
+  clearMainRange(26, 30);
+  topDurRows.forEach((r, idx) => {
+    const rowNum = 26 + idx;
+    const rm = r.rolling_max || {};
+    const aepStr = r.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
+    writeCell(`C${rowNum}`, idx + 1, 'n');
+    writeCell(`D${rowNum}`, selectedGaugeName);
+    writeCell(`E${rowNum}`, DUR_LABELS[r.duration_minutes] || `${r.duration_minutes} min`);
+    writeCell(`F${rowNum}`, eventWindowText(rm?.peak_start, rm?.peak_end));
+    writeCell(`G${rowNum}`, Number(rm?.max_depth_mm || 0), 'n');
+    writeCell(`H${rowNum}`, aepStr);
+    writeCell(`I${rowNum}`, aepToARI(r.aep || aepStr));
+    writeCell(`J${rowNum}`, aepToARI(r.aep || aepStr));
+  });
+
+  const topSiteRows = getSortedTopSiteResults();
+  writeCell('C33', 'Top Intensity Per Site — All Gauges');
+  clearMainRange(35, 80);
+  topSiteRows.forEach((r, idx) => {
+    const rowNum = 35 + idx;
+    const rm = r.rolling_max || {};
+    const aepStr = r.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
+    writeCell(`C${rowNum}`, idx + 1, 'n');
+    writeCell(`D${rowNum}`, getTemplateGaugeName(r.station_name));
+    writeCell(`E${rowNum}`, DUR_LABELS[r.duration_minutes] || `${r.duration_minutes} min`);
+    writeCell(`F${rowNum}`, eventWindowText(rm?.peak_start, rm?.peak_end));
+    writeCell(`G${rowNum}`, Number(rm?.max_depth_mm || 0), 'n');
+    writeCell(`H${rowNum}`, aepStr);
+    writeCell(`I${rowNum}`, aepToARI(r.aep || aepStr));
+    writeCell(`J${rowNum}`, aepToARI(r.aep || aepStr));
+  });
+
   const outNameBase = String(lastResults.station_name || 'rainfall')
     .replace(/[^\w\s-]+/g, '')
     .trim()
