@@ -1204,6 +1204,22 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
     </div>
 
     <div class="fw-panel">
+      <div class="lbl">SharePoint Workbook Access</div>
+      <div class="fw-grid">
+        <div class="fg" style="grid-column:1 / -1">
+          <label for="fwWorkbookUrl">SharePoint Workbook URL</label>
+          <input type="text" id="fwWorkbookUrl" placeholder="Paste the SharePoint link to the CAPEX workbook here"/>
+        </div>
+      </div>
+      <div class="fw-actions" style="margin-top:12px">
+        <button class="export-btn" onclick="saveFutureWorksWorkbookUrl()">Save Workbook URL</button>
+        <button class="export-btn" onclick="openFutureWorksWorkbook()">Open In Browser</button>
+        <button class="export-btn" onclick="openFutureWorksWorkbookInExcel()">Open In Excel</button>
+      </div>
+      <div class="fw-note" style="margin-top:12px">This opens the full workbook in the normal SharePoint/Excel experience so you can edit every sheet directly, not just the relining backlog.</div>
+    </div>
+
+    <div class="fw-panel">
       <div class="lbl">Relining Mapping Defaults</div>
       <div class="fw-grid">
         <div class="fg">
@@ -1243,6 +1259,10 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
       </div>
       <div class="fw-actions" style="margin-top:12px">
         <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Latest Relining Packages</button>
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Import Existing Output
+          <input type="file" id="fwImportFile" accept=".csv,.json" style="display:none" onchange="importFutureWorksFile(event)"/>
+        </label>
         <button class="export-btn" onclick="exportFutureWorksCsv()">Export CSV</button>
         <button class="export-btn" onclick="switchPage('relining')">Open Relining Tool</button>
       </div>
@@ -1303,6 +1323,7 @@ let topSiteResultsCache = [];
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
+const FUTURE_WORKS_URL_KEY = 'nbc_futureworks_workbook_url';
 const FUTURE_WORKS_COLUMNS = [
   { key: 'exhibition', label: 'In exhibition map?' },
   { key: 'packageId', label: 'Package' },
@@ -2911,6 +2932,143 @@ function getFutureWorksDefaults() {
   };
 }
 
+function getFutureWorksWorkbookUrl() {
+  return (localStorage.getItem(FUTURE_WORKS_URL_KEY) || '').trim();
+}
+
+function syncFutureWorksWorkbookInput() {
+  const input = document.getElementById('fwWorkbookUrl');
+  if (input) input.value = getFutureWorksWorkbookUrl();
+}
+
+function saveFutureWorksWorkbookUrl() {
+  const input = document.getElementById('fwWorkbookUrl');
+  if (!input) return;
+  const value = input.value.trim();
+  if (!value) {
+    localStorage.removeItem(FUTURE_WORKS_URL_KEY);
+    return;
+  }
+  localStorage.setItem(FUTURE_WORKS_URL_KEY, value);
+}
+
+function openFutureWorksWorkbook() {
+  saveFutureWorksWorkbookUrl();
+  const url = getFutureWorksWorkbookUrl();
+  if (!url) {
+    alert('Paste the SharePoint workbook URL first.');
+    return;
+  }
+  window.open(url, '_blank', 'noopener');
+}
+
+function openFutureWorksWorkbookInExcel() {
+  saveFutureWorksWorkbookUrl();
+  const url = getFutureWorksWorkbookUrl();
+  if (!url) {
+    alert('Paste the SharePoint workbook URL first.');
+    return;
+  }
+  window.location.href = `ms-excel:ofe|u|${url}`;
+}
+
+function normaliseImportedFutureWorksRows(rows) {
+  if (!Array.isArray(rows) || !rows.length) return [];
+  const defaults = getFutureWorksDefaults();
+  return rows.map((raw, idx) => {
+    const item = raw || {};
+    const packageId = item.packageId || item.package_id || item.Package || item.package || `RLN_${String(idx + 1).padStart(3, '0')}`;
+    const totalCost = Number(item.total_cost ?? item.totalCost ?? item.Budget ?? item.budget ?? 0);
+    const totalLength = Number(item.total_length_m ?? item.totalLength ?? item['Length (m)'] ?? item.lengthM ?? 0);
+    const pipeCount = Number(item.pipe_count ?? item.pipeCount ?? 0);
+    const suburb = item.suburb || item.suburbs || item['Suburb(s)'] || 'LGA Wide';
+    const description = item.shortDescription || item['Short description of work'] ||
+      (pipeCount
+        ? `Relining package ${packageId} covering ${pipeCount} pipe${pipeCount === 1 ? '' : 's'} in ${suburb}.`
+        : `Relining package ${packageId} in ${suburb}.`);
+    return {
+      exhibition: item.exhibition || item['In exhibition map?'] || '',
+      packageId,
+      programDescription: item.programDescription || item['Program Description'] || defaults.programDescription,
+      briefRequired: item.briefRequired || item['Brief Required?'] || defaults.briefRequired,
+      budget: totalCost ? totalCost.toFixed(2) : (item.budget || item['Budget'] || ''),
+      shortDescription: description,
+      suburbs: suburb,
+      streets: item.streets || item['Street(s)'] || '',
+      lengthM: totalLength ? totalLength.toFixed(1) : (item.lengthM || item['Length (m)'] || ''),
+      ward: item.ward || item['Ward'] || defaults.ward,
+      stage: item.stage || item['Stage by end of FY26/27'] || defaults.stage,
+      assetNumbers: item.assetNumbers || item.asset_numbers || item['Asset number'] || '',
+      lat: item.lat || item.latitude || item['Latitude'] || '',
+      lon: item.lon || item.longitude || item['Longitude'] || '',
+      q1_2728: item.q1_2728 || item['27/28 Q1'] || '',
+      q2_2728: item.q2_2728 || item['27/28 Q2'] || '',
+      q3_2728: item.q3_2728 || item['27/28 Q3'] || '',
+      q4_2728: item.q4_2728 || item['27/28 Q4'] || ''
+    };
+  });
+}
+
+function parseSimpleCsv(text) {
+  const lines = String(text || '').replace(/\r/g, '').split('\n').filter(Boolean);
+  if (lines.length < 2) return [];
+  const parseLine = (line) => {
+    const out = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') {
+        if (inQuotes && line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (ch === ',' && !inQuotes) {
+        out.push(current);
+        current = '';
+      } else {
+        current += ch;
+      }
+    }
+    out.push(current);
+    return out;
+  };
+  const headers = parseLine(lines[0]).map(h => h.trim());
+  return lines.slice(1).map(line => {
+    const values = parseLine(line);
+    const row = {};
+    headers.forEach((header, idx) => row[header] = values[idx] ?? '');
+    return row;
+  });
+}
+
+async function importFutureWorksFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    let rows = [];
+    if (file.name.toLowerCase().endsWith('.json')) {
+      const parsed = JSON.parse(text);
+      rows = Array.isArray(parsed) ? parsed : (parsed.packages || parsed.rows || []);
+    } else {
+      rows = parseSimpleCsv(text);
+    }
+    futureWorksRows = normaliseImportedFutureWorksRows(rows);
+    if (!futureWorksRows.length) {
+      alert('No usable rows were found in that file.');
+      return;
+    }
+    renderFutureWorksTable();
+  } catch (e) {
+    alert(`Import failed: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
+  }
+}
+
 function mapReliningPackagesToFutureWorksRows(packages) {
   const defaults = getFutureWorksDefaults();
   return (packages || []).map((pkg, idx) => {
@@ -3963,6 +4121,7 @@ function switchPage(page) {
     }
   }
   if (page === 'futureworks') {
+    syncFutureWorksWorkbookInput();
     renderFutureWorksTable();
   }
   if (page === 'prioritisation') {
