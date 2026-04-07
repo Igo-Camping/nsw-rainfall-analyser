@@ -3136,7 +3136,7 @@ function normaliseImportedFutureWorksRows(rows) {
   return rows.map((raw, idx) => {
     const item = raw || {};
     const packageId = item.packageId || item.package_id || item.Package || item.package || `RLN_${String(idx + 1).padStart(3, '0')}`;
-    const totalCost = Number(item.total_cost ?? item.totalCost ?? item.Budget ?? item.budget ?? 0);
+    const totalCost = Number(item.total_cost ?? item.totalCost ?? item['Cost ($)'] ?? item.Budget ?? item.budget ?? 0);
     const totalLength = Number(item.total_length_m ?? item.totalLength ?? item['Length (m)'] ?? item.lengthM ?? 0);
     const pipeCount = Number(item.pipe_count ?? item.pipeCount ?? 0);
     const suburb = item.suburb || item.suburbs || item['Suburb(s)'] || 'LGA Wide';
