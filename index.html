@@ -2590,7 +2590,7 @@ function renderTopPerSite(results = null, dur = null) {
         ${topSiteHeader('Peak (mm)', 'peak', true)}
         <th style="min-width:88px">Intensity</th>
         ${topSiteHeader('AEP', 'aep')}
-        ${topSiteHeader('Return Period', 'ari', true)}
+        ${topSiteHeader('ARI', 'ari', true)}
         ${topSiteHeader('Peak Time', 'peakTime')}
       </tr></thead>
       <tbody>${rows}</tbody>
@@ -2672,30 +2672,39 @@ function renderTopDurations(results) {
     const pb = parseFloat((b.aep?.aep||'100').replace(/[~<>%]/g,''));
     return pa - pb;
   });
+  const maxD = Math.max(...sorted.map(r => r.rolling_max?.max_depth_mm || 0)) || 1;
 
   const rows = sorted.map(r => {
     const rm = r.rolling_max;
     const aepStr = r.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
     const {cls} = classifyAEP(aepStr);
+    const depth = rm?.max_depth_mm || 0;
+    const pct = depth / maxD * 100;
     return `
       <tr>
         <td>${DUR_LABELS[r.duration_minutes]||r.duration_minutes+'min'}</td>
-        <td class="r">${rm?.max_depth_mm ?? '-'} mm</td>
+        <td class="r">${depth || depth === 0 ? depth : '-'} mm</td>
+        <td><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
         <td><span class="aep-badge ${cls}">${aepStr}</span></td>
         <td class="r">${aepToARI(r.aep || aepStr)}</td>
+        <td>${rm?.peak_start ? fmtDt(rm.peak_start) : '-'}</td>
       </tr>`;
   }).join('');
 
   document.getElementById('r-allsite').innerHTML = `
-    <table>
+    <div class="results-table-wrap">
+    <table class="results-table compact">
       <thead><tr>
         <th>Duration</th>
-        <th class="r">Depth (mm)</th>
+        <th class="r">Peak (mm)</th>
+        <th style="min-width:88px">Intensity</th>
         <th>AEP</th>
         <th class="r">ARI</th>
+        <th>Peak Time</th>
       </tr></thead>
       <tbody>${rows}</tbody>
     </table>
+    </div>
   `;
   switchRTab('r-allsite');
 }
@@ -3005,7 +3014,7 @@ function renderIFDTable(aep, observedDepth, dur) {
           ${vals.map((v,i)=>`<td class="r ${i===loBracket||i===hiBracket?'bracket-hi':''}">${v}</td>`).join('')}
         </tr>
         <tr>
-          <td>Return Period</td>
+          <td>ARI</td>
           ${aeps.map(a=>`<td class="r">${aepToARI(a)}</td>`).join('')}
         </tr>
       </tbody>
