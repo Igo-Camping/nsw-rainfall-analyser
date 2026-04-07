@@ -585,7 +585,10 @@ window.addEventListener('keydown', (event) => {
         </div>
       </div>
 
-      <button class="run-btn" id="runBtn" onclick="runAnalysis()" disabled>Select a station</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="run-btn" id="runBtn" onclick="runAnalysis()" disabled style="flex:1">Select a station</button>
+        <button class="export-btn" id="exportAllBtn" onclick="exportAllXlsx()" disabled>Export All</button>
+      </div>
     </div>
 
   </div><!-- /sidebar -->
@@ -1791,6 +1794,8 @@ function selectStation(id) {
   const btn = document.getElementById('runBtn');
   btn.disabled = false;
   btn.textContent = `Analyse ${selected.name.split(' ').slice(0,3).join(' ')}`;
+  const exportBtn = document.getElementById('exportAllBtn');
+  if (exportBtn) exportBtn.disabled = true;
 }
 
 // â”€â”€ Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -2140,6 +2145,8 @@ async function runAnalysis() {
       to: toDt.toISOString(),
       analysisKey: baseKey
     };
+    const exportBtn = document.getElementById('exportAllBtn');
+    if (exportBtn) exportBtn.disabled = false;
 
     setLoadTxt('Calculating top intensity per site...');
     await runTopPerSite(dur, fromDt, toDt, { render: false, manageLoader: false });
@@ -3061,6 +3068,276 @@ function exportCSV() {
   a.href = URL.createObjectURL(blob);
   a.download = `rainfall_analysis_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
+}
+
+function getSortedTopSiteResults() {
+  const sortable = [...topSiteResultsCache].filter(r => r.rolling_max);
+  return sortable.sort((a, b) => {
+    const av = getTopSiteSortValue(a, topSiteSort.key);
+    const bv = getTopSiteSortValue(b, topSiteSort.key);
+    if (typeof av === 'string' || typeof bv === 'string') {
+      const cmp = String(av).localeCompare(String(bv), undefined, { numeric: true, sensitivity: 'base' });
+      return topSiteSort.dir === 'asc' ? cmp : -cmp;
+    }
+    const cmp = (Number(av) || 0) - (Number(bv) || 0);
+    return topSiteSort.dir === 'asc' ? cmp : -cmp;
+  });
+}
+
+function getSortedTopDurationResults() {
+  return [...(lastTopDurResults?.results || [])].sort((a,b) => {
+    const pa = parseFloat((a.aep?.aep || '100').replace(/[~<>%]/g,''));
+    const pb = parseFloat((b.aep?.aep || '100').replace(/[~<>%]/g,''));
+    return pa - pb;
+  });
+}
+
+function buildDailyRows(readings) {
+  const byDay = {};
+  (readings || []).forEach(r => {
+    const day = new Date(r.timestamp.replace(' ','T'))
+      .toLocaleDateString('en-CA', {timeZone:'Australia/Sydney'});
+    if (!byDay[day]) byDay[day] = 0;
+    byDay[day] += r.value;
+  });
+  return Object.entries(byDay)
+    .sort(([a],[b]) => a.localeCompare(b))
+    .map(([day, total]) => ({
+      Date: day,
+      Label: new Date(day + 'T00:00:00').toLocaleDateString('en-AU',
+        { weekday:'long', day:'numeric', month:'short', year:'numeric' }),
+      'Total (mm)': Math.round(total * 100) / 100
+    }));
+}
+
+function buildHourlyRows(readings) {
+  const byDayHour = {};
+  (readings || []).forEach(r => {
+    const d = new Date(r.timestamp.replace(' ','T'));
+    const day = d.toLocaleDateString('en-CA', {timeZone:'Australia/Sydney'});
+    const hour = parseInt(d.toLocaleTimeString('en-AU',
+      {timeZone:'Australia/Sydney', hour:'2-digit', hour12:false}));
+    if (!byDayHour[day]) byDayHour[day] = Array(24).fill(0);
+    if (hour >= 0 && hour < 24) byDayHour[day][hour] += r.value;
+  });
+
+  return Object.entries(byDayHour)
+    .sort(([a],[b]) => a.localeCompare(b))
+    .flatMap(([day, hours]) => hours.map((v, h) => ({
+      Date: day,
+      Hour: `${String(h).padStart(2,'0')}:00 - ${String(h + 1).padStart(2,'0')}:00`,
+      'Total (mm)': Math.round(v * 100) / 100
+    })));
+}
+
+function buildIfdRows() {
+  if (!lastResults) return [];
+  const dur = lastResults.duration_minutes;
+  const observedDepth = lastResults.rolling_max?.max_depth_mm ?? '';
+  const aeps = ['63.2%', '50%', '20%', '10%', '5%', '2%', '1%'];
+  const row = { Metric: 'IFD Depth (mm)' };
+  const ariRow = { Metric: 'ARI' };
+  const observedRow = { Metric: 'Observed' };
+  aeps.forEach(a => {
+    row[a] = getIfdDepthForAep(lastResults.station_id, dur, a);
+    ariRow[a] = aepToARI(a);
+    observedRow[a] = observedDepth;
+  });
+  return [observedRow, row, ariRow];
+}
+
+function buildIfdDepthReferenceRows() {
+  if (!selected || !ifdCache[selected.station_id]) return [];
+  const aeps = ['63.2%', '50%', '20%', '10%', '5%', '2%', '1%'];
+  return ALL_DURATIONS
+    .filter(d => ifdCache[selected.station_id]?.[d])
+    .map(d => {
+      const row = {
+        Location: selected.name,
+        Duration: DUR_LABELS[d] || `${d} min`,
+        'Duration in min': d
+      };
+      aeps.forEach(a => {
+        row[a] = getIfdDepthForAep(selected.station_id, d, a);
+      });
+      return row;
+    });
+}
+
+function getIfdDepthForAep(stationId, durationMinutes, aepLabel) {
+  const ifd = ifdCache[stationId];
+  const durTable = ifd?.[durationMinutes];
+  if (!durTable) return '';
+  const exact = durTable[aepLabel];
+  if (exact != null) return exact;
+  const key = Object.keys(durTable).find(k => String(k).replace(/\s+/g,'') === String(aepLabel).replace(/\s+/g,''));
+  return key ? durTable[key] : '';
+}
+
+function buildGaugeDataRows() {
+  const sources = topSiteResultsCache.length ? topSiteResultsCache : (lastResults ? [lastResults] : []);
+  const timestampMap = new Map();
+  sources.forEach(r => {
+    (r.readings || []).forEach(reading => {
+      if (!timestampMap.has(reading.timestamp)) timestampMap.set(reading.timestamp, { Date: reading.timestamp });
+      timestampMap.get(reading.timestamp)[r.station_name] = reading.value;
+    });
+  });
+  return [...timestampMap.values()].sort((a, b) => String(a.Date).localeCompare(String(b.Date)));
+}
+
+function buildMainDisplaySheet() {
+  const dailyRows = buildDailyRows(lastDailyData?.readings || lastResults?.readings || []);
+  const topDurRows = getSortedTopDurationResults();
+  const topSiteRows = getSortedTopSiteResults();
+  const wsData = [];
+  const pushRow = (row = []) => wsData.push(row);
+  const station = lastResults?.station_name || selected?.name || '';
+  const durationText = lastResults?.durationLabel || (lastResults ? (DUR_LABELS[lastResults.duration_minutes] || `${lastResults.duration_minutes} min`) : '');
+  const eventWindow = lastResults ? `${fmtDt(lastResults.from)} to ${fmtDt(lastResults.to)}` : '';
+  const aepText = lastResults?.aep?.aep || '';
+  const ariText = lastResults ? aepToARI(lastResults.aep || lastResults.aep?.aep || '') : '';
+
+  pushRow([]);
+  pushRow([]);
+  pushRow(['', '', 'Location:', '', station]);
+  pushRow(['', '', 'Duration (min):', '', lastResults?.duration_minutes || '', '', durationText]);
+  pushRow(['', '', 'Event window:', '', eventWindow]);
+  pushRow([]);
+  pushRow(['', '', 'Event depth (mm):', lastResults?.rolling_max?.max_depth_mm ?? '', '', 'AEP', aepText, 'ARI', ariText]);
+  pushRow([]);
+  pushRow([]);
+  pushRow([]);
+  pushRow([]);
+  pushRow([]);
+
+  const topDay = dailyRows.reduce((best, row) => !best || row['Total (mm)'] > best['Total (mm)'] ? row : best, null);
+  pushRow(['', '', `Top Rainfall Day — ${station}`]);
+  pushRow(['', '', 'Date', 'Day', 'Total (mm)', 'Period']);
+  if (topDay) {
+    pushRow(['', '', topDay.Date, topDay.Label.split(',')[0], topDay['Total (mm)'], '24hr Period from 12am - 11:59pm']);
+  } else {
+    pushRow(['', '', '', '', '', '']);
+  }
+
+  pushRow([]);
+  pushRow([]);
+  pushRow([]);
+  pushRow([]);
+  pushRow([]);
+
+  pushRow(['', '', `Top 5 Durations — ${station}`]);
+  pushRow(['', '', 'Rank', 'Gauge', 'Duration', 'Peak Time', 'Peak (mm)', 'AEP', 'ARI']);
+  topDurRows.slice(0, 5).forEach((r, idx) => {
+    const rm = r.rolling_max || {};
+    const aepStr = r.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
+    pushRow(['', '', idx + 1, station, DUR_LABELS[r.duration_minutes] || `${r.duration_minutes} min`, rm?.peak_start ? fmtDt(rm.peak_start) : '', rm?.max_depth_mm || 0, aepStr, aepToARI(r.aep || aepStr)]);
+  });
+
+  pushRow([]);
+  pushRow([]);
+
+  pushRow(['', '', 'Top Intensity Per Site — All Gauges']);
+  pushRow(['', '', 'Rank', 'Gauge', 'Best Duration', 'Peak Time', 'Peak (mm)', 'AEP', 'ARI']);
+  topSiteRows.forEach((r, idx) => {
+    const rm = r.rolling_max || {};
+    const aepStr = r.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
+    pushRow(['', '', idx + 1, r.station_name, DUR_LABELS[r.duration_minutes] || `${r.duration_minutes} min`, rm?.peak_start ? fmtDt(rm.peak_start) : '', rm?.max_depth_mm || 0, aepStr, aepToARI(r.aep || aepStr)]);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+  ws['!merges'] = [
+    XLSX.utils.decode_range('C13:F13'),
+    XLSX.utils.decode_range('C24:F24'),
+    XLSX.utils.decode_range('C33:F33')
+  ];
+  ws['!cols'] = [
+    { wch: 3 }, { wch: 3 }, { wch: 18 }, { wch: 24 }, { wch: 18 },
+    { wch: 30 }, { wch: 14 }, { wch: 12 }, { wch: 16 }, { wch: 16 }
+  ];
+  return ws;
+}
+
+function autoFitSheet(ws) {
+  const ref = ws['!ref'];
+  if (!ref || typeof XLSX === 'undefined') return;
+  const range = XLSX.utils.decode_range(ref);
+  const widths = [];
+  for (let c = range.s.c; c <= range.e.c; c++) {
+    let maxLen = 10;
+    for (let r = range.s.r; r <= range.e.r; r++) {
+      const cell = ws[XLSX.utils.encode_cell({ r, c })];
+      const text = cell ? String(cell.v ?? '') : '';
+      maxLen = Math.max(maxLen, Math.min(40, text.length + 2));
+    }
+    widths.push({ wch: maxLen });
+  }
+  ws['!cols'] = widths;
+}
+
+function appendWorkbookSheet(wb, name, rows) {
+  if (!rows?.length) return;
+  const ws = XLSX.utils.json_to_sheet(rows);
+  autoFitSheet(ws);
+  XLSX.utils.book_append_sheet(wb, ws, name.slice(0, 31));
+}
+
+function exportAllXlsx() {
+  if (typeof XLSX === 'undefined') {
+    alert('Excel export library did not load.');
+    return;
+  }
+  if (!lastResults) {
+    alert('Run an analysis first.');
+    return;
+  }
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, buildMainDisplaySheet(), 'Main');
+
+  const topSiteRows = getSortedTopSiteResults();
+  const maxTopSitePeak = Math.max(...topSiteRows.map(x => x.rolling_max?.max_depth_mm || 0)) || 1;
+  appendWorkbookSheet(wb, 'Top_Intensity', topSiteRows.map((r, i) => {
+    const rm = r.rolling_max || {};
+    const aepStr = r.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
+    return {
+      Rank: i + 1,
+      Station: r.station_name,
+      Duration: DUR_LABELS[r.duration_minutes] || `${r.duration_minutes} min`,
+      'Peak (mm)': rm.max_depth_mm || 0,
+      'Intensity (%)': Math.round(((rm.max_depth_mm || 0) / maxTopSitePeak) * 1000) / 10,
+      AEP: aepStr,
+      ARI: aepToARI(r.aep || aepStr),
+      'Peak Time': rm.peak_start ? fmtDt(rm.peak_start) : ''
+    };
+  }));
+
+  const topDurRows = getSortedTopDurationResults();
+  const maxTopDurPeak = Math.max(...topDurRows.map(r => r.rolling_max?.max_depth_mm || 0)) || 1;
+  appendWorkbookSheet(wb, 'Top_Durations', topDurRows.map(r => {
+    const rm = r.rolling_max || {};
+    const aepStr = r.aep?.aep || (rm?.max_depth_mm > 0 ? 'IFD unavailable' : '>63.2%');
+    return {
+      Duration: DUR_LABELS[r.duration_minutes] || `${r.duration_minutes} min`,
+      'Peak (mm)': rm.max_depth_mm || 0,
+      'Intensity (%)': Math.round(((rm.max_depth_mm || 0) / maxTopDurPeak) * 1000) / 10,
+      AEP: aepStr,
+      ARI: aepToARI(r.aep || aepStr),
+      'Peak Time': rm.peak_start ? fmtDt(rm.peak_start) : ''
+    };
+  }));
+
+  appendWorkbookSheet(wb, 'Gauge_Data', buildGaugeDataRows());
+  appendWorkbookSheet(wb, 'Daily_Totals', buildDailyRows(lastDailyData?.readings || lastResults.readings || []));
+  appendWorkbookSheet(wb, 'Hourly_Breakdown', buildHourlyRows(lastDailyData?.readings || lastResults.readings || []));
+  appendWorkbookSheet(wb, 'BoM_IFD_2016', buildIfdDepthReferenceRows());
+  appendWorkbookSheet(wb, 'IFD_Table', buildIfdRows());
+
+  const safeStation = String(lastResults.station_name || 'rainfall')
+    .replace(/[^\w\s-]+/g, '')
+    .trim()
+    .replace(/\s+/g, '_');
+  XLSX.writeFile(wb, `rainfall_analysis_${safeStation || 'station'}_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
 // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
