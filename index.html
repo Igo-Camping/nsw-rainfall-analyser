@@ -1398,6 +1398,7 @@ let futureWorksWorkbookMeta = null;
 let futureWorksReliningFileName = '';
 let futureWorksExtraFileName = '';
 let topSiteResultsCache = [];
+let topSiteResultsKey = null;
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
@@ -1809,14 +1810,6 @@ function switchTab(tab, skipRun = false) {
   updateRecalcButton();
   if (tab === 'monitors') {
     loadOtherMonitors();
-  } else if (tab === 'top-site') {
-    if (topSiteResultsCache.length) {
-      renderTopPerSite();
-      document.getElementById('results').classList.add('show');
-      switchRTab('r-allsite');
-    } else if (!skipRun && selected) {
-      showTopSiteReadyState();
-    }
   } else if (!skipRun && selected) {
     renderCachedCurrentTab();
   }
@@ -1899,6 +1892,13 @@ function getCurrentAnalysisContext(quiet = false) {
   return { dur, fromDt, toDt, baseKey, summaryKey };
 }
 
+function getTopSiteAnalysisKey(fromDt, toDt) {
+  const lga = document.getElementById('lgaSel')?.value || '';
+  const q = document.getElementById('search')?.value.toLowerCase().trim() || '';
+  const nbcSub = lga === 'Northern Beaches' ? (document.getElementById('nbcSub')?.value || 'all') : '';
+  return `${fromDt.toISOString()}|${toDt.toISOString()}|${lga}|${nbcSub}|${q}`;
+}
+
 function renderCachedCurrentTab(context = null) {
   const ctx = context || getCurrentAnalysisContext(true);
   if (!ctx || !selected) return;
@@ -1940,6 +1940,18 @@ function renderCachedCurrentTab(context = null) {
         'No daily totals cached for the current settings',
         'Use the <strong>Analyse</strong> button to build daily totals for this location.'
       );
+    }
+    return;
+  }
+
+  if (currentTab === 'top-site') {
+    const topSiteKey = getTopSiteAnalysisKey(ctx.fromDt, ctx.toDt);
+    if (topSiteResultsCache.length && topSiteResultsKey === topSiteKey) {
+      renderTopPerSite();
+      document.getElementById('results').classList.add('show');
+      switchRTab('r-allsite');
+    } else {
+      showTopSiteReadyState();
     }
   }
 }
@@ -2096,12 +2108,8 @@ async function runAnalysis() {
       analysisKey: baseKey
     };
 
-    if (currentTab === 'top-site') {
-      hideLoad();
-      await runTopPerSite(dur, fromDt, toDt);
-      return;
-    }
-
+    setLoadTxt('Calculating top intensity per site...');
+    await runTopPerSite(dur, fromDt, toDt, { render: false, manageLoader: false });
     hideLoad();
     renderCachedCurrentTab(ctx);
   } catch(e) {
@@ -2299,7 +2307,8 @@ async function analyseStation(station, dur, fromDt, toDt) {
 // â”€â”€ Top Intensity Per Site â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // â”€â”€ Top Intensity Per Site â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Matches Excel tool: finds the worst AEP across ALL standard durations per station
-async function runTopPerSite(dur, fromDt, toDt) {
+async function runTopPerSite(dur, fromDt, toDt, options = {}) {
+  const { render = true, manageLoader = true } = options;
   const lga = document.getElementById('lgaSel').value;
   const q = document.getElementById('search').value.toLowerCase().trim();
   let stations;
@@ -2315,7 +2324,11 @@ async function runTopPerSite(dur, fromDt, toDt) {
     stations = stations.filter(s => s.name.toLowerCase().includes(q));
   }
 
-  if (!stations.length) { hideLoad(); alert('No stations in selected area.'); return; }
+  if (!stations.length) {
+    if (manageLoader) hideLoad();
+    alert('No stations in selected area.');
+    return [];
+  }
 
   // All 25 standard durations â€” same as Excel tool
   const allDurs = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
@@ -2378,18 +2391,25 @@ async function runTopPerSite(dur, fromDt, toDt) {
     if (bestResult) allSiteResults.push(bestResult);
   }
 
-  hideLoad();
+  if (manageLoader) hideLoad();
   if (!allSiteResults.length) {
     alert('Top Intensity Per Site could not load any station results for that date range. Try a shorter range or narrower area.');
-    return;
+    topSiteResultsCache = [];
+    topSiteResultsKey = getTopSiteAnalysisKey(fromDt, toDt);
+    return [];
   }
   if (failedStations.length && allSiteResults.length === 1 && selected && allSiteResults[0]?.station_id === selected.station_id) {
     console.warn('Large-range analysis failed for most stations:', failedStations);
     alert(`Large date range warning: only ${selected.name} returned successfully. Try a shorter date range or narrower area.`);
   }
-  renderTopPerSite(allSiteResults, null);
-  document.getElementById('results').classList.add('show');
-  switchRTab('r-allsite');
+  topSiteResultsKey = getTopSiteAnalysisKey(fromDt, toDt);
+  topSiteResultsCache = [...allSiteResults];
+  if (render) {
+    renderTopPerSite(allSiteResults, null);
+    document.getElementById('results').classList.add('show');
+    switchRTab('r-allsite');
+  }
+  return allSiteResults;
 }
 
 // Convert AEP string like "~5%", ">63.2%", "~0.5%" to a probability number for comparison
