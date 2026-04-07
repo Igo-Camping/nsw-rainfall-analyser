@@ -1261,7 +1261,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Latest Relining Packages</button>
         <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
           Import Existing Output
-          <input type="file" id="fwImportFile" accept=".csv,.json" style="display:none" onchange="importFutureWorksFile(event)"/>
+          <input type="file" id="fwImportFile" accept=".csv,.json,.xlsx,.xls" style="display:none" onchange="importFutureWorksFile(event)"/>
         </label>
         <button class="export-btn" onclick="exportFutureWorksCsv()">Export CSV</button>
         <button class="export-btn" onclick="switchPage('relining')">Open Relining Tool</button>
@@ -1275,6 +1275,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
   </div>
 </div>
 
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script>
 // â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
@@ -2982,9 +2983,11 @@ function normaliseImportedFutureWorksRows(rows) {
     const totalLength = Number(item.total_length_m ?? item.totalLength ?? item['Length (m)'] ?? item.lengthM ?? 0);
     const pipeCount = Number(item.pipe_count ?? item.pipeCount ?? 0);
     const suburb = item.suburb || item.suburbs || item['Suburb(s)'] || 'LGA Wide';
+    const diameters = item['Diameters (mm)'] || item.diameters || item.diameter || '';
+    const assetIds = item['Asset IDs'] || item.assetIds || item.asset_numbers || item['Asset number'] || '';
     const description = item.shortDescription || item['Short description of work'] ||
       (pipeCount
-        ? `Relining package ${packageId} covering ${pipeCount} pipe${pipeCount === 1 ? '' : 's'} in ${suburb}.`
+        ? `Relining package ${packageId} covering ${pipeCount} pipe${pipeCount === 1 ? '' : 's'} in ${suburb}${diameters ? ` (${diameters} mm)` : ''}.`
         : `Relining package ${packageId} in ${suburb}.`);
     return {
       exhibition: item.exhibition || item['In exhibition map?'] || '',
@@ -2998,7 +3001,7 @@ function normaliseImportedFutureWorksRows(rows) {
       lengthM: totalLength ? totalLength.toFixed(1) : (item.lengthM || item['Length (m)'] || ''),
       ward: item.ward || item['Ward'] || defaults.ward,
       stage: item.stage || item['Stage by end of FY26/27'] || defaults.stage,
-      assetNumbers: item.assetNumbers || item.asset_numbers || item['Asset number'] || '',
+      assetNumbers: item.assetNumbers || assetIds || '',
       lat: item.lat || item.latitude || item['Latitude'] || '',
       lon: item.lon || item.longitude || item['Longitude'] || '',
       q1_2728: item.q1_2728 || item['27/28 Q1'] || '',
@@ -3048,13 +3051,24 @@ async function importFutureWorksFile(event) {
   const file = event?.target?.files?.[0];
   if (!file) return;
   try {
-    const text = await file.text();
     let rows = [];
-    if (file.name.toLowerCase().endsWith('.json')) {
+    const lower = file.name.toLowerCase();
+    if (lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
+      if (typeof XLSX === 'undefined') {
+        throw new Error('Excel import library did not load.');
+      }
+      const buffer = await file.arrayBuffer();
+      const workbook = XLSX.read(buffer, { type: 'array' });
+      const firstSheet = workbook.SheetNames[0];
+      rows = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], { defval: '' });
+    } else {
+      const text = await file.text();
+      if (lower.endsWith('.json')) {
       const parsed = JSON.parse(text);
       rows = Array.isArray(parsed) ? parsed : (parsed.packages || parsed.rows || []);
-    } else {
-      rows = parseSimpleCsv(text);
+      } else {
+        rows = parseSimpleCsv(text);
+      }
     }
     futureWorksRows = normaliseImportedFutureWorksRows(rows);
     if (!futureWorksRows.length) {
