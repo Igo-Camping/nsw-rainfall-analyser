@@ -1262,6 +1262,39 @@ window.addEventListener('keydown', (event) => {
     </div>
 
     <div class="fw-panel">
+      <div class="lbl">Manual Uploads</div>
+      <div class="fw-grid">
+        <div class="pkg-meta-item">
+          <div class="pkg-meta-lbl">Forward Works Workbook</div>
+          <div class="pkg-meta-val" id="fwWorkbookStatus">Not loaded</div>
+        </div>
+        <div class="pkg-meta-item">
+          <div class="pkg-meta-lbl">Relining Output</div>
+          <div class="pkg-meta-val" id="fwReliningStatus">Not loaded</div>
+        </div>
+        <div class="pkg-meta-item">
+          <div class="pkg-meta-lbl">Additional Input</div>
+          <div class="pkg-meta-val" id="fwExtraStatus">Optional</div>
+        </div>
+      </div>
+      <div class="fw-actions" style="margin-top:12px">
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload Forward Works Plan
+          <input type="file" id="fwWorkbookFile" accept=".xlsx,.xls,.xlsm" style="display:none" onchange="importForwardWorksWorkbook(event)"/>
+        </label>
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload Relining Output
+          <input type="file" id="fwImportFile" accept=".csv,.json,.xlsx,.xls,.xlsm" style="display:none" onchange="importFutureWorksFile(event)"/>
+        </label>
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload Extra File
+          <input type="file" id="fwExtraFile" accept=".csv,.json,.xlsx,.xls,.xlsm" style="display:none" onchange="importFutureWorksExtra(event)"/>
+        </label>
+      </div>
+      <div class="fw-note" style="margin-top:12px">If SharePoint access is unreliable, load the forward works workbook and the relining output manually here. The page will use the uploaded files in-browser for staging and mapping.</div>
+    </div>
+
+    <div class="fw-panel">
       <div class="lbl">Relining Mapping Defaults</div>
       <div class="fw-grid">
         <div class="fg">
@@ -1301,10 +1334,6 @@ window.addEventListener('keydown', (event) => {
       </div>
       <div class="fw-actions" style="margin-top:12px">
         <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Latest Relining Packages</button>
-        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
-          Import Existing Output
-          <input type="file" id="fwImportFile" accept=".csv,.json,.xlsx,.xls" style="display:none" onchange="importFutureWorksFile(event)"/>
-        </label>
         <button class="export-btn" onclick="exportFutureWorksCsv()">Export CSV</button>
         <button class="export-btn" onclick="switchPage('relining')">Open Relining Tool</button>
       </div>
@@ -1362,6 +1391,10 @@ let lastPackagingGeneration = null;
 let costingLookup = null;
 let costingRows = [];
 let futureWorksRows = [];
+let futureWorksWorkbookFile = null;
+let futureWorksWorkbookMeta = null;
+let futureWorksReliningFileName = '';
+let futureWorksExtraFileName = '';
 let topSiteResultsCache = [];
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
@@ -2989,6 +3022,23 @@ function getFutureWorksLocalWorkbookTemplate() {
   return `${getFutureWorksLocalFolderTemplate()}\\${FUTURE_WORKS_WORKBOOK_NAME}`;
 }
 
+function updateFutureWorksUploadStatus() {
+  const workbookEl = document.getElementById('fwWorkbookStatus');
+  const reliningEl = document.getElementById('fwReliningStatus');
+  const extraEl = document.getElementById('fwExtraStatus');
+  if (workbookEl) {
+    workbookEl.textContent = futureWorksWorkbookMeta
+      ? `${futureWorksWorkbookMeta.name} · ${futureWorksWorkbookMeta.sheetCount} sheets`
+      : 'Not loaded';
+  }
+  if (reliningEl) {
+    reliningEl.textContent = futureWorksReliningFileName || 'Not loaded';
+  }
+  if (extraEl) {
+    extraEl.textContent = futureWorksExtraFileName || 'Optional';
+  }
+}
+
 function syncFutureWorksLocalPathLabels() {
   const folderEl = document.getElementById('fwLocalFolderPath');
   const workbookEl = document.getElementById('fwLocalWorkbookPath');
@@ -3000,6 +3050,7 @@ function syncFutureWorksWorkbookInput() {
   const input = document.getElementById('fwWorkbookUrl');
   if (input) input.value = getFutureWorksWorkbookUrl();
   syncFutureWorksLocalPathLabels();
+  updateFutureWorksUploadStatus();
 }
 
 function saveFutureWorksWorkbookUrl() {
@@ -3047,6 +3098,36 @@ async function copyFutureWorksLocalPath(kind) {
     document.execCommand('copy');
     ta.remove();
   }
+}
+
+async function importForwardWorksWorkbook(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: 'array' });
+    futureWorksWorkbookFile = file;
+    futureWorksWorkbookMeta = {
+      name: file.name,
+      sheetCount: workbook.SheetNames.length,
+      sheets: workbook.SheetNames.slice(),
+      hasBacklogSheet: workbook.SheetNames.includes('15) Pipe Renewal Backlog')
+    };
+    updateFutureWorksUploadStatus();
+  } catch (e) {
+    alert(`Workbook import failed: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
+  }
+}
+
+async function importFutureWorksExtra(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  futureWorksExtraFileName = file.name;
+  updateFutureWorksUploadStatus();
+  if (event?.target) event.target.value = '';
 }
 
 function normaliseImportedFutureWorksRows(rows) {
@@ -3151,6 +3232,8 @@ async function importFutureWorksFile(event) {
       alert('No usable rows were found in that file.');
       return;
     }
+    futureWorksReliningFileName = file.name;
+    updateFutureWorksUploadStatus();
     renderFutureWorksTable();
   } catch (e) {
     alert(`Import failed: ${e.message || e}`);
