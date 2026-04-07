@@ -22,6 +22,7 @@ import asyncio
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 import httpx
+from packaging_backend import router as packaging_router
 
 app = FastAPI(
     title="NSW Rainfall Analyser API",
@@ -37,6 +38,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(packaging_router)
 
 # ---------------------------------------------------------------------------
 # Load station cache on startup

@@ -1063,7 +1063,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
     <div class="pkg-hero">
       <div>
         <div class="pkg-title">Relining Packaging</div>
-        <div class="pkg-sub">Connect this page to the Python packaging backend running on your personal laptop, then verify from the work laptop that it is resolving the shared <code>Data</code> and <code>Outputs</code> folders before we keep porting the full workflow.</div>
+        <div class="pkg-sub">This page now targets the hosted packaging backend by default. Use the connection panel below to verify the deployed service, resolved data paths, and relining package generation as we keep porting the full workflow.</div>
       </div>
       <div class="pkg-status-chip"><span class="pkg-dot" id="pkgDot"></span><span id="pkgStatusText">Backend not checked</span></div>
     </div>
@@ -1078,7 +1078,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
         <button class="export-btn" onclick="savePackagingApiUrl()">Save URL</button>
         <button class="export-btn" onclick="refreshPackagingConnection()">Test Connection</button>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">For cross-device testing, replace `localhost` with your personal laptop IP, for example `http://192.168.1.50:8001`.</div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">The default value points at the hosted Render API. Only change it if you deliberately want to test against another backend.</div>
     </div>
 
     <div class="pkg-panel">
@@ -1157,7 +1157,7 @@ if (sessionStorage.getItem(SESSION_KEY) === '1') {
 <script>
 // â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
-const DEFAULT_PACKAGING_API = 'http://localhost:8001';
+const DEFAULT_PACKAGING_API = API;
 const COSTING_LOOKUP_PATH = './costing_lookup.json';
 
 // All durations the tool supports (matching NBC tool)
@@ -2782,7 +2782,7 @@ async function refreshPackagingConnection() {
   showLoad('Testing packaging backend...');
   try {
     const [health, config] = await Promise.all([
-      packagingApi('/health'),
+      packagingApi('/packaging/health'),
       packagingApi('/packaging/config')
     ]);
     packagingConfig = { ...config, ...health };
