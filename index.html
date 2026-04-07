@@ -610,6 +610,7 @@ window.addEventListener('keydown', (event) => {
           <div class="res-sub" id="res-sub"></div>
         </div>
         <div style="display:flex;gap:8px;align-items:center">
+          <button class="export-btn" id="recalcBtn" style="display:none" onclick="recalcCurrentTab()">Recalc</button>
           <button class="export-btn" onclick="exportCSV()">Export CSV</button>
           <button class="close-btn" onclick="closeResults()">Close</button>
         </div>
@@ -1804,10 +1805,51 @@ function switchTab(tab, skipRun = false) {
   document.querySelectorAll('.tab').forEach((el,i) => {
     el.classList.toggle('active', ['map','top-site','top-dur','daily','monitors'][i] === tab);
   });
+  updateRecalcButton();
   if (tab === 'monitors') {
     loadOtherMonitors();
+  } else if (tab === 'top-site') {
+    if (topSiteResultsCache.length) {
+      renderTopPerSite();
+      document.getElementById('results').classList.add('show');
+      switchRTab('r-allsite');
+    } else if (!skipRun && selected) {
+      showTopSiteReadyState();
+    }
   } else if (tab !== 'map' && !skipRun) {
     if (selected) runAnalysis();
+  }
+}
+
+function updateRecalcButton() {
+  const btn = document.getElementById('recalcBtn');
+  if (!btn) return;
+  btn.style.display = currentTab === 'top-site' ? '' : 'none';
+}
+
+function showTopSiteReadyState() {
+  document.getElementById('results').classList.remove('no-rtabs');
+  document.getElementById('results').classList.add('show');
+  document.getElementById('res-title').textContent = 'Top Intensity Per Site';
+  const lga = document.getElementById('lgaSel').value;
+  document.getElementById('res-sub').textContent =
+    `Best duration per station - ${lga || 'All stations'} - Click Recalc to run`;
+  document.getElementById('r-allsite').innerHTML = `
+    <div style="padding:24px;color:var(--text-l);font-size:13px;text-align:center">
+      Top Intensity Per Site is ready to run.<br/>
+      Use the <strong>Recalc</strong> button when you want to refresh the results.
+    </div>
+  `;
+  switchRTab('r-allsite');
+}
+
+function recalcCurrentTab() {
+  if (currentTab === 'top-site') {
+    if (!selected && !document.getElementById('lgaSel')?.value) {
+      alert('Select a station or area first.');
+      return;
+    }
+    runAnalysis();
   }
 }
 
@@ -2315,6 +2357,7 @@ async function openTopSiteDailyTotals(stationId) {
 
 function renderTopPerSite(results = null, dur = null) {
   if (results) topSiteResultsCache = [...results];
+  updateRecalcButton();
   document.getElementById('results').classList.remove('no-rtabs');
   document.getElementById('res-title').textContent = 'Top Intensity Per Site';
   const lga = document.getElementById('lgaSel').value;
@@ -2432,6 +2475,7 @@ async function runTopDurations(fromDt, toDt) {
 }
 
 function renderTopDurations(results) {
+  updateRecalcButton();
   document.getElementById('results').classList.add('no-rtabs');
   document.getElementById('res-title').textContent = `All Durations - ${selected.name}`;
   document.getElementById('res-sub').textContent = 'All durations analysed, ranked by AEP';
@@ -2487,6 +2531,7 @@ async function runDailyTotals(fromDt, toDt) {
 let lastDailyData = null;
 
 function renderDailyTotals(data) {
+  updateRecalcButton();
   document.getElementById('results').classList.add('no-rtabs');
   document.getElementById('res-title').textContent = `Daily Totals - ${data.station_name}`;
   document.getElementById('res-sub').textContent = `${fmtDt(data.from)} -> ${fmtDt(data.to)} - 24hr periods from midnight`;
@@ -2619,6 +2664,7 @@ function renderHourlyTable() {
 // â”€â”€ Render single station results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderResults(data, wx, rainToday) {
   const panel = document.getElementById('results');
+  updateRecalcButton();
   panel.classList.add('show');
   panel.classList.remove('no-rtabs');
 
