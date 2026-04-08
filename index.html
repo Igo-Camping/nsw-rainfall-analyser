@@ -3284,11 +3284,18 @@ function exportAllUsingTemplate() {
   wb.Sheets['Gauge_Data'] = newGaugeWs;
 
   const writeCell = (addr, value, type = 's') => {
+    const existing = mainWs[addr] || {};
     if (value === '' || value == null) {
-      delete mainWs[addr];
+      if (existing && Object.keys(existing).length) {
+        mainWs[addr] = { ...existing, v: '', t: 's' };
+        delete mainWs[addr].w;
+      } else {
+        delete mainWs[addr];
+      }
       return;
     }
-    mainWs[addr] = { t: type, v: value };
+    mainWs[addr] = { ...existing, t: type, v: value };
+    delete mainWs[addr].w;
   };
   const clearMainRange = (startRow, endRow) => {
     for (let r = startRow; r <= endRow; r++) {
