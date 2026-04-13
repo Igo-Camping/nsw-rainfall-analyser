@@ -1,6 +1,15 @@
-
 index working.html
 index working.txt
-
-index working.html
-index working.txt
+packaging_data/
+packaging_outputs/
+costing_lookup.json
+__pycache__/
+*.pyc
+index.txt
+Imports/
+Imports/*.csv
+Imports/*.json
+Imports/*.xlsx
+Imports/*.xlsm
+Imports/*.xls
+Imports/*.xlsb

@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
+<meta name="referrer" content="strict-origin-when-cross-origin"/>
 <title>NBC Stormwater Tools - Northern Beaches Council</title>
 <!-- v3 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
@@ -331,7 +333,12 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
     <div style="width:52px;height:52px;background:#00847F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;margin:0 auto 16px">NBC</div>
     <div style="font-size:18px;font-weight:700;color:#1A2B3C;margin-bottom:4px">NBC Stormwater Tools</div>
     <div style="font-size:11px;color:#5A6B7A;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em">Northern Beaches Council - Stormwater</div>
+    <input type="text" id="user-input" placeholder="Enter username"
+      autocomplete="username"
+      style="width:100%;padding:11px 14px;border:1.5px solid #DDE3E8;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;text-align:center;color:#1A2B3C"
+      onkeydown="if(event.key==='Enter')checkPW()"/>
     <input type="password" id="pw-input" placeholder="Enter password"
+      autocomplete="current-password"
       style="width:100%;padding:11px 14px;border:1.5px solid #DDE3E8;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;text-align:center;letter-spacing:.15em;color:#1A2B3C"
       onkeydown="if(event.key==='Enter')checkPW()"/>
     <div id="pw-err" style="color:#E74C3C;font-size:12px;height:16px;margin-bottom:8px"></div>
@@ -350,6 +357,7 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 
 <script>
 // Password - change this to whatever you want
+const APP_USERNAME = 'stormwater';
 const APP_PASSWORD = 'NBC2024';
 const SESSION_KEY  = 'nbc_rain_auth';
 let pendingProtectedPage = null;
@@ -366,12 +374,14 @@ function openGate(targetPage = null) {
   pendingProtectedPage = targetPage;
   const gate = document.getElementById('gate');
   if (gate) gate.style.display = 'flex';
+  const userInput = document.getElementById('user-input');
   const input = document.getElementById('pw-input');
   const err = document.getElementById('pw-err');
   if (err) err.textContent = '';
+  if (userInput) userInput.value = '';
   if (input) {
     input.value = '';
-    setTimeout(() => input.focus(), 30);
+    setTimeout(() => (userInput || input).focus(), 30);
   }
 }
 
@@ -382,8 +392,9 @@ function closeGate() {
 }
 
 function checkPW() {
+  const userVal = document.getElementById('user-input').value.trim();
   const val = document.getElementById('pw-input').value;
-  if (val === APP_PASSWORD) {
+  if (userVal === APP_USERNAME && val === APP_PASSWORD) {
     sessionStorage.setItem(SESSION_KEY, '1');
     document.getElementById('gate').style.display = 'none';
     const nextPage = pendingProtectedPage;
@@ -391,9 +402,10 @@ function checkPW() {
     if (nextPage) switchPage(nextPage, { skipAuth: true });
   } else {
     const err = document.getElementById('pw-err');
-    err.textContent = 'Incorrect password - try again';
+    err.textContent = 'Incorrect username or password';
+    document.getElementById('user-input').value = '';
     document.getElementById('pw-input').value = '';
-    document.getElementById('pw-input').focus();
+    document.getElementById('user-input').focus();
     setTimeout(() => err.textContent = '', 3000);
   }
 }
@@ -1040,7 +1052,7 @@ window.addEventListener('keydown', (event) => {
   <div class="cost-shell">
     <div class="cost-hero">
       <div class="cost-title">Costing Tool</div>
-      <div class="cost-sub">This is the first real browser slice of the full web port of <strong>Master Costing Tool - Stormwater.xlsm</strong>. It already uses workbook-extracted lookup data and cascading BOQ selectors, and we’ll keep layering the remaining workbook behaviour on top.</div>
+      <div class="cost-sub">Upload the current <strong>Master Costing Tool - Stormwater.xlsm</strong> workbook to use the costing lookup data in-browser only. No uploaded workbook is stored by the app.</div>
     </div>
     <div class="cost-grid">
       <div class="cost-card">
@@ -1059,6 +1071,16 @@ window.addEventListener('keydown', (event) => {
         <div class="k">Current Total</div>
         <div class="v" id="costGrandTotal">$0</div>
       </div>
+    </div>
+    <div class="cost-panel">
+      <div class="lbl">Required Upload</div>
+      <div class="cost-actions" style="margin-bottom:12px">
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload Costing Workbook
+          <input type="file" id="costWorkbookFile" accept=".xlsx,.xls,.xlsm" style="display:none" onchange="importCostingWorkbook(event)"/>
+        </label>
+      </div>
+      <div class="cost-muted" id="costUploadStatus">Upload the costing workbook to begin. The file is read in memory only for this session.</div>
     </div>
     <div class="cost-panel">
       <div class="lbl">Project Setup</div>
@@ -1109,7 +1131,7 @@ window.addEventListener('keydown', (event) => {
         </table>
       </div>
       <div class="cost-muted" style="margin-top:12px">
-        This uses workbook-extracted table data from the original costing XLSM. The next passes will add more workbook-specific behaviours like deeper modifier logic, panel/source handling, and any macro-driven output workflows still missing.
+        This uses the uploaded workbook directly in the browser. If no workbook is uploaded, the BOQ table stays locked and prompts for the required file.
       </div>
     </div>
   </div>
@@ -1120,30 +1142,33 @@ window.addEventListener('keydown', (event) => {
     <div class="pkg-hero">
       <div>
         <div class="pkg-title">Relining Packaging</div>
-        <div class="pkg-sub">This page now targets the hosted packaging backend by default. Use the connection panel below to verify the deployed service, resolved data paths, and relining package generation as we keep porting the full workflow.</div>
+        <div class="pkg-sub">Upload the current asset file and panel rates workbook to run relining packaging entirely in your browser. No uploaded file is sent to Render or saved by the app.</div>
       </div>
-      <div class="pkg-status-chip"><span class="pkg-dot" id="pkgDot"></span><span id="pkgStatusText">Backend not checked</span></div>
+      <div class="pkg-status-chip"><span class="pkg-dot" id="pkgDot"></span><span id="pkgStatusText">Waiting for required files</span></div>
     </div>
 
     <div class="pkg-panel">
-      <div class="lbl">Backend Connection</div>
-      <div class="pkg-grid">
-        <div class="fg">
-          <label for="pkgApiUrl">Packaging API Base URL</label>
-          <input type="text" id="pkgApiUrl" placeholder="http://localhost:8001"/>
-        </div>
-        <button class="export-btn" onclick="savePackagingApiUrl()">Save URL</button>
-        <button class="export-btn" onclick="refreshPackagingConnection()">Test Connection</button>
-      </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">The default value points at the hosted Render API. Only change it if you deliberately want to test against another backend.</div>
-    </div>
-
-    <div class="pkg-panel">
-      <div class="lbl">Resolved File Paths</div>
+      <div class="lbl">Required Uploads</div>
       <div class="pkg-meta" id="pkgPathMeta"></div>
+      <div class="fw-actions" style="margin-top:12px">
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload Assets File
+          <input type="file" id="pkgAssetsFile" accept=".csv,.xlsx,.xls,.xlsm" style="display:none" onchange="importReliningAssetsFile(event)"/>
+        </label>
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload Panel Rates Workbook
+          <input type="file" id="pkgRatesFile" accept=".xlsx,.xls,.xlsm" style="display:none" onchange="importReliningRatesFile(event)"/>
+        </label>
+      </div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Required files are used in memory for this browser session only. Nothing is uploaded to the server or written to disk by the app.</div>
+    </div>
+
+    <div class="pkg-panel">
+      <div class="lbl">Upload Summary</div>
+      <div class="pkg-meta" id="pkgMeta"></div>
       <div class="pkg-assumptions" id="pkgAssumptions">
-        Expected input filenames in <code>Data</code>: <code>assets_with_coords.csv</code> or <code>assets.csv</code>, plus <code>Panel_Rates.xlsx</code>.<br/>
-        Generated files should land in <code>Outputs</code> once the export steps are wired through the backend.
+        Upload an assets extract with the relining fields and the <code>_Tables</code> sheet from <code>Panel_Rates.xlsx</code>.<br/>
+        Generated package summaries stay in-browser and can be pushed into Future Works without creating any saved server copy.
       </div>
     </div>
 
@@ -1162,7 +1187,7 @@ window.addEventListener('keydown', (event) => {
           <button class="run-btn" style="margin-top:0" onclick="loadPackagingPreview()">Load Stream Preview</button>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">This first pass shows backend health and the asset split only. We can layer the full packaging workflow on top of this once the work-laptop connection is proven.</div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Preview uses the uploaded assets file only. Upload both required files before generating relining packages.</div>
     </div>
 
     <div class="pkg-panel">
@@ -1195,7 +1220,7 @@ window.addEventListener('keydown', (event) => {
           <button class="run-btn" style="margin-top:0" onclick="generateReliningPackages()">Generate Packages</button>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">This uses your existing Python relining rates and package split logic, but keeps the output to summary tables for now.</div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Packaging runs locally in the browser against the uploaded files and keeps the output to summary tables for now.</div>
     </div>
 
     <div class="pkg-meta" id="pkgMeta"></div>
@@ -1231,7 +1256,7 @@ window.addEventListener('keydown', (event) => {
         </div>
         <div class="pkg-meta-item">
           <div class="pkg-meta-lbl">Source</div>
-          <div class="pkg-meta-val">Latest relining package generation</div>
+          <div class="pkg-meta-val">Current in-browser relining package generation</div>
         </div>
         <div class="pkg-meta-item">
           <div class="pkg-meta-lbl">Council Program Folder</div>
@@ -1337,7 +1362,7 @@ window.addEventListener('keydown', (event) => {
         </div>
       </div>
       <div class="fw-actions" style="margin-top:12px">
-        <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Latest Relining Packages</button>
+        <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Current Relining Packages</button>
         <button class="export-btn" onclick="exportFutureWorksCsv()">Export CSV</button>
         <button class="export-btn" onclick="switchPage('relining')">Open Relining Tool</button>
       </div>
@@ -1345,7 +1370,7 @@ window.addEventListener('keydown', (event) => {
 
     <div class="fw-panel">
       <div class="lbl">Backlog Preview</div>
-      <div id="fwTableArea" class="fw-empty">Generate relining packages first, then click <strong>Load Latest Relining Packages</strong> here to stage them into the future works backlog format.</div>
+      <div id="fwTableArea" class="fw-empty">Generate relining packages first, then click <strong>Load Current Relining Packages</strong> here to stage them into the future works backlog format.</div>
     </div>
   </div>
 </div>
@@ -1354,8 +1379,6 @@ window.addEventListener('keydown', (event) => {
 <script>
 // â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
-const DEFAULT_PACKAGING_API = API;
-const COSTING_LOOKUP_PATH = './costing_lookup.json';
 
 // All durations the tool supports (matching NBC tool)
 const ALL_DURATIONS = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
@@ -1391,15 +1414,19 @@ let lastResults = null, allSiteResults = null;
 let lastTopDurResults = null;
 let rainChart = null, compareChart = null;
 let currentTab = 'map';
-let packagingConfig = null;
 let lastPackagingGeneration = null;
 let costingLookup = null;
 let costingRows = [];
 let futureWorksRows = [];
-let futureWorksWorkbookFile = null;
 let futureWorksWorkbookMeta = null;
 let futureWorksReliningFileName = '';
 let futureWorksExtraFileName = '';
+let futureWorksWorkbookUrl = '';
+let costingWorkbookName = '';
+let reliningAssetsRows = [];
+let reliningRatesRows = [];
+let reliningAssetsFileName = '';
+let reliningRatesFileName = '';
 let topSiteResultsCache = [];
 let topSiteResultsKey = null;
 let lastAnalysisContext = null;
@@ -1408,7 +1435,6 @@ const RAINFALL_TEMPLATE_URL = 'templates/NBC Rainfall Calculator.xlsm';
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
-const FUTURE_WORKS_URL_KEY = 'nbc_futureworks_workbook_url';
 const FUTURE_WORKS_WORKBOOK_NAME = '2027-2031 CAPEX Project Brief - Program of Works Details - E&R - Rolling.xlsx';
 const FUTURE_WORKS_LOCAL_FOLDER_TEMPLATE = '%USERPROFILE%\\OneDrive - Northern Beaches Council\\Stormwater Engineering - General\\Program';
 const FUTURE_WORKS_COLUMNS = [
@@ -3543,37 +3569,6 @@ async function api(path) {
   return r.json();
 }
 
-function getPackagingApiBase() {
-  return (localStorage.getItem('nbc_packaging_api') || DEFAULT_PACKAGING_API).replace(/\/+$/,'');
-}
-
-function syncPackagingApiInput() {
-  const input = document.getElementById('pkgApiUrl');
-  if (input) input.value = getPackagingApiBase();
-}
-
-function savePackagingApiUrl() {
-  const input = document.getElementById('pkgApiUrl');
-  if (!input) return;
-  const value = input.value.trim().replace(/\/+$/,'');
-  if (!value) return;
-  localStorage.setItem('nbc_packaging_api', value);
-  refreshPackagingConnection();
-}
-
-async function packagingApi(path, options = {}) {
-  const base = getPackagingApiBase();
-  const r = await fetch(base + path, {
-    headers: {'Content-Type':'application/json', ...(options.headers || {})},
-    ...options
-  });
-  if (!r.ok) {
-    const txt = await r.text();
-    throw new Error(txt || `${r.status} ${r.statusText}`);
-  }
-  return r.json();
-}
-
 function setPackagingStatus(ok, text) {
   const dot = document.getElementById('pkgDot');
   const label = document.getElementById('pkgStatusText');
@@ -3581,13 +3576,234 @@ function setPackagingStatus(ok, text) {
   if (label) label.textContent = text;
 }
 
+function resolveSuburbColumn(rows) {
+  if (!rows?.length) return null;
+  const candidates = ['Asset Suburb', 'Location - Suburb', 'Suburb', 'SUBURB'];
+  return candidates.find(name => Object.prototype.hasOwnProperty.call(rows[0], name)) || null;
+}
+
+function normaliseNumeric(value) {
+  if (value == null || value === '') return null;
+  const cleaned = String(value).replace(/[$,\s]/g, '');
+  const num = Number(cleaned);
+  return Number.isFinite(num) ? num : null;
+}
+
+function getReliningConditionNumber(row) {
+  const raw = row?.['SW_Condition'];
+  const match = String(raw ?? '').match(/(\d+)/);
+  return match ? Number(match[1]) : null;
+}
+
+function parseDescriptorDiameters(desc) {
+  const text = String(desc ?? '');
+  const mmMatches = [...text.matchAll(/[ØO]?(\d+)\s*mm/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
+  if (mmMatches.length) return mmMatches;
+  return [...text.matchAll(/[ØO](\d+)/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
+}
+
+function parseLengthBand(desc) {
+  const text = String(desc ?? '');
+  const plus = text.match(/\+(\d+)/);
+  if (plus) return [Number(plus[1]), Infinity];
+  const range = text.match(/(\d+)\s*-\s*(\d+)/);
+  if (range) return [Number(range[1]), Number(range[2])];
+  return null;
+}
+
+function cleanRateRows(rows) {
+  return (rows || []).map(row => ({
+    ...row,
+    'Unit Rate': normaliseNumeric(row?.['Unit Rate'])
+  }));
+}
+
+function getReliningRateForRow(row) {
+  const diameter = normaliseNumeric(row?.['SWP_Pipe Diameter_mm']);
+  const lengthM = normaliseNumeric(row?.['Spatial Length_m']);
+  if (!Number.isFinite(diameter) || !Number.isFinite(lengthM) || !reliningRatesRows.length) return null;
+
+  let matches = reliningRatesRows.filter(rate => {
+    const diameters = parseDescriptorDiameters(rate?.['Size/Descriptor']);
+    return diameters.includes(diameter);
+  });
+  if (!matches.length) return null;
+
+  const inBand = matches.filter(rate => {
+    const band = parseLengthBand(rate?.['Size/Descriptor']);
+    if (!band) return false;
+    return lengthM >= band[0] && lengthM <= band[1];
+  });
+  if (inBand.length) matches = inBand;
+  else if (matches.some(rate => parseLengthBand(rate?.['Size/Descriptor']))) return null;
+
+  const assetClassMatches = matches.filter(rate => /Median/i.test(String(rate?.['Asset Class'] || '')));
+  if (assetClassMatches.length) matches = assetClassMatches;
+  else {
+    const panelMatches = matches.filter(rate => /Panel/i.test(String(rate?.['Asset Class'] || '')));
+    if (panelMatches.length) matches = panelMatches;
+  }
+
+  const numericRates = matches.map(rate => normaliseNumeric(rate?.['Unit Rate'])).filter(value => Number.isFinite(value));
+  if (!numericRates.length) return null;
+  numericRates.sort((a, b) => a - b);
+  return numericRates[Math.floor(numericRates.length / 2)];
+}
+
+function getReliningRowsForMode(mode) {
+  const allowed = mode === 'Condition 8 only' ? new Set([8]) : (mode === 'Condition 7 only' ? new Set([7]) : new Set([7, 8]));
+  return reliningAssetsRows.filter(row => allowed.has(getReliningConditionNumber(row)));
+}
+
+function buildPackagingStreamSummary(name, rows, suburbCol) {
+  const totalLength = rows.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m']) || 0), 0);
+  const sampleCols = ['Asset', suburbCol, 'SWP_Pipe Diameter_mm', 'Spatial Length_m', 'SW_Condition'].filter(Boolean);
+  const sampleAssets = rows.slice(0, 8).map(row => {
+    const item = {};
+    sampleCols.forEach(col => item[col] = row?.[col] ?? '');
+    return item;
+  });
+  return {
+    name,
+    pipe_count: rows.length,
+    total_length_m: Number(totalLength.toFixed(1)),
+    sample_assets: sampleAssets
+  };
+}
+
+function buildSplitStreams(mode) {
+  const suburbCol = resolveSuburbColumn(reliningAssetsRows);
+  const reliningPreviewRows = getReliningRowsForMode(mode);
+  const reliningDefaultRows = reliningAssetsRows.filter(row => getReliningConditionNumber(row) === 8);
+  const reconstructionRows = reliningAssetsRows.filter(row => {
+    const cond = getReliningConditionNumber(row);
+    return cond === 9 || cond === 10;
+  });
+  const amplificationRows = reliningAssetsRows.filter(row => {
+    const cond = getReliningConditionNumber(row);
+    const flood = String(row?.['SW LGA 20% H1-H6'] || '').trim().toUpperCase();
+    const diameter = normaliseNumeric(row?.['SWP_Pipe Diameter_mm']) || 0;
+    return [4, 5, 6, 7].includes(cond) && ['H3', 'H4', 'H5', 'H6'].includes(flood) && diameter >= 300;
+  });
+  return {
+    suburb_column: suburbCol,
+    asset_count: reliningAssetsRows.length,
+    streams: [
+      buildPackagingStreamSummary('Relining Preview', reliningPreviewRows, suburbCol),
+      buildPackagingStreamSummary('Relining Default (Condition 8)', reliningDefaultRows, suburbCol),
+      buildPackagingStreamSummary('Reconstruction', reconstructionRows, suburbCol),
+      buildPackagingStreamSummary('Amplification', amplificationRows, suburbCol)
+    ]
+  };
+}
+
+function splitIntoPackagesByCount(rows, pipesPerPackage, groupBySuburb, suburbCol) {
+  const sorted = [...rows].sort((a, b) => {
+    if (!groupBySuburb || !suburbCol) return String(a?.Asset || '').localeCompare(String(b?.Asset || ''));
+    const suburbCompare = String(a?.[suburbCol] || '').localeCompare(String(b?.[suburbCol] || ''));
+    if (suburbCompare !== 0) return suburbCompare;
+    return String(a?.Asset || '').localeCompare(String(b?.Asset || ''));
+  });
+  let pkgIndex = 0;
+  let countInPkg = 0;
+  let lastGroup = null;
+  return sorted.map(row => {
+    const group = groupBySuburb && suburbCol ? String(row?.[suburbCol] || '') : '';
+    if (lastGroup === null) lastGroup = group;
+    if (group !== lastGroup || countInPkg >= pipesPerPackage) {
+      pkgIndex += 1;
+      countInPkg = 0;
+      lastGroup = group;
+    }
+    const packageId = `RLN_${String(pkgIndex + 1).padStart(3, '0')}`;
+    countInPkg += 1;
+    return { ...row, package_id: packageId };
+  });
+}
+
+function splitIntoValuePackages(rows, maxPackageValue, groupBySuburb, suburbCol) {
+  const groups = new Map();
+  rows.forEach(row => {
+    const key = groupBySuburb && suburbCol ? String(row?.[suburbCol] || '') : '__all__';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  });
+  const packaged = [];
+  let pkgCounter = 1;
+  groups.forEach(groupRows => {
+    const sorted = [...groupRows].sort((a, b) => (b.pipe_cost || 0) - (a.pipe_cost || 0));
+    let current = [];
+    let currentValue = 0;
+    sorted.forEach(row => {
+      const pipeValue = Number(row.pipe_cost || 0);
+      if (current.length && (currentValue + pipeValue > maxPackageValue)) {
+        current.forEach(item => packaged.push({ ...item, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
+        pkgCounter += 1;
+        current = [];
+        currentValue = 0;
+      }
+      current.push(row);
+      currentValue += pipeValue;
+    });
+    if (current.length) {
+      current.forEach(item => packaged.push({ ...item, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
+      pkgCounter += 1;
+    }
+  });
+  return packaged;
+}
+
+function summarisePackages(rows, suburbCol) {
+  const packages = new Map();
+  rows.forEach(row => {
+    const key = String(row.package_id || '');
+    if (!key) return;
+    if (!packages.has(key)) packages.set(key, []);
+    packages.get(key).push(row);
+  });
+  const summaries = [];
+  [...packages.keys()].sort().forEach(packageId => {
+    const pkgRows = packages.get(packageId) || [];
+    const totalLength = pkgRows.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m']) || 0), 0);
+    const totalCost = pkgRows.reduce((sum, row) => sum + (Number(row?.pipe_cost) || 0), 0);
+    const suburbs = suburbCol ? pkgRows.map(row => String(row?.[suburbCol] || '')).filter(Boolean) : [];
+    const suburb = suburbs.length ? suburbs.sort((a, b) =>
+      suburbs.filter(v => v === b).length - suburbs.filter(v => v === a).length
+    )[0] : '';
+    summaries.push({
+      package_id: packageId,
+      pipe_count: pkgRows.length,
+      total_length_m: Number(totalLength.toFixed(1)),
+      total_cost: Number(totalCost.toFixed(2)),
+      ...(suburb ? { suburb } : {})
+    });
+  });
+  return summaries;
+}
+
+function samplePackageAssets(rows, suburbCol) {
+  const firstPackageId = [...new Set(rows.map(row => row.package_id).filter(Boolean))].sort()[0];
+  if (!firstPackageId) return [];
+  return rows.filter(row => row.package_id === firstPackageId).slice(0, 12).map(row => {
+    const item = {
+      package_id: row.package_id,
+      Asset: row.Asset ?? '',
+      'SWP_Pipe Diameter_mm': row['SWP_Pipe Diameter_mm'] ?? '',
+      'Spatial Length_m': row['Spatial Length_m'] ?? '',
+      pipe_cost: row.pipe_cost != null ? Number(row.pipe_cost.toFixed(2)) : ''
+    };
+    if (suburbCol) item[suburbCol] = row?.[suburbCol] ?? '';
+    return item;
+  });
+}
+
 function renderPackagingMeta(meta) {
   const el = document.getElementById('pkgMeta');
   if (!el) return;
   const rows = [
-    ['Backend URL', getPackagingApiBase()],
+    ['Assets file', reliningAssetsFileName || 'Required'],
+    ['Rates file', reliningRatesFileName || 'Required'],
     ['Assets Loaded', meta?.asset_count?.toLocaleString?.() ?? '-'],
-    ['Assets Path', meta?.assets_path || '-'],
     ['Suburb Column', meta?.suburb_column || '-']
   ];
   el.innerHTML = rows.map(([label, value]) => `
@@ -3598,18 +3814,14 @@ function renderPackagingMeta(meta) {
   `).join('');
 }
 
-function renderPackagingPaths(meta) {
+function renderPackagingPaths() {
   const el = document.getElementById('pkgPathMeta');
   if (!el) return;
-  const dataPath = meta?.data_path || '-';
-  const outputsPath = meta?.outputs_path || '-';
-  const ratesPath = meta?.rates_path || '-';
-  const sharedHint = String(dataPath).includes('OneDrive - Northern Beaches Council') ? 'Council OneDrive path' : 'Local fallback path';
   const rows = [
-    ['Input Data Folder', dataPath],
-    ['Rates Workbook', ratesPath],
-    ['Outputs Folder', outputsPath],
-    ['Path Mode', sharedHint]
+    ['Assets Upload', reliningAssetsFileName || 'Not loaded'],
+    ['Rates Upload', reliningRatesFileName || 'Not loaded'],
+    ['Storage Mode', 'In-browser memory only'],
+    ['Server Copy', 'None']
   ];
   el.innerHTML = rows.map(([label, value]) => `
     <div class="pkg-meta-item">
@@ -3730,7 +3942,7 @@ function getFutureWorksDefaults() {
 }
 
 function getFutureWorksWorkbookUrl() {
-  return (localStorage.getItem(FUTURE_WORKS_URL_KEY) || '').trim();
+  return futureWorksWorkbookUrl.trim();
 }
 
 function getFutureWorksLocalFolderTemplate() {
@@ -3775,12 +3987,7 @@ function syncFutureWorksWorkbookInput() {
 function saveFutureWorksWorkbookUrl() {
   const input = document.getElementById('fwWorkbookUrl');
   if (!input) return;
-  const value = input.value.trim();
-  if (!value) {
-    localStorage.removeItem(FUTURE_WORKS_URL_KEY);
-    return;
-  }
-  localStorage.setItem(FUTURE_WORKS_URL_KEY, value);
+  futureWorksWorkbookUrl = input.value.trim();
 }
 
 function openFutureWorksWorkbook() {
@@ -3826,7 +4033,6 @@ async function importForwardWorksWorkbook(event) {
     if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
     const buffer = await file.arrayBuffer();
     const workbook = XLSX.read(buffer, { type: 'array' });
-    futureWorksWorkbookFile = file;
     futureWorksWorkbookMeta = {
       name: file.name,
       sheetCount: workbook.SheetNames.length,
@@ -3923,13 +4129,170 @@ function parseSimpleCsv(text) {
   });
 }
 
+function readWorkbookRows(workbook, sheetName = null) {
+  const targetSheet = sheetName || workbook.SheetNames[0];
+  if (!targetSheet || !workbook.Sheets[targetSheet]) return [];
+  return XLSX.utils.sheet_to_json(workbook.Sheets[targetSheet], { defval: '' });
+}
+
+function extractCostingLookupFromWorkbook(workbook) {
+  const tableRows = readWorkbookRows(workbook, '_Tables');
+  if (!tableRows.length) throw new Error('The costing workbook is missing the _Tables sheet.');
+  const modifierRows = readWorkbookRows(workbook, 'IPART Modifiers');
+
+  const rows = tableRows.map(row => ({
+    assetClass: String(row['Asset Class'] ?? '').trim(),
+    category: String(row['Category'] ?? '').trim(),
+    item: String(row['Item'] ?? '').trim(),
+    component: String(row['Component'] ?? '').trim(),
+    source: String(row['Source'] ?? '').trim(),
+    type: String(row['Type'] ?? '').trim(),
+    size: String(row['Size/Descriptor'] ?? '').trim(),
+    unit: String(row['Unit'] ?? '').trim(),
+    unitRate: normaliseNumeric(row['Unit Rate']),
+    modifier: String(row['Modifier'] ?? '').trim()
+  })).filter(row => row.assetClass && row.item);
+
+  const modifiers = modifierRows.map(row => ({
+    context: String(row.Context ?? row.context ?? '').trim(),
+    level: String(row.Level ?? row.level ?? row['Modifier Level'] ?? '').trim(),
+    factor: normaliseNumeric(row.Factor ?? row.factor ?? row['IPART Factor'] ?? row['Modifier Factor'])
+  })).filter(row => row.level && Number.isFinite(row.factor));
+
+  const assetClasses = [...new Set(rows.map(row => row.assetClass).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const categories = [...new Set(rows.map(row => row.category).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const items = [...new Set(rows.map(row => row.item).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+
+  return {
+    meta: {
+      sourceWorkbook: costingWorkbookName || 'Uploaded workbook',
+      rowCount: rows.length,
+      assetClassCount: assetClasses.length,
+      categoryCount: categories.length,
+      itemCount: items.length
+    },
+    modifiers,
+    assetClasses,
+    rows
+  };
+}
+
+async function importCostingWorkbook(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  showLoad('Loading costing workbook...');
+  try {
+    if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: 'array' });
+    costingWorkbookName = file.name;
+    costingLookup = extractCostingLookupFromWorkbook(workbook);
+    const modifierSel = document.getElementById('costModifier');
+    if (modifierSel) {
+      const modifiers = costingLookup.modifiers || [];
+      modifierSel.innerHTML = [
+        '<option value="1">No modifier (1.00x)</option>',
+        ...modifiers.map(m => `<option value="${m.factor}">${escapeHtml((m.context ? m.context + ' · ' : '') + m.level)} (${Number(m.factor).toFixed(2)}x)</option>`)
+      ].join('');
+    }
+    document.getElementById('costMetaType').textContent = costingWorkbookName;
+    document.getElementById('costMetaRows').textContent = (costingLookup.meta?.rowCount || 0).toLocaleString();
+    document.getElementById('costMetaClasses').textContent = (costingLookup.meta?.assetClassCount || 0).toLocaleString();
+    const statusEl = document.getElementById('costUploadStatus');
+    if (statusEl) statusEl.textContent = `${costingWorkbookName} loaded in browser memory only for this session.`;
+    if (!costingRows.length) {
+      for (let i = 0; i < 5; i++) addCostingRow();
+    } else {
+      renderCostingTable();
+    }
+  } catch (e) {
+    costingLookup = null;
+    costingWorkbookName = '';
+    const statusEl = document.getElementById('costUploadStatus');
+    if (statusEl) statusEl.textContent = `Workbook import failed: ${e.message || e}`;
+    renderCostingTable();
+  } finally {
+    hideLoad();
+    if (event?.target) event.target.value = '';
+  }
+}
+
+async function importReliningAssetsFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  showLoad('Loading relining assets file...');
+  try {
+    const lower = file.name.toLowerCase();
+    let rows = [];
+    if (lower.endsWith('.csv')) {
+      rows = parseSimpleCsv(await file.text());
+    } else {
+      if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
+      const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+      rows = readWorkbookRows(workbook);
+    }
+    if (!rows.length) throw new Error('No asset rows were found in that file.');
+    reliningAssetsRows = rows;
+    reliningAssetsFileName = file.name;
+    lastPackagingGeneration = null;
+    renderPackagingPaths();
+    renderPackagingMeta({ asset_count: rows.length, suburb_column: resolveSuburbColumn(rows) });
+    setPackagingStatus(reliningRatesRows.length > 0, reliningRatesRows.length > 0 ? 'Required files loaded' : 'Upload panel rates workbook to continue');
+    renderPackagingCards([]);
+    renderPackagingSamples([]);
+    document.getElementById('pkgPackagesArea').className = 'pkg-empty';
+    document.getElementById('pkgPackagesArea').textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
+  } catch (e) {
+    reliningAssetsRows = [];
+    reliningAssetsFileName = '';
+    setPackagingStatus(false, `Assets upload failed`);
+    renderPackagingPaths();
+    renderPackagingMeta({ asset_count: 0, suburb_column: '-' });
+    alert(`Assets upload failed: ${e.message || e}`);
+  } finally {
+    hideLoad();
+    if (event?.target) event.target.value = '';
+  }
+}
+
+async function importReliningRatesFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  showLoad('Loading relining rates workbook...');
+  try {
+    if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
+    const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+    const rows = cleanRateRows(readWorkbookRows(workbook, '_Tables'))
+      .filter(row => /SP6 Pipeline Relining/i.test(String(row?.Category || '')));
+    if (!rows.length) throw new Error('No SP6 Pipeline Relining rows were found in the _Tables sheet.');
+    reliningRatesRows = rows;
+    reliningRatesFileName = file.name;
+    lastPackagingGeneration = null;
+    renderPackagingPaths();
+    renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
+    setPackagingStatus(reliningAssetsRows.length > 0, reliningAssetsRows.length > 0 ? 'Required files loaded' : 'Upload assets file to continue');
+    document.getElementById('pkgPackagesArea').className = 'pkg-empty';
+    document.getElementById('pkgPackagesArea').textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
+  } catch (e) {
+    reliningRatesRows = [];
+    reliningRatesFileName = '';
+    setPackagingStatus(false, 'Rates upload failed');
+    renderPackagingPaths();
+    renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
+    alert(`Rates upload failed: ${e.message || e}`);
+  } finally {
+    hideLoad();
+    if (event?.target) event.target.value = '';
+  }
+}
+
 async function importFutureWorksFile(event) {
   const file = event?.target?.files?.[0];
   if (!file) return;
   try {
     let rows = [];
     const lower = file.name.toLowerCase();
-    if (lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
+    if (lower.endsWith('.xlsx') || lower.endsWith('.xls') || lower.endsWith('.xlsm')) {
       if (typeof XLSX === 'undefined') {
         throw new Error('Excel import library did not load.');
       }
@@ -4002,7 +4365,7 @@ function renderFutureWorksTable() {
   if (!area) return;
   if (!futureWorksRows.length) {
     area.className = 'fw-empty';
-    area.innerHTML = 'Generate relining packages first, then click <strong>Load Latest Relining Packages</strong> here to stage them into the future works backlog format.';
+    area.innerHTML = 'Generate relining packages first, then click <strong>Load Current Relining Packages</strong> here to stage them into the future works backlog format.';
     return;
   }
 
@@ -4064,62 +4427,26 @@ function exportFutureWorksCsv() {
 }
 
 async function refreshPackagingConnection() {
-  syncPackagingApiInput();
-  showLoad('Testing packaging backend...');
-  try {
-    const [health, config] = await Promise.all([
-      packagingApi('/packaging/health'),
-      packagingApi('/packaging/config')
-    ]);
-    packagingConfig = { ...config, ...health };
-    setPackagingStatus(true, `${(health.assets_loaded || 0).toLocaleString()} assets online`);
-    renderPackagingMeta({
-      asset_count: health.assets_loaded,
-      assets_path: health.assets_path,
-      suburb_column: config.suburb_column
-    });
-    renderPackagingPaths({
-      data_path: config.data_path || '',
-      rates_path: health.rates_path || '',
-      outputs_path: health.outputs_path || ''
-    });
-  } catch (e) {
-    setPackagingStatus(false, 'Backend unreachable');
-    renderPackagingMeta({
-      asset_count: '-',
-      assets_path: `Check ${getPackagingApiBase()}`,
-      suburb_column: '-'
-    });
-    renderPackagingPaths({
-      data_path: `Check ${getPackagingApiBase()}`,
-      rates_path: '-',
-      outputs_path: '-'
-    });
-  } finally {
-    hideLoad();
+  renderPackagingPaths();
+  renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
+  if (reliningAssetsRows.length && reliningRatesRows.length) {
+    setPackagingStatus(true, 'Required files loaded');
+  } else {
+    setPackagingStatus(false, 'Waiting for required files');
   }
 }
 
 async function loadPackagingPreview() {
   const mode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
-  setPackagingStatus(false, 'Loading preview...');
-  showLoad('Loading packaging preview...');
   try {
-    const data = await packagingApi('/packaging/split-streams', {
-      method: 'POST',
-      body: JSON.stringify({ relining_mode: mode })
-    });
+    if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
+    const data = buildSplitStreams(mode);
     setPackagingStatus(true, `${data.asset_count.toLocaleString()} assets previewed`);
     renderPackagingMeta({
       asset_count: data.asset_count,
-      assets_path: packagingConfig?.assets_path || '-',
       suburb_column: data.suburb_column
     });
-    renderPackagingPaths({
-      data_path: packagingConfig?.data_path || '-',
-      rates_path: packagingConfig?.rates_path || '-',
-      outputs_path: packagingConfig?.outputs_path || '-'
-    });
+    renderPackagingPaths();
     renderPackagingCards(data.streams);
     renderPackagingSamples(data.streams);
   } catch (e) {
@@ -4129,8 +4456,6 @@ async function loadPackagingPreview() {
       area.className = 'pkg-empty';
       area.textContent = String(e.message || e);
     }
-  } finally {
-    hideLoad();
   }
 }
 
@@ -4140,19 +4465,38 @@ async function generateReliningPackages() {
   const maxPackageValue = Number(String(document.getElementById('pkgMaxValue')?.value || '500000').replace(/,/g, ''));
   const pipesPerPackage = Number(String(document.getElementById('pkgPipeCount')?.value || '25').replace(/,/g, ''));
   const groupBySuburb = (document.getElementById('pkgGroupSuburb')?.value || 'yes') === 'yes';
-  setPackagingStatus(false, 'Generating packages...');
-  showLoad('Generating relining packages...');
   try {
-    const data = await packagingApi('/packaging/generate-relining-packages', {
-      method: 'POST',
-      body: JSON.stringify({
-        relining_mode: reliningMode,
-        package_method: method,
-        max_package_value: Number.isFinite(maxPackageValue) ? maxPackageValue : 500000,
-        pipes_per_package: Number.isFinite(pipesPerPackage) ? pipesPerPackage : 25,
-        group_by_suburb: groupBySuburb
-      })
-    });
+    if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
+    if (!reliningRatesRows.length) throw new Error('Upload the panel rates workbook first.');
+    const preview = buildSplitStreams(reliningMode);
+    const suburbCol = preview.suburb_column;
+    const reliningRows = getReliningRowsForMode(reliningMode)
+      .map(row => {
+        const ratePerM = getReliningRateForRow(row);
+        const lengthM = normaliseNumeric(row?.['Spatial Length_m']);
+        return {
+          ...row,
+          rate_per_m: ratePerM,
+          pipe_cost: Number.isFinite(ratePerM) && Number.isFinite(lengthM) ? ratePerM * lengthM : null
+        };
+      });
+    const costed = reliningRows.filter(row => Number.isFinite(row.pipe_cost));
+    const uncosted = reliningRows.filter(row => !Number.isFinite(row.pipe_cost));
+    const packaged = method === 'count'
+      ? splitIntoPackagesByCount(costed, Math.max(Number.isFinite(pipesPerPackage) ? pipesPerPackage : 25, 1), groupBySuburb, suburbCol)
+      : splitIntoValuePackages(costed, Math.max(Number.isFinite(maxPackageValue) ? maxPackageValue : 500000, 1), groupBySuburb, suburbCol);
+    const packageSummaries = summarisePackages(packaged, suburbCol);
+    const totalLength = packaged.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m']) || 0), 0);
+    const totalCost = packaged.reduce((sum, row) => sum + (Number(row?.pipe_cost) || 0), 0);
+    const data = {
+      package_count: packageSummaries.length,
+      costed_pipe_count: costed.length,
+      uncosted_pipe_count: uncosted.length,
+      total_length_m: Number(totalLength.toFixed(1)),
+      total_cost: Number(totalCost.toFixed(2)),
+      packages: packageSummaries,
+      sample_assets: samplePackageAssets(packaged, suburbCol)
+    };
     lastPackagingGeneration = data;
     setPackagingStatus(true, `${data.package_count.toLocaleString()} packages generated`);
     renderGeneratedPackages(data);
@@ -4163,8 +4507,6 @@ async function generateReliningPackages() {
       area.className = 'pkg-empty';
       area.textContent = String(e.message || e);
     }
-  } finally {
-    hideLoad();
   }
 }
 
@@ -4174,34 +4516,10 @@ function formatCurrency(value) {
 }
 
 async function initCostingTool() {
-  showLoad('Loading costing workbook data...');
-  try {
-    const resp = await fetch(COSTING_LOOKUP_PATH, { cache: 'no-store' });
-    if (!resp.ok) throw new Error(`Lookup load failed (${resp.status})`);
-    costingLookup = await resp.json();
-    const modifierSel = document.getElementById('costModifier');
-    if (modifierSel) {
-      const modifiers = costingLookup.modifiers || [];
-      modifierSel.innerHTML = [
-        '<option value="1">No modifier (1.00x)</option>',
-        ...modifiers.map((m, i) => `<option value="${m.factor}">${escapeHtml((m.context ? m.context + ' · ' : '') + m.level)} (${m.factor.toFixed(2)}x)</option>`)
-      ].join('');
-    }
-    document.getElementById('costMetaRows').textContent = (costingLookup.meta?.rowCount || 0).toLocaleString();
-    document.getElementById('costMetaClasses').textContent = (costingLookup.meta?.assetClassCount || 0).toLocaleString();
-    if (!costingRows.length) {
-      for (let i = 0; i < 5; i++) addCostingRow();
-      return;
-    }
-    renderCostingTable();
-  } catch (e) {
-    const rowsEl = document.getElementById('costRows');
-    if (rowsEl) {
-      rowsEl.innerHTML = `<tr><td colspan="12" style="padding:20px;color:#8b2020">${escapeHtml(e.message || String(e))}</td></tr>`;
-    }
-  } finally {
-    hideLoad();
-  }
+  document.getElementById('costMetaType').textContent = 'Workbook upload required';
+  document.getElementById('costMetaRows').textContent = 'Upload required';
+  document.getElementById('costMetaClasses').textContent = '-';
+  renderCostingTable();
 }
 
 function getCostingFactor() {
@@ -4287,7 +4605,7 @@ function renderCostingTable() {
   const body = document.getElementById('costRows');
   if (!body) return;
   if (!costingLookup?.rows?.length) {
-    body.innerHTML = `<tr><td colspan="12" style="padding:20px;color:var(--text-l)">Loading costing data...</td></tr>`;
+    body.innerHTML = `<tr><td colspan="12" style="padding:20px;color:var(--text-l)">Upload the costing workbook to unlock the BOQ table.</td></tr>`;
     return;
   }
 
@@ -5016,8 +5334,9 @@ function switchPage(page, options = {}) {
   if (page === 'relining') {
     if (!window._packagingInited) {
       window._packagingInited = true;
-      syncPackagingApiInput();
       togglePackagingInputs();
+      refreshPackagingConnection();
+    } else {
       refreshPackagingConnection();
     }
   }

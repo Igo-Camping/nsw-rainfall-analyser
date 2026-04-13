@@ -13,7 +13,8 @@ Endpoints:
   GET /health                            - Health check
 """
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 import json
@@ -22,7 +23,6 @@ import asyncio
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 import httpx
-from packaging_backend import router as packaging_router
 
 app = FastAPI(
     title="NSW Rainfall Analyser API",
@@ -39,7 +39,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(packaging_router)
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response: Response = await call_next(request)
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+    return response
 
 # ---------------------------------------------------------------------------
 # Load station cache on startup
