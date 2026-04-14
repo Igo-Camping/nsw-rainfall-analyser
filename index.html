@@ -321,10 +321,7 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .cost-muted{font-size:11px;color:var(--text-l);line-height:1.6}
 .ca-shell{display:flex;flex:1;min-height:0;gap:16px}
 .ca-sidebar{width:350px;flex-shrink:0;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
-.ca-main{flex:1;min-height:0;display:flex;flex-direction:column;gap:16px}
-.ca-hero{background:linear-gradient(135deg,#10202C 0%,#1A2B3C 55%,#2E4D64 100%);color:white;border-radius:var(--r);padding:22px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.ca-title{font-size:24px;font-weight:800}
-.ca-sub{font-size:12px;color:rgba(255,255,255,.78);line-height:1.6;max-width:760px;margin-top:6px}
+.ca-main{flex:1;min-height:0;display:flex;flex-direction:column}
 .ca-panel{background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px}
 .ca-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
 .ca-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:14px}
@@ -347,7 +344,7 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .ca-map-toolbar{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F8FAFB}
 .ca-map-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
 .ca-map-sub{font-size:11px;color:var(--text-l)}
-#criticalAssetsMap{flex:1;min-height:420px}
+#criticalAssetsMap{flex:1;min-height:560px}
 .ca-table-wrap{width:420px;max-width:42%;min-width:340px;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
 .ca-table-head{padding:12px 14px;border-bottom:1px solid var(--border);background:#F8FAFB}
 .ca-table-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
@@ -1498,14 +1495,6 @@ window.addEventListener('keydown', (event) => {
     </div>
 
     <div class="ca-main">
-      <div class="ca-hero">
-        <div>
-          <div class="ca-title">Critical Assets</div>
-          <div class="ca-sub">Northern Beaches aerial asset view for critical stormwater infrastructure. Filters update the map and asset table together so we can isolate specific classes or focus on overdue inspections.</div>
-        </div>
-        <div class="ca-grid" style="min-width:300px;flex:0 0 420px" id="caSummaryCards"></div>
-      </div>
-
       <div class="ca-layout">
         <div class="ca-map-wrap">
           <div class="ca-map-toolbar">
@@ -1522,6 +1511,9 @@ window.addEventListener('keydown', (event) => {
         </div>
 
         <div class="ca-table-wrap">
+          <div class="ca-panel" style="border:none;border-bottom:1px solid var(--border);border-radius:0;padding:12px 14px">
+            <div class="ca-grid" id="caSummaryCards"></div>
+          </div>
           <div class="ca-table-head">
             <div class="ca-table-title">Visible Assets</div>
             <div class="ca-table-sub" id="caTableSubtitle">No assets loaded yet.</div>
