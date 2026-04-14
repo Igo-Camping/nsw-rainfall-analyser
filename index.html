@@ -5363,10 +5363,10 @@ function dedupeCriticalAssets(items) {
 
 function getFilteredCriticalAssets() {
   const classAll = criticalClassFilters.has('ALL');
-  const statusAll = criticalStatusFilters.has('ALL');
+  const statusAll = criticalStatusFilters.has('ALL') || !criticalStatusFilters.size;
   return criticalAssetsAll.filter(asset =>
     (classAll || criticalClassFilters.has(asset.assetClass)) &&
-    (statusAll || criticalStatusFilters.has(asset.status))
+    (statusAll || asset.status === 'unknown' || criticalStatusFilters.has(asset.status))
   );
 }
 
