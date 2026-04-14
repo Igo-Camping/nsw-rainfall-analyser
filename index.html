@@ -5274,6 +5274,8 @@ function buildCriticalAssetRecord(row, index, sourceLabel) {
     description: description || `${assetClass} ${assetId}`,
     assetClass,
     criticality,
+    score: parseNumberValue(getValueByAliases(row, ['Score', 'score'])),
+    observedCondition: String(getValueByAliases(row, ['Observed_Condition', 'Observed Condition', 'SW_Condition']) || '').trim(),
     diameterMm,
     lengthM: parseNumberValue(getValueByAliases(row, ['Spatial_Length_m', 'Length_m', 'Shape_Length'])),
     suburb: String(getValueByAliases(row, ['Location - Suburb', 'Asset_Address', 'Physical_Location']) || '').trim(),
@@ -5427,11 +5429,12 @@ function buildCriticalPopup(asset) {
       <div style="font-size:12px;color:var(--text);margin-bottom:8px">${escapeHtml(asset.description)}</div>
       <div style="font-size:11px;color:var(--text-l);line-height:1.6">
         <div><strong>Class:</strong> ${escapeHtml(asset.assetClass)}</div>
+        <div><strong>Score:</strong> ${asset.score != null ? escapeHtml(asset.score) : 'Not available'}</div>
+        <div><strong>Observed condition:</strong> ${escapeHtml(asset.observedCondition || 'Not available')}</div>
         <div><strong>Status:</strong> ${escapeHtml(CRITICAL_STATUS_META[asset.status]?.label || 'Awaiting schedule')}</div>
         <div><strong>Last inspection:</strong> ${escapeHtml(formatShortDate(asset.inspection?.lastInspection))}</div>
         <div><strong>Next due:</strong> ${escapeHtml(formatShortDate(asset.nextDue))}</div>
         <div><strong>Diameter:</strong> ${asset.diameterMm ? `${asset.diameterMm} mm` : 'Not available'}</div>
-        <div><strong>Source:</strong> ${escapeHtml(asset.sourceLabel || 'Uploaded')}</div>
       </div>
     </div>`;
 }
