@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <title>NBC Stormwater Tools - Northern Beaches Council</title>
 <!-- v3 -->
@@ -319,9 +319,62 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .cost-boq td input,.cost-boq td select{width:100%;padding:7px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--panel);font-size:12px}
 .cost-boq .r{text-align:right;font-variant-numeric:tabular-nums}
 .cost-muted{font-size:11px;color:var(--text-l);line-height:1.6}
+.ca-shell{display:flex;flex:1;min-height:0;gap:16px}
+.ca-sidebar{width:350px;flex-shrink:0;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.ca-main{flex:1;min-height:0;display:flex;flex-direction:column;gap:16px}
+.ca-hero{background:linear-gradient(135deg,#10202C 0%,#1A2B3C 55%,#2E4D64 100%);color:white;border-radius:var(--r);padding:22px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.ca-title{font-size:24px;font-weight:800}
+.ca-sub{font-size:12px;color:rgba(255,255,255,.78);line-height:1.6;max-width:760px;margin-top:6px}
+.ca-panel{background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.ca-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.ca-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.ca-card .k{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-l);margin-bottom:6px}
+.ca-card .v{font-size:28px;font-weight:900;color:var(--navy);line-height:1}
+.ca-card .s{font-size:11px;color:var(--text-l);margin-top:6px}
+.ca-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.ca-chip-group{display:flex;flex-wrap:wrap;gap:8px}
+.ca-chip{padding:7px 12px;border:1.5px solid var(--border);border-radius:999px;background:white;color:var(--text);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.ca-chip:hover{border-color:var(--teal)}
+.ca-chip.active{background:var(--teal);border-color:var(--teal);color:white}
+.ca-chip.status-red.active{background:#C0392B;border-color:#C0392B}
+.ca-chip.status-orange.active{background:#E67E22;border-color:#E67E22}
+.ca-chip.status-green.active{background:#1E8449;border-color:#1E8449}
+.ca-chip.status-unknown.active{background:#60717D;border-color:#60717D}
+.ca-actions{display:flex;gap:10px;flex-wrap:wrap}
+.ca-note{font-size:11px;color:var(--text-l);line-height:1.6}
+.ca-layout{display:flex;flex:1;min-height:0;gap:16px}
+.ca-map-wrap{flex:1;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.ca-map-toolbar{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F8FAFB}
+.ca-map-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
+.ca-map-sub{font-size:11px;color:var(--text-l)}
+#criticalAssetsMap{flex:1;min-height:420px}
+.ca-table-wrap{width:420px;max-width:42%;min-width:340px;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.ca-table-head{padding:12px 14px;border-bottom:1px solid var(--border);background:#F8FAFB}
+.ca-table-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
+.ca-table-sub{font-size:11px;color:var(--text-l);margin-top:4px}
+.ca-table-body{overflow:auto;flex:1}
+.ca-table{width:100%;border-collapse:collapse}
+.ca-table th{padding:8px 10px;background:var(--navy);color:white;font-size:11px}
+.ca-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top;font-size:12px}
+.ca-table tr{cursor:pointer}
+.ca-table tr:hover td{background:#F4FAF9}
+.ca-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.ca-badge::before{content:'';width:8px;height:8px;border-radius:50%}
+.ca-badge.red{background:#FDEDEC;color:#922B21}.ca-badge.red::before{background:#C0392B}
+.ca-badge.orange{background:#FEF5E7;color:#AF601A}.ca-badge.orange::before{background:#E67E22}
+.ca-badge.green{background:#EAF7EE;color:#1E8449}.ca-badge.green::before{background:#1E8449}
+.ca-badge.unknown{background:#EDF1F4;color:#566573}.ca-badge.unknown::before{background:#60717D}
+.ca-empty{font-size:12px;color:var(--text-l);padding:18px;background:white;border:1px dashed var(--border);border-radius:var(--r)}
+.ca-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ca-legend-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-l)}
+.ca-legend-swatch{width:12px;height:12px;border-radius:999px;background:#60717D}
+.ca-legend-swatch.line{border-radius:4px;height:6px}
 @media (max-width: 820px){
   .pkg-grid{grid-template-columns:1fr}
   .pkg-hero{flex-direction:column}
+  .ca-shell,.ca-layout{flex-direction:column}
+  .ca-sidebar,.ca-table-wrap{width:auto;max-width:none;min-width:0}
+  #criticalAssetsMap{min-height:360px}
 }
 </style>
 </head>
@@ -367,7 +420,7 @@ function isAuthenticated() {
 }
 
 function isProtectedPage(page) {
-  return ['prioritisation','costing','relining','futureworks'].includes(page);
+  return ['prioritisation','costing','relining','futureworks','criticalassets'].includes(page);
 }
 
 function openGate(targetPage = null) {
@@ -431,11 +484,12 @@ window.addEventListener('keydown', (event) => {
 
 <!-- Page Nav (hidden on home) -->
 <div id="page-nav" style="display:none">
-  <button class="pnav-btn active" onclick="switchPage('aep')">Rainfall Calculator</button>
-  <button class="pnav-btn" onclick="switchPage('prioritisation')">Prioritisation Tool</button>
-  <button class="pnav-btn" onclick="switchPage('costing')">Costing Tool</button>
-  <button class="pnav-btn" onclick="switchPage('relining')">Relining Packaging</button>
-  <button class="pnav-btn" onclick="switchPage('futureworks')">Future Works Plan</button>
+  <button class="pnav-btn active" data-page="aep" onclick="switchPage('aep')">Rainfall Calculator</button>
+  <button class="pnav-btn" data-page="criticalassets" onclick="switchPage('criticalassets')">Critical Assets</button>
+  <button class="pnav-btn" data-page="prioritisation" onclick="switchPage('prioritisation')">Prioritisation Tool</button>
+  <button class="pnav-btn" data-page="costing" onclick="switchPage('costing')">Costing Tool</button>
+  <button class="pnav-btn" data-page="relining" onclick="switchPage('relining')">Relining Packaging</button>
+  <button class="pnav-btn" data-page="futureworks" onclick="switchPage('futureworks')">Future Works Plan</button>
   <button class="pnav-btn pnav-home" onclick="switchPage('home')">Home</button>
 </div>
 
@@ -474,6 +528,12 @@ window.addEventListener('keydown', (event) => {
       <div class="hc-icon">Future Works</div>
       <div class="hc-title">Future Works Plan</div>
       <div class="hc-desc">Backlog and delivery planning workspace that will become the SharePoint-backed program sheet.</div>
+      <div><span class="hc-badge live">In Progress</span></div>
+    </div>
+    <div class="home-card" onclick="switchPage('criticalassets')">
+      <div class="hc-icon">Assets</div>
+      <div class="hc-title">Critical Assets</div>
+      <div class="hc-desc">Aerial asset map for critical stormwater assets with class filters, pipe geometry and inspection compliance status.</div>
       <div><span class="hc-badge live">In Progress</span></div>
     </div>
   </div>
@@ -1050,9 +1110,19 @@ window.addEventListener('keydown', (event) => {
 
 <div id="page-costing" style="display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel);padding:20px">
   <div class="cost-shell">
+    <div class="cost-panel" id="costUploadPanel">
+      <div class="lbl">Lookup File</div>
+      <div class="pkg-grid" style="grid-template-columns:auto 1fr">
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload costing_lookup.json
+          <input type="file" id="costLookupFile" accept=".json" style="display:none" onchange="loadCostingFromFile(event)"/>
+        </label>
+        <span id="costLookupStatus" style="font-size:12px;color:var(--text-l);align-self:center;padding-left:8px">No file loaded — upload the extracted costing lookup JSON to use this tool.</span>
+      </div>
+    </div>
     <div class="cost-hero">
       <div class="cost-title">Costing Tool</div>
-      <div class="cost-sub">Upload the current <strong>Master Costing Tool - Stormwater.xlsm</strong> workbook to use the costing lookup data in-browser only. No uploaded workbook is stored by the app.</div>
+      <div class="cost-sub">This is the first real browser slice of the full web port of <strong>Master Costing Tool - Stormwater.xlsm</strong>. It already uses workbook-extracted lookup data and cascading BOQ selectors, and we’ll keep layering the remaining workbook behaviour on top.</div>
     </div>
     <div class="cost-grid">
       <div class="cost-card">
@@ -1061,26 +1131,16 @@ window.addEventListener('keydown', (event) => {
       </div>
       <div class="cost-card">
         <div class="k">Lookup Rows</div>
-        <div class="v" id="costMetaRows">Loading...</div>
+        <div class="v" id="costMetaRows">—</div>
       </div>
       <div class="cost-card">
         <div class="k">Asset Classes</div>
-        <div class="v" id="costMetaClasses">-</div>
+        <div class="v" id="costMetaClasses">—</div>
       </div>
       <div class="cost-card">
         <div class="k">Current Total</div>
         <div class="v" id="costGrandTotal">$0</div>
       </div>
-    </div>
-    <div class="cost-panel">
-      <div class="lbl">Required Upload</div>
-      <div class="cost-actions" style="margin-bottom:12px">
-        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
-          Upload Costing Workbook
-          <input type="file" id="costWorkbookFile" accept=".xlsx,.xls,.xlsm" style="display:none" onchange="importCostingWorkbook(event)"/>
-        </label>
-      </div>
-      <div class="cost-muted" id="costUploadStatus">Upload the costing workbook to begin. The file is read in memory only for this session.</div>
     </div>
     <div class="cost-panel">
       <div class="lbl">Project Setup</div>
@@ -1131,7 +1191,7 @@ window.addEventListener('keydown', (event) => {
         </table>
       </div>
       <div class="cost-muted" style="margin-top:12px">
-        This uses the uploaded workbook directly in the browser. If no workbook is uploaded, the BOQ table stays locked and prompts for the required file.
+        This uses workbook-extracted table data from the original costing XLSM. The next passes will add more workbook-specific behaviours like deeper modifier logic, panel/source handling, and any macro-driven output workflows still missing.
       </div>
     </div>
   </div>
@@ -1142,34 +1202,27 @@ window.addEventListener('keydown', (event) => {
     <div class="pkg-hero">
       <div>
         <div class="pkg-title">Relining Packaging</div>
-        <div class="pkg-sub">Upload the current asset file and panel rates workbook to run relining packaging entirely in your browser. No uploaded file is sent to Render or saved by the app.</div>
+        <div class="pkg-sub">Upload your assets and rates files to use this tool. Files are processed in-browser only — no copy is saved anywhere.</div>
       </div>
-      <div class="pkg-status-chip"><span class="pkg-dot" id="pkgDot"></span><span id="pkgStatusText">Waiting for required files</span></div>
+      <div class="pkg-status-chip"><span class="pkg-dot" id="pkgDot"></span><span id="pkgStatusText">No files loaded</span></div>
     </div>
 
     <div class="pkg-panel">
-      <div class="lbl">Required Uploads</div>
-      <div class="pkg-meta" id="pkgPathMeta"></div>
-      <div class="fw-actions" style="margin-top:12px">
+      <div class="lbl">Upload Required Files</div>
+      <div class="pkg-grid" style="grid-template-columns:auto auto 1fr">
         <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
-          Upload Assets File
-          <input type="file" id="pkgAssetsFile" accept=".csv,.xlsx,.xls,.xlsm" style="display:none" onchange="importReliningAssetsFile(event)"/>
+          Upload Assets CSV
+          <input type="file" id="pkgAssetsFile" accept=".csv" style="display:none" onchange="loadReliningAssetsFile(event)"/>
         </label>
         <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
-          Upload Panel Rates Workbook
-          <input type="file" id="pkgRatesFile" accept=".xlsx,.xls,.xlsm" style="display:none" onchange="importReliningRatesFile(event)"/>
+          Upload Panel_Rates.xlsx
+          <input type="file" id="pkgRatesFile" accept=".xlsx,.xls" style="display:none" onchange="loadReliningRatesFile(event)"/>
         </label>
+        <div style="font-size:12px;color:var(--text-l);align-self:center;padding-left:8px">
+          <span id="pkgAssetsStatus">Assets: not loaded</span> &nbsp;·&nbsp; <span id="pkgRatesStatus">Rates: not loaded</span>
+        </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Required files are used in memory for this browser session only. Nothing is uploaded to the server or written to disk by the app.</div>
-    </div>
-
-    <div class="pkg-panel">
-      <div class="lbl">Upload Summary</div>
-      <div class="pkg-meta" id="pkgMeta"></div>
-      <div class="pkg-assumptions" id="pkgAssumptions">
-        Upload an assets extract with the relining fields and the <code>_Tables</code> sheet from <code>Panel_Rates.xlsx</code>.<br/>
-        Generated package summaries stay in-browser and can be pushed into Future Works without creating any saved server copy.
-      </div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Expected files: <code>assets_with_coords.csv</code> or <code>assets.csv</code>, and <code>Panel_Rates.xlsx</code>. Neither file is stored — they are held in memory for this session only.</div>
     </div>
 
     <div class="pkg-panel">
@@ -1184,10 +1237,10 @@ window.addEventListener('keydown', (event) => {
         </div>
         <div class="fg">
           <label>&nbsp;</label>
-          <button class="run-btn" style="margin-top:0" onclick="loadPackagingPreview()">Load Stream Preview</button>
+          <button class="run-btn" style="margin-top:0" id="pkgPreviewBtn" onclick="loadPackagingPreview()">Load Stream Preview</button>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Preview uses the uploaded assets file only. Upload both required files before generating relining packages.</div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Upload both files above before running the stream preview.</div>
     </div>
 
     <div class="pkg-panel">
@@ -1217,21 +1270,21 @@ window.addEventListener('keydown', (event) => {
         </div>
         <div class="fg">
           <label>&nbsp;</label>
-          <button class="run-btn" style="margin-top:0" onclick="generateReliningPackages()">Generate Packages</button>
+          <button class="run-btn" style="margin-top:0" id="pkgGenerateBtn" onclick="generateReliningPackages()">Generate Packages</button>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Packaging runs locally in the browser against the uploaded files and keeps the output to summary tables for now.</div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">In-browser package generation coming in a future update. Upload files above to enable.</div>
     </div>
 
     <div class="pkg-meta" id="pkgMeta"></div>
     <div class="pkg-card-grid" id="pkgCards"></div>
     <div class="pkg-panel">
       <div class="lbl">Sample Assets</div>
-      <div id="pkgSampleArea" class="pkg-empty">Run the stream preview to see sample assets from each packaging stream.</div>
+      <div id="pkgSampleArea" class="pkg-empty">Upload files and run the stream preview to see sample assets.</div>
     </div>
     <div class="pkg-panel">
       <div class="lbl">Generated Packages</div>
-      <div id="pkgPackagesArea" class="pkg-empty">Generate relining packages to see package counts, cost totals, and sample package rows.</div>
+      <div id="pkgPackagesArea" class="pkg-empty">Package generation coming in a future update.</div>
     </div>
   </div>
 </div>
@@ -1256,7 +1309,7 @@ window.addEventListener('keydown', (event) => {
         </div>
         <div class="pkg-meta-item">
           <div class="pkg-meta-lbl">Source</div>
-          <div class="pkg-meta-val">Current in-browser relining package generation</div>
+          <div class="pkg-meta-val">Latest relining package generation</div>
         </div>
         <div class="pkg-meta-item">
           <div class="pkg-meta-lbl">Council Program Folder</div>
@@ -1362,7 +1415,7 @@ window.addEventListener('keydown', (event) => {
         </div>
       </div>
       <div class="fw-actions" style="margin-top:12px">
-        <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Current Relining Packages</button>
+        <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Latest Relining Packages</button>
         <button class="export-btn" onclick="exportFutureWorksCsv()">Export CSV</button>
         <button class="export-btn" onclick="switchPage('relining')">Open Relining Tool</button>
       </div>
@@ -1370,7 +1423,114 @@ window.addEventListener('keydown', (event) => {
 
     <div class="fw-panel">
       <div class="lbl">Backlog Preview</div>
-      <div id="fwTableArea" class="fw-empty">Generate relining packages first, then click <strong>Load Current Relining Packages</strong> here to stage them into the future works backlog format.</div>
+      <div id="fwTableArea" class="fw-empty">Generate relining packages first, then click <strong>Load Latest Relining Packages</strong> here to stage them into the future works backlog format.</div>
+    </div>
+  </div>
+</div>
+
+<div id="page-criticalassets" style="display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel);padding:20px">
+  <div class="ca-shell">
+    <div class="ca-sidebar">
+      <div>
+        <div class="lbl">Critical Assets</div>
+        <div style="font-size:20px;font-weight:800;color:var(--navy)">Inspection Map</div>
+        <div class="ca-note" style="margin-top:8px">Interactive aerial map of Northern Beaches critical stormwater assets. Pipe assets are drawn from start/end coordinates, and non-pipe assets are shown as point markers.</div>
+      </div>
+
+      <div class="ca-panel" style="padding:0;border:none">
+        <div class="lbl">Data Sources</div>
+        <div class="ca-meta">
+          <div class="pkg-meta-item">
+            <div class="pkg-meta-lbl">Critical Asset Source</div>
+            <div class="pkg-meta-val" id="caAssetsStatus">Not loaded</div>
+          </div>
+          <div class="pkg-meta-item">
+            <div class="pkg-meta-lbl">Combined Asset File</div>
+            <div class="pkg-meta-val" id="caCombinedStatus">Optional</div>
+          </div>
+          <div class="pkg-meta-item">
+            <div class="pkg-meta-lbl">Inspection Schedule</div>
+            <div class="pkg-meta-val" id="caInspectionStatus">Waiting for file</div>
+          </div>
+        </div>
+        <div class="ca-actions" style="margin-top:12px">
+          <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+            Upload assets_with_coords
+            <input type="file" accept=".csv,.xlsx,.xls" style="display:none" onchange="loadCriticalAssetsInput(event, 'assets')"/>
+          </label>
+          <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+            Upload combined assets
+            <input type="file" accept=".csv,.xlsx,.xls" style="display:none" onchange="loadCriticalAssetsInput(event, 'combined')"/>
+          </label>
+          <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+            Upload inspection file
+            <input type="file" accept=".csv,.xlsx,.xls" style="display:none" onchange="loadCriticalAssetsInput(event, 'inspection')"/>
+          </label>
+          <button class="export-btn" onclick="loadCriticalAssetsDefaults()">Show source paths</button>
+        </div>
+        <div class="ca-note" style="margin-top:12px">Current working source folder: <code>D:\Packaging\data</code>. Because the site runs in the browser, these files are loaded by upload for now rather than auto-reading from disk.</div>
+      </div>
+
+      <div>
+        <div class="lbl">Asset Class Filter</div>
+        <div class="ca-chip-group" id="caClassFilters"></div>
+      </div>
+
+      <div>
+        <div class="lbl">Inspection Status Filter</div>
+        <div class="ca-chip-group" id="caStatusFilters"></div>
+      </div>
+
+      <div>
+        <div class="lbl">Map Legend</div>
+        <div class="ca-legend">
+          <div class="ca-legend-item"><span class="ca-legend-swatch line" style="background:#C0392B"></span>Overdue</div>
+          <div class="ca-legend-item"><span class="ca-legend-swatch line" style="background:#E67E22"></span>Due within 6 months</div>
+          <div class="ca-legend-item"><span class="ca-legend-swatch line" style="background:#1E8449"></span>Up to date</div>
+          <div class="ca-legend-item"><span class="ca-legend-swatch line" style="background:#60717D"></span>Awaiting schedule</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="lbl">Schedule Logic</div>
+        <div class="ca-note">The page calculates status from either a supplied next due date, or from the last inspection date plus the inspection interval. Orange is set to assets due within the next 183 days.</div>
+      </div>
+    </div>
+
+    <div class="ca-main">
+      <div class="ca-hero">
+        <div>
+          <div class="ca-title">Critical Assets</div>
+          <div class="ca-sub">Northern Beaches aerial asset view for critical stormwater infrastructure. Filters update the map and asset table together so we can isolate specific classes or focus on overdue inspections.</div>
+        </div>
+        <div class="ca-grid" style="min-width:300px;flex:0 0 420px" id="caSummaryCards"></div>
+      </div>
+
+      <div class="ca-layout">
+        <div class="ca-map-wrap">
+          <div class="ca-map-toolbar">
+            <div>
+              <div class="ca-map-title">Northern Beaches Aerial Map</div>
+              <div class="ca-map-sub" id="caMapSubtitle">Load a critical asset file to draw assets on the map.</div>
+            </div>
+            <div class="ca-actions">
+              <button class="export-btn" onclick="fitCriticalAssetsToVisible()">Fit Visible Assets</button>
+              <button class="export-btn" onclick="resetCriticalAssetFilters()">Reset Filters</button>
+            </div>
+          </div>
+          <div id="criticalAssetsMap"></div>
+        </div>
+
+        <div class="ca-table-wrap">
+          <div class="ca-table-head">
+            <div class="ca-table-title">Visible Assets</div>
+            <div class="ca-table-sub" id="caTableSubtitle">No assets loaded yet.</div>
+          </div>
+          <div class="ca-table-body" id="caTableBody">
+            <div class="ca-empty" style="margin:14px">Upload <code>assets_with_coords.csv</code> to start the map.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1414,19 +1574,17 @@ let lastResults = null, allSiteResults = null;
 let lastTopDurResults = null;
 let rainChart = null, compareChart = null;
 let currentTab = 'map';
+let packagingConfig = null;
 let lastPackagingGeneration = null;
 let costingLookup = null;
 let costingRows = [];
 let futureWorksRows = [];
+let futureWorksWorkbookFile = null;
+let reliningAssetsData = null;  // in-memory only, never saved
+let reliningRatesData = null;   // in-memory only, never saved
 let futureWorksWorkbookMeta = null;
 let futureWorksReliningFileName = '';
 let futureWorksExtraFileName = '';
-let futureWorksWorkbookUrl = '';
-let costingWorkbookName = '';
-let reliningAssetsRows = [];
-let reliningRatesRows = [];
-let reliningAssetsFileName = '';
-let reliningRatesFileName = '';
 let topSiteResultsCache = [];
 let topSiteResultsKey = null;
 let lastAnalysisContext = null;
@@ -1435,6 +1593,7 @@ const RAINFALL_TEMPLATE_URL = 'templates/NBC Rainfall Calculator.xlsm';
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
+const FUTURE_WORKS_URL_KEY = 'nbc_futureworks_workbook_url';
 const FUTURE_WORKS_WORKBOOK_NAME = '2027-2031 CAPEX Project Brief - Program of Works Details - E&R - Rolling.xlsx';
 const FUTURE_WORKS_LOCAL_FOLDER_TEMPLATE = '%USERPROFILE%\\OneDrive - Northern Beaches Council\\Stormwater Engineering - General\\Program';
 const FUTURE_WORKS_COLUMNS = [
@@ -3569,6 +3728,7 @@ async function api(path) {
   return r.json();
 }
 
+
 function setPackagingStatus(ok, text) {
   const dot = document.getElementById('pkgDot');
   const label = document.getElementById('pkgStatusText');
@@ -3576,234 +3736,12 @@ function setPackagingStatus(ok, text) {
   if (label) label.textContent = text;
 }
 
-function resolveSuburbColumn(rows) {
-  if (!rows?.length) return null;
-  const candidates = ['Asset Suburb', 'Location - Suburb', 'Suburb', 'SUBURB'];
-  return candidates.find(name => Object.prototype.hasOwnProperty.call(rows[0], name)) || null;
-}
-
-function normaliseNumeric(value) {
-  if (value == null || value === '') return null;
-  const cleaned = String(value).replace(/[$,\s]/g, '');
-  const num = Number(cleaned);
-  return Number.isFinite(num) ? num : null;
-}
-
-function getReliningConditionNumber(row) {
-  const raw = row?.['SW_Condition'];
-  const match = String(raw ?? '').match(/(\d+)/);
-  return match ? Number(match[1]) : null;
-}
-
-function parseDescriptorDiameters(desc) {
-  const text = String(desc ?? '');
-  const mmMatches = [...text.matchAll(/[ØO]?(\d+)\s*mm/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
-  if (mmMatches.length) return mmMatches;
-  return [...text.matchAll(/[ØO](\d+)/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
-}
-
-function parseLengthBand(desc) {
-  const text = String(desc ?? '');
-  const plus = text.match(/\+(\d+)/);
-  if (plus) return [Number(plus[1]), Infinity];
-  const range = text.match(/(\d+)\s*-\s*(\d+)/);
-  if (range) return [Number(range[1]), Number(range[2])];
-  return null;
-}
-
-function cleanRateRows(rows) {
-  return (rows || []).map(row => ({
-    ...row,
-    'Unit Rate': normaliseNumeric(row?.['Unit Rate'])
-  }));
-}
-
-function getReliningRateForRow(row) {
-  const diameter = normaliseNumeric(row?.['SWP_Pipe Diameter_mm']);
-  const lengthM = normaliseNumeric(row?.['Spatial Length_m']);
-  if (!Number.isFinite(diameter) || !Number.isFinite(lengthM) || !reliningRatesRows.length) return null;
-
-  let matches = reliningRatesRows.filter(rate => {
-    const diameters = parseDescriptorDiameters(rate?.['Size/Descriptor']);
-    return diameters.includes(diameter);
-  });
-  if (!matches.length) return null;
-
-  const inBand = matches.filter(rate => {
-    const band = parseLengthBand(rate?.['Size/Descriptor']);
-    if (!band) return false;
-    return lengthM >= band[0] && lengthM <= band[1];
-  });
-  if (inBand.length) matches = inBand;
-  else if (matches.some(rate => parseLengthBand(rate?.['Size/Descriptor']))) return null;
-
-  const assetClassMatches = matches.filter(rate => /Median/i.test(String(rate?.['Asset Class'] || '')));
-  if (assetClassMatches.length) matches = assetClassMatches;
-  else {
-    const panelMatches = matches.filter(rate => /Panel/i.test(String(rate?.['Asset Class'] || '')));
-    if (panelMatches.length) matches = panelMatches;
-  }
-
-  const numericRates = matches.map(rate => normaliseNumeric(rate?.['Unit Rate'])).filter(value => Number.isFinite(value));
-  if (!numericRates.length) return null;
-  numericRates.sort((a, b) => a - b);
-  return numericRates[Math.floor(numericRates.length / 2)];
-}
-
-function getReliningRowsForMode(mode) {
-  const allowed = mode === 'Condition 8 only' ? new Set([8]) : (mode === 'Condition 7 only' ? new Set([7]) : new Set([7, 8]));
-  return reliningAssetsRows.filter(row => allowed.has(getReliningConditionNumber(row)));
-}
-
-function buildPackagingStreamSummary(name, rows, suburbCol) {
-  const totalLength = rows.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m']) || 0), 0);
-  const sampleCols = ['Asset', suburbCol, 'SWP_Pipe Diameter_mm', 'Spatial Length_m', 'SW_Condition'].filter(Boolean);
-  const sampleAssets = rows.slice(0, 8).map(row => {
-    const item = {};
-    sampleCols.forEach(col => item[col] = row?.[col] ?? '');
-    return item;
-  });
-  return {
-    name,
-    pipe_count: rows.length,
-    total_length_m: Number(totalLength.toFixed(1)),
-    sample_assets: sampleAssets
-  };
-}
-
-function buildSplitStreams(mode) {
-  const suburbCol = resolveSuburbColumn(reliningAssetsRows);
-  const reliningPreviewRows = getReliningRowsForMode(mode);
-  const reliningDefaultRows = reliningAssetsRows.filter(row => getReliningConditionNumber(row) === 8);
-  const reconstructionRows = reliningAssetsRows.filter(row => {
-    const cond = getReliningConditionNumber(row);
-    return cond === 9 || cond === 10;
-  });
-  const amplificationRows = reliningAssetsRows.filter(row => {
-    const cond = getReliningConditionNumber(row);
-    const flood = String(row?.['SW LGA 20% H1-H6'] || '').trim().toUpperCase();
-    const diameter = normaliseNumeric(row?.['SWP_Pipe Diameter_mm']) || 0;
-    return [4, 5, 6, 7].includes(cond) && ['H3', 'H4', 'H5', 'H6'].includes(flood) && diameter >= 300;
-  });
-  return {
-    suburb_column: suburbCol,
-    asset_count: reliningAssetsRows.length,
-    streams: [
-      buildPackagingStreamSummary('Relining Preview', reliningPreviewRows, suburbCol),
-      buildPackagingStreamSummary('Relining Default (Condition 8)', reliningDefaultRows, suburbCol),
-      buildPackagingStreamSummary('Reconstruction', reconstructionRows, suburbCol),
-      buildPackagingStreamSummary('Amplification', amplificationRows, suburbCol)
-    ]
-  };
-}
-
-function splitIntoPackagesByCount(rows, pipesPerPackage, groupBySuburb, suburbCol) {
-  const sorted = [...rows].sort((a, b) => {
-    if (!groupBySuburb || !suburbCol) return String(a?.Asset || '').localeCompare(String(b?.Asset || ''));
-    const suburbCompare = String(a?.[suburbCol] || '').localeCompare(String(b?.[suburbCol] || ''));
-    if (suburbCompare !== 0) return suburbCompare;
-    return String(a?.Asset || '').localeCompare(String(b?.Asset || ''));
-  });
-  let pkgIndex = 0;
-  let countInPkg = 0;
-  let lastGroup = null;
-  return sorted.map(row => {
-    const group = groupBySuburb && suburbCol ? String(row?.[suburbCol] || '') : '';
-    if (lastGroup === null) lastGroup = group;
-    if (group !== lastGroup || countInPkg >= pipesPerPackage) {
-      pkgIndex += 1;
-      countInPkg = 0;
-      lastGroup = group;
-    }
-    const packageId = `RLN_${String(pkgIndex + 1).padStart(3, '0')}`;
-    countInPkg += 1;
-    return { ...row, package_id: packageId };
-  });
-}
-
-function splitIntoValuePackages(rows, maxPackageValue, groupBySuburb, suburbCol) {
-  const groups = new Map();
-  rows.forEach(row => {
-    const key = groupBySuburb && suburbCol ? String(row?.[suburbCol] || '') : '__all__';
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(row);
-  });
-  const packaged = [];
-  let pkgCounter = 1;
-  groups.forEach(groupRows => {
-    const sorted = [...groupRows].sort((a, b) => (b.pipe_cost || 0) - (a.pipe_cost || 0));
-    let current = [];
-    let currentValue = 0;
-    sorted.forEach(row => {
-      const pipeValue = Number(row.pipe_cost || 0);
-      if (current.length && (currentValue + pipeValue > maxPackageValue)) {
-        current.forEach(item => packaged.push({ ...item, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
-        pkgCounter += 1;
-        current = [];
-        currentValue = 0;
-      }
-      current.push(row);
-      currentValue += pipeValue;
-    });
-    if (current.length) {
-      current.forEach(item => packaged.push({ ...item, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
-      pkgCounter += 1;
-    }
-  });
-  return packaged;
-}
-
-function summarisePackages(rows, suburbCol) {
-  const packages = new Map();
-  rows.forEach(row => {
-    const key = String(row.package_id || '');
-    if (!key) return;
-    if (!packages.has(key)) packages.set(key, []);
-    packages.get(key).push(row);
-  });
-  const summaries = [];
-  [...packages.keys()].sort().forEach(packageId => {
-    const pkgRows = packages.get(packageId) || [];
-    const totalLength = pkgRows.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m']) || 0), 0);
-    const totalCost = pkgRows.reduce((sum, row) => sum + (Number(row?.pipe_cost) || 0), 0);
-    const suburbs = suburbCol ? pkgRows.map(row => String(row?.[suburbCol] || '')).filter(Boolean) : [];
-    const suburb = suburbs.length ? suburbs.sort((a, b) =>
-      suburbs.filter(v => v === b).length - suburbs.filter(v => v === a).length
-    )[0] : '';
-    summaries.push({
-      package_id: packageId,
-      pipe_count: pkgRows.length,
-      total_length_m: Number(totalLength.toFixed(1)),
-      total_cost: Number(totalCost.toFixed(2)),
-      ...(suburb ? { suburb } : {})
-    });
-  });
-  return summaries;
-}
-
-function samplePackageAssets(rows, suburbCol) {
-  const firstPackageId = [...new Set(rows.map(row => row.package_id).filter(Boolean))].sort()[0];
-  if (!firstPackageId) return [];
-  return rows.filter(row => row.package_id === firstPackageId).slice(0, 12).map(row => {
-    const item = {
-      package_id: row.package_id,
-      Asset: row.Asset ?? '',
-      'SWP_Pipe Diameter_mm': row['SWP_Pipe Diameter_mm'] ?? '',
-      'Spatial Length_m': row['Spatial Length_m'] ?? '',
-      pipe_cost: row.pipe_cost != null ? Number(row.pipe_cost.toFixed(2)) : ''
-    };
-    if (suburbCol) item[suburbCol] = row?.[suburbCol] ?? '';
-    return item;
-  });
-}
-
 function renderPackagingMeta(meta) {
   const el = document.getElementById('pkgMeta');
   if (!el) return;
   const rows = [
-    ['Assets file', reliningAssetsFileName || 'Required'],
-    ['Rates file', reliningRatesFileName || 'Required'],
     ['Assets Loaded', meta?.asset_count?.toLocaleString?.() ?? '-'],
+    ['Assets Path', meta?.assets_path || '-'],
     ['Suburb Column', meta?.suburb_column || '-']
   ];
   el.innerHTML = rows.map(([label, value]) => `
@@ -3814,14 +3752,18 @@ function renderPackagingMeta(meta) {
   `).join('');
 }
 
-function renderPackagingPaths() {
+function renderPackagingPaths(meta) {
   const el = document.getElementById('pkgPathMeta');
   if (!el) return;
+  const dataPath = meta?.data_path || '-';
+  const outputsPath = meta?.outputs_path || '-';
+  const ratesPath = meta?.rates_path || '-';
+  const sharedHint = String(dataPath).includes('OneDrive - Northern Beaches Council') ? 'Council OneDrive path' : 'Local fallback path';
   const rows = [
-    ['Assets Upload', reliningAssetsFileName || 'Not loaded'],
-    ['Rates Upload', reliningRatesFileName || 'Not loaded'],
-    ['Storage Mode', 'In-browser memory only'],
-    ['Server Copy', 'None']
+    ['Input Data Folder', dataPath],
+    ['Rates Workbook', ratesPath],
+    ['Outputs Folder', outputsPath],
+    ['Path Mode', sharedHint]
   ];
   el.innerHTML = rows.map(([label, value]) => `
     <div class="pkg-meta-item">
@@ -3942,7 +3884,7 @@ function getFutureWorksDefaults() {
 }
 
 function getFutureWorksWorkbookUrl() {
-  return futureWorksWorkbookUrl.trim();
+  return (localStorage.getItem(FUTURE_WORKS_URL_KEY) || '').trim();
 }
 
 function getFutureWorksLocalFolderTemplate() {
@@ -3987,7 +3929,12 @@ function syncFutureWorksWorkbookInput() {
 function saveFutureWorksWorkbookUrl() {
   const input = document.getElementById('fwWorkbookUrl');
   if (!input) return;
-  futureWorksWorkbookUrl = input.value.trim();
+  const value = input.value.trim();
+  if (!value) {
+    localStorage.removeItem(FUTURE_WORKS_URL_KEY);
+    return;
+  }
+  localStorage.setItem(FUTURE_WORKS_URL_KEY, value);
 }
 
 function openFutureWorksWorkbook() {
@@ -4033,6 +3980,7 @@ async function importForwardWorksWorkbook(event) {
     if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
     const buffer = await file.arrayBuffer();
     const workbook = XLSX.read(buffer, { type: 'array' });
+    futureWorksWorkbookFile = file;
     futureWorksWorkbookMeta = {
       name: file.name,
       sheetCount: workbook.SheetNames.length,
@@ -4129,170 +4077,13 @@ function parseSimpleCsv(text) {
   });
 }
 
-function readWorkbookRows(workbook, sheetName = null) {
-  const targetSheet = sheetName || workbook.SheetNames[0];
-  if (!targetSheet || !workbook.Sheets[targetSheet]) return [];
-  return XLSX.utils.sheet_to_json(workbook.Sheets[targetSheet], { defval: '' });
-}
-
-function extractCostingLookupFromWorkbook(workbook) {
-  const tableRows = readWorkbookRows(workbook, '_Tables');
-  if (!tableRows.length) throw new Error('The costing workbook is missing the _Tables sheet.');
-  const modifierRows = readWorkbookRows(workbook, 'IPART Modifiers');
-
-  const rows = tableRows.map(row => ({
-    assetClass: String(row['Asset Class'] ?? '').trim(),
-    category: String(row['Category'] ?? '').trim(),
-    item: String(row['Item'] ?? '').trim(),
-    component: String(row['Component'] ?? '').trim(),
-    source: String(row['Source'] ?? '').trim(),
-    type: String(row['Type'] ?? '').trim(),
-    size: String(row['Size/Descriptor'] ?? '').trim(),
-    unit: String(row['Unit'] ?? '').trim(),
-    unitRate: normaliseNumeric(row['Unit Rate']),
-    modifier: String(row['Modifier'] ?? '').trim()
-  })).filter(row => row.assetClass && row.item);
-
-  const modifiers = modifierRows.map(row => ({
-    context: String(row.Context ?? row.context ?? '').trim(),
-    level: String(row.Level ?? row.level ?? row['Modifier Level'] ?? '').trim(),
-    factor: normaliseNumeric(row.Factor ?? row.factor ?? row['IPART Factor'] ?? row['Modifier Factor'])
-  })).filter(row => row.level && Number.isFinite(row.factor));
-
-  const assetClasses = [...new Set(rows.map(row => row.assetClass).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const categories = [...new Set(rows.map(row => row.category).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const items = [...new Set(rows.map(row => row.item).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-
-  return {
-    meta: {
-      sourceWorkbook: costingWorkbookName || 'Uploaded workbook',
-      rowCount: rows.length,
-      assetClassCount: assetClasses.length,
-      categoryCount: categories.length,
-      itemCount: items.length
-    },
-    modifiers,
-    assetClasses,
-    rows
-  };
-}
-
-async function importCostingWorkbook(event) {
-  const file = event?.target?.files?.[0];
-  if (!file) return;
-  showLoad('Loading costing workbook...');
-  try {
-    if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
-    const buffer = await file.arrayBuffer();
-    const workbook = XLSX.read(buffer, { type: 'array' });
-    costingWorkbookName = file.name;
-    costingLookup = extractCostingLookupFromWorkbook(workbook);
-    const modifierSel = document.getElementById('costModifier');
-    if (modifierSel) {
-      const modifiers = costingLookup.modifiers || [];
-      modifierSel.innerHTML = [
-        '<option value="1">No modifier (1.00x)</option>',
-        ...modifiers.map(m => `<option value="${m.factor}">${escapeHtml((m.context ? m.context + ' · ' : '') + m.level)} (${Number(m.factor).toFixed(2)}x)</option>`)
-      ].join('');
-    }
-    document.getElementById('costMetaType').textContent = costingWorkbookName;
-    document.getElementById('costMetaRows').textContent = (costingLookup.meta?.rowCount || 0).toLocaleString();
-    document.getElementById('costMetaClasses').textContent = (costingLookup.meta?.assetClassCount || 0).toLocaleString();
-    const statusEl = document.getElementById('costUploadStatus');
-    if (statusEl) statusEl.textContent = `${costingWorkbookName} loaded in browser memory only for this session.`;
-    if (!costingRows.length) {
-      for (let i = 0; i < 5; i++) addCostingRow();
-    } else {
-      renderCostingTable();
-    }
-  } catch (e) {
-    costingLookup = null;
-    costingWorkbookName = '';
-    const statusEl = document.getElementById('costUploadStatus');
-    if (statusEl) statusEl.textContent = `Workbook import failed: ${e.message || e}`;
-    renderCostingTable();
-  } finally {
-    hideLoad();
-    if (event?.target) event.target.value = '';
-  }
-}
-
-async function importReliningAssetsFile(event) {
-  const file = event?.target?.files?.[0];
-  if (!file) return;
-  showLoad('Loading relining assets file...');
-  try {
-    const lower = file.name.toLowerCase();
-    let rows = [];
-    if (lower.endsWith('.csv')) {
-      rows = parseSimpleCsv(await file.text());
-    } else {
-      if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
-      const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array' });
-      rows = readWorkbookRows(workbook);
-    }
-    if (!rows.length) throw new Error('No asset rows were found in that file.');
-    reliningAssetsRows = rows;
-    reliningAssetsFileName = file.name;
-    lastPackagingGeneration = null;
-    renderPackagingPaths();
-    renderPackagingMeta({ asset_count: rows.length, suburb_column: resolveSuburbColumn(rows) });
-    setPackagingStatus(reliningRatesRows.length > 0, reliningRatesRows.length > 0 ? 'Required files loaded' : 'Upload panel rates workbook to continue');
-    renderPackagingCards([]);
-    renderPackagingSamples([]);
-    document.getElementById('pkgPackagesArea').className = 'pkg-empty';
-    document.getElementById('pkgPackagesArea').textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
-  } catch (e) {
-    reliningAssetsRows = [];
-    reliningAssetsFileName = '';
-    setPackagingStatus(false, `Assets upload failed`);
-    renderPackagingPaths();
-    renderPackagingMeta({ asset_count: 0, suburb_column: '-' });
-    alert(`Assets upload failed: ${e.message || e}`);
-  } finally {
-    hideLoad();
-    if (event?.target) event.target.value = '';
-  }
-}
-
-async function importReliningRatesFile(event) {
-  const file = event?.target?.files?.[0];
-  if (!file) return;
-  showLoad('Loading relining rates workbook...');
-  try {
-    if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
-    const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array' });
-    const rows = cleanRateRows(readWorkbookRows(workbook, '_Tables'))
-      .filter(row => /SP6 Pipeline Relining/i.test(String(row?.Category || '')));
-    if (!rows.length) throw new Error('No SP6 Pipeline Relining rows were found in the _Tables sheet.');
-    reliningRatesRows = rows;
-    reliningRatesFileName = file.name;
-    lastPackagingGeneration = null;
-    renderPackagingPaths();
-    renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
-    setPackagingStatus(reliningAssetsRows.length > 0, reliningAssetsRows.length > 0 ? 'Required files loaded' : 'Upload assets file to continue');
-    document.getElementById('pkgPackagesArea').className = 'pkg-empty';
-    document.getElementById('pkgPackagesArea').textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
-  } catch (e) {
-    reliningRatesRows = [];
-    reliningRatesFileName = '';
-    setPackagingStatus(false, 'Rates upload failed');
-    renderPackagingPaths();
-    renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
-    alert(`Rates upload failed: ${e.message || e}`);
-  } finally {
-    hideLoad();
-    if (event?.target) event.target.value = '';
-  }
-}
-
 async function importFutureWorksFile(event) {
   const file = event?.target?.files?.[0];
   if (!file) return;
   try {
     let rows = [];
     const lower = file.name.toLowerCase();
-    if (lower.endsWith('.xlsx') || lower.endsWith('.xls') || lower.endsWith('.xlsm')) {
+    if (lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
       if (typeof XLSX === 'undefined') {
         throw new Error('Excel import library did not load.');
       }
@@ -4365,7 +4156,7 @@ function renderFutureWorksTable() {
   if (!area) return;
   if (!futureWorksRows.length) {
     area.className = 'fw-empty';
-    area.innerHTML = 'Generate relining packages first, then click <strong>Load Current Relining Packages</strong> here to stage them into the future works backlog format.';
+    area.innerHTML = 'Generate relining packages first, then click <strong>Load Latest Relining Packages</strong> here to stage them into the future works backlog format.';
     return;
   }
 
@@ -4426,88 +4217,70 @@ function exportFutureWorksCsv() {
   origPriDownload(`future_works_backlog_${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
 }
 
-async function refreshPackagingConnection() {
-  renderPackagingPaths();
-  renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
-  if (reliningAssetsRows.length && reliningRatesRows.length) {
-    setPackagingStatus(true, 'Required files loaded');
-  } else {
-    setPackagingStatus(false, 'Waiting for required files');
+function refreshPackagingConnection() {
+  updateReliningStatus();
+}
+
+function loadPackagingPreview() {
+  if (!reliningAssetsData) {
+    alert('Upload the assets CSV file first.');
+    return;
+  }
+  const sampleArea = document.getElementById('pkgSampleArea');
+  const count = reliningAssetsData.length;
+  if (sampleArea) sampleArea.textContent = `${count.toLocaleString()} assets loaded from file. In-browser stream preview coming in a future update.`;
+}
+
+function generateReliningPackages() {
+  if (!reliningAssetsData || !reliningRatesData) {
+    alert('Upload both the assets CSV and Panel_Rates.xlsx files first.');
+    return;
+  }
+  const area = document.getElementById('pkgPackagesArea');
+  if (area) area.textContent = 'In-browser package generation coming in a future update.';
+}
+
+async function loadReliningAssetsFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    // Basic CSV parse — just count rows for now
+    const lines = text.replace(/\r/g, '').split('\n').filter(Boolean);
+    reliningAssetsData = lines.slice(1); // store rows excluding header
+    const statusEl = document.getElementById('pkgAssetsStatus');
+    if (statusEl) statusEl.textContent = `Assets: ${escapeHtml(file.name)} (${(lines.length - 1).toLocaleString()} rows)`;
+    updateReliningStatus();
+  } catch (e) {
+    alert(`Failed to load assets file: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
   }
 }
 
-async function loadPackagingPreview() {
-  const mode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
+async function loadReliningRatesFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
   try {
-    if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
-    const data = buildSplitStreams(mode);
-    setPackagingStatus(true, `${data.asset_count.toLocaleString()} assets previewed`);
-    renderPackagingMeta({
-      asset_count: data.asset_count,
-      suburb_column: data.suburb_column
-    });
-    renderPackagingPaths();
-    renderPackagingCards(data.streams);
-    renderPackagingSamples(data.streams);
+    if (typeof XLSX === 'undefined') throw new Error('Excel library not loaded.');
+    const buffer = await file.arrayBuffer();
+    reliningRatesData = { name: file.name, buffer }; // hold reference in memory only
+    const statusEl = document.getElementById('pkgRatesStatus');
+    if (statusEl) statusEl.textContent = `Rates: ${escapeHtml(file.name)}`;
+    updateReliningStatus();
   } catch (e) {
-    setPackagingStatus(false, 'Preview failed');
-    const area = document.getElementById('pkgSampleArea');
-    if (area) {
-      area.className = 'pkg-empty';
-      area.textContent = String(e.message || e);
-    }
+    alert(`Failed to load rates file: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
   }
 }
 
-async function generateReliningPackages() {
-  const method = document.getElementById('pkgMethod')?.value || 'value';
-  const reliningMode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
-  const maxPackageValue = Number(String(document.getElementById('pkgMaxValue')?.value || '500000').replace(/,/g, ''));
-  const pipesPerPackage = Number(String(document.getElementById('pkgPipeCount')?.value || '25').replace(/,/g, ''));
-  const groupBySuburb = (document.getElementById('pkgGroupSuburb')?.value || 'yes') === 'yes';
-  try {
-    if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
-    if (!reliningRatesRows.length) throw new Error('Upload the panel rates workbook first.');
-    const preview = buildSplitStreams(reliningMode);
-    const suburbCol = preview.suburb_column;
-    const reliningRows = getReliningRowsForMode(reliningMode)
-      .map(row => {
-        const ratePerM = getReliningRateForRow(row);
-        const lengthM = normaliseNumeric(row?.['Spatial Length_m']);
-        return {
-          ...row,
-          rate_per_m: ratePerM,
-          pipe_cost: Number.isFinite(ratePerM) && Number.isFinite(lengthM) ? ratePerM * lengthM : null
-        };
-      });
-    const costed = reliningRows.filter(row => Number.isFinite(row.pipe_cost));
-    const uncosted = reliningRows.filter(row => !Number.isFinite(row.pipe_cost));
-    const packaged = method === 'count'
-      ? splitIntoPackagesByCount(costed, Math.max(Number.isFinite(pipesPerPackage) ? pipesPerPackage : 25, 1), groupBySuburb, suburbCol)
-      : splitIntoValuePackages(costed, Math.max(Number.isFinite(maxPackageValue) ? maxPackageValue : 500000, 1), groupBySuburb, suburbCol);
-    const packageSummaries = summarisePackages(packaged, suburbCol);
-    const totalLength = packaged.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m']) || 0), 0);
-    const totalCost = packaged.reduce((sum, row) => sum + (Number(row?.pipe_cost) || 0), 0);
-    const data = {
-      package_count: packageSummaries.length,
-      costed_pipe_count: costed.length,
-      uncosted_pipe_count: uncosted.length,
-      total_length_m: Number(totalLength.toFixed(1)),
-      total_cost: Number(totalCost.toFixed(2)),
-      packages: packageSummaries,
-      sample_assets: samplePackageAssets(packaged, suburbCol)
-    };
-    lastPackagingGeneration = data;
-    setPackagingStatus(true, `${data.package_count.toLocaleString()} packages generated`);
-    renderGeneratedPackages(data);
-  } catch (e) {
-    setPackagingStatus(false, 'Package generation failed');
-    const area = document.getElementById('pkgPackagesArea');
-    if (area) {
-      area.className = 'pkg-empty';
-      area.textContent = String(e.message || e);
-    }
-  }
+function updateReliningStatus() {
+  const dot = document.getElementById('pkgDot');
+  const text = document.getElementById('pkgStatusText');
+  const bothLoaded = reliningAssetsData && reliningRatesData;
+  if (dot) dot.style.background = bothLoaded ? '#2e7d32' : '#888';
+  if (text) text.textContent = bothLoaded ? 'Files loaded' : (reliningAssetsData ? 'Rates file needed' : (reliningRatesData ? 'Assets file needed' : 'No files loaded'));
 }
 
 function formatCurrency(value) {
@@ -4515,11 +4288,42 @@ function formatCurrency(value) {
   return '$' + num.toLocaleString(undefined, { maximumFractionDigits: 0 });
 }
 
-async function initCostingTool() {
-  document.getElementById('costMetaType').textContent = 'Workbook upload required';
-  document.getElementById('costMetaRows').textContent = 'Upload required';
-  document.getElementById('costMetaClasses').textContent = '-';
-  renderCostingTable();
+function initCostingTool() {
+  // Costing tool requires manual file upload — no auto-fetch
+  if (costingLookup && !costingRows.length) {
+    for (let i = 0; i < 5; i++) addCostingRow();
+  }
+}
+
+async function loadCostingFromFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    costingLookup = data;
+    const modifierSel = document.getElementById('costModifier');
+    if (modifierSel) {
+      const modifiers = costingLookup.modifiers || [];
+      modifierSel.innerHTML = [
+        '<option value="1">No modifier (1.00x)</option>',
+        ...modifiers.map((m) => `<option value="${m.factor}">${escapeHtml((m.context ? m.context + ' · ' : '') + m.level)} (${m.factor.toFixed(2)}x)</option>`)
+      ].join('');
+    }
+    document.getElementById('costMetaRows').textContent = (costingLookup.meta?.rowCount || 0).toLocaleString();
+    document.getElementById('costMetaClasses').textContent = (costingLookup.meta?.assetClassCount || 0).toLocaleString();
+    const statusEl = document.getElementById('costLookupStatus');
+    if (statusEl) statusEl.textContent = `Loaded: ${escapeHtml(file.name)}`;
+    if (!costingRows.length) {
+      for (let i = 0; i < 5; i++) addCostingRow();
+    } else {
+      renderCostingTable();
+    }
+  } catch (e) {
+    alert(`Failed to load costing file: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
+  }
 }
 
 function getCostingFactor() {
@@ -4605,7 +4409,7 @@ function renderCostingTable() {
   const body = document.getElementById('costRows');
   if (!body) return;
   if (!costingLookup?.rows?.length) {
-    body.innerHTML = `<tr><td colspan="12" style="padding:20px;color:var(--text-l)">Upload the costing workbook to unlock the BOQ table.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="12" style="padding:20px;color:var(--text-l)">Loading costing data...</td></tr>`;
     return;
   }
 
@@ -5300,8 +5104,483 @@ function drawLgaBoundary(lgaName) {
   console.log(`Boundary drawn for ${lgaName}`);
 }
 
+// Critical assets
+const CRITICAL_ASSET_CLASSES = ['Culverts','Detention Basin','End Structure','Open','Stormwater Pipe','Stormwater Pit','Water Quality Device'];
+const CRITICAL_STATUS_META = {
+  red: { label: 'Overdue', color: '#C0392B', className: 'red' },
+  orange: { label: 'Due within 6 months', color: '#E67E22', className: 'orange' },
+  green: { label: 'Up to date', color: '#1E8449', className: 'green' },
+  unknown: { label: 'Awaiting schedule', color: '#60717D', className: 'unknown' }
+};
+const CRITICAL_DEFAULT_SOURCE_PATH = 'D:\\Packaging\\data\\assets_with_coords.csv';
+const CRITICAL_DEFAULT_COMBINED_PATH = 'D:\\Packaging\\data\\combined_assets.csv';
+const CRITICAL_DEFAULT_INSPECTION_PATH = 'D:\\Packaging\\data\\critical_asset_inspections.xlsx';
+let criticalAssetsMap = null;
+let criticalAssetsLayer = null;
+let criticalAssetsAll = [];
+let criticalInspectionRows = [];
+let criticalVisibleAssets = [];
+let criticalClassFilters = new Set(['ALL']);
+let criticalStatusFilters = new Set(['ALL']);
+let criticalAssetsSourceName = '';
+let criticalCombinedSourceName = '';
+let criticalInspectionSourceName = '';
+
+function ensureCriticalAssetsMap() {
+  if (criticalAssetsMap) return;
+  criticalAssetsMap = L.map('criticalAssetsMap', { preferCanvas: true, zoomControl: true }).setView([-33.72, 151.25], 11);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles © Esri',
+    maxZoom: 19
+  }).addTo(criticalAssetsMap);
+  criticalAssetsLayer = L.layerGroup().addTo(criticalAssetsMap);
+  renderCriticalAssetsFilters();
+  renderCriticalAssetsSummary();
+}
+
+function normaliseKey(value) {
+  return String(value ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+function getValueByAliases(row, aliases) {
+  if (!row || !aliases?.length) return '';
+  const lookup = {};
+  Object.entries(row).forEach(([key, value]) => { lookup[normaliseKey(key)] = value; });
+  for (const alias of aliases) {
+    if (Object.prototype.hasOwnProperty.call(row, alias) && row[alias] !== '') return row[alias];
+    const hit = lookup[normaliseKey(alias)];
+    if (hit !== undefined && hit !== '') return hit;
+  }
+  return '';
+}
+
+function parseNumberValue(value) {
+  if (value == null) return null;
+  const cleaned = String(value).replace(/,/g, '').match(/-?\d+(\.\d+)?/);
+  return cleaned ? Number(cleaned[0]) : null;
+}
+
+function parseDateValue(value) {
+  if (!value && value !== 0) return null;
+  if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
+  if (typeof value === 'number' && value > 20000 && typeof XLSX !== 'undefined') {
+    const parsed = XLSX.SSF.parse_date_code(value);
+    if (parsed) return new Date(parsed.y, parsed.m - 1, parsed.d);
+  }
+  const raw = String(value).trim();
+  if (!raw) return null;
+  const direct = new Date(raw);
+  if (!Number.isNaN(direct.getTime())) return direct;
+  const match = raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  let year = Number(match[3]);
+  if (year < 100) year += 2000;
+  const parsed = new Date(year, month - 1, day);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function addMonths(date, months) {
+  const out = new Date(date.getTime());
+  out.setMonth(out.getMonth() + months);
+  return out;
+}
+
+function formatShortDate(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return 'Not available';
+  return date.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function classifyAssetClass(value, fallbackDescription = '') {
+  const text = `${value || ''} ${fallbackDescription || ''}`.toLowerCase();
+  if (text.includes('culvert')) return 'Culverts';
+  if (text.includes('detention')) return 'Detention Basin';
+  if (text.includes('end structure') || text.includes('headwall')) return 'End Structure';
+  if (text.includes('open')) return 'Open';
+  if (text.includes('pit')) return 'Stormwater Pit';
+  if (text.includes('water quality') || text.includes('gross pollutant') || text.includes('gpt')) return 'Water Quality Device';
+  if (text.includes('pipe')) return 'Stormwater Pipe';
+  return '';
+}
+
+function utmToLatLng(easting, northing, zone = 56, southernHemisphere = true) {
+  if (!Number.isFinite(easting) || !Number.isFinite(northing)) return null;
+  const a = 6378137.0;
+  const eccSquared = 0.00669438;
+  const k0 = 0.9996;
+  const eccPrimeSquared = eccSquared / (1 - eccSquared);
+  const x = easting - 500000.0;
+  let y = northing;
+  if (southernHemisphere) y -= 10000000.0;
+  const longOrigin = (zone - 1) * 6 - 180 + 3;
+  const M = y / k0;
+  const mu = M / (a * (1 - eccSquared / 4 - 3 * eccSquared * eccSquared / 64 - 5 * Math.pow(eccSquared, 3) / 256));
+  const e1 = (1 - Math.sqrt(1 - eccSquared)) / (1 + Math.sqrt(1 - eccSquared));
+  const phi1Rad = mu
+    + (3 * e1 / 2 - 27 * Math.pow(e1, 3) / 32) * Math.sin(2 * mu)
+    + (21 * e1 * e1 / 16 - 55 * Math.pow(e1, 4) / 32) * Math.sin(4 * mu)
+    + (151 * Math.pow(e1, 3) / 96) * Math.sin(6 * mu)
+    + (1097 * Math.pow(e1, 4) / 512) * Math.sin(8 * mu);
+  const N1 = a / Math.sqrt(1 - eccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad));
+  const T1 = Math.tan(phi1Rad) * Math.tan(phi1Rad);
+  const C1 = eccPrimeSquared * Math.cos(phi1Rad) * Math.cos(phi1Rad);
+  const R1 = a * (1 - eccSquared) / Math.pow(1 - eccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad), 1.5);
+  const D = x / (N1 * k0);
+  const latRad = phi1Rad - (N1 * Math.tan(phi1Rad) / R1) * (
+    (D * D) / 2 -
+    (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * eccPrimeSquared) * Math.pow(D, 4) / 24 +
+    (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * eccPrimeSquared - 3 * C1 * C1) * Math.pow(D, 6) / 720
+  );
+  const lonRad = (
+    D -
+    (1 + 2 * T1 + C1) * Math.pow(D, 3) / 6 +
+    (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * eccPrimeSquared + 24 * T1 * T1) * Math.pow(D, 5) / 120
+  ) / Math.cos(phi1Rad);
+  return {
+    lat: latRad * (180 / Math.PI),
+    lon: longOrigin + lonRad * (180 / Math.PI)
+  };
+}
+
+function resolveLineCoordinatePair(row, start = true) {
+  const x = parseNumberValue(getValueByAliases(row, start ? ['XStart', 'FromX', 'StartX'] : ['XEnd', 'ToX', 'EndX']));
+  const y = parseNumberValue(getValueByAliases(row, start ? ['YStart', 'FromY', 'StartY'] : ['YEnd', 'ToY', 'EndY']));
+  if (Number.isFinite(x) && Number.isFinite(y)) return utmToLatLng(x, y, 56, true);
+  const lat = parseNumberValue(getValueByAliases(row, start ? ['Start Latitude', 'US Latitude', 'Latitude Start'] : ['End Latitude', 'DS Latitude', 'Latitude End']));
+  const lon = parseNumberValue(getValueByAliases(row, start ? ['Start Longitude', 'US Longitude', 'Longitude Start'] : ['End Longitude', 'DS Longitude', 'Longitude End']));
+  if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon };
+  return null;
+}
+
+function buildCriticalAssetRecord(row, index, sourceLabel) {
+  const criticality = String(getValueByAliases(row, ['Criticality', 'criticality']) || '').trim().toUpperCase();
+  if (criticality !== 'Y') return null;
+  const assetId = String(getValueByAliases(row, ['Asset', 'Asset Number', 'Asset_Number', 'CATLG_ID', 'MAPKEY', 'Asset2']) || `asset-${index + 1}`).trim();
+  const description = String(getValueByAliases(row, ['Description', 'Short Description', 'Formatted_Address', 'Pipe_Start_Address']) || '').trim();
+  const classRaw = getValueByAliases(row, ['Asset_Classification', 'Asset Classification', 'Asset Class', 'Asset_Class_Plan', 'Description']);
+  const assetClass = classifyAssetClass(classRaw, description);
+  if (!assetClass) return null;
+  const start = resolveLineCoordinatePair(row, true);
+  const end = resolveLineCoordinatePair(row, false);
+  const lat = parseNumberValue(getValueByAliases(row, ['Latitude', 'lat']));
+  const lon = parseNumberValue(getValueByAliases(row, ['Longitude', 'lon']));
+  const midY = parseNumberValue(getValueByAliases(row, ['YMid', 'YMid.1']));
+  const midX = parseNumberValue(getValueByAliases(row, ['XMid', 'XMid.1']));
+  const midProjected = Number.isFinite(midX) && Number.isFinite(midY) && midX > 1000 && midY > 1000 ? utmToLatLng(midX, midY, 56, true) : null;
+  const rawDiameter = parseNumberValue(getValueByAliases(row, ['SWP_Pipe_Diameter_mm', 'Diameter', 'DiameterStr', 'Culvert_Diameter_m']));
+  const diameterMm = Number.isFinite(rawDiameter) ? (rawDiameter < 20 ? rawDiameter * 1000 : rawDiameter) : null;
+  const centroid = Number.isFinite(lat) && Number.isFinite(lon)
+    ? { lat, lon }
+    : (start && end
+      ? { lat: (start.lat + end.lat) / 2, lon: (start.lon + end.lon) / 2 }
+      : (midProjected || (Number.isFinite(midY) && Number.isFinite(midX) && midY < 0 && midX > 100 ? { lat: midY, lon: midX } : null)));
+  const geometryType = start && end ? 'line' : 'point';
+  if (!centroid && geometryType !== 'line') return null;
+  return {
+    id: assetId,
+    description: description || `${assetClass} ${assetId}`,
+    assetClass,
+    criticality,
+    diameterMm,
+    lengthM: parseNumberValue(getValueByAliases(row, ['Spatial_Length_m', 'Length_m', 'Shape_Length'])),
+    suburb: String(getValueByAliases(row, ['Location - Suburb', 'Asset_Address', 'Physical_Location']) || '').trim(),
+    address: String(getValueByAliases(row, ['Formatted_Address', 'Pipe_Start_Address', 'Asset_Address']) || '').trim(),
+    geometryType,
+    coordinates: start && end ? [[start.lat, start.lon], [end.lat, end.lon]] : null,
+    lat: centroid?.lat ?? start?.lat ?? null,
+    lon: centroid?.lon ?? start?.lon ?? null,
+    sourceLabel
+  };
+}
+
+function resolveInspectionIntervalMonths(row) {
+  const months = parseNumberValue(getValueByAliases(row, ['Inspection Frequency Months', 'Frequency Months', 'Cycle Months', 'Interval Months']));
+  if (Number.isFinite(months)) return months;
+  const years = parseNumberValue(getValueByAliases(row, ['Inspection Frequency Years', 'Frequency Years', 'Cycle Years', 'Interval Years']));
+  if (Number.isFinite(years)) return years * 12;
+  const raw = String(getValueByAliases(row, ['Inspection Frequency', 'Inspection Schedule', 'Frequency', 'Cycle']) || '').toLowerCase();
+  if (!raw) return null;
+  if (raw.includes('annual') || raw.includes('yearly')) return 12;
+  const yearMatch = raw.match(/(\d+(\.\d+)?)\s*year/);
+  if (yearMatch) return Number(yearMatch[1]) * 12;
+  const monthMatch = raw.match(/(\d+(\.\d+)?)\s*month/);
+  if (monthMatch) return Number(monthMatch[1]);
+  return null;
+}
+
+function buildInspectionRecord(row) {
+  const assetId = String(getValueByAliases(row, ['Asset', 'Asset Number', 'Asset_Number', 'Asset ID', 'Asset_ID', 'CATLG_ID', 'MAPKEY']) || '').trim();
+  if (!assetId) return null;
+  return {
+    assetId,
+    assetClass: classifyAssetClass(getValueByAliases(row, ['Asset Class', 'Asset_Classification', 'Class', 'Description'])),
+    lastInspection: parseDateValue(getValueByAliases(row, ['Last Inspection', 'Last Inspection Date', 'Observed Condition Last Inspection Date', 'Actual Inspection Date', 'Inspection Date'])),
+    nextDue: parseDateValue(getValueByAliases(row, ['Next Due', 'Next Due Date', 'Due Date', 'Inspection Due'])),
+    intervalMonths: resolveInspectionIntervalMonths(row),
+    intervalLabel: String(getValueByAliases(row, ['Inspection Frequency', 'Inspection Schedule', 'Frequency', 'Cycle']) || '').trim()
+  };
+}
+
+function getInspectionLookup() {
+  const lookup = {};
+  criticalInspectionRows.forEach(row => {
+    if (!row?.assetId) return;
+    lookup[row.assetId] = row;
+  });
+  return lookup;
+}
+
+function enrichCriticalAssets() {
+  const inspectionLookup = getInspectionLookup();
+  const now = new Date();
+  criticalAssetsAll = criticalAssetsAll.map(asset => {
+    const inspection = inspectionLookup[asset.id];
+    let nextDue = inspection?.nextDue || null;
+    if (!nextDue && inspection?.lastInspection && Number.isFinite(inspection.intervalMonths)) {
+      nextDue = addMonths(inspection.lastInspection, inspection.intervalMonths);
+    }
+    const daysToDue = nextDue ? Math.floor((nextDue - now) / (1000 * 60 * 60 * 24)) : null;
+    let status = 'unknown';
+    if (nextDue) {
+      if (daysToDue < 0) status = 'red';
+      else if (daysToDue <= 183) status = 'orange';
+      else status = 'green';
+    }
+    return { ...asset, inspection, nextDue, daysToDue, status };
+  });
+}
+
+function dedupeCriticalAssets(items) {
+  const seen = new Map();
+  items.forEach(item => {
+    if (!item?.id) return;
+    const key = `${item.id}|${item.assetClass}`;
+    if (!seen.has(key)) seen.set(key, item);
+  });
+  return Array.from(seen.values());
+}
+
+function getFilteredCriticalAssets() {
+  const classAll = criticalClassFilters.has('ALL');
+  const statusAll = criticalStatusFilters.has('ALL');
+  return criticalAssetsAll.filter(asset =>
+    (classAll || criticalClassFilters.has(asset.assetClass)) &&
+    (statusAll || criticalStatusFilters.has(asset.status))
+  );
+}
+
+function renderCriticalAssetsFilters() {
+  const classWrap = document.getElementById('caClassFilters');
+  const statusWrap = document.getElementById('caStatusFilters');
+  if (!classWrap || !statusWrap) return;
+  classWrap.innerHTML = [
+    `<button class="ca-chip ${criticalClassFilters.has('ALL') ? 'active' : ''}" onclick="toggleCriticalClassFilter('ALL')">ALL</button>`,
+    ...CRITICAL_ASSET_CLASSES.map(name => `<button class="ca-chip ${criticalClassFilters.has(name) ? 'active' : ''}" onclick="toggleCriticalClassFilter('${encodeInlineArg(name)}')">${escapeHtml(name)}</button>`)
+  ].join('');
+  statusWrap.innerHTML = [
+    `<button class="ca-chip ${criticalStatusFilters.has('ALL') ? 'active' : ''}" onclick="toggleCriticalStatusFilter('ALL')">ALL</button>`,
+    ...Object.entries(CRITICAL_STATUS_META).map(([key, meta]) =>
+      `<button class="ca-chip status-${key} ${criticalStatusFilters.has(key) ? 'active' : ''}" onclick="toggleCriticalStatusFilter('${key}')">${escapeHtml(meta.label)}</button>`
+    )
+  ].join('');
+}
+
+function toggleCriticalClassFilter(value) {
+  const decoded = value === 'ALL' ? 'ALL' : decodeInlineArg(value);
+  if (decoded === 'ALL') {
+    criticalClassFilters = new Set(['ALL']);
+  } else {
+    if (criticalClassFilters.has('ALL')) criticalClassFilters = new Set();
+    if (criticalClassFilters.has(decoded)) criticalClassFilters.delete(decoded);
+    else criticalClassFilters.add(decoded);
+    if (!criticalClassFilters.size) criticalClassFilters = new Set(['ALL']);
+  }
+  renderCriticalAssetsFilters();
+  renderCriticalAssetsView();
+}
+
+function toggleCriticalStatusFilter(value) {
+  if (value === 'ALL') {
+    criticalStatusFilters = new Set(['ALL']);
+  } else {
+    if (criticalStatusFilters.has('ALL')) criticalStatusFilters = new Set();
+    if (criticalStatusFilters.has(value)) criticalStatusFilters.delete(value);
+    else criticalStatusFilters.add(value);
+    if (!criticalStatusFilters.size) criticalStatusFilters = new Set(['ALL']);
+  }
+  renderCriticalAssetsFilters();
+  renderCriticalAssetsView();
+}
+
+function resetCriticalAssetFilters() {
+  criticalClassFilters = new Set(['ALL']);
+  criticalStatusFilters = new Set(['ALL']);
+  renderCriticalAssetsFilters();
+  renderCriticalAssetsView();
+}
+
+function getCriticalStyle(asset) {
+  const meta = CRITICAL_STATUS_META[asset.status] || CRITICAL_STATUS_META.unknown;
+  const weight = asset.geometryType === 'line'
+    ? Math.max(3, Math.min(9, 2 + ((asset.diameterMm || 300) / 450)))
+    : 2;
+  return { color: meta.color, weight, fillColor: meta.color, fillOpacity: 0.88 };
+}
+
+function buildCriticalPopup(asset) {
+  return `
+    <div style="min-width:220px">
+      <div style="font-weight:800;color:var(--navy);margin-bottom:6px">${escapeHtml(asset.id)}</div>
+      <div style="font-size:12px;color:var(--text);margin-bottom:8px">${escapeHtml(asset.description)}</div>
+      <div style="font-size:11px;color:var(--text-l);line-height:1.6">
+        <div><strong>Class:</strong> ${escapeHtml(asset.assetClass)}</div>
+        <div><strong>Status:</strong> ${escapeHtml(CRITICAL_STATUS_META[asset.status]?.label || 'Awaiting schedule')}</div>
+        <div><strong>Last inspection:</strong> ${escapeHtml(formatShortDate(asset.inspection?.lastInspection))}</div>
+        <div><strong>Next due:</strong> ${escapeHtml(formatShortDate(asset.nextDue))}</div>
+        <div><strong>Diameter:</strong> ${asset.diameterMm ? `${asset.diameterMm} mm` : 'Not available'}</div>
+        <div><strong>Source:</strong> ${escapeHtml(asset.sourceLabel || 'Uploaded')}</div>
+      </div>
+    </div>`;
+}
+
+function renderCriticalAssetsSummary() {
+  const wrap = document.getElementById('caSummaryCards');
+  if (!wrap) return;
+  const counts = { total: criticalAssetsAll.length, red: 0, orange: 0, green: 0, unknown: 0 };
+  criticalAssetsAll.forEach(asset => { counts[asset.status] = (counts[asset.status] || 0) + 1; });
+  wrap.innerHTML = `
+    <div class="ca-card"><div class="k">Critical Assets</div><div class="v">${counts.total}</div><div class="s">Criticality = Y records currently loaded</div></div>
+    <div class="ca-card"><div class="k">Overdue</div><div class="v" style="color:#C0392B">${counts.red}</div><div class="s">Inspection due date has passed</div></div>
+    <div class="ca-card"><div class="k">Due Soon</div><div class="v" style="color:#E67E22">${counts.orange}</div><div class="s">Due within the next 6 months</div></div>
+    <div class="ca-card"><div class="k">Up To Date</div><div class="v" style="color:#1E8449">${counts.green}</div><div class="s">Outside the 6 month warning window</div></div>
+  `;
+}
+
+function renderCriticalAssetsTable(rows) {
+  const body = document.getElementById('caTableBody');
+  const subtitle = document.getElementById('caTableSubtitle');
+  if (!body || !subtitle) return;
+  subtitle.textContent = rows.length ? `${rows.length} visible asset${rows.length === 1 ? '' : 's'}` : 'No visible assets for the current filters.';
+  if (!rows.length) {
+    body.innerHTML = '<div class="ca-empty" style="margin:14px">No assets match the selected class and status filters.</div>';
+    return;
+  }
+  body.innerHTML = `<table class="ca-table">
+    <thead><tr><th>Asset</th><th>Class</th><th>Status</th><th>Next Due</th></tr></thead>
+    <tbody>
+      ${rows.map((asset, idx) => `
+        <tr onclick="focusCriticalAsset(${idx})">
+          <td><div style="font-weight:700;color:var(--navy)">${escapeHtml(asset.id)}</div><div style="font-size:11px;color:var(--text-l);margin-top:4px">${escapeHtml(asset.description)}</div></td>
+          <td>${escapeHtml(asset.assetClass)}</td>
+          <td><span class="ca-badge ${CRITICAL_STATUS_META[asset.status]?.className || 'unknown'}">${escapeHtml(CRITICAL_STATUS_META[asset.status]?.label || 'Awaiting schedule')}</span></td>
+          <td>${escapeHtml(formatShortDate(asset.nextDue))}</td>
+        </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderCriticalAssetsView() {
+  ensureCriticalAssetsMap();
+  const subtitle = document.getElementById('caMapSubtitle');
+  criticalVisibleAssets = getFilteredCriticalAssets();
+  if (subtitle) {
+    subtitle.textContent = criticalVisibleAssets.length
+      ? `${criticalVisibleAssets.length} assets visible. Pipes are drawn using start/end coordinates from the source file.`
+      : 'No assets match the current filters.';
+  }
+  criticalAssetsLayer.clearLayers();
+  criticalVisibleAssets.forEach((asset, idx) => {
+    const style = getCriticalStyle(asset);
+    const layer = asset.geometryType === 'line' && asset.coordinates
+      ? L.polyline(asset.coordinates, { color: style.color, weight: style.weight, opacity: 0.95 })
+      : L.circleMarker([asset.lat, asset.lon], { radius: 7, color: '#fff', weight: 1.5, fillColor: style.fillColor, fillOpacity: style.fillOpacity });
+    layer.bindPopup(buildCriticalPopup(asset));
+    layer.on('click', () => focusCriticalAsset(idx, false));
+    layer.addTo(criticalAssetsLayer);
+    asset._layer = layer;
+  });
+  renderCriticalAssetsTable(criticalVisibleAssets);
+  renderCriticalAssetsSummary();
+}
+
+function fitCriticalAssetsToVisible() {
+  if (!criticalAssetsMap || !criticalVisibleAssets.length) return;
+  const layers = criticalVisibleAssets.map(asset => asset._layer).filter(Boolean);
+  if (!layers.length) return;
+  const group = L.featureGroup(layers);
+  criticalAssetsMap.fitBounds(group.getBounds().pad(0.12));
+}
+
+function focusCriticalAsset(index, openPopup = true) {
+  const asset = criticalVisibleAssets[index];
+  if (!asset || !asset._layer) return;
+  if (asset.geometryType === 'line' && asset.coordinates) {
+    criticalAssetsMap.fitBounds(asset._layer.getBounds().pad(0.2));
+  } else if (Number.isFinite(asset.lat) && Number.isFinite(asset.lon)) {
+    criticalAssetsMap.setView([asset.lat, asset.lon], Math.max(criticalAssetsMap.getZoom(), 17));
+  }
+  if (openPopup) asset._layer.openPopup();
+}
+
+function updateCriticalAssetsStatusLabels() {
+  const assetsStatus = document.getElementById('caAssetsStatus');
+  const combinedStatus = document.getElementById('caCombinedStatus');
+  const inspectionStatus = document.getElementById('caInspectionStatus');
+  if (assetsStatus) assetsStatus.textContent = criticalAssetsSourceName || 'Not loaded';
+  if (combinedStatus) combinedStatus.textContent = criticalCombinedSourceName || 'Optional';
+  if (inspectionStatus) inspectionStatus.textContent = criticalInspectionSourceName || 'Waiting for file';
+}
+
+async function readSpreadsheetRows(file) {
+  const lower = file.name.toLowerCase();
+  if (lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
+    if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: 'array' });
+    const firstSheet = workbook.SheetNames[0];
+    return XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], { defval: '' });
+  }
+  return parseSimpleCsv(await file.text());
+}
+
+async function loadCriticalAssetsInput(event, kind) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    const rows = await readSpreadsheetRows(file);
+    if (kind === 'inspection') {
+      criticalInspectionRows = rows.map(buildInspectionRecord).filter(Boolean);
+      criticalInspectionSourceName = `${file.name} (${criticalInspectionRows.length.toLocaleString()} rows)`;
+    } else {
+      const newAssets = rows.map((row, idx) => buildCriticalAssetRecord(row, idx, file.name)).filter(Boolean);
+      if (kind === 'assets') {
+        criticalAssetsAll = newAssets;
+        criticalAssetsSourceName = `${file.name} (${newAssets.length.toLocaleString()} critical assets)`;
+      } else {
+        criticalAssetsAll = dedupeCriticalAssets([...criticalAssetsAll, ...newAssets]);
+        criticalCombinedSourceName = `${file.name} (${newAssets.length.toLocaleString()} critical assets)`;
+      }
+    }
+    enrichCriticalAssets();
+    updateCriticalAssetsStatusLabels();
+    renderCriticalAssetsView();
+    if (criticalAssetsAll.length) setTimeout(() => fitCriticalAssetsToVisible(), 80);
+  } catch (e) {
+    alert(`Critical assets import failed: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
+  }
+}
+
+function loadCriticalAssetsDefaults() {
+  updateCriticalAssetsStatusLabels();
+  renderCriticalAssetsView();
+  alert(`Use the upload buttons to load source files from ${CRITICAL_DEFAULT_SOURCE_PATH}, ${CRITICAL_DEFAULT_COMBINED_PATH}, and ${CRITICAL_DEFAULT_INSPECTION_PATH} once available.`);
+}
+
 // â”€â”€ Page navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const PAGES = ['home','aep','prioritisation','costing','relining','futureworks'];
+const PAGES = ['home','aep','criticalassets','prioritisation','costing','relining','futureworks'];
 let currentPage = 'home';
 
 function switchPage(page, options = {}) {
@@ -5310,18 +5589,27 @@ function switchPage(page, options = {}) {
     return;
   }
   currentPage = page;
-  const flexPages = new Set(['aep','prioritisation','costing','relining','futureworks']);
+  const flexPages = new Set(['aep','criticalassets','prioritisation','costing','relining','futureworks']);
   PAGES.forEach(p => {
     const el = document.getElementById('page-' + p);
     if (!el) return;
     el.style.display = p === page ? (flexPages.has(p) ? 'flex' : '') : 'none';
   });
   document.getElementById('page-nav').style.display = page === 'home' ? 'none' : 'flex';
-  document.querySelectorAll('.pnav-btn').forEach((b, i) =>
-    b.classList.toggle('active', ['aep','prioritisation','costing','relining','futureworks'][i] === page));
+  document.querySelectorAll('.pnav-btn[data-page]').forEach(b =>
+    b.classList.toggle('active', b.dataset.page === page));
   if (page === 'aep') {
     if (!window._aepInited) { window._aepInited = true; init(); }
     setTimeout(() => map.invalidateSize(), 50);
+  }
+  if (page === 'criticalassets') {
+    if (!window._criticalAssetsInited) {
+      window._criticalAssetsInited = true;
+      ensureCriticalAssetsMap();
+      updateCriticalAssetsStatusLabels();
+      renderCriticalAssetsView();
+    }
+    setTimeout(() => criticalAssetsMap?.invalidateSize(), 50);
   }
   if (page === 'costing') {
     if (!window._costingInited) {
@@ -5335,8 +5623,6 @@ function switchPage(page, options = {}) {
     if (!window._packagingInited) {
       window._packagingInited = true;
       togglePackagingInputs();
-      refreshPackagingConnection();
-    } else {
       refreshPackagingConnection();
     }
   }
