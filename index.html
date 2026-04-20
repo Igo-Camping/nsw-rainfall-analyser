@@ -5000,16 +5000,26 @@ function meanCoordinate(items) {
 }
 
 function findBestClusterSeed(remaining, options) {
-  return remaining.slice().sort((a, b) => {
-    const nearbyCount = item => remaining.filter(other =>
+  const counts = new Map(remaining.map(item => [
+    item.assetId,
+    remaining.filter(other =>
       other.assetId !== item.assetId &&
       Number.isFinite(other.lat) &&
       Number.isFinite(other.lon) &&
       haversineDistanceM(item, other) <= CCTV_TIGHT_CLUSTER_RADIUS_M
-    ).length;
-    if (a.isTbaCondition !== b.isTbaCondition) return a.isTbaCondition ? -1 : 1;
-    const densityDiff = nearbyCount(b) - nearbyCount(a);
-    if (densityDiff !== 0) return densityDiff;
+    ).length
+  ]));
+  return remaining.slice().sort((a, b) => {
+    const aNearby = counts.get(a.assetId);
+    const bNearby = counts.get(b.assetId);
+    // Group 0: TBA with ≥1 neighbour, Group 1: non-TBA, Group 2: isolated TBA
+    const aGroup = a.isTbaCondition ? (aNearby > 0 ? 0 : 2) : 1;
+    const bGroup = b.isTbaCondition ? (bNearby > 0 ? 0 : 2) : 1;
+    if (aGroup !== bGroup) return aGroup - bGroup;
+    if (aGroup === 1) {
+      const densityDiff = bNearby - aNearby;
+      if (densityDiff !== 0) return densityDiff;
+    }
     if (b.criticalityScore !== a.criticalityScore) return b.criticalityScore - a.criticalityScore;
     return String(a.assetId).localeCompare(String(b.assetId));
   })[0];
