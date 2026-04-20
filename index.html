@@ -5096,7 +5096,7 @@ function buildCctvPackagesPortable(candidates, options, rateMeta) {
     const pkg = [];
     for (const entry of scored) {
       if (entry.distanceM > options.proximityM) continue;
-      if (!canAddToCctvPackage(pkg, entry.item, options)) continue;
+      if (!canAddToCctvPackage(pkg, entry.item, options)) break;
       pkg.push(entry.item);
     }
     const pkgIds = new Set(pkg.map(item => item.assetId));
