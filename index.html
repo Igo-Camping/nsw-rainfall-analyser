@@ -4756,19 +4756,7 @@ function resolveCctvCriticalityScore(row) {
 }
 
 function resolveCctvCoordinate(row) {
-  const midY = parseNumberValue(getValueByAliases(row, ['YMid', 'YMid.1']));
-  const midX = parseNumberValue(getValueByAliases(row, ['XMid', 'XMid.1']));
-  if (Number.isFinite(midX) && Number.isFinite(midY)) {
-    if (midX > 1000 && midY > 1000) return { ...utmToLatLng(midX, midY, 56, true), source: 'midpoint_projected' };
-    if (midY >= -35 && midY <= -32 && midX >= 150 && midX <= 153) return { lat: midY, lon: midX, source: 'midpoint_lat_lon' };
-  }
-
-  const start = resolveLineCoordinatePair(row, true);
-  const end = resolveLineCoordinatePair(row, false);
-  if (start && end) return { lat: (start.lat + end.lat) / 2, lon: (start.lon + end.lon) / 2, source: 'line_midpoint' };
-  if (start) return { ...start, source: 'line_start' };
-  if (end) return { ...end, source: 'line_end' };
-
+  // 1. Direct lat/lon — most reliable
   const lat = parseNumberValue(getValueByAliases(row, ['Latitude', 'lat']));
   const lon = parseNumberValue(getValueByAliases(row, ['Longitude', 'lon']));
   if (Number.isFinite(lat) && Number.isFinite(lon) && lat >= -35 && lat <= -32 && lon >= 150 && lon <= 153) {
@@ -4777,6 +4765,22 @@ function resolveCctvCoordinate(row) {
   if (Number.isFinite(lat) && Number.isFinite(lon) && lon >= -35 && lon <= -32 && lat >= 150 && lat <= 153) {
     return { lat: lon, lon: lat, source: 'swapped_lat_lon' };
   }
+
+  // 2. YMid/XMid midpoint
+  const midY = parseNumberValue(getValueByAliases(row, ['YMid', 'YMid.1']));
+  const midX = parseNumberValue(getValueByAliases(row, ['XMid', 'XMid.1']));
+  if (Number.isFinite(midX) && Number.isFinite(midY)) {
+    if (midX > 1000 && midY > 1000) return { ...utmToLatLng(midX, midY, 56, true), source: 'midpoint_projected' };
+    if (midY >= -35 && midY <= -32 && midX >= 150 && midX <= 153) return { lat: midY, lon: midX, source: 'midpoint_lat_lon' };
+  }
+
+  // 3. Line start/end
+  const start = resolveLineCoordinatePair(row, true);
+  const end = resolveLineCoordinatePair(row, false);
+  if (start && end) return { lat: (start.lat + end.lat) / 2, lon: (start.lon + end.lon) / 2, source: 'line_midpoint' };
+  if (start) return { ...start, source: 'line_start' };
+  if (end) return { ...end, source: 'line_end' };
+
   return null;
 }
 
