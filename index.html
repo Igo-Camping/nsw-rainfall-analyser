@@ -5178,12 +5178,7 @@ function buildFixedCentreCctvPackages(candidates, options, rateMeta) {
       return String(a.assetId).localeCompare(String(b.assetId));
     })[0];
 
-    // Fix 2: compute a fixed anchor from all initial neighbours within proximityM of seed
-    const initialNeighbours = remaining.filter(item =>
-      Number.isFinite(item.lat) && Number.isFinite(item.lon) &&
-      haversineDistanceM(centre, item) <= options.proximityM
-    );
-    const fixedAnchor = meanCoordinate(initialNeighbours.length ? initialNeighbours : [centre]) || centre;
+    const fixedAnchor = centre;
 
     const items = [centre];
     let acceptedInPass = true;
