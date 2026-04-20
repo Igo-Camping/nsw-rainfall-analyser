@@ -1533,7 +1533,7 @@ window.addEventListener('keydown', (event) => {
         <code>TBA</code> pipes are treated as highest-priority candidates where selected,
         <code>Condition 1-6</code> remains available as the normal condition filter,
         assets with no CCTV date remain eligible,
-        packages start from a tight <code>100 m</code> local cluster, then include only pipes inside the selected radius from that cluster centre,
+        each package has one fixed centre and includes only pipes inside the selected radius from that centre,
         criticality only nudges ordering,
         and CCTV cost is estimated from package length divided by the survey production rate, multiplied by the median CCTV panel rate.
       </div>
@@ -4756,15 +4756,6 @@ function resolveCctvCriticalityScore(row) {
 }
 
 function resolveCctvCoordinate(row) {
-  const lat = parseNumberValue(getValueByAliases(row, ['Latitude', 'lat']));
-  const lon = parseNumberValue(getValueByAliases(row, ['Longitude', 'lon']));
-  if (Number.isFinite(lat) && Number.isFinite(lon) && lat >= -35 && lat <= -32 && lon >= 150 && lon <= 153) {
-    return { lat, lon, source: 'lat_lon' };
-  }
-  if (Number.isFinite(lat) && Number.isFinite(lon) && lon >= -35 && lon <= -32 && lat >= 150 && lat <= 153) {
-    return { lat: lon, lon: lat, source: 'swapped_lat_lon' };
-  }
-
   const midY = parseNumberValue(getValueByAliases(row, ['YMid', 'YMid.1']));
   const midX = parseNumberValue(getValueByAliases(row, ['XMid', 'XMid.1']));
   if (Number.isFinite(midX) && Number.isFinite(midY)) {
@@ -4777,6 +4768,15 @@ function resolveCctvCoordinate(row) {
   if (start && end) return { lat: (start.lat + end.lat) / 2, lon: (start.lon + end.lon) / 2, source: 'line_midpoint' };
   if (start) return { ...start, source: 'line_start' };
   if (end) return { ...end, source: 'line_end' };
+
+  const lat = parseNumberValue(getValueByAliases(row, ['Latitude', 'lat']));
+  const lon = parseNumberValue(getValueByAliases(row, ['Longitude', 'lon']));
+  if (Number.isFinite(lat) && Number.isFinite(lon) && lat >= -35 && lat <= -32 && lon >= 150 && lon <= 153) {
+    return { lat, lon, source: 'lat_lon' };
+  }
+  if (Number.isFinite(lat) && Number.isFinite(lon) && lon >= -35 && lon <= -32 && lat >= 150 && lat <= 153) {
+    return { lat: lon, lon: lat, source: 'swapped_lat_lon' };
+  }
   return null;
 }
 
@@ -4798,8 +4798,6 @@ const GENERIC_SUBURB_VALUES = new Set([
   'RESERVE', 'PROPERTY', 'PRIVATE PROPERTY', 'COUNCIL PROPERTY',
   'PARK', 'ROAD RESERVE', 'DRAINAGE RESERVE', 'PUBLIC RESERVE'
 ]);
-
-const CCTV_TIGHT_CLUSTER_RADIUS_M = 100;
 
 const NON_SUBURB_PLACE_PATTERNS = [
   /\breserve\b/i,
@@ -4999,49 +4997,28 @@ function meanCoordinate(items) {
   };
 }
 
-function findBestClusterSeed(remaining, options) {
+function findBestPackageCenter(remaining, options) {
   const counts = new Map(remaining.map(item => [
     item.assetId,
     remaining.filter(other =>
       other.assetId !== item.assetId &&
       Number.isFinite(other.lat) &&
       Number.isFinite(other.lon) &&
-      haversineDistanceM(item, other) <= CCTV_TIGHT_CLUSTER_RADIUS_M
+      haversineDistanceM(item, other) <= options.proximityM
     ).length
   ]));
   return remaining.slice().sort((a, b) => {
     const aNearby = counts.get(a.assetId);
     const bNearby = counts.get(b.assetId);
-    // Group 0: TBA with ≥1 neighbour, Group 1: non-TBA, Group 2: isolated TBA
+    // Group 0: TBA with neighbours, Group 1: non-TBA dense centres, Group 2: isolated TBA
     const aGroup = a.isTbaCondition ? (aNearby > 0 ? 0 : 2) : 1;
     const bGroup = b.isTbaCondition ? (bNearby > 0 ? 0 : 2) : 1;
     if (aGroup !== bGroup) return aGroup - bGroup;
-    if (aGroup === 1) {
-      const densityDiff = bNearby - aNearby;
-      if (densityDiff !== 0) return densityDiff;
-    }
+    const densityDiff = bNearby - aNearby;
+    if (densityDiff !== 0) return densityDiff;
     if (b.criticalityScore !== a.criticalityScore) return b.criticalityScore - a.criticalityScore;
     return String(a.assetId).localeCompare(String(b.assetId));
   })[0];
-}
-
-function buildTightCctvCluster(seed, remaining) {
-  const candidates = remaining
-    .filter(item => item.assetId !== seed.assetId && Number.isFinite(item.lat) && Number.isFinite(item.lon))
-    .map(item => ({ item, distanceM: haversineDistanceM(seed, item) }))
-    .filter(entry => entry.distanceM <= CCTV_TIGHT_CLUSTER_RADIUS_M)
-    .sort((a, b) => a.distanceM - b.distanceM);
-
-  const cluster = [seed];
-  for (const entry of candidates) {
-    const isWithinEveryClusterPipe = cluster.every(existing =>
-      Number.isFinite(existing.lat) &&
-      Number.isFinite(existing.lon) &&
-      haversineDistanceM(existing, entry.item) <= CCTV_TIGHT_CLUSTER_RADIUS_M
-    );
-    if (isWithinEveryClusterPipe) cluster.push(entry.item);
-  }
-  return cluster;
 }
 
 function maxPackageSpanM(items) {
@@ -5084,9 +5061,7 @@ function buildCctvPackagesPortable(candidates, options, rateMeta) {
   const remaining = candidates.slice();
   const packages = [];
   while (remaining.length) {
-    const seed = findBestClusterSeed(remaining, options);
-    const tightCluster = buildTightCctvCluster(seed, remaining);
-    const clusterCenter = meanCoordinate(tightCluster) || seed;
+    const clusterCenter = findBestPackageCenter(remaining, options);
     const scored = remaining.map(item => {
       const distanceM = Number.isFinite(item.lat) && Number.isFinite(item.lon)
         ? haversineDistanceM(clusterCenter, item)
@@ -5097,9 +5072,8 @@ function buildCctvPackagesPortable(candidates, options, rateMeta) {
       return { item, distanceM, adjustedDistance };
     }).filter(entry => Number.isFinite(entry.distanceM) && entry.distanceM <= options.proximityM)
       .sort((a, b) => {
-        const aInTightCluster = tightCluster.some(clusterItem => clusterItem.assetId === a.item.assetId);
-        const bInTightCluster = tightCluster.some(clusterItem => clusterItem.assetId === b.item.assetId);
-        if (aInTightCluster !== bInTightCluster) return aInTightCluster ? -1 : 1;
+        if (a.item.assetId === clusterCenter.assetId) return -1;
+        if (b.item.assetId === clusterCenter.assetId) return 1;
         return a.adjustedDistance - b.adjustedDistance;
       });
 
@@ -5109,11 +5083,12 @@ function buildCctvPackagesPortable(candidates, options, rateMeta) {
       if (!canAddToCctvPackage(pkg, entry.item, options)) break;
       pkg.push(entry.item);
     }
-    const pkgIds = new Set(pkg.map(item => item.assetId));
+    const boundedPkg = pkg.filter(item => haversineDistanceM(clusterCenter, item) <= options.proximityM);
+    const pkgIds = new Set(boundedPkg.map(item => item.assetId));
     for (let i = remaining.length - 1; i >= 0; i--) {
       if (pkgIds.has(remaining[i].assetId)) remaining.splice(i, 1);
     }
-    packages.push({ items: pkg, clusterCenter });
+    packages.push({ items: boundedPkg, clusterCenter });
   }
 
   return packages.map((packageDraft, index) => {
@@ -5126,7 +5101,7 @@ function buildCctvPackagesPortable(candidates, options, rateMeta) {
     const maxSpanM = maxPackageSpanM(items);
     const coordinateSources = packageCoordinateSourceSummary(items);
     const suburbCounts = {};
-    items.forEach(item => {
+    items.filter(item => item.package_center_distance_m == null || item.package_center_distance_m <= options.proximityM).forEach(item => {
       suburbCounts[item.suburb] = (suburbCounts[item.suburb] || 0) + 1;
     });
     const suburbEntries = Object.entries(suburbCounts)
@@ -5151,7 +5126,7 @@ function buildCctvPackagesPortable(candidates, options, rateMeta) {
       max_span_m: maxSpanM,
       distance_warning: maxSpanM > (options.proximityM * 2) ? 'Check coordinates or reduce radius' : '',
       coordinate_sources: coordinateSources,
-      tight_cluster_radius_m: CCTV_TIGHT_CLUSTER_RADIUS_M,
+      package_radius_m: options.proximityM,
       asset_ids: assetIds,
       asset_links: assetLinks.filter(Boolean),
       package_map_link: buildEsriPackageLink(assetIds, esriOptions),
@@ -5163,7 +5138,140 @@ function buildCctvPackagesPortable(candidates, options, rateMeta) {
       assets: items.map((item, itemIndex) => ({
         ...item,
         asset_id_text: item.assetId,
-        esri_asset_link: assetLinks[itemIndex] || ''
+        esri_asset_link: assetLinks[itemIndex] || '',
+        package_center_distance_m: Number.isFinite(item.lat) && Number.isFinite(item.lon)
+          ? haversineDistanceM(clusterCenter, item)
+          : null
+      }))
+    };
+  });
+}
+
+function buildFixedCentreCctvPackages(candidates, options, rateMeta) {
+  const esriOptions = getCctvEsriLinkOptions();
+  const remaining = candidates.slice();
+  const packageDrafts = [];
+
+  while (remaining.length) {
+    // Fix 1: pre-compute neighbour counts to deprioritise isolated TBA seeds
+    const neighbourCounts = new Map(remaining.map(item => [
+      item.assetId,
+      remaining.filter(other =>
+        other.assetId !== item.assetId &&
+        Number.isFinite(other.lat) &&
+        Number.isFinite(other.lon) &&
+        haversineDistanceM(item, other) <= options.proximityM
+      ).length
+    ]));
+    const centre = remaining.slice().sort((a, b) => {
+      const aNearby = neighbourCounts.get(a.assetId);
+      const bNearby = neighbourCounts.get(b.assetId);
+      // Group 0: TBA with ≥1 neighbour, Group 1: non-TBA, Group 2: isolated TBA
+      const aGroup = a.isTbaCondition ? (aNearby > 0 ? 0 : 2) : 1;
+      const bGroup = b.isTbaCondition ? (bNearby > 0 ? 0 : 2) : 1;
+      if (aGroup !== bGroup) return aGroup - bGroup;
+      if (aGroup === 1) {
+        const densityDiff = bNearby - aNearby;
+        if (densityDiff !== 0) return densityDiff;
+      }
+      if (b.criticalityScore !== a.criticalityScore) return b.criticalityScore - a.criticalityScore;
+      return String(a.assetId).localeCompare(String(b.assetId));
+    })[0];
+
+    // Fix 2: compute a fixed anchor from all initial neighbours within proximityM of seed
+    const initialNeighbours = remaining.filter(item =>
+      Number.isFinite(item.lat) && Number.isFinite(item.lon) &&
+      haversineDistanceM(centre, item) <= options.proximityM
+    );
+    const fixedAnchor = meanCoordinate(initialNeighbours.length ? initialNeighbours : [centre]) || centre;
+
+    const items = [centre];
+    let acceptedInPass = true;
+    while (acceptedInPass) {
+      acceptedInPass = false;
+      const acceptedIds = new Set(items.map(item => item.assetId));
+      const candidatesInsideRadius = remaining
+        .filter(item => !acceptedIds.has(item.assetId))
+        .map(item => ({
+          item,
+          distanceM: Number.isFinite(item.lat) && Number.isFinite(item.lon)
+            ? haversineDistanceM(fixedAnchor, item)  // Fix 2: fixed anchor, not drifting mean
+            : Number.POSITIVE_INFINITY
+        }))
+        .filter(entry => Number.isFinite(entry.distanceM) && entry.distanceM <= options.proximityM)  // Fix 3: no * 1.5
+        .sort((a, b) => a.distanceM - b.distanceM);
+
+      for (const entry of candidatesInsideRadius) {
+        if (!canAddToCctvPackage(items, entry.item, options)) continue;
+        const allWithinPackageRadius = Number.isFinite(entry.item.lat) &&
+          Number.isFinite(entry.item.lon) &&
+          haversineDistanceM(fixedAnchor, entry.item) <= options.proximityM;  // Fix 2: fixed anchor
+        if (!allWithinPackageRadius) continue;
+        items.push(entry.item);
+        acceptedInPass = true;
+        break;
+      }
+    }
+
+    const packageIds = new Set(items.map(item => item.assetId));
+    for (let i = remaining.length - 1; i >= 0; i--) {
+      if (packageIds.has(remaining[i].assetId)) remaining.splice(i, 1);
+    }
+    packageDrafts.push({ items, clusterCenter: meanCoordinate(items) || centre });
+  }
+
+  return packageDrafts.map((packageDraft, index) => {
+    const { items, clusterCenter } = packageDraft;
+    const centroid = meanCoordinate(items);
+    const totalLengthM = items.reduce((sum, item) => sum + (item.lengthM || 0), 0);
+    const surveyHours = totalLengthM / options.metresPerHour;
+    const cctvRate = rateMeta?.medianRate || 0;
+    const totalCost = surveyHours * cctvRate;
+    const maxSpanM = maxPackageSpanM(items);
+    const coordinateSources = packageCoordinateSourceSummary(items);
+    const suburbCounts = {};
+    items.forEach(item => {
+      suburbCounts[item.suburb] = (suburbCounts[item.suburb] || 0) + 1;
+    });
+    const suburbEntries = Object.entries(suburbCounts)
+      .filter(([suburb]) => suburb && suburb !== 'Unknown')
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const allSuburbs = suburbEntries.map(([suburb]) => suburb);
+    const suburb = allSuburbs[0] || 'Unknown';
+    const assetIds = items.map(item => item.assetId);
+    const assetLinks = items.map(item => buildEsriAssetLink(item.assetId, esriOptions));
+
+    return {
+      package_id: `CCTV_${String(index + 1).padStart(3, '0')}`,
+      suburb,
+      primary_suburb: suburb,
+      suburbs: allSuburbs.length ? allSuburbs : ['Unknown'],
+      pipe_count: items.length,
+      tba_pipe_count: items.filter(item => item.isTbaCondition).length,
+      critical_pipe_count: items.filter(item => item.criticalityScore > 0).length,
+      total_length_m: totalLengthM,
+      cctv_hours: surveyHours,
+      cctv_rate: cctvRate,
+      total_cost: totalCost,
+      max_span_m: maxSpanM,
+      distance_warning: maxSpanM > (options.proximityM * 2) ? 'Check coordinates or reduce radius' : '',
+      coordinate_sources: coordinateSources,
+      package_radius_m: options.proximityM,
+      asset_ids: assetIds,
+      asset_links: assetLinks.filter(Boolean),
+      package_map_link: buildEsriPackageLink(assetIds, esriOptions),
+      esri_id_field: esriOptions.idField,
+      lat: centroid?.lat ?? null,
+      lon: centroid?.lon ?? null,
+      cluster_center_lat: clusterCenter?.lat ?? null,
+      cluster_center_lon: clusterCenter?.lon ?? null,
+      assets: items.map((item, itemIndex) => ({
+        ...item,
+        asset_id_text: item.assetId,
+        esri_asset_link: assetLinks[itemIndex] || '',
+        package_center_distance_m: Number.isFinite(item.lat) && Number.isFinite(item.lon)
+          ? haversineDistanceM(clusterCenter, item)
+          : null
       }))
     };
   });
@@ -5285,7 +5393,7 @@ function renderGeneratedCctvPackages(packages) {
     max_span_m: pkg.max_span_m.toFixed(0),
     distance_warning: pkg.distance_warning || '',
     coordinate_sources: pkg.coordinate_sources || '',
-    tight_cluster_radius_m: pkg.tight_cluster_radius_m,
+    package_radius_m: pkg.package_radius_m,
     cluster_center: Number.isFinite(pkg.cluster_center_lat) && Number.isFinite(pkg.cluster_center_lon)
       ? `${pkg.cluster_center_lat.toFixed(6)}, ${pkg.cluster_center_lon.toFixed(6)}`
       : '',
@@ -5304,6 +5412,7 @@ function renderGeneratedCctvPackages(packages) {
     tba_priority: item.isTbaCondition ? 'Yes' : '',
     criticality_score: item.criticalityScore,
     coordinate_source: item.coordinateSource || '',
+    centre_distance_m: item.package_center_distance_m != null ? item.package_center_distance_m.toFixed(0) : '',
     length_m: Number(item.lengthM || 0).toFixed(1)
   }));
   const summaryHeaders = Object.keys(summaryRows[0]);
@@ -5363,14 +5472,15 @@ function exportCctvPackagesCsv() {
     'package_max_span_m',
     'distance_warning',
     'coordinate_sources',
-    'tight_cluster_radius_m',
+    'package_radius_m',
     'cluster_center_lat',
     'cluster_center_lon',
     'package_cctv_hours',
     'package_total_cost',
     'latitude',
     'longitude',
-    'coordinate_source'
+    'coordinate_source',
+    'centre_distance_m'
   ]];
 
   packages.forEach(pkg => {
@@ -5392,14 +5502,15 @@ function exportCctvPackagesCsv() {
         Number(pkg.max_span_m || 0).toFixed(0),
         pkg.distance_warning || '',
         pkg.coordinate_sources || '',
-        pkg.tight_cluster_radius_m || CCTV_TIGHT_CLUSTER_RADIUS_M,
+        pkg.package_radius_m || '',
         pkg.cluster_center_lat ?? '',
         pkg.cluster_center_lon ?? '',
         Number(pkg.cctv_hours || 0).toFixed(2),
         Number(pkg.total_cost || 0).toFixed(2),
         item.lat ?? '',
         item.lon ?? '',
-        item.coordinateSource || ''
+        item.coordinateSource || '',
+        item.package_center_distance_m != null ? item.package_center_distance_m.toFixed(0) : ''
       ]);
     });
   });
@@ -5448,7 +5559,7 @@ function buildCctvPackagePopup(pkg) {
         <div><strong>Max span:</strong> ${Number(pkg.max_span_m || 0).toFixed(0)} m</div>
         <div><strong>Coordinate sources:</strong> ${escapeHtml(pkg.coordinate_sources || 'Unknown')}</div>
         ${pkg.distance_warning ? `<div style="color:#C0392B"><strong>Warning:</strong> ${escapeHtml(pkg.distance_warning)}</div>` : ''}
-        <div><strong>Tight cluster radius:</strong> ${pkg.tight_cluster_radius_m || CCTV_TIGHT_CLUSTER_RADIUS_M} m</div>
+        <div><strong>Package radius:</strong> ${pkg.package_radius_m || 0} m</div>
         <div><strong>Cluster centre:</strong> ${Number.isFinite(pkg.cluster_center_lat) && Number.isFinite(pkg.cluster_center_lon) ? `${pkg.cluster_center_lat.toFixed(6)}, ${pkg.cluster_center_lon.toFixed(6)}` : 'Not available'}</div>
         <div><strong>CCTV hours:</strong> ${Number(pkg.cctv_hours || 0).toFixed(2)}</div>
         <div><strong>Cost:</strong> ${formatCurrency(pkg.total_cost || 0)}</div>
@@ -5531,7 +5642,7 @@ async function generateCctvPackages() {
     lastCctvPackagingPreview = preview;
     setLoadTxt('Grouping nearby pipes...');
     await waitForPaint();
-    const packages = buildCctvPackagesPortable(preview.withCoords, options, cctvPackagingRatesData.meta);
+    const packages = buildFixedCentreCctvPackages(preview.withCoords, options, cctvPackagingRatesData.meta);
     lastCctvPackagingGeneration = { options, preview, packages, rateMeta: cctvPackagingRatesData.meta };
     setLoadTxt('Rendering package tables and map...');
     await waitForPaint();
