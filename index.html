@@ -4569,6 +4569,7 @@ async function loadCctvPackagingRatesFile(event) {
 
 function clearCctvPackagingOutputs(clearPreview = true) {
   if (clearPreview) {
+    lastCctvPackagingPreview = null;
     const sample = document.getElementById('cctvPkgSampleArea');
     if (sample) {
       sample.className = 'pkg-empty';
@@ -5637,7 +5638,7 @@ async function generateCctvPackages() {
     showLoad('Building CCTV packages...');
     await waitForPaint();
     const options = getCctvPackagingOptions();
-    const preview = lastCctvPackagingPreview || buildCctvPackagingPreview(cctvPackagingAssetsData, options);
+    const preview = buildCctvPackagingPreview(cctvPackagingAssetsData, options);
     lastCctvPackagingPreview = preview;
     setLoadTxt('Grouping nearby pipes...');
     await waitForPaint();
