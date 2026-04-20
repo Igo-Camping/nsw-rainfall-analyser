@@ -4939,7 +4939,7 @@ function normaliseCctvCandidateRow(row, index, options) {
   const isTba = isTbaCondition(rawCondition);
   if (!shouldIncludeCctvCondition(condition, isTba, options.conditionGroups)) return null;
 
-  const assetId = String(getValueByAliases(row, ['Asset', 'Asset Number', 'Asset_Number', 'CATLG_ID', 'MAPKEY']) || `asset-${index + 1}`).trim();
+  const assetId = String(getValueByAliases(row, ['OBJECTID', 'Asset', 'Asset Number', 'Asset_Number', 'MAPKEY', 'CATLG_ID']) || `asset-${index + 1}`).trim();
   const cctvDate = resolveCctvDate(row);
   const cutoff = new Date();
   cutoff.setFullYear(cutoff.getFullYear() - options.lookbackYears);
