@@ -4930,6 +4930,23 @@ function resolveCctvSuburb(row) {
     if (suburb) return suburb;
   }
 
+  // Step 1: Physical_Location — formatSuburbName and backslash-split extraction
+  const physLoc = String(getValueByAliases(row, ['Physical_Location']) || '').trim();
+  if (physLoc) {
+    const direct = formatSuburbName(physLoc);
+    if (direct) return direct;
+    const afterBackslash = physLoc.includes('\\') ? physLoc.split('\\').pop().trim() : physLoc;
+    const fromSplit = formatSuburbName(afterBackslash) || extractSuburbFromAddress(afterBackslash);
+    if (fromSplit) return fromSplit;
+  }
+
+  // Step 2: SW_Sub_Catchment — use only if it matches a known NBC suburb
+  const subCatchment = String(getValueByAliases(row, ['SW_Sub_Catchment']) || '').trim();
+  if (subCatchment) {
+    const formatted = formatSuburbName(subCatchment);
+    if (formatted && NORTHERN_BEACHES_SUBURBS.includes(formatted)) return formatted;
+  }
+
   return 'Unknown';
 }
 
