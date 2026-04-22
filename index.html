@@ -1564,7 +1564,7 @@ window.addEventListener('keydown', (event) => {
           <label for="cctvPkgConsolidateSmall">Small Package Consolidation</label>
           <label style="font-size:12px;color:var(--text);display:flex;align-items:center;gap:8px;padding:9px 10px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--panel)">
             <input type="checkbox" id="cctvPkgConsolidateSmall"/>
-            Consolidate packages of 5 pipes or less
+            Consolidate packages with fewer than 5 pipes
           </label>
         </div>
         <div class="fg">
@@ -1574,7 +1574,7 @@ window.addEventListener('keydown', (event) => {
         <div class="fg">
           <label>&nbsp;</label>
           <div style="font-size:11px;color:var(--text-l);line-height:1.5;padding-top:8px">
-            Optional post-processing step. Small packages are merged into the nearest package whose centre is within this separate distance.
+            Optional post-processing step. Original small packages are moved once into the nearest original non-small package within this separate distance.
           </div>
         </div>
       </div>
@@ -5029,7 +5029,7 @@ function getCctvPackagingOptions() {
     metresPerHour: Math.max(1, parseNumberValue(document.getElementById('cctvPkgMetresPerHour')?.value) || 80),
     criticalityWeight: Math.max(0, parseNumberValue(document.getElementById('cctvPkgCriticalityWeight')?.value) || 0.1),
     consolidateSmallPackages: !!document.getElementById('cctvPkgConsolidateSmall')?.checked,
-    consolidateSmallPackageMaxPipes: 5,
+    consolidateSmallPackageMaxPipes: 4,
     consolidateSmallDistanceM: Math.max(1, parseNumberValue(document.getElementById('cctvPkgConsolidateDistance')?.value) || 500)
   };
 }
@@ -5738,42 +5738,39 @@ function consolidateSmallCctvPackages(packages, options, rateMeta) {
   if (!options.consolidateSmallPackages || !packages?.length) return packages;
   const maxPipes = options.consolidateSmallPackageMaxPipes || 5;
   const maxDistanceM = options.consolidateSmallDistanceM || 500;
-  const drafts = packages.map(pkg => ({
+  const drafts = packages.map((pkg, originalIndex) => ({
+    originalIndex,
+    isOriginalSmall: (pkg.pipe_count || pkg.assets?.length || 0) <= maxPipes,
     items: (pkg.assets || []).map(item => ({ ...item })),
     center: Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon) ? { lat: pkg.lat, lon: pkg.lon } : meanCoordinate(pkg.assets || [])
   }));
 
-  let merged = true;
-  while (merged) {
-    merged = false;
-    for (let i = 0; i < drafts.length; i++) {
-      const small = drafts[i];
-      if (!small || small.items.length > maxPipes) continue;
-      small.center = meanCoordinate(small.items) || small.center;
-      if (!small.center) continue;
-      let bestIndex = -1;
-      let bestDistance = Number.POSITIVE_INFINITY;
-      drafts.forEach((candidate, candidateIndex) => {
-        if (candidateIndex === i) return;
-        candidate.center = meanCoordinate(candidate.items) || candidate.center;
-        if (!candidate.center) return;
-        const distance = haversineDistanceM(small.center, candidate.center);
-        if (distance <= maxDistanceM && distance < bestDistance) {
-          bestDistance = distance;
-          bestIndex = candidateIndex;
-        }
-      });
-      if (bestIndex < 0) continue;
-      drafts[bestIndex].items.push(...small.items);
-      drafts[bestIndex].center = meanCoordinate(drafts[bestIndex].items) || drafts[bestIndex].center;
-      drafts.splice(i, 1);
-      merged = true;
-      break;
-    }
-  }
+  const donors = drafts.filter(draft => draft.isOriginalSmall);
+  donors.forEach(donor => {
+    donor.center = meanCoordinate(donor.items) || donor.center;
+    if (!donor.center) return;
+    let bestTarget = null;
+    let bestDistance = Number.POSITIVE_INFINITY;
+    drafts.forEach(candidate => {
+      if (candidate.originalIndex === donor.originalIndex || candidate.isOriginalSmall || candidate.mergedInto != null) return;
+      candidate.center = meanCoordinate(candidate.items) || candidate.center;
+      if (!candidate.center) return;
+      const distance = haversineDistanceM(donor.center, candidate.center);
+      if (distance <= maxDistanceM && distance < bestDistance) {
+        bestDistance = distance;
+        bestTarget = candidate;
+      }
+    });
+    if (!bestTarget) return;
+    bestTarget.items.push(...donor.items);
+    bestTarget.center = meanCoordinate(bestTarget.items) || bestTarget.center;
+    donor.mergedInto = bestTarget.originalIndex;
+  });
 
   const esriOptions = getCctvEsriLinkOptions();
-  return drafts.map((draft, index) => rebuildCctvPackageFromItems(draft.items, index, options, rateMeta, esriOptions));
+  return drafts
+    .filter(draft => draft.mergedInto == null)
+    .map((draft, index) => rebuildCctvPackageFromItems(draft.items, index, options, rateMeta, esriOptions));
 }
 
 function renderCctvPackagingMeta(preview, rateMeta, options) {
