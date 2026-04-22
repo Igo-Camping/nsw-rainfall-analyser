@@ -6355,6 +6355,7 @@ async function showLevelChart(stationId, stationName, colour) {
 // â”€â”€ All LGA boundaries (background layer) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadAllLgaBoundaries() {
   try {
+    await Promise.resolve();
     let geojson = window.NSW_LGA_BOUNDARIES;
     if (!geojson) {
       const resp = await fetch('./nsw_lga_boundaries.geojson');
