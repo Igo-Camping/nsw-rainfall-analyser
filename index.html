@@ -2109,7 +2109,7 @@ function getLGA(station) {
 }
 
 function getStationSourceLabel(station) {
-  if (station?.isBomGauge) return canAnalyseStation(station) ? 'BoM AWS fallback' : (station.element || station.sourceLayer || 'BOM record');
+  if (station?.isBomGauge) return canAnalyseStation(station) ? 'BoM rainfall fallback' : (station.element || station.sourceLayer || 'BOM record');
   return 'Official live rainfall';
 }
 

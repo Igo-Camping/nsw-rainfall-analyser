@@ -20,9 +20,12 @@ from typing import Optional
 import json
 import math
 import asyncio
+import re
 import xml.etree.ElementTree as ET
+from html.parser import HTMLParser
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 import httpx
 
 app = FastAPI(
@@ -83,10 +86,12 @@ load_station_cache()
 MHL_BASE = "https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS"
 BOM_OBS_XML = "http://www.bom.gov.au/fwo/IDN60920.xml"
 BOM_HISTORY_JSON = "http://www.bom.gov.au/fwo/IDN60801/IDN60801.{wmo}.json"
+BOM_CDO_DAILY_URL = "http://www.bom.gov.au/jsp/ncc/cdio/weatherData/av"
 BOM_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-    "Accept": "application/json, application/xml, text/xml, */*",
+    "Accept": "application/json, application/xml, text/xml, text/html, */*",
 }
+SYDNEY_TZ = ZoneInfo("Australia/Sydney")
 _bom_station_map: dict = {}
 _bom_station_map_loaded_at: Optional[datetime] = None
 
@@ -163,6 +168,81 @@ def normalise_bom_id(value: str) -> str:
 
 def parse_bom_time(value: str) -> datetime:
     return datetime.strptime(value, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+
+
+class CdoDailyTableParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.rows: list[list[str]] = []
+        self.station_title = ""
+        self._in_data_table = False
+        self._table_depth = 0
+        self._in_row = False
+        self._current_row: list[str] = []
+        self._current_cell: Optional[list[str]] = None
+        self._capture_heading = False
+        self._heading_parts: list[str] = []
+
+    def handle_starttag(self, tag, attrs):
+        attr_map = dict(attrs)
+        if tag == "table" and attr_map.get("id") == "dataTable":
+            self._in_data_table = True
+            self._table_depth = 1
+        elif self._in_data_table and tag == "table":
+            self._table_depth += 1
+
+        if tag in ("h1", "h2"):
+            self._capture_heading = True
+            self._heading_parts = []
+
+        if self._in_data_table and tag == "tr":
+            self._in_row = True
+            self._current_row = []
+        elif self._in_data_table and self._in_row and tag in ("th", "td"):
+            self._current_cell = []
+
+    def handle_data(self, data):
+        if self._capture_heading:
+            self._heading_parts.append(data)
+        if self._current_cell is not None:
+            self._current_cell.append(data)
+
+    def handle_endtag(self, tag):
+        if tag in ("h1", "h2") and self._capture_heading:
+            heading = " ".join(part.strip() for part in self._heading_parts if part.strip())
+            if "Daily Rainfall" in heading:
+                self.station_title = heading
+            self._capture_heading = False
+            self._heading_parts = []
+
+        if self._in_data_table and self._in_row and tag in ("th", "td"):
+            value = " ".join(part.strip() for part in (self._current_cell or []) if part.strip())
+            self._current_row.append(value)
+            self._current_cell = None
+        elif self._in_data_table and tag == "tr":
+            if self._current_row:
+                self.rows.append(self._current_row)
+            self._in_row = False
+            self._current_row = []
+        elif self._in_data_table and tag == "table":
+            self._table_depth -= 1
+            if self._table_depth <= 0:
+                self._in_data_table = False
+
+
+def parse_cdo_day_label(value: str) -> Optional[int]:
+    match = re.match(r"\s*(\d{1,2})", value or "")
+    return int(match.group(1)) if match else None
+
+
+def parse_cdo_rain_value(value: str) -> Optional[float]:
+    clean = (value or "").replace("\xa0", " ").strip()
+    if not clean or clean in ("-", "--"):
+        return None
+    if clean.upper().startswith("T"):
+        return 0.0
+    match = re.search(r"-?\d+(?:\.\d+)?", clean)
+    return max(0.0, float(match.group(0))) if match else None
 
 
 async def load_bom_station_map(force: bool = False) -> dict:
@@ -278,6 +358,85 @@ async def fetch_bom_observation_readings(
         "readings": readings,
         "source": "BoM 72-hour AWS observations",
         "resolution_minutes": 30,
+    }
+
+
+async def fetch_bom_cdo_daily_readings(
+    bom_id: Optional[str],
+    from_dt: datetime,
+    to_dt: datetime,
+) -> dict:
+    clean_bom_id = normalise_bom_id(bom_id or "")
+    if not clean_bom_id:
+        raise HTTPException(status_code=400, detail="BoM station number is required for CDO daily rainfall")
+
+    params = {
+        "p_nccObsCode": "136",
+        "p_display_type": "dailyDataFile",
+        "p_startYear": "",
+        "p_c": "",
+        "p_stn_num": clean_bom_id,
+    }
+    timeout = httpx.Timeout(30.0, connect=15.0)
+
+    async with httpx.AsyncClient(timeout=timeout, follow_redirects=True, headers=BOM_HEADERS) as client:
+        resp = await client.get(BOM_CDO_DAILY_URL, params=params)
+        resp.raise_for_status()
+
+    if "Weather Data temporarily unavailable" in resp.text:
+        raise HTTPException(status_code=503, detail="BoM CDO daily rainfall is temporarily unavailable")
+
+    parser = CdoDailyTableParser()
+    parser.feed(resp.text)
+    if not parser.rows:
+        raise HTTPException(status_code=404, detail="No BoM CDO daily rainfall table found for this station")
+
+    year = None
+    readings = []
+    for row in parser.rows:
+        if not row:
+            continue
+
+        if re.fullmatch(r"\d{4}", row[0] or ""):
+            year = int(row[0])
+            continue
+
+        day = parse_cdo_day_label(row[0])
+        if not year or not day:
+            continue
+
+        for month, raw_value in enumerate(row[1:13], start=1):
+            rain = parse_cdo_rain_value(raw_value)
+            if rain is None:
+                continue
+            try:
+                local_time = datetime(year, month, day, 9, 0, tzinfo=SYDNEY_TZ)
+            except ValueError:
+                continue
+
+            timestamp = local_time.astimezone(timezone.utc)
+            if from_dt <= timestamp <= to_dt:
+                readings.append({
+                    "timestamp": local_time.isoformat(),
+                    "value": round(rain, 2),
+                })
+
+    readings.sort(key=lambda item: item["timestamp"])
+    station_name = parser.station_title
+    if station_name:
+        station_name = re.sub(r"^\s*Daily Rainfall\s*-\s*", "", station_name).strip()
+
+    return {
+        "station": {
+            "bom_id": clean_bom_id,
+            "wmo": None,
+            "name": station_name or f"BoM station {clean_bom_id}",
+            "lat": None,
+            "lon": None,
+        },
+        "readings": readings,
+        "source": "BoM Climate Data Online daily rainfall",
+        "resolution_minutes": 1440,
     }
 
 
@@ -678,22 +837,32 @@ async def get_bom_rainfall(
 
     if end <= start:
         raise HTTPException(status_code=400, detail="End datetime must be after start datetime")
-    if end - start > timedelta(hours=72):
-        raise HTTPException(status_code=400, detail="BoM fallback supports the latest 72 hours only")
 
     try:
-        bom_data = await fetch_bom_observation_readings(bom_id, wmo, start, end)
-    except HTTPException:
-        raise
+        if end - start <= timedelta(hours=72):
+            bom_data = await fetch_bom_observation_readings(bom_id, wmo, start, end)
+        else:
+            bom_data = await fetch_bom_cdo_daily_readings(bom_id, start, end)
+
+        if not bom_data["readings"] and bom_id:
+            cdo_data = await fetch_bom_cdo_daily_readings(bom_id, start, end)
+            if cdo_data["readings"]:
+                bom_data = cdo_data
+    except HTTPException as exc:
+        if exc.status_code == 404 and bom_id:
+            bom_data = await fetch_bom_cdo_daily_readings(bom_id, start, end)
+        else:
+            raise
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"BoM observation fetch failed: {str(e)}")
+        raise HTTPException(status_code=502, detail=f"BoM rainfall fetch failed: {str(e)}")
 
     readings = bom_data["readings"]
+    resolution_minutes = bom_data["resolution_minutes"]
     rolling = calculate_rolling_max(
         readings,
         duration_minutes,
-        bom_data["resolution_minutes"],
-    ) if readings else None
+        resolution_minutes,
+    ) if readings and duration_minutes >= resolution_minutes and duration_minutes % resolution_minutes == 0 else None
     station = bom_data["station"]
 
     return {
@@ -708,7 +877,7 @@ async def get_bom_rainfall(
         "rolling_max": rolling,
         "aep": None,
         "source": bom_data["source"],
-        "resolution_minutes": bom_data["resolution_minutes"],
+        "resolution_minutes": resolution_minutes,
     }
 
 
