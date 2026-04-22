@@ -5209,7 +5209,11 @@ function displayTableHeader(value) {
   if (key === 'suburb') return 'Suburb';
   if (key === 'assetsuburb') return 'Asset Suburb';
   if (key === 'locationsuburb') return 'Location - Suburb';
-  return String(value || '').replace(/_/g, ' ');
+  return String(value || '')
+    .replace(/_/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, letter => letter.toUpperCase());
 }
 
 function extractKnownSuburbFromText(value) {
@@ -5761,19 +5765,9 @@ function renderGeneratedCctvPackages(packages) {
   }
   const summaryRows = packages.map(pkg => ({
     package_id: pkg.package_id,
-    primary_suburb: pkg.primary_suburb || pkg.suburb,
-    suburbs: (pkg.suburbs || [pkg.suburb]).join(', '),
+    suburb: (pkg.suburbs || [pkg.suburb]).filter(Boolean).join(', '),
     pipe_count: pkg.pipe_count,
-    tba_pipe_count: pkg.tba_pipe_count,
-    critical_pipe_count: pkg.critical_pipe_count,
     total_length_m: pkg.total_length_m.toFixed(1),
-    max_span_m: pkg.max_span_m.toFixed(0),
-    distance_warning: pkg.distance_warning || '',
-    coordinate_sources: pkg.coordinate_sources || '',
-    package_radius_m: pkg.package_radius_m,
-    cluster_center: Number.isFinite(pkg.cluster_center_lat) && Number.isFinite(pkg.cluster_center_lon)
-      ? `${pkg.cluster_center_lat.toFixed(6)}, ${pkg.cluster_center_lon.toFixed(6)}`
-      : '',
     cctv_hours: pkg.cctv_hours.toFixed(2),
     cctv_rate: formatCurrency(pkg.cctv_rate),
     total_cost: formatCurrency(pkg.total_cost),
