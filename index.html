@@ -6346,14 +6346,8 @@ async function showLevelChart(stationId, stationName, colour) {
 // â”€â”€ All LGA boundaries (background layer) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadAllLgaBoundaries() {
   try {
-    const params = new URLSearchParams({
-      where: '1=1',
-      outFields: 'lganame,councilname,abscode',
-      returnGeometry: 'true',
-      f: 'geojson'
-    });
-    const resp = await fetch(`${NSW_LGA_API}?${params.toString()}`);
-    if (!resp.ok) throw new Error(`LGA API ${resp.status}`);
+    const resp = await fetch('./nsw_lga_boundaries.geojson');
+    if (!resp.ok) throw new Error(`LGA GeoJSON ${resp.status}`);
     const geojson = await resp.json();
     const features = (geojson.features || []).filter(f => {
       const name = getFeatureLgaName(f);
@@ -6364,8 +6358,41 @@ async function loadAllLgaBoundaries() {
       lgaBoundaryCache[name] = feature;
       lgaBoundaryMeta[name] = { bbox: getFeatureBounds(feature) };
     });
-    L.geoJSON({ type: 'FeatureCollection', features }, {
-      style: { color: '#999', weight: 1, opacity: 0.35, fill: false },
+
+    // Greedy graph colouring — adjacent LGAs (overlapping bboxes) get different fills
+    const names = features.map(getFeatureLgaName);
+    const palette = ['#b3d9f0', '#b3f0c8', '#f0ddb3', '#e8b3f0', '#f0b3b3'];
+    const colourMap = {};
+    for (const name of names) {
+      const bbox = lgaBoundaryMeta[name]?.bbox;
+      const usedColours = new Set();
+      if (bbox) {
+        for (const other of names) {
+          if (other === name || !colourMap[other]) continue;
+          const o = lgaBoundaryMeta[other]?.bbox;
+          if (!o) continue;
+          const buf = 0.05; // ~5 km buffer catches shared borders
+          if (bbox.maxLat + buf > o.minLat && bbox.minLat - buf < o.maxLat &&
+              bbox.maxLon + buf > o.minLon && bbox.minLon - buf < o.maxLon) {
+            usedColours.add(colourMap[other]);
+          }
+        }
+      }
+      colourMap[name] = palette.find(c => !usedColours.has(c)) || palette[0];
+    }
+
+    if (allLgaBackgroundLayer) map.removeLayer(allLgaBackgroundLayer);
+    allLgaBackgroundLayer = L.geoJSON({ type: 'FeatureCollection', features }, {
+      style: feature => {
+        const name = getFeatureLgaName(feature);
+        return {
+          color: '#888',
+          weight: 0.8,
+          opacity: 0.5,
+          fillColor: colourMap[name] || palette[0],
+          fillOpacity: 0.25
+        };
+      },
       interactive: false
     }).addTo(map).bringToBack();
   } catch(e) {
@@ -6374,6 +6401,7 @@ async function loadAllLgaBoundaries() {
 }
 
 let lgaBoundaryLayer = null;
+let allLgaBackgroundLayer = null;
 
 // NSW Spatial Services - public ArcGIS REST API
 const NSW_LGA_API = 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/8/query';
@@ -6388,7 +6416,9 @@ const lgaBoundaryCache = {
 const lgaBoundaryMeta = {};
 
 function getFeatureLgaName(feature) {
-  return feature?.properties?.lganame || feature?.properties?.name || feature?.properties?.councilname || '';
+  const p = feature?.properties;
+  if (!p) return '';
+  return p.lganame || p.LGA_NAME24 || p.LGA_NAME || p.LGAName || p.name || p.NAME || p.councilname || '';
 }
 
 function getFeatureBounds(feature) {
