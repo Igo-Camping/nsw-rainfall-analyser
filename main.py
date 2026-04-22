@@ -25,7 +25,7 @@ import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
-from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 import httpx
 
 app = FastAPI(
@@ -91,7 +91,10 @@ BOM_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
     "Accept": "application/json, application/xml, text/xml, text/html, */*",
 }
-SYDNEY_TZ = ZoneInfo("Australia/Sydney")
+try:
+    SYDNEY_TZ = ZoneInfo("Australia/Sydney")
+except ZoneInfoNotFoundError:
+    SYDNEY_TZ = timezone(timedelta(hours=10))
 _bom_station_map: dict = {}
 _bom_station_map_loaded_at: Optional[datetime] = None
 
