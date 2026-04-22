@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="./nsw_lga_boundaries.js"></script>
 <style>
 :root {
   --teal:       #00847F;
@@ -6351,51 +6352,36 @@ async function showLevelChart(stationId, stationName, colour) {
 // â”€â”€ All LGA boundaries (background layer) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadAllLgaBoundaries() {
   try {
-    const resp = await fetch('./nsw_lga_boundaries.geojson');
-    if (!resp.ok) throw new Error(`LGA GeoJSON ${resp.status}`);
-    const geojson = await resp.json();
+    let geojson = window.NSW_LGA_BOUNDARIES;
+    if (!geojson) {
+      const resp = await fetch('./nsw_lga_boundaries.geojson');
+      if (!resp.ok) throw new Error(`LGA GeoJSON ${resp.status}`);
+      geojson = await resp.json();
+    }
     const features = (geojson.features || []).filter(f => {
       const name = getFeatureLgaName(f);
       return name && f.geometry;
     });
+    Object.keys(lgaBoundaryCache).forEach(name => delete lgaBoundaryCache[name]);
+    Object.keys(lgaBoundaryMeta).forEach(name => delete lgaBoundaryMeta[name]);
     features.forEach(feature => {
       const name = getFeatureLgaName(feature);
       lgaBoundaryCache[name] = feature;
       lgaBoundaryMeta[name] = { bbox: getFeatureBounds(feature) };
     });
 
-    // Greedy graph colouring — adjacent LGAs (overlapping bboxes) get different fills
-    const names = features.map(getFeatureLgaName);
-    const palette = ['#b3d9f0', '#b3f0c8', '#f0ddb3', '#e8b3f0', '#f0b3b3'];
-    const colourMap = {};
-    for (const name of names) {
-      const bbox = lgaBoundaryMeta[name]?.bbox;
-      const usedColours = new Set();
-      if (bbox) {
-        for (const other of names) {
-          if (other === name || !colourMap[other]) continue;
-          const o = lgaBoundaryMeta[other]?.bbox;
-          if (!o) continue;
-          const buf = 0.05; // ~5 km buffer catches shared borders
-          if (bbox.maxLat + buf > o.minLat && bbox.minLat - buf < o.maxLat &&
-              bbox.maxLon + buf > o.minLon && bbox.minLon - buf < o.maxLon) {
-            usedColours.add(colourMap[other]);
-          }
-        }
-      }
-      colourMap[name] = palette.find(c => !usedColours.has(c)) || palette[0];
-    }
+    const colourMap = buildLgaBoundaryColourMap(features);
 
     if (allLgaBackgroundLayer) map.removeLayer(allLgaBackgroundLayer);
     allLgaBackgroundLayer = L.geoJSON({ type: 'FeatureCollection', features }, {
       style: feature => {
         const name = getFeatureLgaName(feature);
         return {
-          color: '#888',
-          weight: 0.8,
-          opacity: 0.5,
-          fillColor: colourMap[name] || palette[0],
-          fillOpacity: 0.25
+          color: '#4A5568',
+          weight: 0.7,
+          opacity: 0.55,
+          fillColor: colourMap[name] || LGA_BOUNDARY_PALETTE[0],
+          fillOpacity: 0.3
         };
       },
       interactive: false
@@ -6407,9 +6393,7 @@ async function loadAllLgaBoundaries() {
 
 let lgaBoundaryLayer = null;
 let allLgaBackgroundLayer = null;
-
-// NSW Spatial Services - public ArcGIS REST API
-const NSW_LGA_API = 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/8/query';
+const LGA_BOUNDARY_PALETTE = ['#8DD3C7', '#FDB462', '#B3DE69', '#80B1D3', '#FB8072', '#BEBADA', '#FFFFB3'];
 
 // NBC boundary embedded directly (avoids CORS issues with external APIs)
 // Source: NSW Spatial Services / ABS LGA boundaries
@@ -6423,7 +6407,14 @@ const lgaBoundaryMeta = {};
 function getFeatureLgaName(feature) {
   const p = feature?.properties;
   if (!p) return '';
-  return p.lganame || p.LGA_NAME24 || p.LGA_NAME || p.LGAName || p.name || p.NAME || p.councilname || '';
+  return formatLgaBoundaryName(p.lganame || p.LGA_NAME24 || p.LGA_NAME || p.LGAName || p.name || p.NAME || p.councilname || '');
+}
+
+function formatLgaBoundaryName(value) {
+  const text = String(value || '').trim().replace(/\s+/g, ' ');
+  if (!text) return '';
+  if (/[a-z]/.test(text)) return text;
+  return text.toLowerCase().replace(/\b[a-z]/g, char => char.toUpperCase());
 }
 
 function getFeatureBounds(feature) {
@@ -6443,6 +6434,80 @@ function getFeatureBounds(feature) {
   };
   visit(coords);
   return (isFinite(minLat) && isFinite(minLon)) ? { minLat, maxLat, minLon, maxLon } : null;
+}
+
+function bboxOverlaps(a, b, padding = 0) {
+  if (!a || !b) return false;
+  return a.maxLat + padding >= b.minLat &&
+    a.minLat - padding <= b.maxLat &&
+    a.maxLon + padding >= b.minLon &&
+    a.minLon - padding <= b.maxLon;
+}
+
+function getBoundaryPointKeys(feature, precision = 4) {
+  const keys = new Set();
+  const coords = feature?.geometry?.coordinates || [];
+  const visit = arr => {
+    if (!Array.isArray(arr)) return;
+    if (typeof arr[0] === 'number' && typeof arr[1] === 'number') {
+      keys.add(`${arr[0].toFixed(precision)},${arr[1].toFixed(precision)}`);
+      return;
+    }
+    arr.forEach(visit);
+  };
+  visit(coords);
+  return keys;
+}
+
+function addLgaAdjacency(adjacency, a, b) {
+  if (!a || !b || a === b) return;
+  if (!adjacency.has(a)) adjacency.set(a, new Set());
+  if (!adjacency.has(b)) adjacency.set(b, new Set());
+  adjacency.get(a).add(b);
+  adjacency.get(b).add(a);
+}
+
+function buildLgaBoundaryColourMap(features) {
+  const entries = features.map(feature => ({
+    feature,
+    name: getFeatureLgaName(feature),
+    bbox: getFeatureBounds(feature),
+    pointKeys: getBoundaryPointKeys(feature)
+  })).filter(entry => entry.name && entry.bbox);
+  const adjacency = new Map(entries.map(entry => [entry.name, new Set()]));
+  const pointOwners = new Map();
+
+  entries.forEach(entry => {
+    entry.pointKeys.forEach(key => {
+      const owners = pointOwners.get(key) || [];
+      owners.forEach(owner => addLgaAdjacency(adjacency, entry.name, owner));
+      owners.push(entry.name);
+      pointOwners.set(key, owners);
+    });
+  });
+
+  for (let i = 0; i < entries.length; i++) {
+    for (let j = i + 1; j < entries.length; j++) {
+      if (adjacency.get(entries[i].name)?.has(entries[j].name)) continue;
+      if (bboxOverlaps(entries[i].bbox, entries[j].bbox, 0.002)) {
+        addLgaAdjacency(adjacency, entries[i].name, entries[j].name);
+      }
+    }
+  }
+
+  const colourMap = {};
+  entries
+    .slice()
+    .sort((a, b) => (adjacency.get(b.name)?.size || 0) - (adjacency.get(a.name)?.size || 0) || a.name.localeCompare(b.name))
+    .forEach(entry => {
+      const usedColours = new Set(
+        [...(adjacency.get(entry.name) || [])]
+          .map(neighbour => colourMap[neighbour])
+          .filter(Boolean)
+      );
+      colourMap[entry.name] = LGA_BOUNDARY_PALETTE.find(colour => !usedColours.has(colour)) || LGA_BOUNDARY_PALETTE[0];
+    });
+  return colourMap;
 }
 
 function getLgaLatLngBounds(lgaName) {
