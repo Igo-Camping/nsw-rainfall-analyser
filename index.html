@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <title>NBC Stormwater Tools - Northern Beaches Council</title>
 <!-- v3 -->
@@ -91,10 +91,6 @@ select:focus,input:focus{border-color:var(--teal)}
 /* Results panel */
 .results{background:white;border-top:2px solid var(--teal);display:none;overflow-y:auto;flex:0 0 auto;max-height:min(42vh,360px)}
 .results.show{display:block}
-.main.results-full #map{display:none}
-.main.results-full .results{display:flex;flex-direction:column;flex:1 1 auto;max-height:none;overflow:hidden}
-.main.results-full .results.show{display:flex}
-.main.results-full .rpanel.active{display:flex;flex-direction:column;height:100%;overflow:auto}
 .res-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;background:white;z-index:10}
 .res-title{font-size:14px;font-weight:700}
 .res-sub{font-size:11px;color:var(--text-l);margin-top:2px}
@@ -163,11 +159,6 @@ tr.highlight td{background:rgba(0,132,127,.08);font-weight:600}
 /* Chart container */
 .chart-wrap{height:200px;position:relative;margin-bottom:16px}
 .chart-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-l);margin-bottom:8px}
-.monthly-note{margin-bottom:12px;font-size:12px;color:var(--text-l)}
-.monthly-chart-shell{flex:1;min-height:460px;overflow:auto;border:1px solid var(--border);border-radius:var(--r);background:var(--panel);padding:16px}
-.monthly-chart-frame{height:100%;min-height:420px;position:relative}
-.monthly-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-.monthly-pill{padding:8px 12px;border:1px solid var(--border);border-radius:999px;background:var(--panel);font-size:12px;color:var(--text-l)}
 
 /* Loading */
 .loading{position:fixed;inset:0;background:rgba(26,43,60,.28);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:12px}
@@ -328,9 +319,66 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .cost-boq td input,.cost-boq td select{width:100%;padding:7px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--panel);font-size:12px}
 .cost-boq .r{text-align:right;font-variant-numeric:tabular-nums}
 .cost-muted{font-size:11px;color:var(--text-l);line-height:1.6}
+.ca-shell{display:flex;flex:1;min-height:0;gap:16px}
+.ca-sidebar{width:350px;flex-shrink:0;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.ca-main{flex:1;min-height:0;display:flex;flex-direction:column}
+.ca-panel{background:white;border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.ca-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.ca-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.ca-card .k{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-l);margin-bottom:6px}
+.ca-card .v{font-size:28px;font-weight:900;color:var(--navy);line-height:1}
+.ca-card .s{font-size:11px;color:var(--text-l);margin-top:6px}
+.ca-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.ca-chip-group{display:flex;flex-wrap:wrap;gap:8px}
+.ca-chip{padding:7px 12px;border:1.5px solid var(--border);border-radius:999px;background:white;color:var(--text);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.ca-chip:hover{border-color:var(--teal)}
+.ca-chip.active{background:var(--teal);border-color:var(--teal);color:white}
+.ca-chip.status-red.active{background:#C0392B;border-color:#C0392B}
+.ca-chip.status-orange.active{background:#E67E22;border-color:#E67E22}
+.ca-chip.status-green.active{background:#1E8449;border-color:#1E8449}
+.ca-chip.status-unknown.active{background:#60717D;border-color:#60717D}
+.ca-actions{display:flex;gap:10px;flex-wrap:wrap}
+.ca-note{font-size:11px;color:var(--text-l);line-height:1.6}
+.ca-layout{display:flex;flex:1;min-height:0;gap:16px}
+.ca-map-wrap{flex:1;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.ca-map-toolbar{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F8FAFB}
+.ca-map-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
+.ca-map-sub{font-size:11px;color:var(--text-l)}
+#criticalAssetsMap{flex:1;min-height:560px}
+.ca-table-wrap{width:420px;max-width:42%;min-width:340px;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.ca-table-head{padding:12px 14px;border-bottom:1px solid var(--border);background:#F8FAFB}
+.ca-table-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
+.ca-table-sub{font-size:11px;color:var(--text-l);margin-top:4px}
+.ca-table-body{overflow:auto;flex:1}
+.ca-table{width:100%;border-collapse:collapse}
+.ca-table th{padding:8px 10px;background:var(--navy);color:white;font-size:11px}
+.ca-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top;font-size:12px}
+.ca-table tr{cursor:pointer}
+.ca-table tr:hover td{background:#F4FAF9}
+.ca-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.ca-badge::before{content:'';width:8px;height:8px;border-radius:50%}
+.ca-badge.red{background:#FDEDEC;color:#922B21}.ca-badge.red::before{background:#C0392B}
+.ca-badge.orange{background:#FEF5E7;color:#AF601A}.ca-badge.orange::before{background:#E67E22}
+.ca-badge.green{background:#EAF7EE;color:#1E8449}.ca-badge.green::before{background:#1E8449}
+.ca-badge.unknown{background:#EDF1F4;color:#566573}.ca-badge.unknown::before{background:#60717D}
+.ca-empty{font-size:12px;color:var(--text-l);padding:18px;background:white;border:1px dashed var(--border);border-radius:var(--r)}
+.ca-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ca-legend-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-l)}
+.ca-legend-swatch{width:12px;height:12px;border-radius:999px;background:#60717D}
+.ca-legend-swatch.line{border-radius:4px;height:6px}
+.cctv-map-wrap{height:520px;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.cctv-map-toolbar{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F8FAFB}
+.cctv-map-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
+.cctv-map-sub{font-size:11px;color:var(--text-l);margin-top:3px}
+#cctvPackagesMap{flex:1;min-height:420px}
 @media (max-width: 820px){
   .pkg-grid{grid-template-columns:1fr}
   .pkg-hero{flex-direction:column}
+  .ca-shell,.ca-layout{flex-direction:column}
+  .ca-sidebar,.ca-table-wrap{width:auto;max-width:none;min-width:0}
+  #criticalAssetsMap{min-height:360px}
+  .cctv-map-wrap{height:420px}
+  #cctvPackagesMap{min-height:320px}
 }
 </style>
 </head>
@@ -376,7 +424,7 @@ function isAuthenticated() {
 }
 
 function isProtectedPage(page) {
-  return ['prioritisation','costing','relining','futureworks'].includes(page);
+  return ['prioritisation','costing','relining','cctvpackaging','futureworks','criticalassets'].includes(page);
 }
 
 function openGate(targetPage = null) {
@@ -440,11 +488,13 @@ window.addEventListener('keydown', (event) => {
 
 <!-- Page Nav (hidden on home) -->
 <div id="page-nav" style="display:none">
-  <button class="pnav-btn active" onclick="switchPage('aep')">Rainfall Calculator</button>
-  <button class="pnav-btn" onclick="switchPage('prioritisation')">Prioritisation Tool</button>
-  <button class="pnav-btn" onclick="switchPage('costing')">Costing Tool</button>
-  <button class="pnav-btn" onclick="switchPage('relining')">Relining Packaging</button>
-  <button class="pnav-btn" onclick="switchPage('futureworks')">Future Works Plan</button>
+  <button class="pnav-btn active" data-page="aep" onclick="switchPage('aep')">Rainfall Calculator</button>
+  <button class="pnav-btn" data-page="criticalassets" onclick="switchPage('criticalassets')">Critical Assets</button>
+  <button class="pnav-btn" data-page="prioritisation" onclick="switchPage('prioritisation')">Prioritisation Tool</button>
+  <button class="pnav-btn" data-page="costing" onclick="switchPage('costing')">Costing Tool</button>
+  <button class="pnav-btn" data-page="relining" onclick="switchPage('relining')">Relining Packaging</button>
+  <button class="pnav-btn" data-page="cctvpackaging" onclick="switchPage('cctvpackaging')">CCTV Packaging</button>
+  <button class="pnav-btn" data-page="futureworks" onclick="switchPage('futureworks')">Future Works Plan</button>
   <button class="pnav-btn pnav-home" onclick="switchPage('home')">Home</button>
 </div>
 
@@ -479,10 +529,22 @@ window.addEventListener('keydown', (event) => {
       <div class="hc-desc">Pipe relining scope packaging and cost estimation tool.</div>
       <div><span class="hc-badge live">Live</span></div>
     </div>
+    <div class="home-card" onclick="switchPage('cctvpackaging')">
+      <div class="hc-icon">CCTV</div>
+      <div class="hc-title">CCTV Packaging</div>
+      <div class="hc-desc">Standalone CCTV renewal packaging tool for condition 1 to 6 pipes, recent-CCTV exclusion, proximity-first grouping, and CCTV rate costing.</div>
+      <div><span class="hc-badge live">Live</span></div>
+    </div>
     <div class="home-card" onclick="switchPage('futureworks')">
       <div class="hc-icon">Future Works</div>
       <div class="hc-title">Future Works Plan</div>
       <div class="hc-desc">Backlog and delivery planning workspace that will become the SharePoint-backed program sheet.</div>
+      <div><span class="hc-badge live">In Progress</span></div>
+    </div>
+    <div class="home-card" onclick="switchPage('criticalassets')">
+      <div class="hc-icon">Assets</div>
+      <div class="hc-title">Critical Assets</div>
+      <div class="hc-desc">Aerial asset map for critical stormwater assets with class filters, pipe geometry and inspection compliance status.</div>
       <div><span class="hc-badge live">In Progress</span></div>
     </div>
   </div>
@@ -490,14 +552,13 @@ window.addEventListener('keydown', (event) => {
 
 <!-- AEP Tool (display:flex so Leaflet map inits with correct dimensions) -->
 <div id="page-aep" style="flex-direction:column;flex:1;min-height:0;overflow:hidden;display:flex">
-  <div class="tab-bar">
-    <div class="tab active" onclick="switchTab('map')">Map View</div>
-    <div class="tab" onclick="switchTab('top-site')">Top Intensity Per Site</div>
-    <div class="tab" onclick="switchTab('top-dur')">All Durations</div>
-    <div class="tab" onclick="switchTab('daily')">Daily Totals</div>
-    <div class="tab" onclick="switchTab('monthly')">Monthly Rainfall</div>
-    <div class="tab" onclick="switchTab('monitors')">Other Monitors</div>
-  </div>
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('map')">Map View</div>
+  <div class="tab" onclick="switchTab('top-site')">Top Intensity Per Site</div>
+  <div class="tab" onclick="switchTab('top-dur')">All Durations</div>
+  <div class="tab" onclick="switchTab('daily')">Daily Totals</div>
+  <div class="tab" onclick="switchTab('monitors')">Other Monitors</div>
+</div>
 
 <div class="body">
   <!-- Sidebar -->
@@ -1060,9 +1121,19 @@ window.addEventListener('keydown', (event) => {
 
 <div id="page-costing" style="display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel);padding:20px">
   <div class="cost-shell">
+    <div class="cost-panel" id="costUploadPanel">
+      <div class="lbl">Lookup File</div>
+      <div class="pkg-grid" style="grid-template-columns:auto 1fr">
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload costing_lookup.json
+          <input type="file" id="costLookupFile" accept=".json" style="display:none" onchange="loadCostingFromFile(event)"/>
+        </label>
+        <span id="costLookupStatus" style="font-size:12px;color:var(--text-l);align-self:center;padding-left:8px">No file loaded — upload the extracted costing lookup JSON to use this tool.</span>
+      </div>
+    </div>
     <div class="cost-hero">
       <div class="cost-title">Costing Tool</div>
-      <div class="cost-sub">Upload the current <strong>Master Costing Tool - Stormwater.xlsm</strong> workbook to use the costing lookup data in-browser only. No uploaded workbook is stored by the app.</div>
+      <div class="cost-sub">This is the first real browser slice of the full web port of <strong>Master Costing Tool - Stormwater.xlsm</strong>. It already uses workbook-extracted lookup data and cascading BOQ selectors, and we’ll keep layering the remaining workbook behaviour on top.</div>
     </div>
     <div class="cost-grid">
       <div class="cost-card">
@@ -1071,26 +1142,16 @@ window.addEventListener('keydown', (event) => {
       </div>
       <div class="cost-card">
         <div class="k">Lookup Rows</div>
-        <div class="v" id="costMetaRows">Loading...</div>
+        <div class="v" id="costMetaRows">—</div>
       </div>
       <div class="cost-card">
         <div class="k">Asset Classes</div>
-        <div class="v" id="costMetaClasses">-</div>
+        <div class="v" id="costMetaClasses">—</div>
       </div>
       <div class="cost-card">
         <div class="k">Current Total</div>
         <div class="v" id="costGrandTotal">$0</div>
       </div>
-    </div>
-    <div class="cost-panel">
-      <div class="lbl">Required Upload</div>
-      <div class="cost-actions" style="margin-bottom:12px">
-        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
-          Upload Costing Workbook
-          <input type="file" id="costWorkbookFile" accept=".xlsx,.xls,.xlsm" style="display:none" onchange="importCostingWorkbook(event)"/>
-        </label>
-      </div>
-      <div class="cost-muted" id="costUploadStatus">Upload the costing workbook to begin. The file is read in memory only for this session.</div>
     </div>
     <div class="cost-panel">
       <div class="lbl">Project Setup</div>
@@ -1141,7 +1202,7 @@ window.addEventListener('keydown', (event) => {
         </table>
       </div>
       <div class="cost-muted" style="margin-top:12px">
-        This uses the uploaded workbook directly in the browser. If no workbook is uploaded, the BOQ table stays locked and prompts for the required file.
+        This uses workbook-extracted table data from the original costing XLSM. The next passes will add more workbook-specific behaviours like deeper modifier logic, panel/source handling, and any macro-driven output workflows still missing.
       </div>
     </div>
   </div>
@@ -1152,34 +1213,27 @@ window.addEventListener('keydown', (event) => {
     <div class="pkg-hero">
       <div>
         <div class="pkg-title">Relining Packaging</div>
-        <div class="pkg-sub">Upload the current asset file and panel rates workbook to run relining packaging entirely in your browser. No uploaded file is sent to Render or saved by the app.</div>
+        <div class="pkg-sub">Upload your assets and rates files to use this tool. Files are processed in-browser only — no copy is saved anywhere.</div>
       </div>
-      <div class="pkg-status-chip"><span class="pkg-dot" id="pkgDot"></span><span id="pkgStatusText">Waiting for required files</span></div>
+      <div class="pkg-status-chip"><span class="pkg-dot" id="pkgDot"></span><span id="pkgStatusText">No files loaded</span></div>
     </div>
 
     <div class="pkg-panel">
-      <div class="lbl">Required Uploads</div>
-      <div class="pkg-meta" id="pkgPathMeta"></div>
-      <div class="fw-actions" style="margin-top:12px">
+      <div class="lbl">Upload Required Files</div>
+      <div class="pkg-grid" style="grid-template-columns:auto auto 1fr">
         <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
-          Upload Assets File
-          <input type="file" id="pkgAssetsFile" accept=".csv,.xlsx,.xls,.xlsm" style="display:none" onchange="importReliningAssetsFile(event)"/>
+          Upload Assets CSV
+          <input type="file" id="pkgAssetsFile" accept=".csv" style="display:none" onchange="loadReliningAssetsFile(event)"/>
         </label>
         <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
-          Upload Panel Rates Workbook
-          <input type="file" id="pkgRatesFile" accept=".xlsx,.xls,.xlsm" style="display:none" onchange="importReliningRatesFile(event)"/>
+          Upload Panel_Rates.xlsx
+          <input type="file" id="pkgRatesFile" accept=".xlsx,.xls" style="display:none" onchange="loadReliningRatesFile(event)"/>
         </label>
+        <div style="font-size:12px;color:var(--text-l);align-self:center;padding-left:8px">
+          <span id="pkgAssetsStatus">Assets: not loaded</span> &nbsp;·&nbsp; <span id="pkgRatesStatus">Rates: not loaded</span>
+        </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Required files are used in memory for this browser session only. Nothing is uploaded to the server or written to disk by the app.</div>
-    </div>
-
-    <div class="pkg-panel">
-      <div class="lbl">Upload Summary</div>
-      <div class="pkg-meta" id="pkgMeta"></div>
-      <div class="pkg-assumptions" id="pkgAssumptions">
-        Upload an assets extract with the relining fields and the <code>_Tables</code> sheet from <code>Panel_Rates.xlsx</code>.<br/>
-        Generated package summaries stay in-browser and can be pushed into Future Works without creating any saved server copy.
-      </div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Expected files: <code>assets_with_coords.csv</code> or <code>assets.csv</code>, and <code>Panel_Rates.xlsx</code>. Neither file is stored — they are held in memory for this session only.</div>
     </div>
 
     <div class="pkg-panel">
@@ -1194,10 +1248,10 @@ window.addEventListener('keydown', (event) => {
         </div>
         <div class="fg">
           <label>&nbsp;</label>
-          <button class="run-btn" style="margin-top:0" onclick="loadPackagingPreview()">Load Stream Preview</button>
+          <button class="run-btn" style="margin-top:0" id="pkgPreviewBtn" onclick="loadPackagingPreview()">Load Stream Preview</button>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Preview uses the uploaded assets file only. Upload both required files before generating relining packages.</div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Upload both files above before running the stream preview.</div>
     </div>
 
     <div class="pkg-panel">
@@ -1227,21 +1281,21 @@ window.addEventListener('keydown', (event) => {
         </div>
         <div class="fg">
           <label>&nbsp;</label>
-          <button class="run-btn" style="margin-top:0" onclick="generateReliningPackages()">Generate Packages</button>
+          <button class="run-btn" style="margin-top:0" id="pkgGenerateBtn" onclick="generateReliningPackages()">Generate Packages</button>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Packaging runs locally in the browser against the uploaded files and keeps the output to summary tables for now.</div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">In-browser package generation coming in a future update. Upload files above to enable.</div>
     </div>
 
     <div class="pkg-meta" id="pkgMeta"></div>
     <div class="pkg-card-grid" id="pkgCards"></div>
     <div class="pkg-panel">
       <div class="lbl">Sample Assets</div>
-      <div id="pkgSampleArea" class="pkg-empty">Run the stream preview to see sample assets from each packaging stream.</div>
+      <div id="pkgSampleArea" class="pkg-empty">Upload files and run the stream preview to see sample assets.</div>
     </div>
     <div class="pkg-panel">
       <div class="lbl">Generated Packages</div>
-      <div id="pkgPackagesArea" class="pkg-empty">Generate relining packages to see package counts, cost totals, and sample package rows.</div>
+      <div id="pkgPackagesArea" class="pkg-empty">Package generation coming in a future update.</div>
     </div>
   </div>
 </div>
@@ -1266,7 +1320,7 @@ window.addEventListener('keydown', (event) => {
         </div>
         <div class="pkg-meta-item">
           <div class="pkg-meta-lbl">Source</div>
-          <div class="pkg-meta-val">Current in-browser relining package generation</div>
+          <div class="pkg-meta-val">Latest relining package generation</div>
         </div>
         <div class="pkg-meta-item">
           <div class="pkg-meta-lbl">Council Program Folder</div>
@@ -1372,7 +1426,7 @@ window.addEventListener('keydown', (event) => {
         </div>
       </div>
       <div class="fw-actions" style="margin-top:12px">
-        <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Current Relining Packages</button>
+        <button class="run-btn" style="margin-top:0" onclick="loadFutureWorksFromRelining()">Load Latest Relining Packages</button>
         <button class="export-btn" onclick="exportFutureWorksCsv()">Export CSV</button>
         <button class="export-btn" onclick="switchPage('relining')">Open Relining Tool</button>
       </div>
@@ -1380,7 +1434,272 @@ window.addEventListener('keydown', (event) => {
 
     <div class="fw-panel">
       <div class="lbl">Backlog Preview</div>
-      <div id="fwTableArea" class="fw-empty">Generate relining packages first, then click <strong>Load Current Relining Packages</strong> here to stage them into the future works backlog format.</div>
+      <div id="fwTableArea" class="fw-empty">Generate relining packages first, then click <strong>Load Latest Relining Packages</strong> here to stage them into the future works backlog format.</div>
+    </div>
+  </div>
+</div>
+
+<div id="page-cctvpackaging" style="display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel);padding:20px">
+  <div class="pkg-shell">
+    <div class="pkg-hero">
+      <div>
+        <div class="pkg-title">CCTV Packaging</div>
+        <div class="pkg-sub">Separate tool from relining packaging. This workflow filters condition 1 to 6 pipes, excludes assets with CCTV in the last 4 years, then builds proximity-first packages with only a light criticality influence. The engine is kept portable so it can move into ESRI cleanly later.</div>
+      </div>
+      <div class="pkg-status-chip"><span class="pkg-dot" id="cctvPkgDot"></span><span id="cctvPkgStatusText">No files loaded</span></div>
+    </div>
+
+    <div class="pkg-panel">
+      <div class="lbl">Upload Required Files</div>
+      <div class="pkg-grid" style="grid-template-columns:auto auto 1fr">
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload Assets CSV
+          <input type="file" id="cctvPkgAssetsFile" accept=".csv" style="display:none" onchange="loadCctvPackagingAssetsFile(event)"/>
+        </label>
+        <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+          Upload Panel_Rates.xlsx
+          <input type="file" id="cctvPkgRatesFile" accept=".xlsx,.xls" style="display:none" onchange="loadCctvPackagingRatesFile(event)"/>
+        </label>
+        <div style="font-size:12px;color:var(--text-l);align-self:center;padding-left:8px">
+          <span id="cctvPkgAssetsStatus">Assets: not loaded</span> &nbsp;·&nbsp; <span id="cctvPkgRatesStatus">Rates: not loaded</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Expected inputs: an assets CSV containing condition, CCTV date, and location columns, plus the panel rates workbook with CCTV survey rates.</div>
+    </div>
+
+    <div class="pkg-panel">
+      <div class="lbl">Packaging Rules</div>
+      <div class="pkg-grid" style="grid-template-columns:1fr 1fr 1fr 1fr auto">
+        <div class="fg" style="grid-column:span 2">
+          <label>Pipe Condition Selection</label>
+          <div id="cctvPkgConditionGroups" style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--text)">
+            <label><input type="checkbox" value="1-2"/> 1-2</label>
+            <label><input type="checkbox" value="3-4"/> 3-4</label>
+            <label><input type="checkbox" value="5-6"/> 5-6</label>
+            <label><input type="checkbox" value="1-6" checked/> 1-6</label>
+            <label><input type="checkbox" value="7-8"/> 7-8</label>
+            <label><input type="checkbox" value="tba" checked/> TBA</label>
+          </div>
+        </div>
+        <div class="fg">
+          <label for="cctvPkgLookbackYears">Exclude CCTV Within Last</label>
+          <input type="text" id="cctvPkgLookbackYears" value="4"/>
+        </div>
+        <div class="fg">
+          <label for="cctvPkgProximity">Target Proximity (m)</label>
+          <input type="text" id="cctvPkgProximity" value="500"/>
+        </div>
+        <div class="fg">
+          <label>&nbsp;</label>
+          <button class="run-btn" style="margin-top:0" onclick="previewCctvPackaging()">Preview Candidates</button>
+        </div>
+      </div>
+      <div class="pkg-grid" style="grid-template-columns:1fr 1fr 1fr 1fr auto;margin-top:12px">
+        <div class="fg">
+          <label for="cctvPkgTargetMode">Package Target</label>
+          <select id="cctvPkgTargetMode" onchange="toggleCctvPackageTargetInputs()">
+            <option value="length" selected>Total length</option>
+            <option value="count">Pipe count</option>
+            <option value="both">Length and count</option>
+          </select>
+        </div>
+        <div class="fg" id="cctvPkgTargetLengthWrap">
+          <label for="cctvPkgTargetLength">Target Length Per Package (m)</label>
+          <input type="text" id="cctvPkgTargetLength" value="1000"/>
+        </div>
+        <div class="fg" id="cctvPkgPipeCountWrap" style="display:none">
+          <label for="cctvPkgPipeCount">Target Pipes Per Package</label>
+          <input type="text" id="cctvPkgPipeCount" value="25"/>
+        </div>
+        <div class="fg">
+          <label for="cctvPkgMetresPerHour">CCTV Survey Production Rate (m/hr)</label>
+          <input type="text" id="cctvPkgMetresPerHour" value="80"/>
+        </div>
+        <div class="fg">
+          <label for="cctvPkgCriticalityWeight">Criticality Influence</label>
+          <select id="cctvPkgCriticalityWeight">
+            <option value="0.05">Very light</option>
+            <option value="0.1" selected>Light</option>
+            <option value="0.2">Moderate</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>&nbsp;</label>
+          <button class="run-btn" style="margin-top:0" onclick="generateCctvPackages()">Generate Packages</button>
+        </div>
+      </div>
+      <div class="pkg-assumptions">
+        Assumptions for this first version:
+        <code>TBA</code> pipes are treated as highest-priority candidates where selected,
+        <code>Condition 1-6</code> remains available as the normal condition filter,
+        assets with no CCTV date remain eligible,
+        each package has one fixed centre and includes only pipes inside the selected radius from that centre,
+        criticality only nudges ordering,
+        and CCTV cost is estimated from package length divided by the survey production rate, multiplied by the median CCTV panel rate.
+      </div>
+    </div>
+
+    <div class="pkg-panel">
+      <div class="lbl">ESRI Link Settings</div>
+      <div class="pkg-grid" style="grid-template-columns:2fr 1fr 1fr">
+        <div class="fg">
+          <label for="cctvEsriBaseUrl">ESRI App URL</label>
+          <input type="text" id="cctvEsriBaseUrl" placeholder="https://experience.arcgis.com/experience/... or Dashboard URL"/>
+        </div>
+        <div class="fg">
+          <label for="cctvEsriParam">Asset Parameter</label>
+          <input type="text" id="cctvEsriParam" value="asset"/>
+        </div>
+        <div class="fg">
+          <label for="cctvEsriLinkMode">Link Mode</label>
+          <select id="cctvEsriLinkMode">
+            <option value="query" selected>Query parameter</option>
+            <option value="experience">Experience Builder data_s</option>
+          </select>
+        </div>
+      </div>
+      <div class="pkg-grid" style="grid-template-columns:1fr 1fr;margin-top:12px">
+        <div class="fg">
+          <label for="cctvEsriDataSourceId">Experience Builder Data Source ID</label>
+          <input type="text" id="cctvEsriDataSourceId" placeholder="Only needed for data_s links"/>
+        </div>
+        <div class="fg">
+          <label for="cctvEsriIdField">Stable Asset ID Field</label>
+          <input type="text" id="cctvEsriIdField" value="asset_id_text"/>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px;line-height:1.6">
+        Leave the ESRI URL blank until the final app exists. The export will still include stable asset IDs, and once the URL is added it will generate clickable asset/package links without needing access to the ESRI server files.
+      </div>
+    </div>
+
+    <div class="pkg-meta" id="cctvPkgMeta"></div>
+    <div class="pkg-card-grid" id="cctvPkgCards"></div>
+    <div class="pkg-panel">
+      <div class="lbl">Eligible Candidate Sample</div>
+      <div id="cctvPkgSampleArea" class="pkg-empty">Upload files and run the preview to see remaining CCTV candidates.</div>
+    </div>
+    <div class="pkg-panel">
+      <div class="lbl">Generated Packages</div>
+      <div id="cctvPkgPackagesArea" class="pkg-empty">Generate packages to see grouped CCTV survey packages and estimated CCTV costs.</div>
+    </div>
+    <div class="pkg-panel">
+      <div class="lbl">Package Map</div>
+      <div class="cctv-map-wrap">
+        <div class="cctv-map-toolbar">
+          <div>
+            <div class="cctv-map-title">CCTV Package Map</div>
+            <div class="cctv-map-sub" id="cctvMapSubtitle">Generate packages to draw package groups on the map.</div>
+          </div>
+          <div class="ca-actions">
+            <button class="export-btn" onclick="fitCctvPackagesMap()">Fit Packages</button>
+            <button class="export-btn" onclick="renderCctvPackagesMap()">Refresh Map</button>
+          </div>
+        </div>
+        <div id="cctvPackagesMap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-criticalassets" style="display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel);padding:20px">
+  <div class="ca-shell">
+    <div class="ca-sidebar">
+      <div>
+        <div class="lbl">Critical Assets</div>
+        <div style="font-size:20px;font-weight:800;color:var(--navy)">Inspection Map</div>
+        <div class="ca-note" style="margin-top:8px">Interactive aerial map of Northern Beaches critical stormwater assets. Pipe assets are drawn from start/end coordinates, and non-pipe assets are shown as point markers.</div>
+      </div>
+
+      <div class="ca-panel" style="padding:0;border:none">
+        <div class="lbl">Data Sources</div>
+        <div class="ca-meta">
+          <div class="pkg-meta-item">
+            <div class="pkg-meta-lbl">Critical Asset Source</div>
+            <div class="pkg-meta-val" id="caAssetsStatus">Not loaded</div>
+          </div>
+          <div class="pkg-meta-item">
+            <div class="pkg-meta-lbl">Combined Asset File</div>
+            <div class="pkg-meta-val" id="caCombinedStatus">Optional</div>
+          </div>
+          <div class="pkg-meta-item">
+            <div class="pkg-meta-lbl">Inspection Schedule</div>
+            <div class="pkg-meta-val" id="caInspectionStatus">Waiting for file</div>
+          </div>
+        </div>
+        <div class="ca-actions" style="margin-top:12px">
+          <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+            Upload assets_with_coords
+            <input type="file" accept=".csv,.xlsx,.xls" style="display:none" onchange="loadCriticalAssetsInput(event, 'assets')"/>
+          </label>
+          <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+            Upload combined assets
+            <input type="file" accept=".csv,.xlsx,.xls" style="display:none" onchange="loadCriticalAssetsInput(event, 'combined')"/>
+          </label>
+          <label class="export-btn" style="display:inline-flex;align-items:center;justify-content:center">
+            Upload inspection file
+            <input type="file" accept=".csv,.xlsx,.xls" style="display:none" onchange="loadCriticalAssetsInput(event, 'inspection')"/>
+          </label>
+          <button class="export-btn" onclick="loadCriticalAssetsDefaults()">Show source paths</button>
+        </div>
+        <div class="ca-note" style="margin-top:12px">Current working source folder: <code>D:\Packaging\data</code>. Because the site runs in the browser, these files are loaded by upload for now rather than auto-reading from disk.</div>
+      </div>
+
+      <div>
+        <div class="lbl">Asset Class Filter</div>
+        <div class="ca-chip-group" id="caClassFilters"></div>
+      </div>
+
+      <div>
+        <div class="lbl">Inspection Status Filter</div>
+        <div class="ca-chip-group" id="caStatusFilters"></div>
+      </div>
+
+      <div>
+        <div class="lbl">Map Legend</div>
+        <div class="ca-legend">
+          <div class="ca-legend-item"><span class="ca-legend-swatch line" style="background:#C0392B"></span>Overdue</div>
+          <div class="ca-legend-item"><span class="ca-legend-swatch line" style="background:#E67E22"></span>Due within 6 months</div>
+          <div class="ca-legend-item"><span class="ca-legend-swatch line" style="background:#1E8449"></span>Up to date</div>
+          <div class="ca-legend-item"><span class="ca-legend-swatch line" style="background:#60717D"></span>Awaiting schedule</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="lbl">Schedule Logic</div>
+        <div class="ca-note">The page calculates status from either a supplied next due date, or from the last inspection date plus the inspection interval. Orange is set to assets due within the next 183 days.</div>
+      </div>
+    </div>
+
+    <div class="ca-main">
+      <div class="ca-layout">
+        <div class="ca-map-wrap">
+          <div class="ca-map-toolbar">
+            <div>
+              <div class="ca-map-title">Northern Beaches Aerial Map</div>
+              <div class="ca-map-sub" id="caMapSubtitle">Load a critical asset file to draw assets on the map.</div>
+            </div>
+            <div class="ca-actions">
+              <button class="export-btn" onclick="fitCriticalAssetsToVisible()">Fit Visible Assets</button>
+              <button class="export-btn" onclick="resetCriticalAssetFilters()">Reset Filters</button>
+            </div>
+          </div>
+          <div id="criticalAssetsMap"></div>
+        </div>
+
+        <div class="ca-table-wrap">
+          <div class="ca-panel" style="border:none;border-bottom:1px solid var(--border);border-radius:0;padding:12px 14px">
+            <div class="ca-grid" id="caSummaryCards"></div>
+          </div>
+          <div class="ca-table-head">
+            <div class="ca-table-title">Visible Assets</div>
+            <div class="ca-table-sub" id="caTableSubtitle">No assets loaded yet.</div>
+          </div>
+          <div class="ca-table-body" id="caTableBody">
+            <div class="ca-empty" style="margin:14px">Upload <code>assets_with_coords.csv</code> to start the map.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1423,36 +1742,33 @@ let allStations = [], selected = null, markers = {}, mode = 'recent';
 let lastResults = null, allSiteResults = null;
 let lastTopDurResults = null;
 let rainChart = null, compareChart = null;
-let monthlyChart = null;
 let currentTab = 'map';
+let packagingConfig = null;
 let lastPackagingGeneration = null;
 let costingLookup = null;
 let costingRows = [];
 let futureWorksRows = [];
+let futureWorksWorkbookFile = null;
+let reliningAssetsData = null;  // in-memory only, never saved
+let reliningRatesData = null;   // in-memory only, never saved
+let cctvPackagingAssetsData = null;
+let cctvPackagingRatesData = null;
+let lastCctvPackagingPreview = null;
+let lastCctvPackagingGeneration = null;
+let cctvPackagesMap = null;
+let cctvPackagesLayer = null;
 let futureWorksWorkbookMeta = null;
 let futureWorksReliningFileName = '';
 let futureWorksExtraFileName = '';
-let futureWorksWorkbookUrl = '';
-let costingWorkbookName = '';
-let reliningAssetsRows = [];
-let reliningRatesRows = [];
-let reliningAssetsFileName = '';
-let reliningRatesFileName = '';
 let topSiteResultsCache = [];
 let topSiteResultsKey = null;
 let lastAnalysisContext = null;
-let lastMonthlyData = null;
 let rainfallTemplateBytes = null;
 const RAINFALL_TEMPLATE_URL = 'templates/NBC Rainfall Calculator.xlsm';
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
-const LONG_RANGE_CHUNK_DAYS = 31;
-const MONTHLY_CHART_COLORS = [
-  '#00847F', '#1A2B3C', '#E67E22', '#2E86AB', '#C0392B', '#27AE60',
-  '#8E44AD', '#D35400', '#16A085', '#2C3E50', '#7F8C8D', '#C0392B',
-  '#2980B9', '#F39C12', '#117A65', '#6C3483'
-];
+const FUTURE_WORKS_URL_KEY = 'nbc_futureworks_workbook_url';
 const FUTURE_WORKS_WORKBOOK_NAME = '2027-2031 CAPEX Project Brief - Program of Works Details - E&R - Rolling.xlsx';
 const FUTURE_WORKS_LOCAL_FOLDER_TEMPLATE = '%USERPROFILE%\\OneDrive - Northern Beaches Council\\Stormwater Engineering - General\\Program';
 const FUTURE_WORKS_COLUMNS = [
@@ -1866,7 +2182,7 @@ function setMode(m) {
 function switchTab(tab, skipRun = false) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach((el,i) => {
-    el.classList.toggle('active', ['map','top-site','top-dur','daily','monthly','monitors'][i] === tab);
+    el.classList.toggle('active', ['map','top-site','top-dur','daily','monitors'][i] === tab);
   });
   updateRecalcButton();
   if (tab === 'monitors') {
@@ -1879,7 +2195,7 @@ function switchTab(tab, skipRun = false) {
 function updateRecalcButton() {
   const btn = document.getElementById('recalcBtn');
   if (!btn) return;
-  btn.style.display = ['top-site', 'monthly'].includes(currentTab) ? '' : 'none';
+  btn.style.display = currentTab === 'top-site' ? '' : 'none';
 }
 
 function setResultsTabMode(mode) {
@@ -1924,7 +2240,6 @@ function showSelectedAnalysisReadyState(title, subtitle, message) {
     </div>
   `;
   switchRTab('r-allsite');
-  syncResultsViewport();
 }
 
 function showTopSiteReadyState() {
@@ -1941,26 +2256,10 @@ function showTopSiteReadyState() {
     </div>
   `;
   switchRTab('r-allsite');
-  syncResultsViewport();
-}
-
-function showMonthlyReadyState(ctx = null) {
-  setResultsTabMode('single-table');
-  document.getElementById('results').classList.add('show');
-  document.getElementById('res-title').textContent = 'Monthly Rainfall';
-  const status = getMonthlyEligibility(ctx?.fromDt, ctx?.toDt);
-  document.getElementById('res-sub').textContent = status.subtitle;
-  document.getElementById('r-allsite').innerHTML = `
-    <div style="padding:24px;color:var(--text-l);font-size:13px;text-align:center">
-      ${status.message}
-    </div>
-  `;
-  switchRTab('r-allsite');
-  syncResultsViewport();
 }
 
 function recalcCurrentTab() {
-  if (currentTab === 'top-site' || currentTab === 'monthly') {
+  if (currentTab === 'top-site') {
     if (!selected && !document.getElementById('lgaSel')?.value) {
       alert('Select a station or area first.');
       return;
@@ -2049,17 +2348,6 @@ function renderCachedCurrentTab(context = null) {
         'No daily totals cached for the current settings',
         'Use the <strong>Analyse</strong> button to build daily totals for this location.'
       );
-    }
-    return;
-  }
-
-  if (currentTab === 'monthly') {
-    const topSiteKey = getTopSiteAnalysisKey(ctx.fromDt, ctx.toDt);
-    if (lastMonthlyData?.analysisKey === topSiteKey) {
-      renderMonthlyTotals(lastMonthlyData, ctx);
-      document.getElementById('results').classList.add('show');
-    } else {
-      showMonthlyReadyState(ctx);
     }
     return;
   }
@@ -2294,7 +2582,7 @@ function onNbcSubChange() {
 // â”€â”€ MHL data fetch (browser â†’ MHL directly, no backend) â”€â”€â”€â”€
 const MHL_BASE = 'https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS';
 
-async function fetchMhlDataChunk(tsId, fromDt, toDt) {
+async function fetchMhlData(tsId, fromDt, toDt) {
   const fmt = d => {
     const p = n => String(n).padStart(2,'0');
     return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
@@ -2321,33 +2609,6 @@ async function fetchMhlDataChunk(tsId, fromDt, toDt) {
     timestamp: row[0],
     value: (row[1] === null || row[1] === '' || row[1] === '--') ? 0 : Math.max(0, parseFloat(row[1]) || 0)
   })).filter(r => r.timestamp);
-}
-
-async function fetchMhlData(tsId, fromDt, toDt) {
-  const rangeMs = Math.max(0, toDt - fromDt);
-  const chunkMs = LONG_RANGE_CHUNK_DAYS * 86400000;
-
-  if (rangeMs <= chunkMs) {
-    try {
-      return await fetchMhlDataChunk(tsId, fromDt, toDt);
-    } catch (err) {
-      if (rangeMs <= 7 * 86400000) throw err;
-    }
-  }
-
-  const merged = new Map();
-  let cursor = new Date(fromDt);
-  while (cursor < toDt) {
-    const chunkEnd = new Date(Math.min(cursor.getTime() + chunkMs, toDt.getTime()));
-    const rows = await fetchMhlDataChunk(tsId, cursor, chunkEnd);
-    rows.forEach(row => {
-      if (!merged.has(row.timestamp)) merged.set(row.timestamp, row);
-    });
-    if (chunkEnd.getTime() === cursor.getTime()) break;
-    cursor = chunkEnd;
-  }
-
-  return [...merged.values()].sort((a, b) => String(a.timestamp).localeCompare(String(b.timestamp)));
 }
 
 // â”€â”€ Rolling max calculation (in browser) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -2484,7 +2745,6 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   const allDurs = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
   const rangeDays = Math.max(1, Math.ceil((toDt - fromDt) / 86400000));
   const failedStations = [];
-  const monthlyStations = [];
 
   allSiteResults = [];
 
@@ -2511,13 +2771,6 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
       }
     }
     await loadStationIfd(s);
-    monthlyStations.push({
-      station_id: s.station_id,
-      station_name: s.name,
-      from: fromDt.toISOString(),
-      to: toDt.toISOString(),
-      readings
-    });
 
     // Find the duration with the worst (lowest) AEP
     let bestResult = null;
@@ -2554,16 +2807,6 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
     alert('Top Intensity Per Site could not load any station results for that date range. Try a shorter range or narrower area.');
     topSiteResultsCache = [];
     topSiteResultsKey = getTopSiteAnalysisKey(fromDt, toDt);
-    lastMonthlyData = {
-      from: fromDt.toISOString(),
-      to: toDt.toISOString(),
-      stations: monthlyStations.map(station => ({
-        ...station,
-        monthlyTotals: {}
-      })),
-      monthKeys: getFullMonthKeysInRange(fromDt, toDt),
-      analysisKey: topSiteResultsKey
-    };
     return [];
   }
   if (failedStations.length && allSiteResults.length === 1 && selected && allSiteResults[0]?.station_id === selected.station_id) {
@@ -2572,30 +2815,6 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   }
   topSiteResultsKey = getTopSiteAnalysisKey(fromDt, toDt);
   topSiteResultsCache = [...allSiteResults];
-  const monthKeys = getFullMonthKeysInRange(fromDt, toDt);
-  lastMonthlyData = {
-    from: fromDt.toISOString(),
-    to: toDt.toISOString(),
-    stations: monthlyStations.map(station => {
-      const monthlyTotals = {};
-      monthKeys.forEach(key => { monthlyTotals[key] = 0; });
-      (station.readings || []).forEach(reading => {
-        const key = getSydneyMonthKey(reading.timestamp);
-        if (Object.prototype.hasOwnProperty.call(monthlyTotals, key)) {
-          monthlyTotals[key] += Number(reading.value || 0);
-        }
-      });
-      Object.keys(monthlyTotals).forEach(key => {
-        monthlyTotals[key] = Math.round(monthlyTotals[key] * 100) / 100;
-      });
-      return {
-        ...station,
-        monthlyTotals
-      };
-    }),
-    monthKeys,
-    analysisKey: topSiteResultsKey
-  };
   if (render) {
     renderTopPerSite(allSiteResults, null);
     document.getElementById('results').classList.add('show');
@@ -2610,95 +2829,6 @@ function aepStringToProb(aepStr) {
   const clean = aepStr.replace(/[~<>%]/g, '').trim();
   const pct = parseFloat(clean);
   return isNaN(pct) ? 1 : pct / 100;
-}
-
-function getMonthKey(date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-}
-
-function formatMonthLabel(monthKey) {
-  const [year, month] = monthKey.split('-').map(Number);
-  return new Date(year, month - 1, 1).toLocaleDateString('en-AU', {
-    month: 'short',
-    year: 'numeric'
-  });
-}
-
-function getSydneyDayKey(timestamp) {
-  return new Date(String(timestamp).replace(' ', 'T')).toLocaleDateString('en-CA', {
-    timeZone: 'Australia/Sydney'
-  });
-}
-
-function getSydneyMonthKey(timestamp) {
-  const d = new Date(String(timestamp).replace(' ', 'T'));
-  return d.toLocaleDateString('en-CA', {
-    timeZone: 'Australia/Sydney',
-    year: 'numeric',
-    month: '2-digit'
-  }).slice(0, 7);
-}
-
-function getFullMonthKeysInRange(fromDt, toDt) {
-  if (!(fromDt instanceof Date) || !(toDt instanceof Date) || fromDt > toDt) return [];
-  const start = new Date(fromDt);
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(toDt);
-  end.setHours(23, 59, 59, 999);
-  const cursor = new Date(start.getFullYear(), start.getMonth(), 1);
-  const endMonth = new Date(end.getFullYear(), end.getMonth(), 1);
-  const keys = [];
-
-  while (cursor <= endMonth) {
-    const monthStart = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
-    const monthEnd = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0, 23, 59, 59, 999);
-    if (start <= monthStart && end >= monthEnd) {
-      keys.push(getMonthKey(cursor));
-    }
-    cursor.setMonth(cursor.getMonth() + 1);
-  }
-
-  return keys;
-}
-
-function getMonthlyEligibility(fromDt, toDt) {
-  if (mode !== 'custom') {
-    return {
-      ok: false,
-      fullMonths: [],
-      subtitle: 'Monthly totals are available for custom date ranges only',
-      message: 'Switch to <strong>Custom Range</strong> to use this feature.'
-    };
-  }
-
-  const fullMonths = getFullMonthKeysInRange(fromDt, toDt);
-  if (fullMonths.length < 2) {
-    return {
-      ok: false,
-      fullMonths,
-      subtitle: 'Monthly totals need at least 2 full calendar months',
-      message: 'You must select a larger date range to use this feature.<br/>Choose a custom range that contains at least <strong>2 full calendar months</strong>.'
-    };
-  }
-
-  return {
-    ok: true,
-    fullMonths,
-    subtitle: `${formatMonthLabel(fullMonths[0])} to ${formatMonthLabel(fullMonths[fullMonths.length - 1])} - full calendar months within the selected range`,
-    message: ''
-  };
-}
-
-function buildMonthlyRows(monthlyData, monthKeys = null) {
-  if (!monthlyData?.stations?.length) return [];
-  const keys = monthKeys?.length ? monthKeys : (monthlyData.monthKeys || []);
-  return monthlyData.stations.map(station => {
-    const row = { Station: station.station_name };
-    keys.forEach(key => {
-      row[formatMonthLabel(key)] = Math.round((station.monthlyTotals?.[key] || 0) * 100) / 100;
-    });
-    return row;
-  });
 }
 
 function durationLabelToMinutes(label) {
@@ -2771,12 +2901,10 @@ async function openTopSiteDailyTotals(stationId) {
     hideLoad();
     renderDailyTotals({
       station_name: selected.name,
-      station_id: selected.station_id,
       readings,
       from: fromDt.toISOString(),
       to: toDt.toISOString(),
-      analysisKey: `${selected.station_id}|${fromDt.toISOString()}|${toDt.toISOString()}`,
-      highlightDay: result.rolling_max?.peak_start ? getSydneyDayKey(result.rolling_max.peak_start) : null,
+      highlightMaxDay: true,
       scrollToHighlight: true
     });
     document.getElementById('results').classList.add('show');
@@ -2849,15 +2977,13 @@ function renderTopPerSite(results = null, dur = null) {
   `;
 
   renderCompareChart(sorted, dur);
-  syncResultsViewport();
 }
 
 function renderCompareChart(results, dur) {
   const el = document.getElementById('r-chart');
   const top10 = results.slice(0, 10);
-  const chartLabel = dur && DUR_LABELS[dur] ? DUR_LABELS[dur] : 'best duration per site';
   el.innerHTML = `
-    <div class="chart-title">Peak Depth Comparison - ${chartLabel} (Top 10)</div>
+    <div class="chart-title">Peak Depth Comparison - ${DUR_LABELS[dur]||dur+'min'} (Top 10)</div>
     <div class="chart-wrap"><canvas id="cc"></canvas></div>
   `;
   if (compareChart) compareChart.destroy();
@@ -2959,7 +3085,6 @@ function renderTopDurations(results) {
     </div>
   `;
   switchRTab('r-allsite');
-  syncResultsViewport();
 }
 
 // â”€â”€ Daily totals â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -3063,112 +3188,6 @@ function renderDailyTotals(data) {
       document.getElementById(`daily-row-${highlightDay}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
     });
   }
-  lastDailyData = { ...data, highlightDay };
-  syncResultsViewport();
-}
-
-function renderMonthlyTotals(monthlyData, ctx = null) {
-  updateRecalcButton();
-  setResultsTabMode('single-table');
-  document.getElementById('res-title').textContent = 'Monthly Rainfall';
-
-  const fromDt = ctx?.fromDt || new Date(monthlyData?.from || Date.now());
-  const toDt = ctx?.toDt || new Date(monthlyData?.to || Date.now());
-  const status = getMonthlyEligibility(fromDt, toDt);
-  document.getElementById('res-sub').textContent = status.subtitle;
-
-  if (!status.ok) {
-    document.getElementById('r-allsite').innerHTML = `
-      <div style="padding:24px;color:var(--text-l);font-size:13px;text-align:center">
-        ${status.message}
-      </div>
-    `;
-    switchRTab('r-allsite');
-    syncResultsViewport();
-    return;
-  }
-
-  const stations = [...(monthlyData?.stations || [])]
-    .sort((a, b) => String(a.station_name).localeCompare(String(b.station_name), undefined, { sensitivity: 'base' }));
-
-  if (!stations.length) {
-    document.getElementById('r-allsite').innerHTML = `
-      <div style="padding:24px;color:var(--text-l);font-size:13px;text-align:center">
-        No station rainfall data is cached for this range yet. Click <strong>Recalc</strong> to build the monthly view.
-      </div>
-    `;
-    switchRTab('r-allsite');
-    syncResultsViewport();
-    return;
-  }
-
-  const monthKeys = status.fullMonths;
-  const minWidth = Math.max(960, monthKeys.length * Math.max(180, stations.length * 34));
-  const datasets = stations.map((station, index) => ({
-    label: station.station_name,
-    data: monthKeys.map(key => Math.round((station.monthlyTotals?.[key] || 0) * 100) / 100),
-    backgroundColor: MONTHLY_CHART_COLORS[index % MONTHLY_CHART_COLORS.length],
-    borderRadius: 4,
-    maxBarThickness: 26
-  }));
-  const totals = datasets.flatMap(dataset => dataset.data);
-  const maxMonthly = Math.max(...totals, 0);
-
-  document.getElementById('r-allsite').innerHTML = `
-    <div class="monthly-summary">
-      <div class="monthly-pill">${stations.length} stations</div>
-      <div class="monthly-pill">${monthKeys.length} full months</div>
-      <div class="monthly-pill">Highest monthly total: ${maxMonthly.toFixed(1)} mm</div>
-    </div>
-    <div class="monthly-note">Monthly totals are grouped by station and only include full calendar months contained within the selected custom range.</div>
-    <div class="monthly-chart-shell">
-      <div class="monthly-chart-frame" style="min-width:${minWidth}px">
-        <canvas id="monthlyChart"></canvas>
-      </div>
-    </div>
-  `;
-
-  if (monthlyChart) monthlyChart.destroy();
-  monthlyChart = new Chart(document.getElementById('monthlyChart').getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: monthKeys.map(formatMonthLabel),
-      datasets
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: { boxWidth: 12, boxHeight: 12, font: { size: 11 } }
-        },
-        tooltip: {
-          callbacks: {
-            label: ctxTip => `${ctxTip.dataset.label}: ${Number(ctxTip.parsed.y || 0).toFixed(1)} mm`
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: { maxRotation: 0, minRotation: 0, font: { size: 11 } }
-        },
-        y: {
-          beginAtZero: true,
-          grid: { color: 'rgba(0,0,0,0.05)' },
-          ticks: {
-            font: { size: 11 },
-            callback: value => `${value} mm`
-          }
-        }
-      }
-    }
-  });
-
-  switchRTab('r-allsite');
-  syncResultsViewport();
 }
 
 function showDailySubTab(id) {
@@ -3284,7 +3303,6 @@ function renderResults(data, wx, rainToday) {
   renderIFDTable(aep, rm?.max_depth_mm, dur);
   setMarkerStyle(data.station_id, rm?.max_depth_mm > 0 ? 'result' : 'selected');
   switchRTab('r-summary');
-  syncResultsViewport();
 }
 
 // â”€â”€ Rainfall chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -3390,16 +3408,9 @@ function exportCSV() {
   let csv = '';
   const ts = new Date().toLocaleString('en-AU');
 
-  if (currentTab === 'monthly' && lastMonthlyData?.stations?.length) {
-    const monthlyRows = buildMonthlyRows(lastMonthlyData, lastMonthlyData.monthKeys);
-    csv = `NSW Rainfall Analyser - Monthly Rainfall Export\nGenerated: ${ts}\n\n`;
-    csv += Object.keys(monthlyRows[0] || {}).join(',') + '\n';
-    monthlyRows.forEach(row => {
-      csv += Object.values(row).join(',') + '\n';
-    });
-  } else if (allSiteResults?.length) {
+  if (allSiteResults?.length) {
     // All sites export
-    csv = `NSW Rainfall Analyser - All Sites Export\nGenerated: ${ts}\n\n`;
+    csv = `NSW Rainfall Analyser â€” All Sites Export\nGenerated: ${ts}\n\n`;
     csv += 'Rank,Station,Peak Depth (mm),Total Depth (mm),AEP%,Return Period,Peak Start,Peak End\n';
     const sorted = [...allSiteResults]
       .filter(r => r.rolling_max)
@@ -3411,7 +3422,7 @@ function exportCSV() {
     });
   } else if (lastResults?.readings) {
     // Single station export
-    csv = `NSW Rainfall Analyser - ${lastResults.station_name}\nGenerated: ${ts}\n\n`;
+    csv = `NSW Rainfall Analyser â€” ${lastResults.station_name}\nGenerated: ${ts}\n\n`;
     csv += `AEP:,${lastResults.aep?.aep||''}\nReturn Period:,${aepToARI(lastResults.aep || lastResults.aep?.aep || '')}\n`;
     csv += `Peak Depth (mm):,${lastResults.rolling_max?.max_depth_mm||''}\n`;
     csv += `Total Depth (mm):,${lastResults.rolling_max?.total_depth_mm||''}\n\n`;
@@ -3875,7 +3886,6 @@ async function exportAllXlsx() {
   appendWorkbookSheet(wb, 'Gauge_Data', buildGaugeDataRows());
   appendWorkbookSheet(wb, 'Daily_Totals', buildDailyRows(lastDailyData?.readings || lastResults.readings || []));
   appendWorkbookSheet(wb, 'Hourly_Breakdown', buildHourlyRows(lastDailyData?.readings || lastResults.readings || []));
-  appendWorkbookSheet(wb, 'Monthly_Rainfall', buildMonthlyRows(lastMonthlyData, lastMonthlyData?.monthKeys));
   appendWorkbookSheet(wb, 'BoM_IFD_2016', buildIfdDepthReferenceRows());
   appendWorkbookSheet(wb, 'IFD_Table', buildIfdRows());
 
@@ -3893,6 +3903,7 @@ async function api(path) {
   return r.json();
 }
 
+
 function setPackagingStatus(ok, text) {
   const dot = document.getElementById('pkgDot');
   const label = document.getElementById('pkgStatusText');
@@ -3900,260 +3911,13 @@ function setPackagingStatus(ok, text) {
   if (label) label.textContent = text;
 }
 
-function syncResultsViewport() {
-  const main = document.querySelector('.main');
-  if (!main) return;
-  const shouldFill = currentTab === 'monthly' && document.getElementById('results')?.classList.contains('show');
-  main.classList.toggle('results-full', shouldFill);
-}
-
-function resolveSuburbColumn(rows) {
-  if (!rows?.length) return null;
-  const candidates = ['Asset Suburb', 'Location - Suburb', 'Suburb', 'SUBURB'];
-  return candidates.find(name => Object.prototype.hasOwnProperty.call(rows[0], name)) || null;
-}
-
-function deriveSuburbFromText(value) {
-  const text = String(value ?? '').trim();
-  if (!text || text.toUpperCase() === 'TBA') return '';
-  const nswMatch = text.match(/\b([A-Z]+(?: [A-Z]+)*) NSW \d{4}\b/);
-  if (nswMatch) return nswMatch[1].trim();
-  const trailingMatch = text.match(/,\s*([A-Z]+(?: [A-Z]+)*)\s*$/);
-  if (trailingMatch) return trailingMatch[1].trim();
-  return '';
-}
-
-function getRowSuburb(row, suburbCol = null) {
-  const direct = suburbCol ? String(row?.[suburbCol] ?? '').trim() : '';
-  if (direct && direct.toUpperCase() !== 'TBA') return direct;
-  for (const candidate of ['Formatted_Address', 'Asset_Address', 'Physical_Location']) {
-    const derived = deriveSuburbFromText(row?.[candidate]);
-    if (derived) return derived;
-  }
-  return '';
-}
-
-function normaliseNumeric(value) {
-  if (value == null || value === '') return null;
-  const cleaned = String(value).replace(/[$,\s]/g, '');
-  const num = Number(cleaned);
-  return Number.isFinite(num) ? num : null;
-}
-
-function getReliningConditionNumber(row) {
-  const raw = row?.['SW_Condition'];
-  const match = String(raw ?? '').match(/(\d+)/);
-  return match ? Number(match[1]) : null;
-}
-
-function parseDescriptorDiameters(desc) {
-  const text = String(desc ?? '');
-  const mmMatches = [...text.matchAll(/[ØO]?(\d+)\s*mm/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
-  if (mmMatches.length) return mmMatches;
-  return [...text.matchAll(/[ØO](\d+)/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
-}
-
-function parseLengthBand(desc) {
-  const text = String(desc ?? '');
-  const plus = text.match(/\+(\d+)/);
-  if (plus) return [Number(plus[1]), Infinity];
-  const range = text.match(/(\d+)\s*-\s*(\d+)/);
-  if (range) return [Number(range[1]), Number(range[2])];
-  return null;
-}
-
-function cleanRateRows(rows) {
-  return (rows || []).map(row => ({
-    ...row,
-    'Unit Rate': normaliseNumeric(row?.['Unit Rate'])
-  }));
-}
-
-function getReliningRateForRow(row) {
-  const diameter = normaliseNumeric(row?.['SWP_Pipe Diameter_mm']);
-  const lengthM = normaliseNumeric(row?.['Spatial Length_m']);
-  if (!Number.isFinite(diameter) || !Number.isFinite(lengthM) || !reliningRatesRows.length) return null;
-
-  let matches = reliningRatesRows.filter(rate => {
-    const diameters = parseDescriptorDiameters(rate?.['Size/Descriptor']);
-    return diameters.includes(diameter);
-  });
-  if (!matches.length) return null;
-
-  const inBand = matches.filter(rate => {
-    const band = parseLengthBand(rate?.['Size/Descriptor']);
-    if (!band) return false;
-    return lengthM >= band[0] && lengthM <= band[1];
-  });
-  if (inBand.length) matches = inBand;
-  else if (matches.some(rate => parseLengthBand(rate?.['Size/Descriptor']))) return null;
-
-  const assetClassMatches = matches.filter(rate => /Median/i.test(String(rate?.['Asset Class'] || '')));
-  if (assetClassMatches.length) matches = assetClassMatches;
-  else {
-    const panelMatches = matches.filter(rate => /Panel/i.test(String(rate?.['Asset Class'] || '')));
-    if (panelMatches.length) matches = panelMatches;
-  }
-
-  const numericRates = matches.map(rate => normaliseNumeric(rate?.['Unit Rate'])).filter(value => Number.isFinite(value));
-  if (!numericRates.length) return null;
-  numericRates.sort((a, b) => a - b);
-  return numericRates[Math.floor(numericRates.length / 2)];
-}
-
-function getReliningRowsForMode(mode) {
-  const allowed = mode === 'Condition 8 only' ? new Set([8]) : (mode === 'Condition 7 only' ? new Set([7]) : new Set([7, 8]));
-  return reliningAssetsRows.filter(row => allowed.has(getReliningConditionNumber(row)));
-}
-
-function buildPackagingStreamSummary(name, rows, suburbCol) {
-  const totalLength = rows.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m']) || 0), 0);
-  const sampleCols = ['Asset', suburbCol, 'SWP_Pipe Diameter_mm', 'Spatial Length_m', 'SW_Condition'].filter(Boolean);
-  const sampleAssets = rows.slice(0, 8).map(row => {
-    const item = {};
-    sampleCols.forEach(col => item[col] = row?.[col] ?? '');
-    if (!suburbCol) item.Suburb = getRowSuburb(row, suburbCol) || 'TBA';
-    return item;
-  });
-  return {
-    name,
-    pipe_count: rows.length,
-    total_length_m: Number(totalLength.toFixed(1)),
-    sample_assets: sampleAssets
-  };
-}
-
-function buildSplitStreams(mode) {
-  const suburbCol = resolveSuburbColumn(reliningAssetsRows);
-  const reliningPreviewRows = getReliningRowsForMode(mode);
-  const reliningDefaultRows = reliningAssetsRows.filter(row => getReliningConditionNumber(row) === 8);
-  const reconstructionRows = reliningAssetsRows.filter(row => {
-    const cond = getReliningConditionNumber(row);
-    return cond === 9 || cond === 10;
-  });
-  const amplificationRows = reliningAssetsRows.filter(row => {
-    const cond = getReliningConditionNumber(row);
-    const flood = String(row?.['SW LGA 20% H1-H6'] || '').trim().toUpperCase();
-    const diameter = normaliseNumeric(row?.['SWP_Pipe Diameter_mm']) || 0;
-    return [4, 5, 6, 7].includes(cond) && ['H3', 'H4', 'H5', 'H6'].includes(flood) && diameter >= 300;
-  });
-  return {
-    suburb_column: suburbCol,
-    asset_count: reliningAssetsRows.length,
-    streams: [
-      buildPackagingStreamSummary('Relining Preview', reliningPreviewRows, suburbCol),
-      buildPackagingStreamSummary('Relining Default (Condition 8)', reliningDefaultRows, suburbCol),
-      buildPackagingStreamSummary('Reconstruction', reconstructionRows, suburbCol),
-      buildPackagingStreamSummary('Amplification', amplificationRows, suburbCol)
-    ]
-  };
-}
-
-function splitIntoPackagesByCount(rows, pipesPerPackage, groupBySuburb, suburbCol) {
-  const sorted = [...rows].sort((a, b) => {
-    if (!groupBySuburb || !suburbCol) return String(a?.Asset || '').localeCompare(String(b?.Asset || ''));
-    const suburbCompare = getRowSuburb(a, suburbCol).localeCompare(getRowSuburb(b, suburbCol));
-    if (suburbCompare !== 0) return suburbCompare;
-    return String(a?.Asset || '').localeCompare(String(b?.Asset || ''));
-  });
-  let pkgIndex = 0;
-  let countInPkg = 0;
-  let lastGroup = null;
-  return sorted.map(row => {
-    const group = groupBySuburb ? getRowSuburb(row, suburbCol) : '';
-    if (lastGroup === null) lastGroup = group;
-    if (group !== lastGroup || countInPkg >= pipesPerPackage) {
-      pkgIndex += 1;
-      countInPkg = 0;
-      lastGroup = group;
-    }
-    const packageId = `RLN_${String(pkgIndex + 1).padStart(3, '0')}`;
-    countInPkg += 1;
-    return { ...row, package_id: packageId };
-  });
-}
-
-function splitIntoValuePackages(rows, maxPackageValue, groupBySuburb, suburbCol) {
-  const groups = new Map();
-  rows.forEach(row => {
-    const key = groupBySuburb ? (getRowSuburb(row, suburbCol) || '__unknown__') : '__all__';
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(row);
-  });
-  const packaged = [];
-  let pkgCounter = 1;
-  groups.forEach(groupRows => {
-    const sorted = [...groupRows].sort((a, b) => (b.pipe_cost || 0) - (a.pipe_cost || 0));
-    let current = [];
-    let currentValue = 0;
-    sorted.forEach(row => {
-      const pipeValue = Number(row.pipe_cost || 0);
-      if (current.length && (currentValue + pipeValue > maxPackageValue)) {
-        current.forEach(item => packaged.push({ ...item, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
-        pkgCounter += 1;
-        current = [];
-        currentValue = 0;
-      }
-      current.push(row);
-      currentValue += pipeValue;
-    });
-    if (current.length) {
-      current.forEach(item => packaged.push({ ...item, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
-      pkgCounter += 1;
-    }
-  });
-  return packaged;
-}
-
-function summarisePackages(rows, suburbCol) {
-  const packages = new Map();
-  rows.forEach(row => {
-    const key = String(row.package_id || '');
-    if (!key) return;
-    if (!packages.has(key)) packages.set(key, []);
-    packages.get(key).push(row);
-  });
-  const summaries = [];
-  [...packages.keys()].sort().forEach(packageId => {
-    const pkgRows = packages.get(packageId) || [];
-    const totalLength = pkgRows.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m']) || 0), 0);
-    const totalCost = pkgRows.reduce((sum, row) => sum + (Number(row?.pipe_cost) || 0), 0);
-    const suburbs = [...new Set(pkgRows.map(row => getRowSuburb(row, suburbCol)).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-    summaries.push({
-      package_id: packageId,
-      pipe_count: pkgRows.length,
-      total_length_m: Number(totalLength.toFixed(1)),
-      total_cost: Number(totalCost.toFixed(2)),
-      ...(suburbs.length ? { suburb: suburbs.join(', ') } : { suburb: 'TBA' })
-    });
-  });
-  return summaries;
-}
-
-function samplePackageAssets(rows, suburbCol) {
-  const firstPackageId = [...new Set(rows.map(row => row.package_id).filter(Boolean))].sort()[0];
-  if (!firstPackageId) return [];
-  return rows.filter(row => row.package_id === firstPackageId).slice(0, 12).map(row => {
-    const item = {
-      package_id: row.package_id,
-      Asset: row.Asset ?? '',
-      'SWP_Pipe Diameter_mm': row['SWP_Pipe Diameter_mm'] ?? '',
-      'Spatial Length_m': row['Spatial Length_m'] ?? '',
-      pipe_cost: row.pipe_cost != null ? Number(row.pipe_cost.toFixed(2)) : ''
-    };
-    item.Suburb = getRowSuburb(row, suburbCol) || 'TBA';
-    return item;
-  });
-}
-
 function renderPackagingMeta(meta) {
   const el = document.getElementById('pkgMeta');
   if (!el) return;
   const rows = [
-    ['Assets file', reliningAssetsFileName || 'Required'],
-    ['Rates file', reliningRatesFileName || 'Required'],
     ['Assets Loaded', meta?.asset_count?.toLocaleString?.() ?? '-'],
-    ['Suburb Column', meta?.suburb_column || '-']
+    ['Assets Path', meta?.assets_path || '-'],
+    ['Suburb Column', meta?.suburb_column ? displayTableHeader(meta.suburb_column) : '-']
   ];
   el.innerHTML = rows.map(([label, value]) => `
     <div class="pkg-meta-item">
@@ -4163,14 +3927,18 @@ function renderPackagingMeta(meta) {
   `).join('');
 }
 
-function renderPackagingPaths() {
+function renderPackagingPaths(meta) {
   const el = document.getElementById('pkgPathMeta');
   if (!el) return;
+  const dataPath = meta?.data_path || '-';
+  const outputsPath = meta?.outputs_path || '-';
+  const ratesPath = meta?.rates_path || '-';
+  const sharedHint = String(dataPath).includes('OneDrive - Northern Beaches Council') ? 'Council OneDrive path' : 'Local fallback path';
   const rows = [
-    ['Assets Upload', reliningAssetsFileName || 'Not loaded'],
-    ['Rates Upload', reliningRatesFileName || 'Not loaded'],
-    ['Storage Mode', 'In-browser memory only'],
-    ['Server Copy', 'None']
+    ['Input Data Folder', dataPath],
+    ['Rates Workbook', ratesPath],
+    ['Outputs Folder', outputsPath],
+    ['Path Mode', sharedHint]
   ];
   el.innerHTML = rows.map(([label, value]) => `
     <div class="pkg-meta-item">
@@ -4210,7 +3978,7 @@ function renderPackagingSamples(streams) {
     </div>
     <table>
       <thead>
-        <tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>
+        <tr>${headers.map(h => `<th>${escapeHtml(displayTableHeader(h))}</th>`).join('')}</tr>
       </thead>
       <tbody>
         ${firstWithSamples.sample_assets.map(row => `
@@ -4238,8 +4006,10 @@ function renderGeneratedPackages(data) {
     return;
   }
 
-  const packageHeaders = Object.keys(data.packages[0]);
-  const sampleHeaders = data.sample_assets?.length ? Object.keys(data.sample_assets[0]) : [];
+  const displayPackages = data.packages.map(pkg => ({ ...pkg, suburb: formatSuburbName(pkg.suburb) || pkg.suburb }));
+  const displaySamples = (data.sample_assets || []).map(asset => ({ ...asset }));
+  const packageHeaders = Object.keys(displayPackages[0]);
+  const sampleHeaders = displaySamples.length ? Object.keys(displaySamples[0]) : [];
   area.className = 'pkg-table-wrap';
   area.innerHTML = `
     <div style="padding:12px;background:white;border-bottom:1px solid var(--border)">
@@ -4255,10 +4025,10 @@ function renderGeneratedPackages(data) {
     </div>
     <table>
       <thead>
-        <tr>${packageHeaders.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>
+        <tr>${packageHeaders.map(h => `<th>${escapeHtml(displayTableHeader(h))}</th>`).join('')}</tr>
       </thead>
       <tbody>
-        ${data.packages.map(row => `
+        ${displayPackages.map(row => `
           <tr>${packageHeaders.map(h => `<td>${escapeHtml(Array.isArray(row[h]) ? row[h].join(', ') : row[h])}</td>`).join('')}</tr>
         `).join('')}
       </tbody>
@@ -4269,10 +4039,10 @@ function renderGeneratedPackages(data) {
       </div>
       <table>
         <thead>
-          <tr>${sampleHeaders.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>
+          <tr>${sampleHeaders.map(h => `<th>${escapeHtml(displayTableHeader(h))}</th>`).join('')}</tr>
         </thead>
         <tbody>
-          ${data.sample_assets.map(row => `
+          ${displaySamples.map(row => `
             <tr>${sampleHeaders.map(h => `<td>${escapeHtml(row[h])}</td>`).join('')}</tr>
           `).join('')}
         </tbody>
@@ -4291,7 +4061,7 @@ function getFutureWorksDefaults() {
 }
 
 function getFutureWorksWorkbookUrl() {
-  return futureWorksWorkbookUrl.trim();
+  return (localStorage.getItem(FUTURE_WORKS_URL_KEY) || '').trim();
 }
 
 function getFutureWorksLocalFolderTemplate() {
@@ -4336,7 +4106,12 @@ function syncFutureWorksWorkbookInput() {
 function saveFutureWorksWorkbookUrl() {
   const input = document.getElementById('fwWorkbookUrl');
   if (!input) return;
-  futureWorksWorkbookUrl = input.value.trim();
+  const value = input.value.trim();
+  if (!value) {
+    localStorage.removeItem(FUTURE_WORKS_URL_KEY);
+    return;
+  }
+  localStorage.setItem(FUTURE_WORKS_URL_KEY, value);
 }
 
 function openFutureWorksWorkbook() {
@@ -4382,6 +4157,7 @@ async function importForwardWorksWorkbook(event) {
     if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
     const buffer = await file.arrayBuffer();
     const workbook = XLSX.read(buffer, { type: 'array' });
+    futureWorksWorkbookFile = file;
     futureWorksWorkbookMeta = {
       name: file.name,
       sheetCount: workbook.SheetNames.length,
@@ -4413,7 +4189,7 @@ function normaliseImportedFutureWorksRows(rows) {
     const totalCost = Number(item.total_cost ?? item.totalCost ?? item['Cost ($)'] ?? item.Budget ?? item.budget ?? 0);
     const totalLength = Number(item.total_length_m ?? item.totalLength ?? item['Length (m)'] ?? item.lengthM ?? 0);
     const pipeCount = Number(item.pipe_count ?? item.pipeCount ?? 0);
-    const suburb = item.suburb || item.suburbs || item['Suburb(s)'] || 'LGA Wide';
+    const suburb = formatSuburbName(item.suburb || item.suburbs || item['Suburb(s)']) || 'LGA Wide';
     const diameters = item['Diameters (mm)'] || item.diameters || item.diameter || '';
     const assetIds = item['Asset IDs'] || item.assetIds || item.asset_numbers || item['Asset number'] || '';
     const description = item.shortDescription || item['Short description of work'] ||
@@ -4446,6 +4222,26 @@ function normaliseImportedFutureWorksRows(rows) {
 function parseSimpleCsv(text) {
   const lines = String(text || '').replace(/\r/g, '').split('\n').filter(Boolean);
   if (lines.length < 2) return [];
+  const detectDelimiter = (line) => {
+    const candidates = [',', '\t', ';', '|'];
+    let best = ',';
+    let bestCount = -1;
+    for (const candidate of candidates) {
+      let count = 0;
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') inQuotes = !inQuotes;
+        else if (ch === candidate && !inQuotes) count++;
+      }
+      if (count > bestCount) {
+        best = candidate;
+        bestCount = count;
+      }
+    }
+    return best;
+  };
+  const delimiter = detectDelimiter(lines[0]);
   const parseLine = (line) => {
     const out = [];
     let current = '';
@@ -4459,7 +4255,7 @@ function parseSimpleCsv(text) {
         } else {
           inQuotes = !inQuotes;
         }
-      } else if (ch === ',' && !inQuotes) {
+      } else if (ch === delimiter && !inQuotes) {
         out.push(current);
         current = '';
       } else {
@@ -4469,7 +4265,7 @@ function parseSimpleCsv(text) {
     out.push(current);
     return out;
   };
-  const headers = parseLine(lines[0]).map(h => h.trim());
+  const headers = parseLine(lines[0]).map(h => h.replace(/[\u200B-\u200D\uFEFF]/g, '').trim());
   return lines.slice(1).map(line => {
     const values = parseLine(line);
     const row = {};
@@ -4478,170 +4274,13 @@ function parseSimpleCsv(text) {
   });
 }
 
-function readWorkbookRows(workbook, sheetName = null) {
-  const targetSheet = sheetName || workbook.SheetNames[0];
-  if (!targetSheet || !workbook.Sheets[targetSheet]) return [];
-  return XLSX.utils.sheet_to_json(workbook.Sheets[targetSheet], { defval: '' });
-}
-
-function extractCostingLookupFromWorkbook(workbook) {
-  const tableRows = readWorkbookRows(workbook, '_Tables');
-  if (!tableRows.length) throw new Error('The costing workbook is missing the _Tables sheet.');
-  const modifierRows = readWorkbookRows(workbook, 'IPART Modifiers');
-
-  const rows = tableRows.map(row => ({
-    assetClass: String(row['Asset Class'] ?? '').trim(),
-    category: String(row['Category'] ?? '').trim(),
-    item: String(row['Item'] ?? '').trim(),
-    component: String(row['Component'] ?? '').trim(),
-    source: String(row['Source'] ?? '').trim(),
-    type: String(row['Type'] ?? '').trim(),
-    size: String(row['Size/Descriptor'] ?? '').trim(),
-    unit: String(row['Unit'] ?? '').trim(),
-    unitRate: normaliseNumeric(row['Unit Rate']),
-    modifier: String(row['Modifier'] ?? '').trim()
-  })).filter(row => row.assetClass && row.item);
-
-  const modifiers = modifierRows.map(row => ({
-    context: String(row.Context ?? row.context ?? '').trim(),
-    level: String(row.Level ?? row.level ?? row['Modifier Level'] ?? '').trim(),
-    factor: normaliseNumeric(row.Factor ?? row.factor ?? row['IPART Factor'] ?? row['Modifier Factor'])
-  })).filter(row => row.level && Number.isFinite(row.factor));
-
-  const assetClasses = [...new Set(rows.map(row => row.assetClass).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const categories = [...new Set(rows.map(row => row.category).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-  const items = [...new Set(rows.map(row => row.item).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-
-  return {
-    meta: {
-      sourceWorkbook: costingWorkbookName || 'Uploaded workbook',
-      rowCount: rows.length,
-      assetClassCount: assetClasses.length,
-      categoryCount: categories.length,
-      itemCount: items.length
-    },
-    modifiers,
-    assetClasses,
-    rows
-  };
-}
-
-async function importCostingWorkbook(event) {
-  const file = event?.target?.files?.[0];
-  if (!file) return;
-  showLoad('Loading costing workbook...');
-  try {
-    if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
-    const buffer = await file.arrayBuffer();
-    const workbook = XLSX.read(buffer, { type: 'array' });
-    costingWorkbookName = file.name;
-    costingLookup = extractCostingLookupFromWorkbook(workbook);
-    const modifierSel = document.getElementById('costModifier');
-    if (modifierSel) {
-      const modifiers = costingLookup.modifiers || [];
-      modifierSel.innerHTML = [
-        '<option value="1">No modifier (1.00x)</option>',
-        ...modifiers.map(m => `<option value="${m.factor}">${escapeHtml((m.context ? m.context + ' · ' : '') + m.level)} (${Number(m.factor).toFixed(2)}x)</option>`)
-      ].join('');
-    }
-    document.getElementById('costMetaType').textContent = costingWorkbookName;
-    document.getElementById('costMetaRows').textContent = (costingLookup.meta?.rowCount || 0).toLocaleString();
-    document.getElementById('costMetaClasses').textContent = (costingLookup.meta?.assetClassCount || 0).toLocaleString();
-    const statusEl = document.getElementById('costUploadStatus');
-    if (statusEl) statusEl.textContent = `${costingWorkbookName} loaded in browser memory only for this session.`;
-    if (!costingRows.length) {
-      for (let i = 0; i < 5; i++) addCostingRow();
-    } else {
-      renderCostingTable();
-    }
-  } catch (e) {
-    costingLookup = null;
-    costingWorkbookName = '';
-    const statusEl = document.getElementById('costUploadStatus');
-    if (statusEl) statusEl.textContent = `Workbook import failed: ${e.message || e}`;
-    renderCostingTable();
-  } finally {
-    hideLoad();
-    if (event?.target) event.target.value = '';
-  }
-}
-
-async function importReliningAssetsFile(event) {
-  const file = event?.target?.files?.[0];
-  if (!file) return;
-  showLoad('Loading relining assets file...');
-  try {
-    const lower = file.name.toLowerCase();
-    let rows = [];
-    if (lower.endsWith('.csv')) {
-      rows = parseSimpleCsv(await file.text());
-    } else {
-      if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
-      const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array' });
-      rows = readWorkbookRows(workbook);
-    }
-    if (!rows.length) throw new Error('No asset rows were found in that file.');
-    reliningAssetsRows = rows;
-    reliningAssetsFileName = file.name;
-    lastPackagingGeneration = null;
-    renderPackagingPaths();
-    renderPackagingMeta({ asset_count: rows.length, suburb_column: resolveSuburbColumn(rows) });
-    setPackagingStatus(reliningRatesRows.length > 0, reliningRatesRows.length > 0 ? 'Required files loaded' : 'Upload panel rates workbook to continue');
-    renderPackagingCards([]);
-    renderPackagingSamples([]);
-    document.getElementById('pkgPackagesArea').className = 'pkg-empty';
-    document.getElementById('pkgPackagesArea').textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
-  } catch (e) {
-    reliningAssetsRows = [];
-    reliningAssetsFileName = '';
-    setPackagingStatus(false, `Assets upload failed`);
-    renderPackagingPaths();
-    renderPackagingMeta({ asset_count: 0, suburb_column: '-' });
-    alert(`Assets upload failed: ${e.message || e}`);
-  } finally {
-    hideLoad();
-    if (event?.target) event.target.value = '';
-  }
-}
-
-async function importReliningRatesFile(event) {
-  const file = event?.target?.files?.[0];
-  if (!file) return;
-  showLoad('Loading relining rates workbook...');
-  try {
-    if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
-    const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array' });
-    const rows = cleanRateRows(readWorkbookRows(workbook, '_Tables'))
-      .filter(row => /SP6 Pipeline Relining/i.test(String(row?.Category || '')));
-    if (!rows.length) throw new Error('No SP6 Pipeline Relining rows were found in the _Tables sheet.');
-    reliningRatesRows = rows;
-    reliningRatesFileName = file.name;
-    lastPackagingGeneration = null;
-    renderPackagingPaths();
-    renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
-    setPackagingStatus(reliningAssetsRows.length > 0, reliningAssetsRows.length > 0 ? 'Required files loaded' : 'Upload assets file to continue');
-    document.getElementById('pkgPackagesArea').className = 'pkg-empty';
-    document.getElementById('pkgPackagesArea').textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
-  } catch (e) {
-    reliningRatesRows = [];
-    reliningRatesFileName = '';
-    setPackagingStatus(false, 'Rates upload failed');
-    renderPackagingPaths();
-    renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
-    alert(`Rates upload failed: ${e.message || e}`);
-  } finally {
-    hideLoad();
-    if (event?.target) event.target.value = '';
-  }
-}
-
 async function importFutureWorksFile(event) {
   const file = event?.target?.files?.[0];
   if (!file) return;
   try {
     let rows = [];
     const lower = file.name.toLowerCase();
-    if (lower.endsWith('.xlsx') || lower.endsWith('.xls') || lower.endsWith('.xlsm')) {
+    if (lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
       if (typeof XLSX === 'undefined') {
         throw new Error('Excel import library did not load.');
       }
@@ -4676,7 +4315,7 @@ async function importFutureWorksFile(event) {
 function mapReliningPackagesToFutureWorksRows(packages) {
   const defaults = getFutureWorksDefaults();
   return (packages || []).map((pkg, idx) => {
-    const suburb = pkg.suburb || 'LGA Wide';
+    const suburb = formatSuburbName(pkg.suburb) || 'LGA Wide';
     const packageId = pkg.package_id || `RLN_${String(idx + 1).padStart(3, '0')}`;
     const pipeCount = Number(pkg.pipe_count || 0);
     const totalLength = Number(pkg.total_length_m || 0);
@@ -4714,7 +4353,7 @@ function renderFutureWorksTable() {
   if (!area) return;
   if (!futureWorksRows.length) {
     area.className = 'fw-empty';
-    area.innerHTML = 'Generate relining packages first, then click <strong>Load Current Relining Packages</strong> here to stage them into the future works backlog format.';
+    area.innerHTML = 'Generate relining packages first, then click <strong>Load Latest Relining Packages</strong> here to stage them into the future works backlog format.';
     return;
   }
 
@@ -4775,87 +4414,1268 @@ function exportFutureWorksCsv() {
   origPriDownload(`future_works_backlog_${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
 }
 
-async function refreshPackagingConnection() {
-  renderPackagingPaths();
-  renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
-  if (reliningAssetsRows.length && reliningRatesRows.length) {
-    setPackagingStatus(true, 'Required files loaded');
-  } else {
-    setPackagingStatus(false, 'Waiting for required files');
+function refreshPackagingConnection() {
+  updateReliningStatus();
+}
+
+function loadPackagingPreview() {
+  if (!reliningAssetsData) {
+    alert('Upload the assets CSV file first.');
+    return;
+  }
+  const sampleArea = document.getElementById('pkgSampleArea');
+  const count = reliningAssetsData.length;
+  if (sampleArea) sampleArea.textContent = `${count.toLocaleString()} assets loaded from file. In-browser stream preview coming in a future update.`;
+}
+
+function generateReliningPackages() {
+  if (!reliningAssetsData || !reliningRatesData) {
+    alert('Upload both the assets CSV and Panel_Rates.xlsx files first.');
+    return;
+  }
+  const area = document.getElementById('pkgPackagesArea');
+  if (area) area.textContent = 'In-browser package generation coming in a future update.';
+}
+
+async function loadReliningAssetsFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    // Basic CSV parse — just count rows for now
+    const lines = text.replace(/\r/g, '').split('\n').filter(Boolean);
+    reliningAssetsData = lines.slice(1); // store rows excluding header
+    const statusEl = document.getElementById('pkgAssetsStatus');
+    if (statusEl) statusEl.textContent = `Assets: ${escapeHtml(file.name)} (${(lines.length - 1).toLocaleString()} rows)`;
+    updateReliningStatus();
+  } catch (e) {
+    alert(`Failed to load assets file: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
   }
 }
 
-async function loadPackagingPreview() {
-  const mode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
+async function loadReliningRatesFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
   try {
-    if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
-    const data = buildSplitStreams(mode);
-    setPackagingStatus(true, `${data.asset_count.toLocaleString()} assets previewed`);
-    renderPackagingMeta({
-      asset_count: data.asset_count,
-      suburb_column: data.suburb_column
-    });
-    renderPackagingPaths();
-    renderPackagingCards(data.streams);
-    renderPackagingSamples(data.streams);
+    if (typeof XLSX === 'undefined') throw new Error('Excel library not loaded.');
+    const buffer = await file.arrayBuffer();
+    reliningRatesData = { name: file.name, buffer }; // hold reference in memory only
+    const statusEl = document.getElementById('pkgRatesStatus');
+    if (statusEl) statusEl.textContent = `Rates: ${escapeHtml(file.name)}`;
+    updateReliningStatus();
   } catch (e) {
-    setPackagingStatus(false, 'Preview failed');
-    const area = document.getElementById('pkgSampleArea');
-    if (area) {
-      area.className = 'pkg-empty';
-      area.textContent = String(e.message || e);
+    alert(`Failed to load rates file: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
+  }
+}
+
+function updateReliningStatus() {
+  const dot = document.getElementById('pkgDot');
+  const text = document.getElementById('pkgStatusText');
+  const bothLoaded = reliningAssetsData && reliningRatesData;
+  if (dot) dot.style.background = bothLoaded ? '#2e7d32' : '#888';
+  if (text) text.textContent = bothLoaded ? 'Files loaded' : (reliningAssetsData ? 'Rates file needed' : (reliningRatesData ? 'Assets file needed' : 'No files loaded'));
+}
+
+function setCctvPackagingStatus(ok, text) {
+  const dot = document.getElementById('cctvPkgDot');
+  const label = document.getElementById('cctvPkgStatusText');
+  if (dot) dot.style.background = ok ? '#27AE60' : '#888';
+  if (label) label.textContent = text;
+}
+
+function refreshCctvPackagingConnection() {
+  const bothLoaded = cctvPackagingAssetsData && cctvPackagingRatesData;
+  setCctvPackagingStatus(
+    bothLoaded,
+    bothLoaded ? 'Files loaded' : (cctvPackagingAssetsData ? 'Rates file needed' : (cctvPackagingRatesData ? 'Assets file needed' : 'No files loaded'))
+  );
+}
+
+function getCctvConditionHeaderHint(rows) {
+  const headers = Object.keys(rows?.[0] || {});
+  const matches = headers.filter(header => /condition/i.test(header));
+  return matches.length ? ` Condition columns: ${matches.join(', ')}` : ' No condition-like columns detected.';
+}
+
+function getCctvConditionValueHint(rows) {
+  const counts = new Map();
+  (rows || []).slice(0, 500).forEach(row => {
+    const value = String(resolveCctvConditionValue(row) || '[blank]')
+      .replace(/[\u200B-\u200D\uFEFF]/g, '')
+      .trim() || '[blank]';
+    counts.set(value, (counts.get(value) || 0) + 1);
+  });
+  const top = Array.from(counts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([value, count]) => `${value}: ${count}`)
+    .join(', ');
+  return top ? ` Sample condition values: ${top}` : '';
+}
+
+function toggleCctvPackageTargetInputs() {
+  const mode = document.getElementById('cctvPkgTargetMode')?.value || 'length';
+  const lengthWrap = document.getElementById('cctvPkgTargetLengthWrap');
+  const countWrap = document.getElementById('cctvPkgPipeCountWrap');
+  if (lengthWrap) lengthWrap.style.display = mode === 'count' ? 'none' : '';
+  if (countWrap) countWrap.style.display = mode === 'length' ? 'none' : '';
+}
+
+async function loadCctvPackagingAssetsFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    cctvPackagingAssetsData = parseSimpleCsv(text);
+    lastCctvPackagingPreview = null;
+    lastCctvPackagingGeneration = null;
+    const statusEl = document.getElementById('cctvPkgAssetsStatus');
+    if (statusEl) statusEl.textContent = `Assets: ${escapeHtml(file.name)} (${cctvPackagingAssetsData.length.toLocaleString()} rows).${getCctvConditionHeaderHint(cctvPackagingAssetsData)}${getCctvConditionValueHint(cctvPackagingAssetsData)}`;
+    clearCctvPackagingOutputs();
+    refreshCctvPackagingConnection();
+  } catch (e) {
+    alert(`Failed to load assets file: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
+  }
+}
+
+async function loadCctvPackagingRatesFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    if (typeof XLSX === 'undefined') throw new Error('Excel library not loaded.');
+    const buffer = await file.arrayBuffer();
+    const rateRows = readPanelRateRowsFromWorkbook(buffer);
+    const rateMeta = getCctvRateMeta(rateRows);
+    cctvPackagingRatesData = { name: file.name, rows: rateRows, meta: rateMeta };
+    lastCctvPackagingGeneration = null;
+    const statusEl = document.getElementById('cctvPkgRatesStatus');
+    if (statusEl) {
+      statusEl.textContent = `Rates: ${escapeHtml(file.name)} (${rateMeta.matchCount.toLocaleString()} CCTV rows, median ${formatCurrency(rateMeta.medianRate || 0)}/hr)`;
+    }
+    clearCctvPackagingOutputs(false);
+    refreshCctvPackagingConnection();
+  } catch (e) {
+    alert(`Failed to load rates file: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
+  }
+}
+
+function clearCctvPackagingOutputs(clearPreview = true) {
+  if (clearPreview) {
+    lastCctvPackagingPreview = null;
+    const sample = document.getElementById('cctvPkgSampleArea');
+    if (sample) {
+      sample.className = 'pkg-empty';
+      sample.textContent = 'Upload files and run the preview to see remaining CCTV candidates.';
+    }
+    const cards = document.getElementById('cctvPkgCards');
+    if (cards) cards.innerHTML = '';
+    const meta = document.getElementById('cctvPkgMeta');
+    if (meta) meta.innerHTML = '';
+  }
+  const pkgArea = document.getElementById('cctvPkgPackagesArea');
+  if (pkgArea) {
+    pkgArea.className = 'pkg-empty';
+    pkgArea.textContent = 'Generate packages to see grouped CCTV survey packages and estimated CCTV costs.';
+  }
+  renderCctvPackagesMap();
+}
+
+function readPanelRateRowsFromWorkbook(buffer) {
+  const workbook = XLSX.read(buffer, { type: 'array' });
+  const sheetName = workbook.SheetNames.includes('_Tables') ? '_Tables' : workbook.SheetNames[0];
+  return XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
+}
+
+function getCctvRateMeta(rateRows) {
+  const cctvRows = (rateRows || []).filter(row => {
+    const category = String(getValueByAliases(row, ['Category', 'category']) || '').toLowerCase();
+    const item = String(getValueByAliases(row, ['Item', 'item']) || '').toLowerCase();
+    return category.includes('drainage inspections') && item.includes('cctv');
+  });
+  const panelRows = cctvRows.filter(row => String(getValueByAliases(row, ['Asset Class', 'assetClass']) || '').toLowerCase().includes('panel'));
+  const chosen = panelRows.length ? panelRows : cctvRows;
+  const rates = chosen
+    .map(row => parseNumberValue(getValueByAliases(row, ['Unit Rate', 'unitRate'])))
+    .filter(value => Number.isFinite(value) && value > 0)
+    .sort((a, b) => a - b);
+  const medianRate = rates.length
+    ? (rates.length % 2 ? rates[(rates.length - 1) / 2] : (rates[rates.length / 2] + rates[rates.length / 2 - 1]) / 2)
+    : null;
+  return {
+    matchCount: chosen.length,
+    medianRate,
+    unit: String(getValueByAliases(chosen[0] || {}, ['Unit', 'unit']) || 'Hr')
+  };
+}
+
+function parseConditionNumber(value) {
+  const match = String(value ?? '').match(/(\d+)/);
+  return match ? Number(match[1]) : null;
+}
+
+function isTbaCondition(value) {
+  const text = String(value ?? '')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .trim()
+    .toUpperCase();
+  return !text ||
+    text === '-' ||
+    text === 'TBA' ||
+    text === 'TBD' ||
+    text.includes('TBA') ||
+    text.includes('TBD') ||
+    text === 'TO BE ASSESSED' ||
+    text === 'TO BE ADVISED' ||
+    text === 'TO BE DETERMINED' ||
+    text === 'UNKNOWN' ||
+    text === 'N/A' ||
+    text === 'NA' ||
+    text === 'NULL';
+}
+
+function getCctvPackagingOptions() {
+  const conditionGroups = Array.from(document.querySelectorAll('#cctvPkgConditionGroups input[type="checkbox"]:checked'))
+    .map(input => input.value);
+  const targetMode = document.getElementById('cctvPkgTargetMode')?.value || 'length';
+  return {
+    conditionGroups: conditionGroups.length ? conditionGroups : ['tba', '1-6'],
+    targetMode,
+    lookbackYears: Math.max(0, parseNumberValue(document.getElementById('cctvPkgLookbackYears')?.value) || 4),
+    proximityM: Math.max(50, parseNumberValue(document.getElementById('cctvPkgProximity')?.value) || 500),
+    targetLengthM: Math.max(1, parseNumberValue(document.getElementById('cctvPkgTargetLength')?.value) || 1000),
+    pipesPerPackage: Math.max(1, Math.round(parseNumberValue(document.getElementById('cctvPkgPipeCount')?.value) || 25)),
+    metresPerHour: Math.max(1, parseNumberValue(document.getElementById('cctvPkgMetresPerHour')?.value) || 80),
+    criticalityWeight: Math.max(0, parseNumberValue(document.getElementById('cctvPkgCriticalityWeight')?.value) || 0.1)
+  };
+}
+
+function getCctvEsriLinkOptions() {
+  return {
+    baseUrl: String(document.getElementById('cctvEsriBaseUrl')?.value || '').trim(),
+    param: String(document.getElementById('cctvEsriParam')?.value || 'asset').trim() || 'asset',
+    linkMode: document.getElementById('cctvEsriLinkMode')?.value || 'query',
+    dataSourceId: String(document.getElementById('cctvEsriDataSourceId')?.value || '').trim(),
+    idField: String(document.getElementById('cctvEsriIdField')?.value || 'asset_id_text').trim() || 'asset_id_text'
+  };
+}
+
+function appendQueryParam(url, key, value) {
+  if (!url) return '';
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+}
+
+function buildEsriAssetLink(assetId, options) {
+  if (!options?.baseUrl || !assetId) return '';
+  if (options.linkMode === 'experience' && options.dataSourceId) {
+    return `${options.baseUrl}#data_s=id:${encodeURIComponent(options.dataSourceId)}:${encodeURIComponent(assetId)}&zoom_to_selection=true`;
+  }
+  return appendQueryParam(options.baseUrl, options.param, assetId);
+}
+
+function buildEsriPackageLink(assetIds, options) {
+  const ids = (assetIds || []).filter(Boolean);
+  if (!options?.baseUrl || !ids.length) return '';
+  if (options.linkMode === 'experience' && options.dataSourceId) {
+    return `${options.baseUrl}#data_s=id:${encodeURIComponent(options.dataSourceId)}:${ids.map(id => encodeURIComponent(id)).join('+')}&zoom_to_selection=true`;
+  }
+  return appendQueryParam(options.baseUrl, options.param, ids.join(','));
+}
+
+function conditionInRange(condition, low, high) {
+  return Number.isFinite(condition) && condition >= low && condition <= high;
+}
+
+function shouldIncludeCctvCondition(condition, isTba, groups) {
+  const selected = new Set(groups || []);
+  return (
+    (isTba && selected.has('tba')) ||
+    (selected.has('1-2') && conditionInRange(condition, 1, 2)) ||
+    (selected.has('3-4') && conditionInRange(condition, 3, 4)) ||
+    (selected.has('5-6') && conditionInRange(condition, 5, 6)) ||
+    (selected.has('1-6') && conditionInRange(condition, 1, 6)) ||
+    (selected.has('7-8') && conditionInRange(condition, 7, 8))
+  );
+}
+
+function conditionGroupsLabel(groups) {
+  const selected = groups?.length ? groups : ['tba', '1-6'];
+  return selected.map(group => group === 'tba' ? 'TBA' : `Condition ${group}`).join(', ');
+}
+
+function resolveCctvConditionValue(row) {
+  const direct = getValueByAliases(row, [
+    'Observed_Condition',
+    'Observed Condition',
+    'SW_Condition',
+    'Condition',
+    'Pipe Condition',
+    'Pipe_Condition',
+    'Asset Condition',
+    'Asset_Condition'
+  ]);
+  if (direct !== '') return direct;
+
+  const entries = Object.entries(row || {});
+  const conditionEntry = entries.find(([key]) => {
+    const normalised = normaliseKey(key);
+    return normalised === 'observedcondition' ||
+      normalised === 'swcondition' ||
+      normalised === 'condition' ||
+      normalised.endsWith('condition');
+  });
+  return conditionEntry ? conditionEntry[1] : '';
+}
+
+function resolveCctvDate(row) {
+  return parseDateValue(getValueByAliases(row, [
+    'Last CCTV Date',
+    'CCTV Date',
+    'CCTV_Inspection_Date',
+    'CCTV Inspection Date',
+    'Last CCTV',
+    'Last Inspection Date',
+    'Observed Condition Last Inspection Date',
+    'Inspection Date'
+  ]));
+}
+
+function resolveCctvCriticalityScore(row) {
+  const criticalityRaw = String(getValueByAliases(row, ['Criticality', 'criticality', 'SW_Criticality']) || '').trim().toUpperCase();
+  if (criticalityRaw === 'Y') return 3;
+  const numeric = parseNumberValue(getValueByAliases(row, ['Criticality Score', 'Critical_Score', 'Score', 'score']));
+  if (Number.isFinite(numeric)) return Math.max(0, Math.min(5, numeric));
+  return 0;
+}
+
+function resolveCctvCoordinate(row) {
+  // 1. Direct lat/lon — most reliable
+  const lat = parseNumberValue(getValueByAliases(row, ['Latitude', 'lat']));
+  const lon = parseNumberValue(getValueByAliases(row, ['Longitude', 'lon']));
+  if (Number.isFinite(lat) && Number.isFinite(lon) && lat >= -35 && lat <= -32 && lon >= 150 && lon <= 153) {
+    return { lat, lon, source: 'lat_lon' };
+  }
+  if (Number.isFinite(lat) && Number.isFinite(lon) && lon >= -35 && lon <= -32 && lat >= 150 && lat <= 153) {
+    return { lat: lon, lon: lat, source: 'swapped_lat_lon' };
+  }
+
+  // 2. YMid/XMid midpoint
+  const midY = parseNumberValue(getValueByAliases(row, ['YMid', 'YMid.1']));
+  const midX = parseNumberValue(getValueByAliases(row, ['XMid', 'XMid.1']));
+  if (Number.isFinite(midX) && Number.isFinite(midY)) {
+    if (midX > 1000 && midY > 1000) return { ...utmToLatLng(midX, midY, 56, true), source: 'midpoint_projected' };
+    if (midY >= -35 && midY <= -32 && midX >= 150 && midX <= 153) return { lat: midY, lon: midX, source: 'midpoint_lat_lon' };
+  }
+
+  // 3. Line start/end
+  const start = resolveLineCoordinatePair(row, true);
+  const end = resolveLineCoordinatePair(row, false);
+  if (start && end) return { lat: (start.lat + end.lat) / 2, lon: (start.lon + end.lon) / 2, source: 'line_midpoint' };
+  if (start) return { ...start, source: 'line_start' };
+  if (end) return { ...end, source: 'line_end' };
+
+  return null;
+}
+
+const NORTHERN_BEACHES_SUBURBS = [
+  'Allambie Heights', 'Avalon Beach', 'Balgowlah', 'Balgowlah Heights', 'Bayview',
+  'Beacon Hill', 'Belrose', 'Bilgola Beach', 'Bilgola Plateau', 'Brookvale',
+  'Church Point', 'Clareville', 'Clontarf', 'Collaroy', 'Collaroy Plateau',
+  'Cottage Point', 'Cromer', 'Curl Curl', 'Davidson', 'Dee Why', 'Duffys Forest',
+  'Elanora Heights', 'Fairlight', 'Forestville', 'Frenchs Forest', 'Freshwater',
+  'Great Mackerel Beach', 'Ingleside', 'Killarney Heights', 'Manly', 'Manly Vale',
+  'Mona Vale', 'Morning Bay', 'Narraweena', 'Narrabeen', 'Newport',
+  'North Balgowlah', 'North Curl Curl', 'North Manly', 'North Narrabeen',
+  'Oxford Falls', 'Palm Beach', 'Queenscliff', 'Scotland Island', 'Seaforth',
+  'Terrey Hills', 'Warriewood', 'Whale Beach', 'Wheeler Heights'
+];
+
+const GENERIC_SUBURB_VALUES = new Set([
+  '', '-', 'TBA', 'TBD', 'UNKNOWN', 'N/A', 'NA', 'NULL', 'NONE',
+  'RESERVE', 'PROPERTY', 'PRIVATE PROPERTY', 'COUNCIL PROPERTY',
+  'PARK', 'ROAD RESERVE', 'DRAINAGE RESERVE', 'PUBLIC RESERVE'
+]);
+
+const NON_SUBURB_PLACE_PATTERNS = [
+  /\breserve\b/i,
+  /\bpark\b/i,
+  /\boval\b/i,
+  /\bplayground\b/i,
+  /\brecreation\b/i,
+  /\bsports?field\b/i,
+  /\bgolf course\b/i,
+  /\bschool\b/i,
+  /\bbeach reserve\b/i,
+  /\bcar ?park\b/i
+];
+
+function toSuburbTitleCase(value) {
+  return String(value || '').toLowerCase().replace(/\b[a-z]/g, char => char.toUpperCase());
+}
+
+function cleanSuburbText(value) {
+  let text = String(value || '').trim();
+  if (!text) return '';
+  text = text.replace(/\s+/g, ' ');
+  text = text.replace(/\bNSW\b\s*\d{0,4}$/i, '').trim();
+  text = text.replace(/\bNSW\b$/i, '').trim();
+  text = text.replace(/\d{4}$/i, '').trim();
+  return text.replace(/^[,\s]+|[,\s]+$/g, '').trim();
+}
+
+function isGenericSuburbValue(value) {
+  const text = cleanSuburbText(value).toUpperCase();
+  return GENERIC_SUBURB_VALUES.has(text);
+}
+
+function formatSuburbName(value) {
+  const cleaned = cleanSuburbText(value);
+  if (!cleaned || isGenericSuburbValue(cleaned)) return '';
+  const known = NORTHERN_BEACHES_SUBURBS.find(suburb => normaliseKey(suburb) === normaliseKey(cleaned));
+  return known || '';
+}
+
+function looksLikeNonSuburbPlace(value) {
+  const text = cleanSuburbText(value);
+  if (!text) return false;
+  return NON_SUBURB_PLACE_PATTERNS.some(pattern => pattern.test(text));
+}
+
+function displayTableHeader(value) {
+  const key = normaliseKey(value);
+  if (key === 'suburb') return 'Suburb';
+  if (key === 'assetsuburb') return 'Asset Suburb';
+  if (key === 'locationsuburb') return 'Location - Suburb';
+  return String(value || '').replace(/_/g, ' ');
+}
+
+function extractKnownSuburbFromText(value) {
+  const text = cleanSuburbText(value);
+  if (!text) return '';
+  const matches = NORTHERN_BEACHES_SUBURBS
+    .filter(suburb => {
+      const escaped = suburb.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return new RegExp(`(^|[^A-Za-z])${escaped}([^A-Za-z]|$)`, 'i').test(text);
+    })
+    .sort((a, b) => b.length - a.length);
+  return matches[0] || '';
+}
+
+function looksLikeStreetAddress(text) {
+  const value = String(text || '').trim();
+  if (!value) return false;
+  return /^\d+/.test(value) || /\b(st|street|rd|road|ave|avenue|dr|drive|cl|close|pl|place|ct|court|cres|crescent|pde|parade|way|lane|ln)\b/i.test(value);
+}
+
+function extractSuburbFromAddress(value) {
+  const raw = cleanSuburbText(value);
+  if (!raw) return '';
+  const knownSuburb = extractKnownSuburbFromText(raw);
+  if (knownSuburb) return knownSuburb;
+  const parts = raw.split(',').map(part => cleanSuburbText(part)).filter(Boolean);
+  if (!parts.length) return '';
+  if (parts.length >= 2) {
+    const tail = formatSuburbName(parts[parts.length - 1]);
+    if (tail) return tail;
+    const prior = formatSuburbName(parts[parts.length - 2]);
+    if (prior) return prior;
+  }
+  const text = parts[parts.length - 1];
+  const match = text.match(/(?:^|,\s*)([A-Za-z][A-Za-z\s'-]+?)(?:\s+NSW(?:\s+\d{4})?|\s+\d{4})?$/i);
+  if (match) {
+    const candidate = formatSuburbName(match[1]);
+    if (candidate) return candidate;
+  }
+  return '';
+}
+
+function resolveCctvSuburb(row) {
+  const suburbFields = [
+    'Asset Suburb',
+    'Location - Suburb',
+    'Suburb',
+    'SUBURB',
+    'Asset_Suburb'
+  ];
+  for (const field of suburbFields) {
+    const value = getValueByAliases(row, [field]);
+    const direct = formatSuburbName(value) || extractKnownSuburbFromText(value);
+    if (direct) return direct;
+  }
+
+  const addressFields = [
+    'Formatted_Address',
+    'Asset_Address',
+    'Physical_Location',
+    'Pipe_Start_Address',
+    'Pipe_End_Address',
+    'Street',
+    'Street_Name',
+    'Road_Name',
+    'Road',
+    'Location',
+    'Address',
+    'Description'
+  ];
+  for (const field of addressFields) {
+    const suburb = extractSuburbFromAddress(getValueByAliases(row, [field]));
+    if (suburb) return suburb;
+  }
+
+  // Step 1: Physical_Location — formatSuburbName and backslash-split extraction
+  const physLoc = String(getValueByAliases(row, ['Physical_Location']) || '').trim();
+  if (physLoc) {
+    const direct = formatSuburbName(physLoc);
+    if (direct) return direct;
+    const afterBackslash = physLoc.includes('\\') ? physLoc.split('\\').pop().trim() : physLoc;
+    const fromSplit = formatSuburbName(afterBackslash) || extractSuburbFromAddress(afterBackslash);
+    if (fromSplit) return fromSplit;
+  }
+
+  // Step 2: SW_Sub_Catchment — use only if it matches a known NBC suburb
+  const subCatchment = String(getValueByAliases(row, ['SW_Sub_Catchment']) || '').trim();
+  if (subCatchment) {
+    const formatted = formatSuburbName(subCatchment);
+    if (formatted && NORTHERN_BEACHES_SUBURBS.includes(formatted)) return formatted;
+  }
+
+  return 'Unknown';
+}
+
+function normaliseCctvCandidateRow(row, index, options) {
+  const rawCondition = resolveCctvConditionValue(row);
+  const condition = parseConditionNumber(rawCondition);
+  const isTba = isTbaCondition(rawCondition);
+  if (!shouldIncludeCctvCondition(condition, isTba, options.conditionGroups)) return null;
+
+  const assetId = String(getValueByAliases(row, ['OBJECTID', 'Asset', 'Asset Number', 'Asset_Number', 'MAPKEY', 'CATLG_ID']) || `asset-${index + 1}`).trim();
+  const cctvDate = resolveCctvDate(row);
+  const cutoff = new Date();
+  cutoff.setFullYear(cutoff.getFullYear() - options.lookbackYears);
+  const hasRecentCctv = cctvDate instanceof Date && !Number.isNaN(cctvDate.valueOf()) && cctvDate >= cutoff;
+  const coord = resolveCctvCoordinate(row);
+  const lengthM = parseNumberValue(getValueByAliases(row, ['Spatial Length_m', 'Spatial_Length_m', 'Length_m', 'Shape_Length'])) || 0;
+  const criticalityScore = resolveCctvCriticalityScore(row);
+
+  return {
+    assetId,
+    suburb: resolveCctvSuburb(row),
+    condition,
+    conditionLabel: isTba ? 'TBA' : String(condition),
+    isTbaCondition: isTba,
+    cctvDate,
+    hasRecentCctv,
+    criticalityScore,
+    criticalityLabel: String(getValueByAliases(row, ['Criticality', 'criticality']) || '').trim(),
+    lengthM,
+    diameterMm: parseNumberValue(getValueByAliases(row, ['SWP_Pipe Diameter_mm', 'SWP_Pipe_Diameter_mm', 'Diameter'])),
+    lat: coord?.lat ?? null,
+    lon: coord?.lon ?? null,
+    coordinateSource: coord?.source || '',
+    raw: row
+  };
+}
+
+function buildCctvPackagingPreview(assetRows, options) {
+  const all = (assetRows || []).map((row, index) => normaliseCctvCandidateRow(row, index, options)).filter(Boolean);
+  const recentExcluded = all.filter(item => item.hasRecentCctv);
+  const eligible = all.filter(item => !item.hasRecentCctv);
+  const withCoords = eligible.filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
+  const noCoords = eligible.filter(item => !Number.isFinite(item.lat) || !Number.isFinite(item.lon));
+  return {
+    all,
+    eligible,
+    recentExcluded,
+    withCoords,
+    noCoords
+  };
+}
+
+function haversineDistanceM(a, b) {
+  const toRad = deg => deg * Math.PI / 180;
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const dLat = lat2 - lat1;
+  const dLon = toRad(b.lon - a.lon);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 6371000 * 2 * Math.asin(Math.sqrt(h));
+}
+
+function meanCoordinate(items) {
+  if (!items.length) return null;
+  const valid = items.filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
+  if (!valid.length) return null;
+  return {
+    lat: valid.reduce((sum, item) => sum + item.lat, 0) / valid.length,
+    lon: valid.reduce((sum, item) => sum + item.lon, 0) / valid.length
+  };
+}
+
+function findBestPackageCenter(remaining, options) {
+  const counts = new Map(remaining.map(item => [
+    item.assetId,
+    remaining.filter(other =>
+      other.assetId !== item.assetId &&
+      Number.isFinite(other.lat) &&
+      Number.isFinite(other.lon) &&
+      haversineDistanceM(item, other) <= options.proximityM
+    ).length
+  ]));
+  return remaining.slice().sort((a, b) => {
+    const aNearby = counts.get(a.assetId);
+    const bNearby = counts.get(b.assetId);
+    // Group 0: TBA with neighbours, Group 1: non-TBA dense centres, Group 2: isolated TBA
+    const aGroup = a.isTbaCondition ? (aNearby > 0 ? 0 : 2) : 1;
+    const bGroup = b.isTbaCondition ? (bNearby > 0 ? 0 : 2) : 1;
+    if (aGroup !== bGroup) return aGroup - bGroup;
+    const densityDiff = bNearby - aNearby;
+    if (densityDiff !== 0) return densityDiff;
+    if (b.criticalityScore !== a.criticalityScore) return b.criticalityScore - a.criticalityScore;
+    return String(a.assetId).localeCompare(String(b.assetId));
+  })[0];
+}
+
+function maxPackageSpanM(items) {
+  let maxDistance = 0;
+  for (let i = 0; i < items.length; i++) {
+    for (let j = i + 1; j < items.length; j++) {
+      if (Number.isFinite(items[i].lat) && Number.isFinite(items[i].lon) && Number.isFinite(items[j].lat) && Number.isFinite(items[j].lon)) {
+        maxDistance = Math.max(maxDistance, haversineDistanceM(items[i], items[j]));
+      }
     }
   }
+  return maxDistance;
 }
 
-async function generateReliningPackages() {
-  const method = document.getElementById('pkgMethod')?.value || 'value';
-  const reliningMode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
-  const maxPackageValue = Number(String(document.getElementById('pkgMaxValue')?.value || '500000').replace(/,/g, ''));
-  const pipesPerPackage = Number(String(document.getElementById('pkgPipeCount')?.value || '25').replace(/,/g, ''));
-  const groupBySuburb = (document.getElementById('pkgGroupSuburb')?.value || 'yes') === 'yes';
-  try {
-    if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
-    if (!reliningRatesRows.length) throw new Error('Upload the panel rates workbook first.');
-    const preview = buildSplitStreams(reliningMode);
-    const suburbCol = preview.suburb_column;
-    const reliningRows = getReliningRowsForMode(reliningMode)
-      .map(row => {
-        const ratePerM = getReliningRateForRow(row);
-        const lengthM = normaliseNumeric(row?.['Spatial Length_m']);
-        return {
-          ...row,
-          rate_per_m: ratePerM,
-          pipe_cost: Number.isFinite(ratePerM) && Number.isFinite(lengthM) ? ratePerM * lengthM : null
-        };
+function packageCoordinateSourceSummary(items) {
+  const counts = {};
+  items.forEach(item => {
+    const key = item.coordinateSource || 'unknown';
+    counts[key] = (counts[key] || 0) + 1;
+  });
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([source, count]) => `${source}: ${count}`)
+    .join(', ');
+}
+
+function canAddToCctvPackage(pkg, item, options) {
+  if (!pkg.length) return true;
+  const currentLength = pkg.reduce((sum, entry) => sum + (entry.lengthM || 0), 0);
+  const nextLength = currentLength + (item.lengthM || 0);
+  const countLimited = options.targetMode === 'count' || options.targetMode === 'both';
+  const lengthLimited = options.targetMode === 'length' || options.targetMode === 'both';
+  if (countLimited && pkg.length >= options.pipesPerPackage) return false;
+  if (lengthLimited && currentLength > 0 && nextLength > options.targetLengthM) return false;
+  return true;
+}
+
+function buildCctvPackagesPortable(candidates, options, rateMeta) {
+  const esriOptions = getCctvEsriLinkOptions();
+  const remaining = candidates.slice();
+  const packages = [];
+  while (remaining.length) {
+    const clusterCenter = findBestPackageCenter(remaining, options);
+    const scored = remaining.map(item => {
+      const distanceM = Number.isFinite(item.lat) && Number.isFinite(item.lon)
+        ? haversineDistanceM(clusterCenter, item)
+        : Number.POSITIVE_INFINITY;
+      const adjustedDistance = Number.isFinite(distanceM)
+        ? distanceM * (1 - Math.min(0.35, item.criticalityScore * options.criticalityWeight * 0.1))
+        : Number.POSITIVE_INFINITY;
+      return { item, distanceM, adjustedDistance };
+    }).filter(entry => Number.isFinite(entry.distanceM) && entry.distanceM <= options.proximityM)
+      .sort((a, b) => {
+        if (a.item.assetId === clusterCenter.assetId) return -1;
+        if (b.item.assetId === clusterCenter.assetId) return 1;
+        return a.adjustedDistance - b.adjustedDistance;
       });
-    const costed = reliningRows.filter(row => Number.isFinite(row.pipe_cost));
-    const uncosted = reliningRows.filter(row => !Number.isFinite(row.pipe_cost));
-    const packaged = method === 'count'
-      ? splitIntoPackagesByCount(costed, Math.max(Number.isFinite(pipesPerPackage) ? pipesPerPackage : 25, 1), groupBySuburb, suburbCol)
-      : splitIntoValuePackages(costed, Math.max(Number.isFinite(maxPackageValue) ? maxPackageValue : 500000, 1), groupBySuburb, suburbCol);
-    const packageSummaries = summarisePackages(packaged, suburbCol);
-    const totalLength = packaged.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m']) || 0), 0);
-    const totalCost = packaged.reduce((sum, row) => sum + (Number(row?.pipe_cost) || 0), 0);
-    const data = {
-      package_count: packageSummaries.length,
-      costed_pipe_count: costed.length,
-      uncosted_pipe_count: uncosted.length,
-      total_length_m: Number(totalLength.toFixed(1)),
-      total_cost: Number(totalCost.toFixed(2)),
-      packages: packageSummaries,
-      sample_assets: samplePackageAssets(packaged, suburbCol)
-    };
-    lastPackagingGeneration = data;
-    setPackagingStatus(true, `${data.package_count.toLocaleString()} packages generated`);
-    renderGeneratedPackages(data);
-  } catch (e) {
-    setPackagingStatus(false, 'Package generation failed');
-    const area = document.getElementById('pkgPackagesArea');
-    if (area) {
-      area.className = 'pkg-empty';
-      area.textContent = String(e.message || e);
+
+    const pkg = [];
+    for (const entry of scored) {
+      if (entry.distanceM > options.proximityM) continue;
+      if (!canAddToCctvPackage(pkg, entry.item, options)) break;
+      pkg.push(entry.item);
     }
+    const boundedPkg = pkg.filter(item => haversineDistanceM(clusterCenter, item) <= options.proximityM);
+    const pkgIds = new Set(boundedPkg.map(item => item.assetId));
+    for (let i = remaining.length - 1; i >= 0; i--) {
+      if (pkgIds.has(remaining[i].assetId)) remaining.splice(i, 1);
+    }
+    packages.push({ items: boundedPkg, clusterCenter });
+  }
+
+  return packages.map((packageDraft, index) => {
+    const { items, clusterCenter } = packageDraft;
+    const centroid = meanCoordinate(items);
+    const totalLengthM = items.reduce((sum, item) => sum + (item.lengthM || 0), 0);
+    const surveyHours = totalLengthM / options.metresPerHour;
+    const cctvRate = rateMeta?.medianRate || 0;
+    const totalCost = surveyHours * cctvRate;
+    const maxSpanM = maxPackageSpanM(items);
+    const coordinateSources = packageCoordinateSourceSummary(items);
+    const suburbCounts = {};
+    items.filter(item => item.package_center_distance_m == null || item.package_center_distance_m <= options.proximityM).forEach(item => {
+      suburbCounts[item.suburb] = (suburbCounts[item.suburb] || 0) + 1;
+    });
+    const suburbEntries = Object.entries(suburbCounts)
+      .filter(([suburb]) => suburb && suburb !== 'Unknown')
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const allSuburbs = suburbEntries.map(([suburb]) => suburb);
+    const suburb = allSuburbs[0] || 'Unknown';
+    const assetIds = items.map(item => item.assetId);
+    const assetLinks = items.map(item => buildEsriAssetLink(item.assetId, esriOptions));
+    return {
+      package_id: `CCTV_${String(index + 1).padStart(3, '0')}`,
+      suburb,
+      primary_suburb: suburb,
+      suburbs: allSuburbs.length ? allSuburbs : ['Unknown'],
+      pipe_count: items.length,
+      tba_pipe_count: items.filter(item => item.isTbaCondition).length,
+      critical_pipe_count: items.filter(item => item.criticalityScore > 0).length,
+      total_length_m: totalLengthM,
+      cctv_hours: surveyHours,
+      cctv_rate: cctvRate,
+      total_cost: totalCost,
+      max_span_m: maxSpanM,
+      distance_warning: maxSpanM > (options.proximityM * 2) ? 'Check coordinates or reduce radius' : '',
+      coordinate_sources: coordinateSources,
+      package_radius_m: options.proximityM,
+      asset_ids: assetIds,
+      asset_links: assetLinks.filter(Boolean),
+      package_map_link: buildEsriPackageLink(assetIds, esriOptions),
+      esri_id_field: esriOptions.idField,
+      lat: centroid?.lat ?? null,
+      lon: centroid?.lon ?? null,
+      cluster_center_lat: clusterCenter?.lat ?? null,
+      cluster_center_lon: clusterCenter?.lon ?? null,
+      assets: items.map((item, itemIndex) => ({
+        ...item,
+        asset_id_text: item.assetId,
+        esri_asset_link: assetLinks[itemIndex] || '',
+        package_center_distance_m: Number.isFinite(item.lat) && Number.isFinite(item.lon)
+          ? haversineDistanceM(clusterCenter, item)
+          : null
+      }))
+    };
+  });
+}
+
+function buildFixedCentreCctvPackages(candidates, options, rateMeta) {
+  const esriOptions = getCctvEsriLinkOptions();
+  const remaining = candidates.slice();
+  const packageDrafts = [];
+
+  while (remaining.length) {
+    // Fix 1: pre-compute neighbour counts to deprioritise isolated TBA seeds
+    const neighbourCounts = new Map(remaining.map(item => [
+      item.assetId,
+      remaining.filter(other =>
+        other.assetId !== item.assetId &&
+        Number.isFinite(other.lat) &&
+        Number.isFinite(other.lon) &&
+        haversineDistanceM(item, other) <= options.proximityM
+      ).length
+    ]));
+    const centre = remaining.slice().sort((a, b) => {
+      const aNearby = neighbourCounts.get(a.assetId);
+      const bNearby = neighbourCounts.get(b.assetId);
+      // Group 0: TBA with ≥1 neighbour, Group 1: non-TBA, Group 2: isolated TBA
+      const aGroup = a.isTbaCondition ? (aNearby > 0 ? 0 : 2) : 1;
+      const bGroup = b.isTbaCondition ? (bNearby > 0 ? 0 : 2) : 1;
+      if (aGroup !== bGroup) return aGroup - bGroup;
+      if (aGroup === 1) {
+        const densityDiff = bNearby - aNearby;
+        if (densityDiff !== 0) return densityDiff;
+      }
+      if (b.criticalityScore !== a.criticalityScore) return b.criticalityScore - a.criticalityScore;
+      return String(a.assetId).localeCompare(String(b.assetId));
+    })[0];
+
+    const items = [centre];
+    let acceptedInPass = true;
+    while (acceptedInPass) {
+      acceptedInPass = false;
+      const currentCenter = meanCoordinate(items);
+      if (!currentCenter) break;
+      const acceptedIds = new Set(items.map(item => item.assetId));
+      const candidatesInsideRadius = remaining
+        .filter(item => !acceptedIds.has(item.assetId))
+        .map(item => ({
+          item,
+          distanceM: Number.isFinite(item.lat) && Number.isFinite(item.lon)
+            ? haversineDistanceM(currentCenter, item)
+            : Number.POSITIVE_INFINITY
+        }))
+        .filter(entry => Number.isFinite(entry.distanceM) && entry.distanceM <= options.proximityM * 1.5)
+        .sort((a, b) => a.distanceM - b.distanceM);
+
+      for (const entry of candidatesInsideRadius) {
+        if (!canAddToCctvPackage(items, entry.item, options)) continue;
+        const tentativeItems = [...items, entry.item];
+        const tentativeCenter = meanCoordinate(tentativeItems);
+        if (!tentativeCenter) continue;
+        const allWithinPackageRadius = tentativeItems.every(item =>
+          Number.isFinite(item.lat) &&
+          Number.isFinite(item.lon) &&
+          haversineDistanceM(tentativeCenter, item) <= options.proximityM
+        );
+        if (!allWithinPackageRadius) continue;
+        items.push(entry.item);
+        acceptedInPass = true;
+        break;
+      }
+    }
+
+    const packageIds = new Set(items.map(item => item.assetId));
+    for (let i = remaining.length - 1; i >= 0; i--) {
+      if (packageIds.has(remaining[i].assetId)) remaining.splice(i, 1);
+    }
+    packageDrafts.push({ items, clusterCenter: meanCoordinate(items) || centre });
+  }
+
+  return packageDrafts.map((packageDraft, index) => {
+    const { items, clusterCenter } = packageDraft;
+    const centroid = meanCoordinate(items);
+    const totalLengthM = items.reduce((sum, item) => sum + (item.lengthM || 0), 0);
+    const surveyHours = totalLengthM / options.metresPerHour;
+    const cctvRate = rateMeta?.medianRate || 0;
+    const totalCost = surveyHours * cctvRate;
+    const maxSpanM = maxPackageSpanM(items);
+    const coordinateSources = packageCoordinateSourceSummary(items);
+    const suburbCounts = {};
+    items.forEach(item => {
+      suburbCounts[item.suburb] = (suburbCounts[item.suburb] || 0) + 1;
+    });
+    const suburbEntries = Object.entries(suburbCounts)
+      .filter(([suburb]) => suburb && suburb !== 'Unknown')
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const allSuburbs = suburbEntries.map(([suburb]) => suburb);
+    const suburb = allSuburbs[0] || 'Unknown';
+    const assetIds = items.map(item => item.assetId);
+    const assetLinks = items.map(item => buildEsriAssetLink(item.assetId, esriOptions));
+
+    return {
+      package_id: `CCTV_${String(index + 1).padStart(3, '0')}`,
+      suburb,
+      primary_suburb: suburb,
+      suburbs: allSuburbs.length ? allSuburbs : ['Unknown'],
+      pipe_count: items.length,
+      tba_pipe_count: items.filter(item => item.isTbaCondition).length,
+      critical_pipe_count: items.filter(item => item.criticalityScore > 0).length,
+      total_length_m: totalLengthM,
+      cctv_hours: surveyHours,
+      cctv_rate: cctvRate,
+      total_cost: totalCost,
+      max_span_m: maxSpanM,
+      distance_warning: maxSpanM > (options.proximityM * 2) ? 'Check coordinates or reduce radius' : '',
+      coordinate_sources: coordinateSources,
+      package_radius_m: options.proximityM,
+      asset_ids: assetIds,
+      asset_links: assetLinks.filter(Boolean),
+      package_map_link: buildEsriPackageLink(assetIds, esriOptions),
+      esri_id_field: esriOptions.idField,
+      lat: centroid?.lat ?? null,
+      lon: centroid?.lon ?? null,
+      cluster_center_lat: clusterCenter?.lat ?? null,
+      cluster_center_lon: clusterCenter?.lon ?? null,
+      assets: items.map((item, itemIndex) => ({
+        ...item,
+        asset_id_text: item.assetId,
+        esri_asset_link: assetLinks[itemIndex] || '',
+        package_center_distance_m: Number.isFinite(item.lat) && Number.isFinite(item.lon)
+          ? haversineDistanceM(clusterCenter, item)
+          : null
+      }))
+    };
+  });
+}
+
+function renderCctvPackagingMeta(preview, rateMeta, options) {
+  const el = document.getElementById('cctvPkgMeta');
+  if (!el) return;
+  const rows = [
+    ['Condition Filter', conditionGroupsLabel(options.conditionGroups)],
+    ['Recent CCTV Exclusion', `${options.lookbackYears} years`],
+    ['Eligible Candidates', preview.eligible.length.toLocaleString()],
+    ['TBA Candidates', preview.eligible.filter(item => item.isTbaCondition).length.toLocaleString()],
+    ['Recent CCTV Excluded', preview.recentExcluded.length.toLocaleString()],
+    ['Missing Coordinates', preview.noCoords.length.toLocaleString()],
+    ['Median CCTV Rate', rateMeta?.medianRate ? `${formatCurrency(rateMeta.medianRate)}/${rateMeta.unit || 'Hr'}` : 'Not found']
+  ];
+  el.innerHTML = rows.map(([label, value]) => `
+    <div class="pkg-meta-item">
+      <div class="pkg-meta-lbl">${escapeHtml(label)}</div>
+      <div class="pkg-meta-val">${escapeHtml(value)}</div>
+    </div>
+  `).join('');
+}
+
+function renderCctvPackagingCards(preview) {
+  const el = document.getElementById('cctvPkgCards');
+  if (!el) return;
+  const cards = [
+    ['Candidates After Filters', preview.eligible.length, 'Selected conditions and no CCTV in last 4 years'],
+    ['TBA Priority Pipes', preview.eligible.filter(item => item.isTbaCondition).length, 'No condition data and seeded first into packages'],
+    ['With Location', preview.withCoords.length, 'Can be grouped spatially'],
+    ['Recent CCTV Removed', preview.recentExcluded.length, 'Excluded from packaging']
+  ];
+  el.innerHTML = cards.map(([title, value, sub]) => `
+    <div class="pkg-card">
+      <div class="pkg-card-title">${escapeHtml(title)}</div>
+      <div class="pkg-card-val">${Number(value || 0).toLocaleString()}</div>
+      <div class="pkg-card-sub">${escapeHtml(sub)}</div>
+    </div>
+  `).join('');
+}
+
+function renderCctvCandidateSample(items) {
+  const area = document.getElementById('cctvPkgSampleArea');
+  if (!area) return;
+  if (!items.length) {
+    area.className = 'pkg-empty';
+    area.textContent = 'No eligible candidates were found with the current rules.';
+    return;
+  }
+  const rows = items.slice(0, 12).map(item => ({
+    asset_id: item.assetId,
+    suburb: item.suburb,
+    condition: item.conditionLabel,
+    tba_priority: item.isTbaCondition ? 'Yes' : '',
+    last_cctv_date: item.cctvDate ? item.cctvDate.toISOString().slice(0, 10) : '',
+    criticality_score: item.criticalityScore,
+    length_m: Number(item.lengthM || 0).toFixed(1)
+  }));
+  const headers = Object.keys(rows[0]);
+  area.className = 'pkg-table-wrap';
+  area.innerHTML = `
+    <table>
+      <thead><tr>${headers.map(header => `<th>${escapeHtml(displayTableHeader(header))}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(row => `<tr>${headers.map(header => `<td>${escapeHtml(row[header])}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>
+  `;
+}
+
+function waitForPaint() {
+  return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+}
+
+async function previewCctvPackaging() {
+  if (!cctvPackagingAssetsData) {
+    alert('Upload the assets CSV first.');
+    return;
+  }
+  try {
+    showLoad('Filtering CCTV candidates...');
+    await waitForPaint();
+    const options = getCctvPackagingOptions();
+    const preview = buildCctvPackagingPreview(cctvPackagingAssetsData, options);
+    setLoadTxt('Rendering CCTV candidate preview...');
+    await waitForPaint();
+    lastCctvPackagingPreview = preview;
+    renderCctvPackagingMeta(preview, cctvPackagingRatesData?.meta, options);
+    renderCctvPackagingCards(preview);
+    renderCctvCandidateSample(preview.eligible);
+    const pkgArea = document.getElementById('cctvPkgPackagesArea');
+    if (pkgArea) {
+      pkgArea.className = 'pkg-empty';
+      pkgArea.textContent = 'Preview complete. Generate packages to build grouped CCTV packages and cost estimates.';
+    }
+  } catch (e) {
+    alert(`CCTV preview failed: ${e.message || e}`);
+  } finally {
+    hideLoad();
+  }
+}
+
+function renderGeneratedCctvPackages(packages) {
+  const area = document.getElementById('cctvPkgPackagesArea');
+  if (!area) return;
+  if (!packages.length) {
+    area.className = 'pkg-empty';
+    area.textContent = 'No packages could be created from the current eligible set.';
+    return;
+  }
+  const summaryRows = packages.map(pkg => ({
+    package_id: pkg.package_id,
+    primary_suburb: pkg.primary_suburb || pkg.suburb,
+    suburbs: (pkg.suburbs || [pkg.suburb]).join(', '),
+    pipe_count: pkg.pipe_count,
+    tba_pipe_count: pkg.tba_pipe_count,
+    critical_pipe_count: pkg.critical_pipe_count,
+    total_length_m: pkg.total_length_m.toFixed(1),
+    max_span_m: pkg.max_span_m.toFixed(0),
+    distance_warning: pkg.distance_warning || '',
+    coordinate_sources: pkg.coordinate_sources || '',
+    package_radius_m: pkg.package_radius_m,
+    cluster_center: Number.isFinite(pkg.cluster_center_lat) && Number.isFinite(pkg.cluster_center_lon)
+      ? `${pkg.cluster_center_lat.toFixed(6)}, ${pkg.cluster_center_lon.toFixed(6)}`
+      : '',
+    cctv_hours: pkg.cctv_hours.toFixed(2),
+    cctv_rate: formatCurrency(pkg.cctv_rate),
+    total_cost: formatCurrency(pkg.total_cost),
+    asset_ids: pkg.asset_ids.join(', '),
+    package_map_link: pkg.package_map_link || ''
+  }));
+  const sampleRows = packages[0].assets.slice(0, 12).map(item => ({
+    package_id: packages[0].package_id,
+    asset_id: item.assetId,
+    asset_link: item.esri_asset_link || '',
+    suburb: item.suburb,
+    condition: item.conditionLabel,
+    tba_priority: item.isTbaCondition ? 'Yes' : '',
+    criticality_score: item.criticalityScore,
+    coordinate_source: item.coordinateSource || '',
+    centre_distance_m: item.package_center_distance_m != null ? item.package_center_distance_m.toFixed(0) : '',
+    length_m: Number(item.lengthM || 0).toFixed(1)
+  }));
+  const summaryHeaders = Object.keys(summaryRows[0]);
+  const sampleHeaders = sampleRows.length ? Object.keys(sampleRows[0]) : [];
+  const totalCost = packages.reduce((sum, pkg) => sum + pkg.total_cost, 0);
+  const totalLength = packages.reduce((sum, pkg) => sum + pkg.total_length_m, 0);
+  area.className = 'pkg-table-wrap';
+  area.innerHTML = `
+    <div style="padding:12px;background:white;border-bottom:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">
+        ${packages.length.toLocaleString()} packages · ${packages.reduce((sum, pkg) => sum + pkg.pipe_count, 0).toLocaleString()} pipes
+      </div>
+      <div style="font-size:11px;color:var(--text-l)">
+        Total length ${totalLength.toLocaleString(undefined, { maximumFractionDigits: 1 })} m · Estimated CCTV cost ${formatCurrency(totalCost)}
+      </div>
+      <div style="margin-top:10px">
+        <button class="export-btn" onclick="exportCctvPackagesCsv()">Export ESRI CSV</button>
+      </div>
+    </div>
+    <table>
+      <thead><tr>${summaryHeaders.map(header => `<th>${escapeHtml(displayTableHeader(header))}</th>`).join('')}</tr></thead>
+      <tbody>${summaryRows.map(row => `<tr>${summaryHeaders.map(header => `<td>${escapeHtml(row[header])}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table>
+    ${sampleHeaders.length ? `
+      <div style="padding:12px;font-size:12px;font-weight:700;color:var(--navy);background:white;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+        Sample assets from ${escapeHtml(packages[0].package_id)}
+      </div>
+      <table>
+        <thead><tr>${sampleHeaders.map(header => `<th>${escapeHtml(displayTableHeader(header))}</th>`).join('')}</tr></thead>
+        <tbody>${sampleRows.map(row => `<tr>${sampleHeaders.map(header => `<td>${escapeHtml(row[header])}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>
+    ` : ''}
+  `;
+}
+
+function exportCctvPackagesCsv() {
+  const packages = lastCctvPackagingGeneration?.packages || [];
+  if (!packages.length) {
+    alert('Generate CCTV packages before exporting.');
+    return;
+  }
+
+  const rows = [[
+    'package_id',
+    'asset_id_text',
+    'asset_link',
+    'package_map_link',
+    'esri_id_field',
+    'primary_suburb',
+    'package_suburbs',
+    'suburb',
+    'condition',
+    'tba_priority',
+    'criticality_score',
+    'length_m',
+    'package_total_length_m',
+    'package_max_span_m',
+    'distance_warning',
+    'coordinate_sources',
+    'package_radius_m',
+    'cluster_center_lat',
+    'cluster_center_lon',
+    'package_cctv_hours',
+    'package_total_cost',
+    'latitude',
+    'longitude',
+    'coordinate_source',
+    'centre_distance_m'
+  ]];
+
+  packages.forEach(pkg => {
+    (pkg.assets || []).forEach(item => {
+      rows.push([
+        pkg.package_id,
+        item.asset_id_text || item.assetId,
+        item.esri_asset_link || '',
+        pkg.package_map_link || '',
+        pkg.esri_id_field || 'asset_id_text',
+        pkg.primary_suburb || pkg.suburb || '',
+        (pkg.suburbs || [pkg.suburb]).join(', '),
+        item.suburb || pkg.suburb || '',
+        item.conditionLabel || '',
+        item.isTbaCondition ? 'Yes' : '',
+        item.criticalityScore ?? '',
+        Number(item.lengthM || 0).toFixed(1),
+        Number(pkg.total_length_m || 0).toFixed(1),
+        Number(pkg.max_span_m || 0).toFixed(0),
+        pkg.distance_warning || '',
+        pkg.coordinate_sources || '',
+        pkg.package_radius_m || '',
+        pkg.cluster_center_lat ?? '',
+        pkg.cluster_center_lon ?? '',
+        Number(pkg.cctv_hours || 0).toFixed(2),
+        Number(pkg.total_cost || 0).toFixed(2),
+        item.lat ?? '',
+        item.lon ?? '',
+        item.coordinateSource || '',
+        item.package_center_distance_m != null ? item.package_center_distance_m.toFixed(0) : ''
+      ]);
+    });
+  });
+
+  const csv = rows.map(row => row.map(value => `"${String(value ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+  origPriDownload(`cctv_packages_esri_${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
+}
+
+function ensureCctvPackagesMap() {
+  const mapEl = document.getElementById('cctvPackagesMap');
+  if (!mapEl || typeof L === 'undefined') return;
+  if (cctvPackagesMap) {
+    setTimeout(() => cctvPackagesMap.invalidateSize(), 50);
+    return;
+  }
+  cctvPackagesMap = L.map('cctvPackagesMap').setView([-33.75, 151.25], 11);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(cctvPackagesMap);
+  cctvPackagesLayer = L.layerGroup().addTo(cctvPackagesMap);
+}
+
+function getCctvPackageColor(pkg) {
+  if ((pkg.tba_pipe_count || 0) > 0) return '#C0392B';
+  if ((pkg.critical_pipe_count || 0) > 0) return '#E67E22';
+  return '#00847F';
+}
+
+function buildCctvPackagePopup(pkg) {
+  const assetList = (pkg.assets || []).slice(0, 10).map(item => item.assetId).join(', ');
+  const packageLink = pkg.package_map_link
+    ? `<div><strong>ESRI link:</strong> <a href="${escapeHtml(pkg.package_map_link)}" target="_blank" rel="noopener">Open package</a></div>`
+    : '';
+  return `
+    <div style="min-width:220px">
+      <div style="font-weight:800;color:var(--navy);margin-bottom:6px">${escapeHtml(pkg.package_id)}</div>
+      <div style="font-size:11px;color:var(--text-l);line-height:1.7">
+        <div><strong>Primary suburb:</strong> ${escapeHtml(pkg.primary_suburb || pkg.suburb)}</div>
+        <div><strong>Suburbs:</strong> ${escapeHtml((pkg.suburbs || [pkg.suburb]).join(', '))}</div>
+        <div><strong>Pipes:</strong> ${pkg.pipe_count}</div>
+        <div><strong>TBA pipes:</strong> ${pkg.tba_pipe_count || 0}</div>
+        <div><strong>Critical pipes:</strong> ${pkg.critical_pipe_count || 0}</div>
+        <div><strong>Length:</strong> ${Number(pkg.total_length_m || 0).toFixed(1)} m</div>
+        <div><strong>Max span:</strong> ${Number(pkg.max_span_m || 0).toFixed(0)} m</div>
+        <div><strong>Coordinate sources:</strong> ${escapeHtml(pkg.coordinate_sources || 'Unknown')}</div>
+        ${pkg.distance_warning ? `<div style="color:#C0392B"><strong>Warning:</strong> ${escapeHtml(pkg.distance_warning)}</div>` : ''}
+        <div><strong>Package radius:</strong> ${pkg.package_radius_m || 0} m</div>
+        <div><strong>Cluster centre:</strong> ${Number.isFinite(pkg.cluster_center_lat) && Number.isFinite(pkg.cluster_center_lon) ? `${pkg.cluster_center_lat.toFixed(6)}, ${pkg.cluster_center_lon.toFixed(6)}` : 'Not available'}</div>
+        <div><strong>CCTV hours:</strong> ${Number(pkg.cctv_hours || 0).toFixed(2)}</div>
+        <div><strong>Cost:</strong> ${formatCurrency(pkg.total_cost || 0)}</div>
+        <div><strong>Sample assets:</strong> ${escapeHtml(assetList || 'None')}</div>
+        ${packageLink}
+      </div>
+    </div>`;
+}
+
+function renderCctvPackagesMap() {
+  ensureCctvPackagesMap();
+  const subtitle = document.getElementById('cctvMapSubtitle');
+  if (!cctvPackagesMap || !cctvPackagesLayer) {
+    if (subtitle) subtitle.textContent = 'Map is not available in this browser.';
+    return;
+  }
+  cctvPackagesLayer.clearLayers();
+  const packages = lastCctvPackagingGeneration?.packages || [];
+  if (!packages.length) {
+    if (subtitle) subtitle.textContent = 'Generate packages to draw package groups on the map.';
+    return;
+  }
+
+  let drawn = 0;
+  packages.forEach(pkg => {
+    const assets = (pkg.assets || []).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
+    if (!assets.length) return;
+    const color = getCctvPackageColor(pkg);
+    const points = assets.map(item => [item.lat, item.lon]);
+    if (points.length > 1) {
+      L.polyline(points, { color, weight: 3, opacity: 0.75, dashArray: '6 6' }).addTo(cctvPackagesLayer);
+    }
+    assets.forEach(item => {
+      const radius = item.isTbaCondition ? 7 : 5;
+      L.circleMarker([item.lat, item.lon], {
+        radius,
+        color: '#fff',
+        weight: 1.5,
+        fillColor: color,
+        fillOpacity: item.isTbaCondition ? 0.95 : 0.78
+      }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
+      drawn += 1;
+    });
+    if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) {
+      L.circleMarker([pkg.lat, pkg.lon], {
+        radius: 11,
+        color,
+        weight: 3,
+        fillColor: '#fff',
+        fillOpacity: 0.7
+      }).bindTooltip(pkg.package_id, { permanent: false }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
+    }
+  });
+  if (subtitle) {
+    subtitle.textContent = `${packages.length.toLocaleString()} package${packages.length === 1 ? '' : 's'} mapped with ${drawn.toLocaleString()} pipe point${drawn === 1 ? '' : 's'}. Red packages contain TBA condition pipes.`;
+  }
+  fitCctvPackagesMap();
+}
+
+function fitCctvPackagesMap() {
+  ensureCctvPackagesMap();
+  if (!cctvPackagesMap || !cctvPackagesLayer) return;
+  const layers = cctvPackagesLayer.getLayers();
+  if (!layers.length) return;
+  const group = L.featureGroup(layers);
+  cctvPackagesMap.fitBounds(group.getBounds().pad(0.15));
+  setTimeout(() => cctvPackagesMap.invalidateSize(), 50);
+}
+
+async function generateCctvPackages() {
+  if (!cctvPackagingAssetsData || !cctvPackagingRatesData) {
+    alert('Upload both the assets CSV and Panel_Rates.xlsx files first.');
+    return;
+  }
+  try {
+    showLoad('Building CCTV packages...');
+    await waitForPaint();
+    const options = getCctvPackagingOptions();
+    const preview = buildCctvPackagingPreview(cctvPackagingAssetsData, options);
+    lastCctvPackagingPreview = preview;
+    setLoadTxt('Grouping nearby pipes...');
+    await waitForPaint();
+    const packages = buildFixedCentreCctvPackages(preview.withCoords, options, cctvPackagingRatesData.meta);
+    lastCctvPackagingGeneration = { options, preview, packages, rateMeta: cctvPackagingRatesData.meta };
+    setLoadTxt('Rendering package tables and map...');
+    await waitForPaint();
+    renderCctvPackagingMeta(preview, cctvPackagingRatesData.meta, options);
+    renderCctvPackagingCards(preview);
+    renderGeneratedCctvPackages(packages);
+    renderCctvPackagesMap();
+  } catch (e) {
+    alert(`CCTV package generation failed: ${e.message || e}`);
+  } finally {
+    hideLoad();
   }
 }
 
@@ -4864,11 +5684,42 @@ function formatCurrency(value) {
   return '$' + num.toLocaleString(undefined, { maximumFractionDigits: 0 });
 }
 
-async function initCostingTool() {
-  document.getElementById('costMetaType').textContent = 'Workbook upload required';
-  document.getElementById('costMetaRows').textContent = 'Upload required';
-  document.getElementById('costMetaClasses').textContent = '-';
-  renderCostingTable();
+function initCostingTool() {
+  // Costing tool requires manual file upload — no auto-fetch
+  if (costingLookup && !costingRows.length) {
+    for (let i = 0; i < 5; i++) addCostingRow();
+  }
+}
+
+async function loadCostingFromFile(event) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    costingLookup = data;
+    const modifierSel = document.getElementById('costModifier');
+    if (modifierSel) {
+      const modifiers = costingLookup.modifiers || [];
+      modifierSel.innerHTML = [
+        '<option value="1">No modifier (1.00x)</option>',
+        ...modifiers.map((m) => `<option value="${m.factor}">${escapeHtml((m.context ? m.context + ' · ' : '') + m.level)} (${m.factor.toFixed(2)}x)</option>`)
+      ].join('');
+    }
+    document.getElementById('costMetaRows').textContent = (costingLookup.meta?.rowCount || 0).toLocaleString();
+    document.getElementById('costMetaClasses').textContent = (costingLookup.meta?.assetClassCount || 0).toLocaleString();
+    const statusEl = document.getElementById('costLookupStatus');
+    if (statusEl) statusEl.textContent = `Loaded: ${escapeHtml(file.name)}`;
+    if (!costingRows.length) {
+      for (let i = 0; i < 5; i++) addCostingRow();
+    } else {
+      renderCostingTable();
+    }
+  } catch (e) {
+    alert(`Failed to load costing file: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
+  }
 }
 
 function getCostingFactor() {
@@ -4954,7 +5805,7 @@ function renderCostingTable() {
   const body = document.getElementById('costRows');
   if (!body) return;
   if (!costingLookup?.rows?.length) {
-    body.innerHTML = `<tr><td colspan="12" style="padding:20px;color:var(--text-l)">Upload the costing workbook to unlock the BOQ table.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="12" style="padding:20px;color:var(--text-l)">Loading costing data...</td></tr>`;
     return;
   }
 
@@ -5223,7 +6074,6 @@ function closeResults() {
   r.classList.remove('show', 'no-rtabs');
   setResultsTabMode('map');
   allSiteResults = null;
-  syncResultsViewport();
 }
 
 
@@ -5243,7 +6093,6 @@ let levelChart = null;
 async function loadOtherMonitors() {
   const panel = document.getElementById('results');
   panel.classList.add('show');
-  syncResultsViewport();
   document.getElementById('res-title').textContent = 'Other Monitors';
   document.getElementById('res-sub').textContent = 'Stream, tide and estuary gauges - MHL network';
 
@@ -5502,14 +6351,8 @@ async function showLevelChart(stationId, stationName, colour) {
 // â”€â”€ All LGA boundaries (background layer) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function loadAllLgaBoundaries() {
   try {
-    const params = new URLSearchParams({
-      where: '1=1',
-      outFields: 'lganame,councilname,abscode',
-      returnGeometry: 'true',
-      f: 'geojson'
-    });
-    const resp = await fetch(`${NSW_LGA_API}?${params.toString()}`);
-    if (!resp.ok) throw new Error(`LGA API ${resp.status}`);
+    const resp = await fetch('./nsw_lga_boundaries.geojson');
+    if (!resp.ok) throw new Error(`LGA GeoJSON ${resp.status}`);
     const geojson = await resp.json();
     const features = (geojson.features || []).filter(f => {
       const name = getFeatureLgaName(f);
@@ -5520,8 +6363,41 @@ async function loadAllLgaBoundaries() {
       lgaBoundaryCache[name] = feature;
       lgaBoundaryMeta[name] = { bbox: getFeatureBounds(feature) };
     });
-    L.geoJSON({ type: 'FeatureCollection', features }, {
-      style: { color: '#999', weight: 1, opacity: 0.35, fill: false },
+
+    // Greedy graph colouring — adjacent LGAs (overlapping bboxes) get different fills
+    const names = features.map(getFeatureLgaName);
+    const palette = ['#b3d9f0', '#b3f0c8', '#f0ddb3', '#e8b3f0', '#f0b3b3'];
+    const colourMap = {};
+    for (const name of names) {
+      const bbox = lgaBoundaryMeta[name]?.bbox;
+      const usedColours = new Set();
+      if (bbox) {
+        for (const other of names) {
+          if (other === name || !colourMap[other]) continue;
+          const o = lgaBoundaryMeta[other]?.bbox;
+          if (!o) continue;
+          const buf = 0.05; // ~5 km buffer catches shared borders
+          if (bbox.maxLat + buf > o.minLat && bbox.minLat - buf < o.maxLat &&
+              bbox.maxLon + buf > o.minLon && bbox.minLon - buf < o.maxLon) {
+            usedColours.add(colourMap[other]);
+          }
+        }
+      }
+      colourMap[name] = palette.find(c => !usedColours.has(c)) || palette[0];
+    }
+
+    if (allLgaBackgroundLayer) map.removeLayer(allLgaBackgroundLayer);
+    allLgaBackgroundLayer = L.geoJSON({ type: 'FeatureCollection', features }, {
+      style: feature => {
+        const name = getFeatureLgaName(feature);
+        return {
+          color: '#888',
+          weight: 0.8,
+          opacity: 0.5,
+          fillColor: colourMap[name] || palette[0],
+          fillOpacity: 0.25
+        };
+      },
       interactive: false
     }).addTo(map).bringToBack();
   } catch(e) {
@@ -5530,6 +6406,7 @@ async function loadAllLgaBoundaries() {
 }
 
 let lgaBoundaryLayer = null;
+let allLgaBackgroundLayer = null;
 
 // NSW Spatial Services - public ArcGIS REST API
 const NSW_LGA_API = 'https://portal.spatial.nsw.gov.au/server/rest/services/NSW_Administrative_Boundaries_Theme/FeatureServer/8/query';
@@ -5544,7 +6421,9 @@ const lgaBoundaryCache = {
 const lgaBoundaryMeta = {};
 
 function getFeatureLgaName(feature) {
-  return feature?.properties?.lganame || feature?.properties?.name || feature?.properties?.councilname || '';
+  const p = feature?.properties;
+  if (!p) return '';
+  return p.lganame || p.LGA_NAME24 || p.LGA_NAME || p.LGAName || p.name || p.NAME || p.councilname || '';
 }
 
 function getFeatureBounds(feature) {
@@ -5651,8 +6530,488 @@ function drawLgaBoundary(lgaName) {
   console.log(`Boundary drawn for ${lgaName}`);
 }
 
+// Critical assets
+const CRITICAL_ASSET_CLASSES = ['Culverts','Detention Basin','End Structure','Open','Stormwater Pipe','Stormwater Pit','Water Quality Device'];
+const CRITICAL_STATUS_META = {
+  red: { label: 'Overdue', color: '#C0392B', className: 'red' },
+  orange: { label: 'Due within 6 months', color: '#E67E22', className: 'orange' },
+  green: { label: 'Up to date', color: '#1E8449', className: 'green' },
+  unknown: { label: 'Awaiting schedule', color: '#60717D', className: 'unknown' }
+};
+const CRITICAL_DEFAULT_SOURCE_PATH = 'D:\\Packaging\\data\\assets_with_coords.csv';
+const CRITICAL_DEFAULT_COMBINED_PATH = 'D:\\Packaging\\data\\combined_assets.csv';
+const CRITICAL_DEFAULT_INSPECTION_PATH = 'D:\\Packaging\\data\\critical_asset_inspections.xlsx';
+let criticalAssetsMap = null;
+let criticalAssetsLayer = null;
+let criticalAssetsAll = [];
+let criticalInspectionRows = [];
+let criticalVisibleAssets = [];
+let criticalClassFilters = new Set(['ALL']);
+let criticalStatusFilters = new Set(['ALL']);
+let criticalAssetsSourceName = '';
+let criticalCombinedSourceName = '';
+let criticalInspectionSourceName = '';
+
+function ensureCriticalAssetsMap() {
+  if (criticalAssetsMap) return;
+  criticalAssetsMap = L.map('criticalAssetsMap', { preferCanvas: true, zoomControl: true }).setView([-33.72, 151.25], 11);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles © Esri',
+    maxZoom: 19
+  }).addTo(criticalAssetsMap);
+  criticalAssetsLayer = L.layerGroup().addTo(criticalAssetsMap);
+  renderCriticalAssetsFilters();
+  renderCriticalAssetsSummary();
+}
+
+function normaliseKey(value) {
+  return String(value ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+function getValueByAliases(row, aliases) {
+  if (!row || !aliases?.length) return '';
+  const lookup = {};
+  Object.entries(row).forEach(([key, value]) => { lookup[normaliseKey(key)] = value; });
+  for (const alias of aliases) {
+    if (Object.prototype.hasOwnProperty.call(row, alias) && row[alias] !== '') return row[alias];
+    const hit = lookup[normaliseKey(alias)];
+    if (hit !== undefined && hit !== '') return hit;
+  }
+  return '';
+}
+
+function parseNumberValue(value) {
+  if (value == null) return null;
+  const cleaned = String(value).replace(/,/g, '').match(/-?\d+(\.\d+)?/);
+  return cleaned ? Number(cleaned[0]) : null;
+}
+
+function parseDateValue(value) {
+  if (!value && value !== 0) return null;
+  if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
+  if (typeof value === 'number' && value > 20000 && typeof XLSX !== 'undefined') {
+    const parsed = XLSX.SSF.parse_date_code(value);
+    if (parsed) return new Date(parsed.y, parsed.m - 1, parsed.d);
+  }
+  const raw = String(value).trim();
+  if (!raw) return null;
+  const direct = new Date(raw);
+  if (!Number.isNaN(direct.getTime())) return direct;
+  const match = raw.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+  if (!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  let year = Number(match[3]);
+  if (year < 100) year += 2000;
+  const parsed = new Date(year, month - 1, day);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function addMonths(date, months) {
+  const out = new Date(date.getTime());
+  out.setMonth(out.getMonth() + months);
+  return out;
+}
+
+function formatShortDate(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) return 'Not available';
+  return date.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function classifyAssetClass(value, fallbackDescription = '') {
+  const text = `${value || ''} ${fallbackDescription || ''}`.toLowerCase();
+  if (text.includes('culvert')) return 'Culverts';
+  if (text.includes('detention')) return 'Detention Basin';
+  if (text.includes('end structure') || text.includes('headwall')) return 'End Structure';
+  if (text.includes('open')) return 'Open';
+  if (text.includes('pit')) return 'Stormwater Pit';
+  if (text.includes('water quality') || text.includes('gross pollutant') || text.includes('gpt')) return 'Water Quality Device';
+  if (text.includes('pipe')) return 'Stormwater Pipe';
+  return '';
+}
+
+function utmToLatLng(easting, northing, zone = 56, southernHemisphere = true) {
+  if (!Number.isFinite(easting) || !Number.isFinite(northing)) return null;
+  const a = 6378137.0;
+  const eccSquared = 0.00669438;
+  const k0 = 0.9996;
+  const eccPrimeSquared = eccSquared / (1 - eccSquared);
+  const x = easting - 500000.0;
+  let y = northing;
+  if (southernHemisphere) y -= 10000000.0;
+  const longOrigin = (zone - 1) * 6 - 180 + 3;
+  const M = y / k0;
+  const mu = M / (a * (1 - eccSquared / 4 - 3 * eccSquared * eccSquared / 64 - 5 * Math.pow(eccSquared, 3) / 256));
+  const e1 = (1 - Math.sqrt(1 - eccSquared)) / (1 + Math.sqrt(1 - eccSquared));
+  const phi1Rad = mu
+    + (3 * e1 / 2 - 27 * Math.pow(e1, 3) / 32) * Math.sin(2 * mu)
+    + (21 * e1 * e1 / 16 - 55 * Math.pow(e1, 4) / 32) * Math.sin(4 * mu)
+    + (151 * Math.pow(e1, 3) / 96) * Math.sin(6 * mu)
+    + (1097 * Math.pow(e1, 4) / 512) * Math.sin(8 * mu);
+  const N1 = a / Math.sqrt(1 - eccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad));
+  const T1 = Math.tan(phi1Rad) * Math.tan(phi1Rad);
+  const C1 = eccPrimeSquared * Math.cos(phi1Rad) * Math.cos(phi1Rad);
+  const R1 = a * (1 - eccSquared) / Math.pow(1 - eccSquared * Math.sin(phi1Rad) * Math.sin(phi1Rad), 1.5);
+  const D = x / (N1 * k0);
+  const latRad = phi1Rad - (N1 * Math.tan(phi1Rad) / R1) * (
+    (D * D) / 2 -
+    (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * eccPrimeSquared) * Math.pow(D, 4) / 24 +
+    (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * eccPrimeSquared - 3 * C1 * C1) * Math.pow(D, 6) / 720
+  );
+  const lonRad = (
+    D -
+    (1 + 2 * T1 + C1) * Math.pow(D, 3) / 6 +
+    (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * eccPrimeSquared + 24 * T1 * T1) * Math.pow(D, 5) / 120
+  ) / Math.cos(phi1Rad);
+  return {
+    lat: latRad * (180 / Math.PI),
+    lon: longOrigin + lonRad * (180 / Math.PI)
+  };
+}
+
+function resolveLineCoordinatePair(row, start = true) {
+  const x = parseNumberValue(getValueByAliases(row, start ? ['XStart', 'FromX', 'StartX'] : ['XEnd', 'ToX', 'EndX']));
+  const y = parseNumberValue(getValueByAliases(row, start ? ['YStart', 'FromY', 'StartY'] : ['YEnd', 'ToY', 'EndY']));
+  if (Number.isFinite(x) && Number.isFinite(y)) return utmToLatLng(x, y, 56, true);
+  const lat = parseNumberValue(getValueByAliases(row, start ? ['Start Latitude', 'US Latitude', 'Latitude Start'] : ['End Latitude', 'DS Latitude', 'Latitude End']));
+  const lon = parseNumberValue(getValueByAliases(row, start ? ['Start Longitude', 'US Longitude', 'Longitude Start'] : ['End Longitude', 'DS Longitude', 'Longitude End']));
+  if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon };
+  return null;
+}
+
+function buildCriticalAssetRecord(row, index, sourceLabel) {
+  const criticality = String(getValueByAliases(row, ['Criticality', 'criticality']) || '').trim().toUpperCase();
+  if (criticality !== 'Y') return null;
+  const assetId = String(getValueByAliases(row, ['Asset', 'Asset Number', 'Asset_Number', 'CATLG_ID', 'MAPKEY', 'Asset2']) || `asset-${index + 1}`).trim();
+  const description = String(getValueByAliases(row, ['Description', 'Short Description', 'Formatted_Address', 'Pipe_Start_Address']) || '').trim();
+  const classRaw = getValueByAliases(row, ['Asset_Classification', 'Asset Classification', 'Asset Class', 'Asset_Class_Plan', 'Description']);
+  const assetClass = classifyAssetClass(classRaw, description);
+  if (!assetClass) return null;
+  const start = resolveLineCoordinatePair(row, true);
+  const end = resolveLineCoordinatePair(row, false);
+  const lat = parseNumberValue(getValueByAliases(row, ['Latitude', 'lat']));
+  const lon = parseNumberValue(getValueByAliases(row, ['Longitude', 'lon']));
+  const midY = parseNumberValue(getValueByAliases(row, ['YMid', 'YMid.1']));
+  const midX = parseNumberValue(getValueByAliases(row, ['XMid', 'XMid.1']));
+  const midProjected = Number.isFinite(midX) && Number.isFinite(midY) && midX > 1000 && midY > 1000 ? utmToLatLng(midX, midY, 56, true) : null;
+  const rawDiameter = parseNumberValue(getValueByAliases(row, ['SWP_Pipe_Diameter_mm', 'Diameter', 'DiameterStr', 'Culvert_Diameter_m']));
+  const diameterMm = Number.isFinite(rawDiameter) ? (rawDiameter < 20 ? rawDiameter * 1000 : rawDiameter) : null;
+  const centroid = Number.isFinite(lat) && Number.isFinite(lon)
+    ? { lat, lon }
+    : (start && end
+      ? { lat: (start.lat + end.lat) / 2, lon: (start.lon + end.lon) / 2 }
+      : (midProjected || (Number.isFinite(midY) && Number.isFinite(midX) && midY < 0 && midX > 100 ? { lat: midY, lon: midX } : null)));
+  const geometryType = start && end ? 'line' : 'point';
+  if (!centroid && geometryType !== 'line') return null;
+  return {
+    id: assetId,
+    description: description || `${assetClass} ${assetId}`,
+    assetClass,
+    criticality,
+    score: parseNumberValue(getValueByAliases(row, ['Score', 'score'])),
+    observedCondition: String(getValueByAliases(row, ['Observed_Condition', 'Observed Condition', 'SW_Condition']) || '').trim(),
+    diameterMm,
+    lengthM: parseNumberValue(getValueByAliases(row, ['Spatial_Length_m', 'Length_m', 'Shape_Length'])),
+    suburb: formatSuburbName(getValueByAliases(row, ['Location - Suburb', 'Asset Suburb', 'Suburb'])) ||
+      extractSuburbFromAddress(getValueByAliases(row, ['Formatted_Address', 'Pipe_Start_Address', 'Asset_Address', 'Physical_Location'])) ||
+      'Unknown',
+    address: String(getValueByAliases(row, ['Formatted_Address', 'Pipe_Start_Address', 'Asset_Address']) || '').trim(),
+    geometryType,
+    coordinates: start && end ? [[start.lat, start.lon], [end.lat, end.lon]] : null,
+    lat: centroid?.lat ?? start?.lat ?? null,
+    lon: centroid?.lon ?? start?.lon ?? null,
+    sourceLabel
+  };
+}
+
+function resolveInspectionIntervalMonths(row) {
+  const months = parseNumberValue(getValueByAliases(row, ['Inspection Frequency Months', 'Frequency Months', 'Cycle Months', 'Interval Months']));
+  if (Number.isFinite(months)) return months;
+  const years = parseNumberValue(getValueByAliases(row, ['Inspection Frequency Years', 'Frequency Years', 'Cycle Years', 'Interval Years']));
+  if (Number.isFinite(years)) return years * 12;
+  const raw = String(getValueByAliases(row, ['Inspection Frequency', 'Inspection Schedule', 'Frequency', 'Cycle']) || '').toLowerCase();
+  if (!raw) return null;
+  if (raw.includes('annual') || raw.includes('yearly')) return 12;
+  const yearMatch = raw.match(/(\d+(\.\d+)?)\s*year/);
+  if (yearMatch) return Number(yearMatch[1]) * 12;
+  const monthMatch = raw.match(/(\d+(\.\d+)?)\s*month/);
+  if (monthMatch) return Number(monthMatch[1]);
+  return null;
+}
+
+function buildInspectionRecord(row) {
+  const assetId = String(getValueByAliases(row, ['Asset', 'Asset Number', 'Asset_Number', 'Asset ID', 'Asset_ID', 'CATLG_ID', 'MAPKEY']) || '').trim();
+  if (!assetId) return null;
+  return {
+    assetId,
+    assetClass: classifyAssetClass(getValueByAliases(row, ['Asset Class', 'Asset_Classification', 'Class', 'Description'])),
+    lastInspection: parseDateValue(getValueByAliases(row, ['Last Inspection', 'Last Inspection Date', 'Observed Condition Last Inspection Date', 'Actual Inspection Date', 'Inspection Date'])),
+    nextDue: parseDateValue(getValueByAliases(row, ['Next Due', 'Next Due Date', 'Due Date', 'Inspection Due'])),
+    intervalMonths: resolveInspectionIntervalMonths(row),
+    intervalLabel: String(getValueByAliases(row, ['Inspection Frequency', 'Inspection Schedule', 'Frequency', 'Cycle']) || '').trim()
+  };
+}
+
+function getInspectionLookup() {
+  const lookup = {};
+  criticalInspectionRows.forEach(row => {
+    if (!row?.assetId) return;
+    lookup[row.assetId] = row;
+  });
+  return lookup;
+}
+
+function enrichCriticalAssets() {
+  const inspectionLookup = getInspectionLookup();
+  const now = new Date();
+  criticalAssetsAll = criticalAssetsAll.map(asset => {
+    const inspection = inspectionLookup[asset.id];
+    let nextDue = inspection?.nextDue || null;
+    if (!nextDue && inspection?.lastInspection && Number.isFinite(inspection.intervalMonths)) {
+      nextDue = addMonths(inspection.lastInspection, inspection.intervalMonths);
+    }
+    const daysToDue = nextDue ? Math.floor((nextDue - now) / (1000 * 60 * 60 * 24)) : null;
+    let status = 'unknown';
+    if (nextDue) {
+      if (daysToDue < 0) status = 'red';
+      else if (daysToDue <= 183) status = 'orange';
+      else status = 'green';
+    }
+    return { ...asset, inspection, nextDue, daysToDue, status };
+  });
+}
+
+function dedupeCriticalAssets(items) {
+  const seen = new Map();
+  items.forEach(item => {
+    if (!item?.id) return;
+    const key = `${item.id}|${item.assetClass}`;
+    if (!seen.has(key)) seen.set(key, item);
+  });
+  return Array.from(seen.values());
+}
+
+function getFilteredCriticalAssets() {
+  const classAll = criticalClassFilters.has('ALL');
+  const statusAll = criticalStatusFilters.has('ALL') || !criticalStatusFilters.size;
+  return criticalAssetsAll.filter(asset =>
+    (classAll || criticalClassFilters.has(asset.assetClass)) &&
+    (statusAll || asset.status === 'unknown' || criticalStatusFilters.has(asset.status))
+  );
+}
+
+function renderCriticalAssetsFilters() {
+  const classWrap = document.getElementById('caClassFilters');
+  const statusWrap = document.getElementById('caStatusFilters');
+  if (!classWrap || !statusWrap) return;
+  classWrap.innerHTML = [
+    `<button class="ca-chip ${criticalClassFilters.has('ALL') ? 'active' : ''}" onclick="toggleCriticalClassFilter('ALL')">ALL</button>`,
+    ...CRITICAL_ASSET_CLASSES.map(name => `<button class="ca-chip ${criticalClassFilters.has(name) ? 'active' : ''}" onclick="toggleCriticalClassFilter('${encodeInlineArg(name)}')">${escapeHtml(name)}</button>`)
+  ].join('');
+  statusWrap.innerHTML = [
+    `<button class="ca-chip ${criticalStatusFilters.has('ALL') ? 'active' : ''}" onclick="toggleCriticalStatusFilter('ALL')">ALL</button>`,
+    ...Object.entries(CRITICAL_STATUS_META).map(([key, meta]) =>
+      `<button class="ca-chip status-${key} ${criticalStatusFilters.has(key) ? 'active' : ''}" onclick="toggleCriticalStatusFilter('${key}')">${escapeHtml(meta.label)}</button>`
+    )
+  ].join('');
+}
+
+function toggleCriticalClassFilter(value) {
+  const decoded = value === 'ALL' ? 'ALL' : decodeInlineArg(value);
+  if (decoded === 'ALL') {
+    criticalClassFilters = new Set(['ALL']);
+  } else {
+    if (criticalClassFilters.has('ALL')) criticalClassFilters = new Set();
+    if (criticalClassFilters.has(decoded)) criticalClassFilters.delete(decoded);
+    else criticalClassFilters.add(decoded);
+    if (!criticalClassFilters.size) criticalClassFilters = new Set(['ALL']);
+  }
+  renderCriticalAssetsFilters();
+  renderCriticalAssetsView();
+}
+
+function toggleCriticalStatusFilter(value) {
+  if (value === 'ALL') {
+    criticalStatusFilters = new Set(['ALL']);
+  } else {
+    if (criticalStatusFilters.has('ALL')) criticalStatusFilters = new Set();
+    if (criticalStatusFilters.has(value)) criticalStatusFilters.delete(value);
+    else criticalStatusFilters.add(value);
+    if (!criticalStatusFilters.size) criticalStatusFilters = new Set(['ALL']);
+  }
+  renderCriticalAssetsFilters();
+  renderCriticalAssetsView();
+}
+
+function resetCriticalAssetFilters() {
+  criticalClassFilters = new Set(['ALL']);
+  criticalStatusFilters = new Set(['ALL']);
+  renderCriticalAssetsFilters();
+  renderCriticalAssetsView();
+}
+
+function getCriticalStyle(asset) {
+  const meta = CRITICAL_STATUS_META[asset.status] || CRITICAL_STATUS_META.unknown;
+  const weight = asset.geometryType === 'line'
+    ? Math.max(3, Math.min(9, 2 + ((asset.diameterMm || 300) / 450)))
+    : 2;
+  return { color: meta.color, weight, fillColor: meta.color, fillOpacity: 0.88 };
+}
+
+function buildCriticalPopup(asset) {
+  return `
+    <div style="min-width:220px">
+      <div style="font-weight:800;color:var(--navy);margin-bottom:6px">${escapeHtml(asset.id)}</div>
+      <div style="font-size:12px;color:var(--text);margin-bottom:8px">${escapeHtml(asset.description)}</div>
+      <div style="font-size:11px;color:var(--text-l);line-height:1.6">
+        <div><strong>Class:</strong> ${escapeHtml(asset.assetClass)}</div>
+        <div><strong>Score:</strong> ${asset.score != null ? escapeHtml(asset.score) : 'Not available'}</div>
+        <div><strong>Observed condition:</strong> ${escapeHtml(asset.observedCondition || 'Not available')}</div>
+        <div><strong>Status:</strong> ${escapeHtml(CRITICAL_STATUS_META[asset.status]?.label || 'Awaiting schedule')}</div>
+        <div><strong>Last inspection:</strong> ${escapeHtml(formatShortDate(asset.inspection?.lastInspection))}</div>
+        <div><strong>Next due:</strong> ${escapeHtml(formatShortDate(asset.nextDue))}</div>
+        <div><strong>Diameter:</strong> ${asset.diameterMm ? `${asset.diameterMm} mm` : 'Not available'}</div>
+      </div>
+    </div>`;
+}
+
+function renderCriticalAssetsSummary() {
+  const wrap = document.getElementById('caSummaryCards');
+  if (!wrap) return;
+  const counts = { total: criticalAssetsAll.length, red: 0, orange: 0, green: 0, unknown: 0 };
+  criticalAssetsAll.forEach(asset => { counts[asset.status] = (counts[asset.status] || 0) + 1; });
+  wrap.innerHTML = `
+    <div class="ca-card"><div class="k">Critical Assets</div><div class="v">${counts.total}</div><div class="s">Criticality = Y records currently loaded</div></div>
+    <div class="ca-card"><div class="k">Overdue</div><div class="v" style="color:#C0392B">${counts.red}</div><div class="s">Inspection due date has passed</div></div>
+    <div class="ca-card"><div class="k">Due Soon</div><div class="v" style="color:#E67E22">${counts.orange}</div><div class="s">Due within the next 6 months</div></div>
+    <div class="ca-card"><div class="k">Up To Date</div><div class="v" style="color:#1E8449">${counts.green}</div><div class="s">Outside the 6 month warning window</div></div>
+  `;
+}
+
+function renderCriticalAssetsTable(rows) {
+  const body = document.getElementById('caTableBody');
+  const subtitle = document.getElementById('caTableSubtitle');
+  if (!body || !subtitle) return;
+  subtitle.textContent = rows.length ? `${rows.length} visible asset${rows.length === 1 ? '' : 's'}` : 'No visible assets for the current filters.';
+  if (!rows.length) {
+    body.innerHTML = '<div class="ca-empty" style="margin:14px">No assets match the selected class and status filters.</div>';
+    return;
+  }
+  body.innerHTML = `<table class="ca-table">
+    <thead><tr><th>Asset</th><th>Class</th><th>Status</th><th>Next Due</th></tr></thead>
+    <tbody>
+      ${rows.map((asset, idx) => `
+        <tr onclick="focusCriticalAsset(${idx})">
+          <td><div style="font-weight:700;color:var(--navy)">${escapeHtml(asset.id)}</div><div style="font-size:11px;color:var(--text-l);margin-top:4px">${escapeHtml(asset.description)}</div></td>
+          <td>${escapeHtml(asset.assetClass)}</td>
+          <td><span class="ca-badge ${CRITICAL_STATUS_META[asset.status]?.className || 'unknown'}">${escapeHtml(CRITICAL_STATUS_META[asset.status]?.label || 'Awaiting schedule')}</span></td>
+          <td>${escapeHtml(formatShortDate(asset.nextDue))}</td>
+        </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderCriticalAssetsView() {
+  ensureCriticalAssetsMap();
+  const subtitle = document.getElementById('caMapSubtitle');
+  criticalVisibleAssets = getFilteredCriticalAssets();
+  if (subtitle) {
+    subtitle.textContent = criticalVisibleAssets.length
+      ? `${criticalVisibleAssets.length} assets visible. Pipes are drawn using start/end coordinates from the source file.`
+      : 'No assets match the current filters.';
+  }
+  criticalAssetsLayer.clearLayers();
+  criticalVisibleAssets.forEach((asset, idx) => {
+    const style = getCriticalStyle(asset);
+    const layer = asset.geometryType === 'line' && asset.coordinates
+      ? L.polyline(asset.coordinates, { color: style.color, weight: style.weight, opacity: 0.95 })
+      : L.circleMarker([asset.lat, asset.lon], { radius: 7, color: '#fff', weight: 1.5, fillColor: style.fillColor, fillOpacity: style.fillOpacity });
+    layer.bindPopup(buildCriticalPopup(asset));
+    layer.on('click', () => focusCriticalAsset(idx, false));
+    layer.addTo(criticalAssetsLayer);
+    asset._layer = layer;
+  });
+  renderCriticalAssetsTable(criticalVisibleAssets);
+  renderCriticalAssetsSummary();
+}
+
+function fitCriticalAssetsToVisible() {
+  if (!criticalAssetsMap || !criticalVisibleAssets.length) return;
+  const layers = criticalVisibleAssets.map(asset => asset._layer).filter(Boolean);
+  if (!layers.length) return;
+  const group = L.featureGroup(layers);
+  criticalAssetsMap.fitBounds(group.getBounds().pad(0.12));
+}
+
+function focusCriticalAsset(index, openPopup = true) {
+  const asset = criticalVisibleAssets[index];
+  if (!asset || !asset._layer) return;
+  if (asset.geometryType === 'line' && asset.coordinates) {
+    criticalAssetsMap.fitBounds(asset._layer.getBounds().pad(0.2));
+  } else if (Number.isFinite(asset.lat) && Number.isFinite(asset.lon)) {
+    criticalAssetsMap.setView([asset.lat, asset.lon], Math.max(criticalAssetsMap.getZoom(), 17));
+  }
+  if (openPopup) asset._layer.openPopup();
+}
+
+function updateCriticalAssetsStatusLabels() {
+  const assetsStatus = document.getElementById('caAssetsStatus');
+  const combinedStatus = document.getElementById('caCombinedStatus');
+  const inspectionStatus = document.getElementById('caInspectionStatus');
+  if (assetsStatus) assetsStatus.textContent = criticalAssetsSourceName || 'Not loaded';
+  if (combinedStatus) combinedStatus.textContent = criticalCombinedSourceName || 'Optional';
+  if (inspectionStatus) inspectionStatus.textContent = criticalInspectionSourceName || 'Waiting for file';
+}
+
+async function readSpreadsheetRows(file) {
+  const lower = file.name.toLowerCase();
+  if (lower.endsWith('.xlsx') || lower.endsWith('.xls')) {
+    if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: 'array' });
+    const firstSheet = workbook.SheetNames[0];
+    return XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], { defval: '' });
+  }
+  return parseSimpleCsv(await file.text());
+}
+
+async function loadCriticalAssetsInput(event, kind) {
+  const file = event?.target?.files?.[0];
+  if (!file) return;
+  try {
+    const rows = await readSpreadsheetRows(file);
+    if (kind === 'inspection') {
+      criticalInspectionRows = rows.map(buildInspectionRecord).filter(Boolean);
+      criticalInspectionSourceName = `${file.name} (${criticalInspectionRows.length.toLocaleString()} rows)`;
+    } else {
+      const newAssets = rows.map((row, idx) => buildCriticalAssetRecord(row, idx, file.name)).filter(Boolean);
+      if (kind === 'assets') {
+        criticalAssetsAll = newAssets;
+        criticalAssetsSourceName = `${file.name} (${newAssets.length.toLocaleString()} critical assets)`;
+      } else {
+        criticalAssetsAll = dedupeCriticalAssets([...criticalAssetsAll, ...newAssets]);
+        criticalCombinedSourceName = `${file.name} (${newAssets.length.toLocaleString()} critical assets)`;
+      }
+    }
+    enrichCriticalAssets();
+    updateCriticalAssetsStatusLabels();
+    renderCriticalAssetsView();
+    if (criticalAssetsAll.length) setTimeout(() => fitCriticalAssetsToVisible(), 80);
+  } catch (e) {
+    alert(`Critical assets import failed: ${e.message || e}`);
+  } finally {
+    if (event?.target) event.target.value = '';
+  }
+}
+
+function loadCriticalAssetsDefaults() {
+  updateCriticalAssetsStatusLabels();
+  renderCriticalAssetsView();
+  alert(`Use the upload buttons to load source files from ${CRITICAL_DEFAULT_SOURCE_PATH}, ${CRITICAL_DEFAULT_COMBINED_PATH}, and ${CRITICAL_DEFAULT_INSPECTION_PATH} once available.`);
+}
+
 // â”€â”€ Page navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const PAGES = ['home','aep','prioritisation','costing','relining','futureworks'];
+const PAGES = ['home','aep','criticalassets','prioritisation','costing','relining','cctvpackaging','futureworks'];
 let currentPage = 'home';
 
 function switchPage(page, options = {}) {
@@ -5661,18 +7020,27 @@ function switchPage(page, options = {}) {
     return;
   }
   currentPage = page;
-  const flexPages = new Set(['aep','prioritisation','costing','relining','futureworks']);
+  const flexPages = new Set(['aep','criticalassets','prioritisation','costing','relining','cctvpackaging','futureworks']);
   PAGES.forEach(p => {
     const el = document.getElementById('page-' + p);
     if (!el) return;
     el.style.display = p === page ? (flexPages.has(p) ? 'flex' : '') : 'none';
   });
   document.getElementById('page-nav').style.display = page === 'home' ? 'none' : 'flex';
-  document.querySelectorAll('.pnav-btn').forEach((b, i) =>
-    b.classList.toggle('active', ['aep','prioritisation','costing','relining','futureworks'][i] === page));
+  document.querySelectorAll('.pnav-btn[data-page]').forEach(b =>
+    b.classList.toggle('active', b.dataset.page === page));
   if (page === 'aep') {
     if (!window._aepInited) { window._aepInited = true; init(); }
     setTimeout(() => map.invalidateSize(), 50);
+  }
+  if (page === 'criticalassets') {
+    if (!window._criticalAssetsInited) {
+      window._criticalAssetsInited = true;
+      ensureCriticalAssetsMap();
+      updateCriticalAssetsStatusLabels();
+      renderCriticalAssetsView();
+    }
+    setTimeout(() => criticalAssetsMap?.invalidateSize(), 50);
   }
   if (page === 'costing') {
     if (!window._costingInited) {
@@ -5687,9 +7055,19 @@ function switchPage(page, options = {}) {
       window._packagingInited = true;
       togglePackagingInputs();
       refreshPackagingConnection();
-    } else {
-      refreshPackagingConnection();
     }
+  }
+  if (page === 'cctvpackaging') {
+    if (!window._cctvPackagingInited) {
+      window._cctvPackagingInited = true;
+      toggleCctvPackageTargetInputs();
+      refreshCctvPackagingConnection();
+    }
+    setTimeout(() => {
+      ensureCctvPackagesMap();
+      cctvPackagesMap?.invalidateSize();
+      renderCctvPackagesMap();
+    }, 50);
   }
   if (page === 'futureworks') {
     syncFutureWorksWorkbookInput();
