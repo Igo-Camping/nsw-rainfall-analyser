@@ -1957,6 +1957,9 @@ function buildLgaDropdown() {
   const lgaSel = document.getElementById('lgaSel');
   const priority = ['Northern Beaches','Central Coast','Ku-ring-gai','Newcastle','Hunter Valley','Greater Sydney West','Lane Cove'];
   const lgas = new Set();
+  Object.keys(lgaBoundaryCache).forEach(lga => {
+    if (lga) lgas.add(lga);
+  });
   allStations.forEach(s => {
     const lga = getLGA(s);
     if (lga) lgas.add(lga);
