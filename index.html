@@ -2109,8 +2109,19 @@ function getLGA(station) {
 }
 
 function getStationSourceLabel(station) {
-  if (station?.isBomGauge) return station.element || station.sourceLayer || 'BOM record';
+  if (station?.isBomGauge) return canAnalyseStation(station) ? 'BoM AWS fallback' : (station.element || station.sourceLayer || 'BOM record');
   return 'Official live rainfall';
+}
+
+function getBomStationNumber(station) {
+  const raw = String(station?.bom_id || station?.site || '').replace(/\D/g, '');
+  return raw ? raw.padStart(6, '0') : '';
+}
+
+function canAnalyseStation(station) {
+  if (!station) return false;
+  if (station.ts_id) return true;
+  return !!station.isBomGauge && !!getBomStationNumber(station);
 }
 
 function onLgaChange() {
@@ -2402,10 +2413,11 @@ function selectStation(id) {
   if (item) { item.classList.add('active'); item.scrollIntoView({block:'nearest'}); }
 
   const btn = document.getElementById('runBtn');
-  btn.disabled = !!selected.isBomGauge;
-  btn.textContent = selected.isBomGauge
-    ? 'BOM reference only'
-    : `Analyse ${selected.name.split(' ').slice(0,3).join(' ')}`;
+  const canAnalyse = canAnalyseStation(selected);
+  btn.disabled = !canAnalyse;
+  btn.textContent = canAnalyse
+    ? `Analyse ${selected.name.split(' ').slice(0,3).join(' ')}`
+    : 'BOM reference only';
   const exportBtn = document.getElementById('exportAllBtn');
   if (exportBtn) exportBtn.disabled = true;
   if (selected.isBomGauge) loadStationIfd(selected);
@@ -2678,7 +2690,13 @@ async function runAnalysis() {
   showLoad('Fetching rainfall data...');
 
   try {
-    const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
+    const requestedDuration = dur === 'worst' ? 30 : dur;
+    const rainfallData = await fetchStationRainfall(selected, fromDt, toDt, requestedDuration);
+    const readings = rainfallData.readings;
+    const intervalMinutes = rainfallData.intervalMinutes || 5;
+    if (dur !== 'worst' && !isDurationSupportedForInterval(dur, intervalMinutes)) {
+      throw new Error(`${rainfallData.source} is ${intervalMinutes}-minute data. Choose a ${intervalMinutes}-minute duration or a multiple of it.`);
+    }
     setLoadTxt('Loading IFD data...');
     await loadStationIfd(selected);
     window.lastReadings = readings;
@@ -2686,10 +2704,11 @@ async function runAnalysis() {
     let resDur, resRolling, resAep, durationLabel;
     if (dur === 'worst') {
       const ifd = ifdCache[selected.station_id];
-      const durations = ifd ? Object.keys(ifd).map(Number).sort((a,b)=>a-b) : ALL_DURATIONS;
+      const durations = (ifd ? Object.keys(ifd).map(Number).sort((a,b)=>a-b) : ALL_DURATIONS)
+        .filter(d => isDurationSupportedForInterval(d, intervalMinutes));
       let bestRarity = -1;
       for (const d of durations) {
-        const rolling = calcRollingMax(readings, d);
+        const rolling = calcRollingMax(readings, d, intervalMinutes);
         if (!rolling || rolling.max_depth_mm <= 0) continue;
         const aep = calcAEP(selected.station_id, d, rolling.max_depth_mm);
         if (!aep) continue;
@@ -2703,19 +2722,31 @@ async function runAnalysis() {
       }
       if (!resDur) {
         resDur = durations[0] || 30;
-        resRolling = calcRollingMax(readings, resDur);
+        resRolling = calcRollingMax(readings, resDur, intervalMinutes);
         resAep = null;
       }
       durationLabel = 'Worst: ' + (DUR_LABELS[resDur] || resDur + ' min');
     } else {
       resDur = dur;
-      resRolling = calcRollingMax(readings, dur);
+      resRolling = calcRollingMax(readings, dur, intervalMinutes);
       resAep = calcAEP(selected.station_id, dur, resRolling?.max_depth_mm || 0);
     }
 
     setLoadTxt('Calculating all durations...');
     const topDurationResults = ALL_DURATIONS.map(d => {
-      const rolling = calcRollingMax(readings, d);
+      if (!isDurationSupportedForInterval(d, intervalMinutes)) {
+        return {
+          station_id: selected.station_id,
+          station_name: selected.name,
+          duration_minutes: d,
+          from: fromDt.toISOString(),
+          to: toDt.toISOString(),
+          readings,
+          rolling_max: null,
+          aep: null
+        };
+      }
+      const rolling = calcRollingMax(readings, d, intervalMinutes);
       let aep = null;
       if (rolling?.max_depth_mm > 0) {
         try {
@@ -2736,7 +2767,9 @@ async function runAnalysis() {
 
     let wx = null, rainToday = null;
     try { wx = await fetchWeather(selected.lat, selected.lon); } catch(e){ console.warn(e); }
-    try { rainToday = await fetchRainfallSinceMidnight(selected.ts_id); } catch(e){ console.warn(e); }
+    try {
+      rainToday = selected.ts_id ? await fetchRainfallSinceMidnight(selected.ts_id) : null;
+    } catch(e){ console.warn(e); }
 
     lastResults = {
       station_id: selected.station_id,
@@ -2748,6 +2781,8 @@ async function runAnalysis() {
       readings,
       rolling_max: resRolling,
       aep: resAep,
+      source: rainfallData.source,
+      intervalMinutes,
       weather: wx,
       rainToday,
       analysisKey: summaryKey
@@ -2859,8 +2894,45 @@ async function fetchMhlData(tsId, fromDt, toDt) {
   })).filter(r => r.timestamp);
 }
 
+async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30) {
+  if (station?.ts_id) {
+    return {
+      readings: await fetchMhlData(station.ts_id, fromDt, toDt),
+      source: 'MHL KiWIS 5-minute rainfall',
+      intervalMinutes: 5
+    };
+  }
+
+  if (station?.isBomGauge) {
+    const bomId = getBomStationNumber(station);
+    if (!bomId) throw new Error('BoM station number unavailable for this reference station');
+    const params = new URLSearchParams({
+      bom_id: bomId,
+      from_dt: fromDt.toISOString(),
+      to_dt: toDt.toISOString(),
+      duration_minutes: String(Math.max(30, Number(durationMinutes) || 30))
+    });
+    const data = await api(`/bom/rainfall?${params}`);
+    station.wmo = data.wmo || station.wmo || '';
+    station.bom_id = data.bom_id || station.bom_id || bomId;
+    return {
+      readings: data.readings || [],
+      source: data.source || 'BoM 72-hour AWS observations',
+      intervalMinutes: data.resolution_minutes || 30
+    };
+  }
+
+  throw new Error('No rainfall data source is available for this station');
+}
+
+function isDurationSupportedForInterval(durationMinutes, intervalMinutes) {
+  const duration = Number(durationMinutes);
+  const interval = Math.max(1, Number(intervalMinutes) || 5);
+  return duration >= interval && duration % interval === 0;
+}
+
 // â”€â”€ Rolling max calculation (in browser) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function calcRollingMax(readings, durationMinutes) {
+function calcRollingMax(readings, durationMinutes, intervalMinutes = 5) {
   if (!readings || !readings.length) return null;
 
   const n = readings.length;
@@ -2870,7 +2942,7 @@ function calcRollingMax(readings, durationMinutes) {
   const prefix = [0];
   for (let i = 0; i < n; i++) prefix.push(prefix[i] + vals[i]);
 
-  const count = Math.round(durationMinutes / 5);
+  const count = Math.max(1, Math.round(durationMinutes / Math.max(1, intervalMinutes || 5)));
   let maxDepth = 0, peakStart = null, peakEnd = null;
 
   for (let right = count - 1; right < n; right++) {

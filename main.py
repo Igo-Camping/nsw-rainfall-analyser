@@ -20,6 +20,7 @@ from typing import Optional
 import json
 import math
 import asyncio
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 import httpx
@@ -80,6 +81,14 @@ load_station_cache()
 # ---------------------------------------------------------------------------
 
 MHL_BASE = "https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS"
+BOM_OBS_XML = "http://www.bom.gov.au/fwo/IDN60920.xml"
+BOM_HISTORY_JSON = "http://www.bom.gov.au/fwo/IDN60801/IDN60801.{wmo}.json"
+BOM_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "application/json, application/xml, text/xml, */*",
+}
+_bom_station_map: dict = {}
+_bom_station_map_loaded_at: Optional[datetime] = None
 
 
 async def fetch_mhl_timeseries(
@@ -143,12 +152,143 @@ async def fetch_mhl_timeseries(
 
 
 # ---------------------------------------------------------------------------
+# BoM observation fallback
+# ---------------------------------------------------------------------------
+
+def normalise_bom_id(value: str) -> str:
+    """BoM CDO station numbers are six digits, often stored locally without the leading zero."""
+    digits = "".join(ch for ch in str(value or "") if ch.isdigit())
+    return digits.zfill(6) if digits else ""
+
+
+def parse_bom_time(value: str) -> datetime:
+    return datetime.strptime(value, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+
+
+async def load_bom_station_map(force: bool = False) -> dict:
+    global _bom_station_map, _bom_station_map_loaded_at
+    now = datetime.now(timezone.utc)
+    if (
+        not force
+        and _bom_station_map
+        and _bom_station_map_loaded_at
+        and now - _bom_station_map_loaded_at < timedelta(hours=6)
+    ):
+        return _bom_station_map
+
+    timeout = httpx.Timeout(30.0, connect=15.0)
+    async with httpx.AsyncClient(timeout=timeout, follow_redirects=True, headers=BOM_HEADERS) as client:
+        resp = await client.get(BOM_OBS_XML)
+        resp.raise_for_status()
+
+    root = ET.fromstring(resp.text)
+    mapping = {}
+    for station in root.findall(".//station"):
+        bom_id = normalise_bom_id(station.attrib.get("bom-id", ""))
+        wmo_id = str(station.attrib.get("wmo-id", "")).strip()
+        if not bom_id or not wmo_id:
+            continue
+        mapping[bom_id] = {
+            "bom_id": bom_id,
+            "wmo": wmo_id,
+            "name": station.attrib.get("stn-name", ""),
+            "lat": station.attrib.get("lat"),
+            "lon": station.attrib.get("lon"),
+        }
+
+    _bom_station_map = mapping
+    _bom_station_map_loaded_at = now
+    return _bom_station_map
+
+
+async def resolve_bom_wmo(bom_id: Optional[str] = None, wmo: Optional[str] = None) -> dict:
+    if wmo:
+        return {"bom_id": normalise_bom_id(bom_id or ""), "wmo": str(wmo).strip()}
+    clean_bom_id = normalise_bom_id(bom_id or "")
+    if not clean_bom_id:
+        raise HTTPException(status_code=400, detail="BoM station number or WMO ID is required")
+    mapping = await load_bom_station_map()
+    station = mapping.get(clean_bom_id)
+    if not station:
+        raise HTTPException(
+            status_code=404,
+            detail="BoM station is not in the current NSW AWS observation feed",
+        )
+    return station
+
+
+async def fetch_bom_observation_readings(
+    bom_id: Optional[str],
+    wmo: Optional[str],
+    from_dt: datetime,
+    to_dt: datetime,
+) -> dict:
+    station = await resolve_bom_wmo(bom_id=bom_id, wmo=wmo)
+    timeout = httpx.Timeout(30.0, connect=15.0)
+    url = BOM_HISTORY_JSON.format(wmo=station["wmo"])
+
+    async with httpx.AsyncClient(timeout=timeout, follow_redirects=True, headers=BOM_HEADERS) as client:
+        resp = await client.get(url)
+        resp.raise_for_status()
+        payload = resp.json()
+
+    rows = payload.get("observations", {}).get("data", [])
+    parsed = []
+    for row in rows:
+        utc_raw = str(row.get("aifstime_utc") or "")
+        rain_raw = row.get("rain_trace")
+        if not utc_raw or rain_raw in (None, "-", ""):
+            continue
+        try:
+            timestamp = parse_bom_time(utc_raw)
+            rain_total = float(str(rain_raw).replace("T", "0"))
+        except ValueError:
+            continue
+        parsed.append((timestamp, max(0.0, rain_total)))
+
+    parsed.sort(key=lambda item: item[0])
+    readings = []
+    previous_total = None
+    previous_rain_day = None
+
+    for timestamp, rain_total in parsed:
+        local_time = timestamp + timedelta(hours=10)
+        rain_day = local_time.date()
+        if local_time.hour < 9:
+            rain_day = (local_time - timedelta(days=1)).date()
+
+        if previous_total is None:
+            increment = 0.0
+        elif rain_day != previous_rain_day or rain_total < previous_total:
+            increment = rain_total
+        else:
+            increment = rain_total - previous_total
+
+        previous_total = rain_total
+        previous_rain_day = rain_day
+
+        if from_dt <= timestamp <= to_dt:
+            readings.append({
+                "timestamp": timestamp.isoformat().replace("+00:00", "Z"),
+                "value": round(max(0.0, increment), 2),
+            })
+
+    return {
+        "station": station,
+        "readings": readings,
+        "source": "BoM 72-hour AWS observations",
+        "resolution_minutes": 30,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Rolling max calculation
 # ---------------------------------------------------------------------------
 
 def calculate_rolling_max(
     readings: list[dict],
-    duration_minutes: int
+    duration_minutes: int,
+    interval_minutes: int = 5
 ) -> dict:
     """
     Calculate the maximum rolling depth over a given duration.
@@ -165,8 +305,8 @@ def calculate_rolling_max(
     if not readings:
         return None
 
-    # Number of 5-min intervals in the duration
-    intervals = duration_minutes // 5
+    # Number of source intervals in the requested duration.
+    intervals = round(duration_minutes / max(1, interval_minutes))
     if intervals < 1:
         intervals = 1
 
@@ -507,6 +647,68 @@ async def get_rainfall(
         "readings":         readings,
         "rolling_max":      rolling,
         "aep":              aep_result,
+    }
+
+
+@app.get("/bom/rainfall")
+async def get_bom_rainfall(
+    bom_id: Optional[str] = Query(None, description="Six digit BoM station number"),
+    wmo: Optional[str] = Query(None, description="Five digit WMO station number"),
+    duration_minutes: int = Query(..., description="Analysis duration in minutes"),
+    from_dt: str = Query(..., description="Start datetime (ISO format)"),
+    to_dt: str = Query(..., description="End datetime (ISO format)"),
+):
+    """
+    Fallback rainfall source for non-MHL BoM AWS stations.
+    Uses BoM 72-hour observations and converts cumulative rain_trace values
+    into interval rainfall readings.
+    """
+    try:
+        start = datetime.fromisoformat(from_dt.replace("Z", "+00:00"))
+        end = datetime.fromisoformat(to_dt.replace("Z", "+00:00"))
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid datetime format. Use ISO 8601.")
+
+    if start.tzinfo is None:
+        start = start.replace(tzinfo=timezone.utc)
+    if end.tzinfo is None:
+        end = end.replace(tzinfo=timezone.utc)
+    start = start.astimezone(timezone.utc)
+    end = end.astimezone(timezone.utc)
+
+    if end <= start:
+        raise HTTPException(status_code=400, detail="End datetime must be after start datetime")
+    if end - start > timedelta(hours=72):
+        raise HTTPException(status_code=400, detail="BoM fallback supports the latest 72 hours only")
+
+    try:
+        bom_data = await fetch_bom_observation_readings(bom_id, wmo, start, end)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"BoM observation fetch failed: {str(e)}")
+
+    readings = bom_data["readings"]
+    rolling = calculate_rolling_max(
+        readings,
+        duration_minutes,
+        bom_data["resolution_minutes"],
+    ) if readings else None
+    station = bom_data["station"]
+
+    return {
+        "station_id": station.get("bom_id") or station.get("wmo"),
+        "station_name": station.get("name") or "BoM station",
+        "bom_id": station.get("bom_id"),
+        "wmo": station.get("wmo"),
+        "from": start.isoformat(),
+        "to": end.isoformat(),
+        "duration_minutes": duration_minutes,
+        "readings": readings,
+        "rolling_max": rolling,
+        "aep": None,
+        "source": bom_data["source"],
+        "resolution_minutes": bom_data["resolution_minutes"],
     }
 
 
