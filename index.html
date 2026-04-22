@@ -1559,6 +1559,25 @@ window.addEventListener('keydown', (event) => {
           <button class="run-btn" style="margin-top:0" onclick="generateCctvPackages()">Generate Packages</button>
         </div>
       </div>
+      <div class="pkg-grid" style="grid-template-columns:1fr 1fr 2fr;margin-top:12px">
+        <div class="fg">
+          <label for="cctvPkgConsolidateSmall">Small Package Consolidation</label>
+          <label style="font-size:12px;color:var(--text);display:flex;align-items:center;gap:8px;padding:9px 10px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--panel)">
+            <input type="checkbox" id="cctvPkgConsolidateSmall"/>
+            Consolidate packages of 5 pipes or less
+          </label>
+        </div>
+        <div class="fg">
+          <label for="cctvPkgConsolidateDistance">Consolidation Distance (m)</label>
+          <input type="text" id="cctvPkgConsolidateDistance" value="500"/>
+        </div>
+        <div class="fg">
+          <label>&nbsp;</label>
+          <div style="font-size:11px;color:var(--text-l);line-height:1.5;padding-top:8px">
+            Optional post-processing step. Small packages are merged into the nearest package whose centre is within this separate distance.
+          </div>
+        </div>
+      </div>
       <div class="pkg-assumptions">
         Assumptions for this first version:
         <code>TBA</code> pipes are treated as highest-priority candidates where selected,
@@ -5008,7 +5027,10 @@ function getCctvPackagingOptions() {
     targetLengthM: Math.max(1, parseNumberValue(document.getElementById('cctvPkgTargetLength')?.value) || 1000),
     pipesPerPackage: Math.max(1, Math.round(parseNumberValue(document.getElementById('cctvPkgPipeCount')?.value) || 25)),
     metresPerHour: Math.max(1, parseNumberValue(document.getElementById('cctvPkgMetresPerHour')?.value) || 80),
-    criticalityWeight: Math.max(0, parseNumberValue(document.getElementById('cctvPkgCriticalityWeight')?.value) || 0.1)
+    criticalityWeight: Math.max(0, parseNumberValue(document.getElementById('cctvPkgCriticalityWeight')?.value) || 0.1),
+    consolidateSmallPackages: !!document.getElementById('cctvPkgConsolidateSmall')?.checked,
+    consolidateSmallPackageMaxPipes: 5,
+    consolidateSmallDistanceM: Math.max(1, parseNumberValue(document.getElementById('cctvPkgConsolidateDistance')?.value) || 500)
   };
 }
 
@@ -5658,6 +5680,102 @@ function buildFixedCentreCctvPackages(candidates, options, rateMeta) {
   });
 }
 
+function rebuildCctvPackageFromItems(items, index, options, rateMeta, esriOptions) {
+  const clusterCenter = meanCoordinate(items);
+  const totalLengthM = items.reduce((sum, item) => sum + (item.lengthM || 0), 0);
+  const surveyHours = totalLengthM / options.metresPerHour;
+  const cctvRate = rateMeta?.medianRate || 0;
+  const totalCost = surveyHours * cctvRate;
+  const maxSpanM = maxPackageSpanM(items);
+  const coordinateSources = packageCoordinateSourceSummary(items);
+  const suburbCounts = {};
+  items.forEach(item => {
+    suburbCounts[item.suburb] = (suburbCounts[item.suburb] || 0) + 1;
+  });
+  const suburbEntries = Object.entries(suburbCounts)
+    .filter(([suburb]) => suburb && suburb !== 'Unknown')
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const allSuburbs = suburbEntries.map(([suburb]) => suburb);
+  const suburb = allSuburbs[0] || 'Unknown';
+  const assetIds = items.map(item => item.assetId);
+  const assetLinks = items.map(item => buildEsriAssetLink(item.assetId, esriOptions));
+  return {
+    package_id: `CCTV_${String(index + 1).padStart(3, '0')}`,
+    suburb,
+    primary_suburb: suburb,
+    suburbs: allSuburbs.length ? allSuburbs : ['Unknown'],
+    pipe_count: items.length,
+    tba_pipe_count: items.filter(item => item.isTbaCondition).length,
+    critical_pipe_count: items.filter(item => item.criticalityScore > 0).length,
+    total_length_m: totalLengthM,
+    cctv_hours: surveyHours,
+    cctv_rate: cctvRate,
+    total_cost: totalCost,
+    max_span_m: maxSpanM,
+    distance_warning: maxSpanM > (options.proximityM * 2) ? 'Check coordinates or reduce radius' : '',
+    coordinate_sources: coordinateSources,
+    package_radius_m: options.proximityM,
+    asset_ids: assetIds,
+    asset_links: assetLinks.filter(Boolean),
+    package_map_link: buildEsriPackageLink(assetIds, esriOptions),
+    esri_id_field: esriOptions.idField,
+    lat: clusterCenter?.lat ?? null,
+    lon: clusterCenter?.lon ?? null,
+    cluster_center_lat: clusterCenter?.lat ?? null,
+    cluster_center_lon: clusterCenter?.lon ?? null,
+    assets: items.map((item, itemIndex) => ({
+      ...item,
+      asset_id_text: item.asset_id_text || item.assetId,
+      esri_asset_link: assetLinks[itemIndex] || '',
+      package_center_distance_m: clusterCenter && Number.isFinite(item.lat) && Number.isFinite(item.lon)
+        ? haversineDistanceM(clusterCenter, item)
+        : null
+    }))
+  };
+}
+
+function consolidateSmallCctvPackages(packages, options, rateMeta) {
+  if (!options.consolidateSmallPackages || !packages?.length) return packages;
+  const maxPipes = options.consolidateSmallPackageMaxPipes || 5;
+  const maxDistanceM = options.consolidateSmallDistanceM || 500;
+  const drafts = packages.map(pkg => ({
+    items: (pkg.assets || []).map(item => ({ ...item })),
+    center: Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon) ? { lat: pkg.lat, lon: pkg.lon } : meanCoordinate(pkg.assets || [])
+  }));
+
+  let merged = true;
+  while (merged) {
+    merged = false;
+    for (let i = 0; i < drafts.length; i++) {
+      const small = drafts[i];
+      if (!small || small.items.length > maxPipes) continue;
+      small.center = meanCoordinate(small.items) || small.center;
+      if (!small.center) continue;
+      let bestIndex = -1;
+      let bestDistance = Number.POSITIVE_INFINITY;
+      drafts.forEach((candidate, candidateIndex) => {
+        if (candidateIndex === i) return;
+        candidate.center = meanCoordinate(candidate.items) || candidate.center;
+        if (!candidate.center) return;
+        const distance = haversineDistanceM(small.center, candidate.center);
+        if (distance <= maxDistanceM && distance < bestDistance) {
+          bestDistance = distance;
+          bestIndex = candidateIndex;
+        }
+      });
+      if (bestIndex < 0) continue;
+      drafts[bestIndex].items.push(...small.items);
+      drafts[bestIndex].center = meanCoordinate(drafts[bestIndex].items) || drafts[bestIndex].center;
+      drafts.splice(i, 1);
+      merged = true;
+      break;
+    }
+  }
+
+  const esriOptions = getCctvEsriLinkOptions();
+  return drafts.map((draft, index) => rebuildCctvPackageFromItems(draft.items, index, options, rateMeta, esriOptions));
+}
+
 function renderCctvPackagingMeta(preview, rateMeta, options) {
   const el = document.getElementById('cctvPkgMeta');
   if (!el) return;
@@ -6013,7 +6131,12 @@ async function generateCctvPackages() {
     lastCctvPackagingPreview = preview;
     setLoadTxt('Grouping nearby pipes...');
     await waitForPaint();
-    const packages = buildFixedCentreCctvPackages(preview.withCoords, options, cctvPackagingRatesData.meta);
+    let packages = buildFixedCentreCctvPackages(preview.withCoords, options, cctvPackagingRatesData.meta);
+    if (options.consolidateSmallPackages) {
+      setLoadTxt('Consolidating small packages...');
+      await waitForPaint();
+      packages = consolidateSmallCctvPackages(packages, options, cctvPackagingRatesData.meta);
+    }
     lastCctvPackagingGeneration = { options, preview, packages, rateMeta: cctvPackagingRatesData.meta };
     setLoadTxt('Rendering package tables and map...');
     await waitForPaint();
