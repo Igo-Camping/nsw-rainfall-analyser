@@ -11,6 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="./nsw_lga_boundaries.js"></script>
+<script src="./bom_northern_beaches_all_gauges.js"></script>
 <style>
 :root {
   --teal:       #00847F;
@@ -347,6 +348,24 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .ca-map-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
 .ca-map-sub{font-size:11px;color:var(--text-l)}
 #criticalAssetsMap{flex:1;min-height:560px}
+.bom-layout{display:flex;flex:1;min-height:0;gap:16px}
+.bom-sidebar{width:360px;max-width:38%;min-width:320px;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.bom-panel{padding:14px;border-bottom:1px solid var(--border)}
+.bom-map-wrap{flex:1;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.bom-map-toolbar{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F8FAFB}
+.bom-map-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
+.bom-map-sub{font-size:11px;color:var(--text-l);margin-top:3px}
+#bomGaugesMap{flex:1;min-height:560px}
+.bom-table-wrap{overflow:auto;flex:1;min-height:0}
+.bom-table{width:100%;border-collapse:collapse}
+.bom-table th{padding:8px 9px;background:var(--navy);color:white;font-size:10px}
+.bom-table td{padding:8px 9px;border-bottom:1px solid var(--border);vertical-align:top;font-size:11px}
+.bom-table tr{cursor:pointer}
+.bom-table tr:hover td{background:#F4FAF9}
+.bom-check{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text);margin-top:8px}
+.bom-legend{display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px}
+.bom-legend-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-l)}
+.bom-dot{width:11px;height:11px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.25)}
 .ca-table-wrap{width:420px;max-width:42%;min-width:340px;min-height:0;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
 .ca-table-head{padding:12px 14px;border-bottom:1px solid var(--border);background:#F8FAFB}
 .ca-table-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
@@ -376,9 +395,10 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 @media (max-width: 820px){
   .pkg-grid{grid-template-columns:1fr}
   .pkg-hero{flex-direction:column}
-  .ca-shell,.ca-layout{flex-direction:column}
-  .ca-sidebar,.ca-table-wrap{width:auto;max-width:none;min-width:0}
+  .ca-shell,.ca-layout,.bom-layout{flex-direction:column}
+  .ca-sidebar,.ca-table-wrap,.bom-sidebar{width:auto;max-width:none;min-width:0}
   #criticalAssetsMap{min-height:360px}
+  #bomGaugesMap{min-height:360px}
   .cctv-map-wrap{height:420px}
   #cctvPackagesMap{min-height:320px}
 }
@@ -426,7 +446,7 @@ function isAuthenticated() {
 }
 
 function isProtectedPage(page) {
-  return ['prioritisation','costing','relining','cctvpackaging','futureworks','criticalassets'].includes(page);
+  return ['prioritisation','costing','relining','cctvpackaging','futureworks','criticalassets','bomgauges'].includes(page);
 }
 
 function openGate(targetPage = null) {
@@ -492,6 +512,7 @@ window.addEventListener('keydown', (event) => {
 <div id="page-nav" style="display:none">
   <button class="pnav-btn active" data-page="aep" onclick="switchPage('aep')">Rainfall Calculator</button>
   <button class="pnav-btn" data-page="criticalassets" onclick="switchPage('criticalassets')">Critical Assets</button>
+  <button class="pnav-btn" data-page="bomgauges" onclick="switchPage('bomgauges')">BOM Gauges</button>
   <button class="pnav-btn" data-page="prioritisation" onclick="switchPage('prioritisation')">Prioritisation Tool</button>
   <button class="pnav-btn" data-page="costing" onclick="switchPage('costing')">Costing Tool</button>
   <button class="pnav-btn" data-page="relining" onclick="switchPage('relining')">Relining Packaging</button>
@@ -548,6 +569,12 @@ window.addEventListener('keydown', (event) => {
       <div class="hc-title">Critical Assets</div>
       <div class="hc-desc">Aerial asset map for critical stormwater assets with class filters, pipe geometry and inspection compliance status.</div>
       <div><span class="hc-badge live">In Progress</span></div>
+    </div>
+    <div class="home-card" onclick="switchPage('bomgauges')">
+      <div class="hc-icon">BOM</div>
+      <div class="hc-title">BOM Gauges</div>
+      <div class="hc-desc">BOM Climate Data Online and National Flood Gauge Network records captured for Northern Beaches and nearby edge cases.</div>
+      <div><span class="hc-badge live">Live</span></div>
     </div>
   </div>
 </div>
@@ -1699,6 +1726,91 @@ window.addEventListener('keydown', (event) => {
           </div>
           <div class="ca-table-body" id="caTableBody">
             <div class="ca-empty" style="margin:14px">Upload <code>assets_with_coords.csv</code> to start the map.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-bomgauges" style="display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel);padding:20px">
+  <div class="ca-shell">
+    <div class="ca-sidebar">
+      <div>
+        <div class="lbl">BOM Gauges</div>
+        <div style="font-size:20px;font-weight:800;color:var(--navy)">Gauge Inventory Map</div>
+        <div class="ca-note" style="margin-top:8px">BOM Climate Data Online and National Flood Gauge Network records captured across Northern Beaches plus nearby edge cases for later sorting.</div>
+      </div>
+
+      <div class="ca-panel" style="padding:0;border:none">
+        <div class="lbl">Dataset</div>
+        <div class="ca-meta">
+          <div class="pkg-meta-item">
+            <div class="pkg-meta-lbl">Source File</div>
+            <div class="pkg-meta-val" id="bomGaugeSourceStatus">Not loaded</div>
+          </div>
+          <div class="pkg-meta-item">
+            <div class="pkg-meta-lbl">Visible Records</div>
+            <div class="pkg-meta-val" id="bomGaugeVisibleStatus">0</div>
+          </div>
+        </div>
+        <div class="ca-actions" style="margin-top:12px">
+          <button class="export-btn" onclick="reloadBomGauges()">Reload BOM Gauges</button>
+          <button class="export-btn" onclick="fitBomGaugesToVisible()">Fit Visible</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="lbl">Filters</div>
+        <div class="fg">
+          <label for="bomGaugeSearch">Search Site / Name</label>
+          <input type="text" id="bomGaugeSearch" placeholder="Terrey, Spit, rainfall..." oninput="renderBomGaugesView()"/>
+        </div>
+        <label class="bom-check"><input type="checkbox" id="bomGaugeInsideOnly" onchange="renderBomGaugesView()"/> Inside Northern Beaches LGA only</label>
+        <label class="bom-check"><input type="checkbox" id="bomGaugeIncludeNearby" checked onchange="renderBomGaugesView()"/> Include nearby / outside-LGA records</label>
+        <div class="fg" style="margin-top:10px">
+          <label for="bomGaugeElementFilter">Source / Element</label>
+          <select id="bomGaugeElementFilter" onchange="renderBomGaugesView()">
+            <option value="ALL">All BOM records</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <div class="lbl">Legend</div>
+        <div class="bom-legend">
+          <div class="bom-legend-item"><span class="bom-dot" style="background:#00847F"></span>Flood Network rain gauge</div>
+          <div class="bom-legend-item"><span class="bom-dot" style="background:#2E86C1"></span>Flood Network river / tide gauge</div>
+          <div class="bom-legend-item"><span class="bom-dot" style="background:#F39C12"></span>CDO rainfall</div>
+          <div class="bom-legend-item"><span class="bom-dot" style="background:#C0392B"></span>CDO rainfall intensity</div>
+          <div class="bom-legend-item"><span class="bom-dot" style="background:#60717D"></span>Other BOM CDO record</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ca-main">
+      <div class="bom-layout">
+        <div class="bom-map-wrap">
+          <div class="bom-map-toolbar">
+            <div>
+              <div class="bom-map-title">Northern Beaches BOM Gauge Map</div>
+              <div class="bom-map-sub" id="bomGaugeMapSubtitle">Loading BOM gauge records...</div>
+            </div>
+            <div class="ca-actions">
+              <button class="export-btn" onclick="fitBomGaugesToVisible()">Fit Visible</button>
+              <button class="export-btn" onclick="resetBomGaugeFilters()">Reset Filters</button>
+            </div>
+          </div>
+          <div id="bomGaugesMap"></div>
+        </div>
+
+        <div class="bom-sidebar">
+          <div class="ca-table-head">
+            <div class="ca-table-title">Visible Gauges</div>
+            <div class="ca-table-sub" id="bomGaugeTableSubtitle">No gauge records loaded yet.</div>
+          </div>
+          <div class="bom-table-wrap" id="bomGaugeTableBody">
+            <div class="ca-empty" style="margin:14px">Loading <code>bom_northern_beaches_all_gauges.geojson</code>...</div>
           </div>
         </div>
       </div>
@@ -7094,8 +7206,258 @@ function loadCriticalAssetsDefaults() {
   alert(`Use the upload buttons to load source files from ${CRITICAL_DEFAULT_SOURCE_PATH}, ${CRITICAL_DEFAULT_COMBINED_PATH}, and ${CRITICAL_DEFAULT_INSPECTION_PATH} once available.`);
 }
 
+// BOM Gauges
+const BOM_GAUGES_URL = './bom_northern_beaches_all_gauges.geojson';
+let bomGaugesMap = null;
+let bomGaugesLayer = null;
+let bomGaugesAll = [];
+let bomGaugesVisible = [];
+let bomGaugeMarkers = new Map();
+
+function ensureBomGaugesMap() {
+  if (bomGaugesMap) return;
+  bomGaugesMap = L.map('bomGaugesMap', { preferCanvas: true, zoomControl: true }).setView([-33.72, 151.25], 11);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles © Esri',
+    maxZoom: 19
+  }).addTo(bomGaugesMap);
+  bomGaugesLayer = L.layerGroup().addTo(bomGaugesMap);
+}
+
+function toBool(value) {
+  if (value === true || value === false) return value;
+  return String(value ?? '').toLowerCase() === 'true';
+}
+
+function normaliseBomGaugeFeature(feature, index) {
+  const coords = feature?.geometry?.coordinates || [];
+  const props = feature?.properties || {};
+  const lon = Number(coords[0]);
+  const lat = Number(coords[1]);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+  return {
+    id: props.record_id || `${props.source || 'bom'}-${props.site || index}-${index}`,
+    site: String(props.site || '').trim(),
+    name: String(props.name || '').trim(),
+    source: String(props.source || '').trim(),
+    sourceLayer: String(props.source_layer || '').trim(),
+    element: String(props.element || '').trim(),
+    elementCode: String(props.element_code || '').trim(),
+    inLga: toBool(props.in_lga),
+    nearbyBbox: toBool(props.nearby_bbox),
+    tail: String(props.tail || '').trim(),
+    agency: String(props.agency || '').trim(),
+    locationTypes: String(props.location_types || '').trim(),
+    classification: String(props.classification || '').trim(),
+    sourceUrl: String(props.source_url || '').trim(),
+    lat,
+    lon
+  };
+}
+
+function getBomGaugeType(gauge) {
+  const source = gauge.source.toLowerCase();
+  const layer = gauge.sourceLayer.toLowerCase();
+  const element = gauge.element.toLowerCase();
+  if (source.includes('national flood') && layer.includes('rain')) return 'flood-rain';
+  if (source.includes('national flood') && (layer.includes('river') || layer.includes('tide'))) return 'flood-water';
+  if (element === 'rainfall') return 'cdo-rainfall';
+  if (element.includes('rainfall intensity')) return 'cdo-intensity';
+  return 'cdo-other';
+}
+
+function getBomGaugeStyle(gauge) {
+  const type = getBomGaugeType(gauge);
+  const styles = {
+    'flood-rain': { color: '#00847F', radius: 7 },
+    'flood-water': { color: '#2E86C1', radius: 7 },
+    'cdo-rainfall': { color: '#F39C12', radius: 6 },
+    'cdo-intensity': { color: '#C0392B', radius: 7 },
+    'cdo-other': { color: '#60717D', radius: 5 }
+  };
+  const style = styles[type] || styles['cdo-other'];
+  return {
+    radius: style.radius,
+    color: gauge.inLga ? '#FFFFFF' : '#1A2B3C',
+    weight: gauge.inLga ? 1.5 : 2,
+    fillColor: style.color,
+    fillOpacity: gauge.inLga ? 0.9 : 0.58,
+    opacity: 0.95
+  };
+}
+
+function getBomGaugeFilterKey(gauge) {
+  return `${gauge.source} | ${gauge.element}`;
+}
+
+function renderBomGaugeElementOptions() {
+  const select = document.getElementById('bomGaugeElementFilter');
+  if (!select) return;
+  const current = select.value || 'ALL';
+  const keys = Array.from(new Set(bomGaugesAll.map(getBomGaugeFilterKey))).filter(Boolean).sort();
+  select.innerHTML = `<option value="ALL">All BOM records</option>` + keys.map(key =>
+    `<option value="${escapeHtml(key)}">${escapeHtml(key)}</option>`
+  ).join('');
+  select.value = keys.includes(current) ? current : 'ALL';
+}
+
+function getFilteredBomGauges() {
+  const search = String(document.getElementById('bomGaugeSearch')?.value || '').trim().toLowerCase();
+  const insideOnly = !!document.getElementById('bomGaugeInsideOnly')?.checked;
+  const includeNearby = !!document.getElementById('bomGaugeIncludeNearby')?.checked;
+  const elementFilter = document.getElementById('bomGaugeElementFilter')?.value || 'ALL';
+  return bomGaugesAll.filter(gauge => {
+    if (insideOnly && !gauge.inLga) return false;
+    if (!insideOnly && !includeNearby && !gauge.inLga) return false;
+    if (elementFilter !== 'ALL' && getBomGaugeFilterKey(gauge) !== elementFilter) return false;
+    if (search) {
+      const haystack = `${gauge.site} ${gauge.name} ${gauge.element} ${gauge.source} ${gauge.sourceLayer} ${gauge.agency} ${gauge.locationTypes}`.toLowerCase();
+      if (!haystack.includes(search)) return false;
+    }
+    return true;
+  });
+}
+
+function buildBomGaugePopup(gauge) {
+  const details = gauge.tail ? `<details style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">Raw details</summary><pre style="white-space:pre-wrap;max-width:340px;max-height:160px;overflow:auto;font-size:10px;margin-top:6px">${escapeHtml(gauge.tail)}</pre></details>` : '';
+  return `
+    <div style="min-width:240px">
+      <div style="font-weight:800;color:var(--navy);margin-bottom:6px">${escapeHtml(gauge.site || 'No site number')}</div>
+      <div style="font-size:12px;color:var(--text);margin-bottom:8px">${escapeHtml(gauge.name || 'Unnamed gauge')}</div>
+      <div style="font-size:11px;color:var(--text-l);line-height:1.6">
+        <div><strong>Element:</strong> ${escapeHtml(gauge.element || 'Not available')}</div>
+        <div><strong>Source:</strong> ${escapeHtml(gauge.source || 'Not available')}</div>
+        <div><strong>Layer:</strong> ${escapeHtml(gauge.sourceLayer || 'Not available')}</div>
+        <div><strong>Agency:</strong> ${escapeHtml(gauge.agency || 'Not available')}</div>
+        <div><strong>Location types:</strong> ${escapeHtml(gauge.locationTypes || 'Not available')}</div>
+        <div><strong>In LGA:</strong> ${gauge.inLga ? 'Yes' : 'No / nearby edge case'}</div>
+        <div><strong>Coordinates:</strong> ${gauge.lat.toFixed(5)}, ${gauge.lon.toFixed(5)}</div>
+      </div>
+      ${details}
+    </div>`;
+}
+
+function renderBomGaugesTable(rows) {
+  const body = document.getElementById('bomGaugeTableBody');
+  const subtitle = document.getElementById('bomGaugeTableSubtitle');
+  if (!body || !subtitle) return;
+  subtitle.textContent = rows.length ? `${rows.length} visible record${rows.length === 1 ? '' : 's'}` : 'No gauge records match the current filters.';
+  if (!rows.length) {
+    body.innerHTML = '<div class="ca-empty" style="margin:14px">No BOM gauge records match the current filters.</div>';
+    return;
+  }
+  body.innerHTML = `<table class="bom-table">
+    <thead><tr><th>Site</th><th>Name</th><th>Element</th><th>In LGA</th></tr></thead>
+    <tbody>
+      ${rows.map((gauge, idx) => `
+        <tr onclick="focusBomGauge(${idx})">
+          <td><strong>${escapeHtml(gauge.site || '-')}</strong></td>
+          <td>${escapeHtml(gauge.name || '-')}<div style="font-size:10px;color:var(--text-l);margin-top:3px">${escapeHtml(gauge.source)}</div></td>
+          <td>${escapeHtml(gauge.element || gauge.sourceLayer || '-')}</td>
+          <td>${gauge.inLga ? 'Yes' : 'Nearby'}</td>
+        </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderBomGaugesView() {
+  ensureBomGaugesMap();
+  const subtitle = document.getElementById('bomGaugeMapSubtitle');
+  const visibleStatus = document.getElementById('bomGaugeVisibleStatus');
+  bomGaugesVisible = getFilteredBomGauges();
+  bomGaugeMarkers = new Map();
+  bomGaugesLayer.clearLayers();
+  bomGaugesVisible.forEach((gauge, idx) => {
+    const marker = L.circleMarker([gauge.lat, gauge.lon], getBomGaugeStyle(gauge));
+    marker.bindPopup(buildBomGaugePopup(gauge));
+    marker.on('click', () => focusBomGauge(idx, false));
+    marker.addTo(bomGaugesLayer);
+    bomGaugeMarkers.set(gauge.id, marker);
+  });
+  renderBomGaugesTable(bomGaugesVisible);
+  if (subtitle) {
+    subtitle.textContent = bomGaugesVisible.length
+      ? `${bomGaugesVisible.length} BOM record${bomGaugesVisible.length === 1 ? '' : 's'} visible. Outside-LGA records are retained for sorting edge cases.`
+      : 'No BOM records match the current filters.';
+  }
+  if (visibleStatus) visibleStatus.textContent = String(bomGaugesVisible.length);
+}
+
+async function loadBomGaugesData(force = false) {
+  if (bomGaugesAll.length && !force) {
+    renderBomGaugesView();
+    return;
+  }
+  ensureBomGaugesMap();
+  const sourceStatus = document.getElementById('bomGaugeSourceStatus');
+  const tableBody = document.getElementById('bomGaugeTableBody');
+  if (sourceStatus) sourceStatus.textContent = 'Loading...';
+  if (tableBody) tableBody.innerHTML = '<div class="ca-empty" style="margin:14px">Loading BOM gauge GeoJSON...</div>';
+  let data = window.BOM_NORTHERN_BEACHES_GAUGES;
+  if (!data || force) {
+    try {
+      const response = await fetch(BOM_GAUGES_URL, { cache: force ? 'reload' : 'default' });
+      if (!response.ok) throw new Error(`Could not load ${BOM_GAUGES_URL}: ${response.status}`);
+      data = await response.json();
+      window.BOM_NORTHERN_BEACHES_GAUGES = data;
+    } catch (error) {
+      if (!data) throw error;
+    }
+  }
+  bomGaugesAll = (data.features || [])
+    .map(normaliseBomGaugeFeature)
+    .filter(Boolean)
+    .sort((a, b) => Number(b.inLga) - Number(a.inLga) || a.name.localeCompare(b.name));
+  if (sourceStatus) sourceStatus.textContent = `${bomGaugesAll.length} records`;
+  renderBomGaugeElementOptions();
+  renderBomGaugesView();
+  setTimeout(() => {
+    bomGaugesMap?.invalidateSize();
+    fitBomGaugesToVisible();
+  }, 80);
+}
+
+function reloadBomGauges() {
+  loadBomGaugesData(true).catch(error => {
+    const sourceStatus = document.getElementById('bomGaugeSourceStatus');
+    const tableBody = document.getElementById('bomGaugeTableBody');
+    if (sourceStatus) sourceStatus.textContent = 'Load failed';
+    if (tableBody) tableBody.innerHTML = `<div class="ca-empty" style="margin:14px">Could not load BOM gauges: ${escapeHtml(error.message)}</div>`;
+  });
+}
+
+function fitBomGaugesToVisible() {
+  if (!bomGaugesMap || !bomGaugesVisible.length) return;
+  const layers = bomGaugesVisible.map(gauge => bomGaugeMarkers.get(gauge.id)).filter(Boolean);
+  if (!layers.length) return;
+  const group = L.featureGroup(layers);
+  bomGaugesMap.fitBounds(group.getBounds().pad(0.15));
+}
+
+function focusBomGauge(index, openPopup = true) {
+  const gauge = bomGaugesVisible[index];
+  if (!gauge) return;
+  const marker = bomGaugeMarkers.get(gauge.id);
+  if (!marker) return;
+  bomGaugesMap.setView([gauge.lat, gauge.lon], Math.max(bomGaugesMap.getZoom(), 15));
+  if (openPopup) marker.openPopup();
+}
+
+function resetBomGaugeFilters() {
+  const search = document.getElementById('bomGaugeSearch');
+  const insideOnly = document.getElementById('bomGaugeInsideOnly');
+  const includeNearby = document.getElementById('bomGaugeIncludeNearby');
+  const elementFilter = document.getElementById('bomGaugeElementFilter');
+  if (search) search.value = '';
+  if (insideOnly) insideOnly.checked = false;
+  if (includeNearby) includeNearby.checked = true;
+  if (elementFilter) elementFilter.value = 'ALL';
+  renderBomGaugesView();
+  fitBomGaugesToVisible();
+}
+
 // â”€â”€ Page navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const PAGES = ['home','aep','criticalassets','prioritisation','costing','relining','cctvpackaging','futureworks'];
+const PAGES = ['home','aep','criticalassets','bomgauges','prioritisation','costing','relining','cctvpackaging','futureworks'];
 let currentPage = 'home';
 
 function switchPage(page, options = {}) {
@@ -7104,7 +7466,7 @@ function switchPage(page, options = {}) {
     return;
   }
   currentPage = page;
-  const flexPages = new Set(['aep','criticalassets','prioritisation','costing','relining','cctvpackaging','futureworks']);
+  const flexPages = new Set(['aep','criticalassets','bomgauges','prioritisation','costing','relining','cctvpackaging','futureworks']);
   PAGES.forEach(p => {
     const el = document.getElementById('page-' + p);
     if (!el) return;
@@ -7125,6 +7487,17 @@ function switchPage(page, options = {}) {
       renderCriticalAssetsView();
     }
     setTimeout(() => criticalAssetsMap?.invalidateSize(), 50);
+  }
+  if (page === 'bomgauges') {
+    if (!window._bomGaugesInited) {
+      window._bomGaugesInited = true;
+      ensureBomGaugesMap();
+      reloadBomGauges();
+    }
+    setTimeout(() => {
+      bomGaugesMap?.invalidateSize();
+      renderBomGaugesView();
+    }, 50);
   }
   if (page === 'costing') {
     if (!window._costingInited) {

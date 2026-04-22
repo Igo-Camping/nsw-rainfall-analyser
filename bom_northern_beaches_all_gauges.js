@@ -1,0 +1,4451 @@
+﻿window.BOM_NORTHERN_BEACHES_GAUGES = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1295,
+          -33.8507
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66034",
+        "name": "ABBOTSFORD (BLACKWALL POINT RD)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 2004 Mar 2026 22.3 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 1
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3223,
+          -33.6358
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66079",
+        "name": "AVALON BEACH (AVALON (PALMGROVE RD))",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Oct 1958 Nov 2021 42.8 68 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 2
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3291,
+          -33.63
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66053",
+        "name": "AVALON (WOLLSTONECRAFT AVE)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Jan 2002 Jul 2015 13.2 97 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 3
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2508,
+          -33.7997
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66002",
+        "name": "BALGOWLAH (ETHEL STREET)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Jun 1940 Dec 1989 49.3 99 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 4
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.25,
+          -33.75
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66127",
+        "name": "BEACON HILL RAAF",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Oct 1968 Oct 1973 5.1 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2173,
+          -33.7402
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66188",
+        "name": "BELROSE (EVELYN PLACE)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Jul 1991 Apr 2024 32.8 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 6
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1491,
+          -33.625
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "67052",
+        "name": "BEROWRA (GOODWYN ROAD)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Apr 1903 Jan 2017 70.3 62 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 7
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1833,
+          -33.85
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66178",
+        "name": "BIRCHGROVE SCHOOL",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "May 1904 Jun 1910 5.9 96 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 8
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2667,
+          -33.5667
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66146",
+        "name": "BROKEN BAY NATL FITNESS CAMP",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1969 Nov 1975 2.6 38 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 9
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2079,
+          -33.5479
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66008",
+        "name": "BROOKLYN (SANDBROOK INLET)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jun 1913 Jul 2011 57.9 59 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 10
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.25,
+          -33.55
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66155",
+        "name": "BROOKLYN (WOBBY BEACH)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jul 1970 Dec 1975 5.5 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 11
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2044,
+          -33.7809
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66080",
+        "name": "CASTLE COVE (ROSEBRIDGE AVE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Oct 1958 Apr 2023 64.6 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 12
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1803,
+          -33.801
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66011",
+        "name": "CHATSWOOD BOWLING CLUB",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jul 1951 Mar 2026 35.6 48 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 13
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1917,
+          -33.8014
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66010",
+        "name": "CHATSWOOD COUNCIL DEPOT",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1897 Dec 1993 59.2 61 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 14
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2,
+          -33.8
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66012",
+        "name": "CHATSWOOD WATER SUPPLY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1894 Aug 1970 76.7 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 15
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3077,
+          -33.7407
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66126",
+        "name": "COLLAROY (LONG REEF GOLF CLUB)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Aug 1965 Mar 2026 43.4 72 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 16
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1105,
+          -33.8483
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66048",
+        "name": "CONCORD (BRAYS RD)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Apr 2000 Mar 2026 26.0 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 17
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1,
+          -33.8333
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66064",
+        "name": "CONCORD WALKER HOSPITAL",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Nov 1894 Dec 1972 77.8 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 18
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2,
+          -33.6167
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66140",
+        "name": "COTTAGE POINT (NOTTINGS)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1969 Aug 1969 0.6 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 19
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1167,
+          -33.85
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66111",
+        "name": "CRAYDON",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1879 Aug 1921 39.5 93 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 20
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2217,
+          -33.8283
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66166",
+        "name": "CREMORNE GRASMERE ROAD",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1963 Apr 1989 26.0 99 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 21
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.272,
+          -33.7255
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66044",
+        "name": "CROMER GOLF CLUB",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Mar 1898 Jun 2011 75.1 66 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 22
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1818,
+          -33.6761
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66142",
+        "name": "DUFFYS FOREST (NAMBA RD)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Feb 1969 Mar 2026 43.3 76 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 23
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2333,
+          -33.75
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66118",
+        "name": "FRENCHS FOREST FITSPATRICK AVE",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Jun 1964 Aug 1982 18.3 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 24
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2334,
+          -33.7493
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66182",
+        "name": "FRENCHS FOREST (FRENCHS FOREST RD)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Feb 1957 Apr 2018 60.6 99 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 25
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1161,
+          -33.8381
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66071",
+        "name": "GLADESVILLE CHAMPION RD",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1997 Sep 2000 3.5 97 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 26
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1463,
+          -33.7619
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66120",
+        "name": "GORDON GOLF CLUB",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Aug 1906 Jan 2026 107.3 90 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 27
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1,
+          -33.8
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66107",
+        "name": "HORNSBY JUNCTION (THORNLEIGH)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1890 Dec 1926 35.8 97 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 28
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1,
+          -33.7
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66106",
+        "name": "HORNSBY MURIEL STREET",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1923 Aug 1930 7.6 99 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 29
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1,
+          -33.7
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66027",
+        "name": "HORNSBY MWSDB",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Dec 1946 Sep 1973 26.7 99 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 30
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1333,
+          -33.8333
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66108",
+        "name": "HUNTERS HILL ST JOSEPHS COLLEG",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1916 Dec 1923 8.0 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 31
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1,
+          -33.8
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66109",
+        "name": "HUNTERS HILL (THE BUNGALOW)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1893 Feb 1943 50.2 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 32
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2667,
+          -33.6833
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66123",
+        "name": "INGLESIDE",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "May 1964 Dec 1977 6.3 46 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 33
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.274,
+          -33.671
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66183",
+        "name": "INGLESIDE (ANIMAL WELFARE LEAGUE NSW)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Jan 1984 Dec 2012 27.0 93 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 34
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1667,
+          -33.7667
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66105",
+        "name": "KILLARA",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jul 1909 Jan 1922 12.3 97 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 35
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1667,
+          -33.7667
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66031",
+        "name": "KILLARA (METRO)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1943 Jun 1951 8.5 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 36
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2983,
+          -33.58
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66143",
+        "name": "KURING-GAI CHASE (WEST HEAD)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Feb 1969 Dec 1991 19.3 84 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 37
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1486,
+          -33.7822
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66032",
+        "name": "LINDFIELD WEST",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Apr 1950 Jun 1992 40.7 96 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 38
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Nov 1970 Sep 2023 45.7 86 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 39
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2667,
+          -33.8
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66099",
+        "name": "MANLY (FAIRLIGHT)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 1926 Aug 1936 10.0 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 40
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2833,
+          -33.7833
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66088",
+        "name": "MANLY NORTH",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 1959 Jul 1975 15.9 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 41
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2692,
+          -33.7939
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66089",
+        "name": "MANLY NORTH BOWLING CLUB",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Dec 1961 Nov 1987 21.8 84 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 42
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2969,
+          -33.815
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66138",
+        "name": "MANLY (NORTH HEAD)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Dec 1968 Jul 1997 21.0 73 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 43
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3,
+          -33.8
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66035",
+        "name": "MANLY TOWN HALL",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "May 1914 Nov 1963 49.4 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 44
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2556,
+          -33.7822
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66153",
+        "name": "MANLY VALE (MANLY DAM)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Jun 1906 Oct 2006 67.3 67 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 45
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1167,
+          -33.7833
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66115",
+        "name": "MARSFIELD",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "May 1964 Jun 1965 1.2 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 46
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1176,
+          -33.7654
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66193",
+        "name": "MARSFIELD (MACQUARIE UNIVERSITY NO:2)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1994 Oct 1995 1.7 100 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 47
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1167,
+          -33.8167
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66102",
+        "name": "MEADOW BANK",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1903 Dec 1916 13.4 96 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 48
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2,
+          -33.8
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66039",
+        "name": "MIDDLECOVE",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1943 Jul 1953 10.5 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 49
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3076,
+          -33.6795
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66141",
+        "name": "MONA VALE GOLF CLUB",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Feb 1969 Feb 2025 54.1 96 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 50
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2428,
+          -33.8194
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66042",
+        "name": "MOSMAN (BAPAUME ROAD)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Sep 1895 Mar 2005 109.5 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 51
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2484,
+          -33.834
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66184",
+        "name": "MOSMAN COUNCIL",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Sep 1984 Aug 2007 19.1 83 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 52
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.25,
+          -33.8333
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66041",
+        "name": "MOSMAN WATER SUPPLY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jun 1904 Oct 1967 63.3 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 53
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1412,
+          -33.6403
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66119",
+        "name": "MOUNT KURING-GAI (LEDORA FARM)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "May 1964 Aug 2025 61.2 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 54
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3187,
+          -33.6572
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66045",
+        "name": "NEWPORT BOWLING CLUB",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Jul 1931 Dec 2010 77.9 98 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 55
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2145,
+          -33.8057
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66167",
+        "name": "NORTHBRIDGE BOWLING CLUB",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1980 Dec 2000 21.0 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 56
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2167,
+          -33.8167
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66130",
+        "name": "NORTHBRIDGE (SAILORS BAY)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1924 Apr 1980 56.3 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 57
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1201,
+          -33.8005
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66213",
+        "name": "NORTH RYDE GOLF CLUB",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Aug 2011 Mar 2026 14.7 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 58
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1333,
+          -33.8
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66081",
+        "name": "NORTH RYDE STROUD STREET",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Aug 1960 Dec 1977 17.4 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 59
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.147,
+          -33.7179
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66114",
+        "name": "NORTH TURRAMURRA (DRYDEN RD)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "May 2005 Dec 2009 4.7 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 60
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3,
+          -33.6
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66083",
+        "name": "PALM BEACH COASTERS RETREAT",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Apr 1960 Nov 1989 23.5 79 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 61
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3221,
+          -33.5965
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66128",
+        "name": "PALM BEACH (SUNRISE ROAD)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 1965 Jul 2023 49.3 85 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 62
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.299,
+          -33.5491
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "61310",
+        "name": "PEARL BEACH (CROMMELIN RESEARCH STATION)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1953 Jul 1998 26.7 59 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 63
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2167,
+          -33.8167
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66151",
+        "name": "PRIMROSE PARK (FOLLY POINT)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Aug 1912 Aug 1918 6.0 99 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 64
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1667,
+          -33.7167
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66096",
+        "name": "PYMBLE",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Oct 1914 Oct 1920 5.7 93 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 65
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1521,
+          -33.7371
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66157",
+        "name": "PYMBLE (CANISIUS COLLEGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Dec 1947 Jul 2011 62.6 98 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 66
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1905 Mar 2015 95.0 86 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 67
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1833,
+          -33.7833
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66056",
+        "name": "ROSEVILLE BOWLING CLUB",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jun 1914 Aug 1979 60.7 93 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 68
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1,
+          -33.8167
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66057",
+        "name": "RYDE PUMPING STATION",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1894 Jun 1978 84.3 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 69
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1667,
+          -33.85
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66175",
+        "name": "SCHNAPPER ISLAND",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1932 Jul 1939 5.7 76 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 70
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2392,
+          -33.7894
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66145",
+        "name": "SEAFORTH CASTLE CIRCUIT",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Oct 1968 Dec 1993 25.2 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 71
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.173,
+          -33.7096
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66206",
+        "name": "ST IVES (RICHMOND AVENUE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Apr 1998 Feb 2021 22.9 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 72
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2833,
+          -33.8333
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66095",
+        "name": "SYDNEY (HORNBY LIGHT)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1840 Dec 1932 30.4 33 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 73
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2,
+          -33.8333
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66061",
+        "name": "SYDNEY NTH BOWLING CLUB",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Apr 1950 Nov 1974 23.2 94 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 74
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2048,
+          -33.8593
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66214",
+        "name": "SYDNEY (OBSERVATORY HILL)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Oct 2017 Mar 2026 8.5 100 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 75
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2333,
+          -33.6833
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66077",
+        "name": "TERREY HILLS",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Oct 1963 Feb 1966 2.3 96 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 76
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2253,
+          -33.6908
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66059",
+        "name": "TERREY HILLS AWS",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 2004 Mar 2026 21.6 100 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 77
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1271,
+          -33.7366
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66158",
+        "name": "TURRAMURRA (KISSING POINT ROAD)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1912 Oct 2018 91.6 86 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 78
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1667,
+          -33.7167
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66117",
+        "name": "TURRAMURRA NORTH",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "May 1964 Aug 1967 3.3 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 79
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1,
+          -33.7
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66180",
+        "name": "TURRAMURRA (PIBRAC)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1891 Aug 1918 24.0 87",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 80
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1144,
+          -33.7242
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66211",
+        "name": "WAHROONGA (ADA AVENUE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 2010 Mar 2026 16.0 99 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 81
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1315,
+          -33.7073
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66205",
+        "name": "WAHROONGA (BOUNDARY ROAD)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1998 Dec 2005 7.8 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 82
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1128,
+          -33.7206
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66063",
+        "name": "WAHROONGA RESERVOIR",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Aug 1906 Jan 1991 53.9 64 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 83
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2797,
+          -33.8369
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66163",
+        "name": "WATSONS BAY (HMAS WATSON)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Oct 1968 Nov 1997 21.8 75 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 84
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3,
+          -33.85
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66065",
+        "name": "WATSONS BAY (VAUCLUSE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1914 Jul 1952 34.1 88 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 85
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1967,
+          -33.8411
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66075",
+        "name": "WAVERTON BOWLING CLUB",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Dec 1955 Aug 1999 34.0 78 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 86
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.138,
+          -33.7693
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66189",
+        "name": "WEST PYMBLE (WYUNA ROAD)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Apr 1992 May 2011 17.9 93 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 87
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2,
+          -33.8
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66094",
+        "name": "WILLOUGHBY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1908 Apr 1927 19.3 100 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 88
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2,
+          -33.8333
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "139",
+        "element": "Rainfall",
+        "site": "66067",
+        "name": "WOLLSTONECRAFT",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1915 May 1975 59.1 98 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_139.txt",
+        "record_id": 89
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1818,
+          -33.6761
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "149",
+        "element": "Rainfall Intensity (pluviograph data)",
+        "site": "66142",
+        "name": "DUFFYS FOREST (NAMBA RD)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Nov 1987 Jun 2017 28.2 93 1.0 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_149.txt",
+        "record_id": 90
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2484,
+          -33.834
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "149",
+        "element": "Rainfall Intensity (pluviograph data)",
+        "site": "66184",
+        "name": "MOSMAN COUNCIL",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Sep 1984 Feb 2015 20.3 64 1.0 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_149.txt",
+        "record_id": 91
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1128,
+          -33.7206
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "149",
+        "element": "Rainfall Intensity (pluviograph data)",
+        "site": "66063",
+        "name": "WAHROONGA RESERVOIR",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1949 Dec 1973 24.0 96 1.0 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_149.txt",
+        "record_id": 92
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "3",
+        "element": "Air Temperature",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1971 Oct 1995 19.4 71 1.6 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_3.txt",
+        "record_id": 93
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1176,
+          -33.7654
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "3",
+        "element": "Air Temperature",
+        "site": "66193",
+        "name": "MARSFIELD (MACQUARIE UNIVERSITY NO:2)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1994 Oct 1995 1.7 91 1.0 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_3.txt",
+        "record_id": 94
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "3",
+        "element": "Air Temperature",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1962 Jan 2015 30.4 51 1.4 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_3.txt",
+        "record_id": 95
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2842,
+          -33.8153
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "3",
+        "element": "Air Temperature",
+        "site": "66202",
+        "name": "SYDNEY HARBOUR (CANNAE POINT)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 2000 Jul 2000 0.5 12 1.0 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_3.txt",
+        "record_id": 96
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2643,
+          -33.8405
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "3",
+        "element": "Air Temperature",
+        "site": "66196",
+        "name": "SYDNEY HARBOUR (WEDDING CAKE WEST)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Sep 1997 Apr 2026 25.6 87 20.5 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_3.txt",
+        "record_id": 97
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2048,
+          -33.8593
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "3",
+        "element": "Air Temperature",
+        "site": "66214",
+        "name": "SYDNEY (OBSERVATORY HILL)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Oct 2017 Apr 2026 8.6 99 18.5 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_3.txt",
+        "record_id": 98
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2253,
+          -33.6908
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "3",
+        "element": "Air Temperature",
+        "site": "66059",
+        "name": "TERREY HILLS AWS",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 2004 Apr 2026 21.7 99 17.3 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_3.txt",
+        "record_id": 99
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "122",
+        "element": "Maximum Air temperature",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1971 Oct 1995 24.1 84 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_122.txt",
+        "record_id": 100
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1176,
+          -33.7654
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "122",
+        "element": "Maximum Air temperature",
+        "site": "66193",
+        "name": "MARSFIELD (MACQUARIE UNIVERSITY NO:2)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1994 Oct 1995 1.7 89 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_122.txt",
+        "record_id": 101
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "122",
+        "element": "Maximum Air temperature",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Apr 1962 Jan 2015 30.2 53 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_122.txt",
+        "record_id": 102
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2643,
+          -33.8405
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "122",
+        "element": "Maximum Air temperature",
+        "site": "66196",
+        "name": "SYDNEY HARBOUR (WEDDING CAKE WEST)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Sep 1997 Apr 2026 24.0 78 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_122.txt",
+        "record_id": 103
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2048,
+          -33.8593
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "122",
+        "element": "Maximum Air temperature",
+        "site": "66214",
+        "name": "SYDNEY (OBSERVATORY HILL)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Oct 2017 Apr 2026 8.6 98 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_122.txt",
+        "record_id": 104
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2253,
+          -33.6908
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "122",
+        "element": "Maximum Air temperature",
+        "site": "66059",
+        "name": "TERREY HILLS AWS",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 2004 Apr 2026 21.7 98 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_122.txt",
+        "record_id": 105
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "5",
+        "element": "Dew Point (Humidity)",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1982 Oct 1995 8.5 48 1.1 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_5.txt",
+        "record_id": 106
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1176,
+          -33.7654
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "5",
+        "element": "Dew Point (Humidity)",
+        "site": "66193",
+        "name": "MARSFIELD (MACQUARIE UNIVERSITY NO:2)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1994 Oct 1995 1.7 90 1.0 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_5.txt",
+        "record_id": 107
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "5",
+        "element": "Dew Point (Humidity)",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1962 Jan 2015 27.9 47 1.4 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_5.txt",
+        "record_id": 108
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2643,
+          -33.8405
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "5",
+        "element": "Dew Point (Humidity)",
+        "site": "66196",
+        "name": "SYDNEY HARBOUR (WEDDING CAKE WEST)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1998 Sep 2010 0.8 1 1.1 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_5.txt",
+        "record_id": 109
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2048,
+          -33.8593
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "5",
+        "element": "Dew Point (Humidity)",
+        "site": "66214",
+        "name": "SYDNEY (OBSERVATORY HILL)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Oct 2017 Apr 2026 8.6 99 18.5 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_5.txt",
+        "record_id": 110
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2253,
+          -33.6908
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "5",
+        "element": "Dew Point (Humidity)",
+        "site": "66059",
+        "name": "TERREY HILLS AWS",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 2004 Apr 2026 21.7 99 17.3 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_5.txt",
+        "record_id": 111
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "125",
+        "element": "Evaporation",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1982 Oct 1995 7.8 42 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_125.txt",
+        "record_id": 112
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "125",
+        "element": "Evaporation",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Nov 1993 Jan 2015 21.2 89 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_125.txt",
+        "record_id": 113
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "126",
+        "element": "Evaporimeter (Max Water Temp)",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1982 Oct 1995 5.2 26 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_126.txt",
+        "record_id": 114
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "126",
+        "element": "Evaporimeter (Max Water Temp)",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Nov 1993 Mar 2003 9.4 90 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_126.txt",
+        "record_id": 115
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2254,
+          -33.8551
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66022",
+        "name": "FORT DENISON",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Aug 1998 Apr 2026 27.8 99 22.0 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 116
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1971 Oct 1995 19.3 71 1.6 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 117
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2986,
+          -33.8152
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66197",
+        "name": "MANLY (NORTH HEAD)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Feb 1999 Apr 2026 27.3 99 21.9 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 118
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1176,
+          -33.7654
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66193",
+        "name": "MARSFIELD (MACQUARIE UNIVERSITY NO:2)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1994 Oct 1995 1.7 90 1.0 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 119
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2636,
+          -33.8283
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66199",
+        "name": "MIDDLE HEAD",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1999 Mar 2001 2.2 94 23.2 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 120
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1962 Jan 2015 30.4 50 1.4 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 121
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.28,
+          -33.8361
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66201",
+        "name": "SOUTH HEAD",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1999 Mar 2001 2.2 94 23.2 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 122
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2722,
+          -33.8167
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66203",
+        "name": "SYDNEY HARBOUR (BOMBORA)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1999 Oct 2000 1.5 54 21.1 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 123
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2842,
+          -33.8153
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66202",
+        "name": "SYDNEY HARBOUR (CANNAE POINT)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1999 Mar 2001 2.2 91 22.8 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 124
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2643,
+          -33.8405
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66196",
+        "name": "SYDNEY HARBOUR (WEDDING CAKE WEST)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Sep 1997 Apr 2026 25.6 88 21.1 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 125
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2253,
+          -33.6908
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "7",
+        "element": "Wind Speed",
+        "site": "66059",
+        "name": "TERREY HILLS AWS",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 2004 Apr 2026 21.7 99 17.3 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_7.txt",
+        "record_id": 126
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2254,
+          -33.8551
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "131",
+        "element": "Maximum Wind Gust Speed",
+        "site": "66022",
+        "name": "FORT DENISON",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Oct 2010 Apr 2026 15.6 97 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_131.txt",
+        "record_id": 127
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2986,
+          -33.8152
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "131",
+        "element": "Maximum Wind Gust Speed",
+        "site": "66197",
+        "name": "MANLY (NORTH HEAD)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Oct 2010 Apr 2026 15.6 96 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_131.txt",
+        "record_id": 128
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "131",
+        "element": "Maximum Wind Gust Speed",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1994 Feb 1997 3.0 93 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_131.txt",
+        "record_id": 129
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2643,
+          -33.8405
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "131",
+        "element": "Maximum Wind Gust Speed",
+        "site": "66196",
+        "name": "SYDNEY HARBOUR (WEDDING CAKE WEST)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jun 2003 Apr 2026 19.8 84 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_131.txt",
+        "record_id": 130
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2253,
+          -33.6908
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "131",
+        "element": "Maximum Wind Gust Speed",
+        "site": "66059",
+        "name": "TERREY HILLS AWS",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 2004 Apr 2026 21.7 97 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_131.txt",
+        "record_id": 131
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "128",
+        "element": "Wind Run (Below 3m)",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1982 Oct 1995 13.3 71 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_128.txt",
+        "record_id": 132
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "128",
+        "element": "Wind Run (Below 3m)",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Nov 1993 May 1999 5.6 99 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_128.txt",
+        "record_id": 133
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2254,
+          -33.8551
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "129",
+        "element": "Wind Run (Above 3m)",
+        "site": "66022",
+        "name": "FORT DENISON",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Oct 2010 Apr 2026 15.6 96 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_129.txt",
+        "record_id": 134
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "129",
+        "element": "Wind Run (Above 3m)",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jan 1982 Jun 1989 6.5 53 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_129.txt",
+        "record_id": 135
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2986,
+          -33.8152
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "129",
+        "element": "Wind Run (Above 3m)",
+        "site": "66197",
+        "name": "MANLY (NORTH HEAD)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Oct 2010 Apr 2026 15.6 96 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_129.txt",
+        "record_id": 136
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2643,
+          -33.8405
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "129",
+        "element": "Wind Run (Above 3m)",
+        "site": "66196",
+        "name": "SYDNEY HARBOUR (WEDDING CAKE WEST)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Jun 2003 Apr 2026 19.8 84 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_129.txt",
+        "record_id": 137
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2253,
+          -33.6908
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "129",
+        "element": "Wind Run (Above 3m)",
+        "site": "66059",
+        "name": "TERREY HILLS AWS",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "Sep 2004 Apr 2026 21.7 96 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_129.txt",
+        "record_id": 138
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "12",
+        "element": "Cloud (Total Amount)",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1971 Oct 1995 19.3 71 1.6 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_12.txt",
+        "record_id": 140
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1176,
+          -33.7654
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "12",
+        "element": "Cloud (Total Amount)",
+        "site": "66193",
+        "name": "MARSFIELD (MACQUARIE UNIVERSITY NO:2)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1994 Oct 1995 1.7 90 1.0 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_12.txt",
+        "record_id": 141
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "12",
+        "element": "Cloud (Total Amount)",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1962 Jan 2015 30.4 51 1.4 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_12.txt",
+        "record_id": 142
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2643,
+          -33.8405
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "12",
+        "element": "Cloud (Total Amount)",
+        "site": "66196",
+        "name": "SYDNEY HARBOUR (WEDDING CAKE WEST)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 2010 Sep 2010 0.5 4 1.0 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_12.txt",
+        "record_id": 143
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1121,
+          -33.7791
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "124",
+        "element": "Ground (Terrestrial) MinimumTemperature",
+        "site": "66156",
+        "name": "MACQUARIE PARK (WILLANDRA VILLAGE)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Feb 1971 Oct 1995 15.1 57 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_124.txt",
+        "record_id": 144
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1176,
+          -33.7654
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "124",
+        "element": "Ground (Terrestrial) MinimumTemperature",
+        "site": "66193",
+        "name": "MARSFIELD (MACQUARIE UNIVERSITY NO:2)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1994 Oct 1995 1.7 89 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_124.txt",
+        "record_id": 145
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "124",
+        "element": "Ground (Terrestrial) MinimumTemperature",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Apr 1962 Jan 2015 27.4 46 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_124.txt",
+        "record_id": 146
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "31",
+        "element": "Soil Temperature (10cm Depth)",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Dec 1999 May 2011 0.3 0 1.0 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_31.txt",
+        "record_id": 147
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.1556,
+          -33.8258
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "2",
+        "element": "Mean Sea Level Pressure",
+        "site": "66131",
+        "name": "RIVERVIEW OBSERVATORY",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Mar 1962 Feb 1972 9.1 75 1.7 N",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_2.txt",
+        "record_id": 148
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2048,
+          -33.8593
+        ]
+      },
+      "properties": {
+        "source": "BOM CDO station list",
+        "source_layer": "",
+        "element_code": "2",
+        "element": "Mean Sea Level Pressure",
+        "site": "66214",
+        "name": "SYDNEY (OBSERVATORY HILL)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "Aug 2020 Apr 2026 5.8 98 23.7 Y",
+        "agency": "",
+        "location_types": "",
+        "classification": "",
+        "source_url": "https://www.bom.gov.au/climate/data/lists_by_element/alphaNSW_2.txt",
+        "record_id": 149
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.18029999838097,
+          -33.801000001241036
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "44078",
+        "name": "Chatswood",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Bureau of Meteorology\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 66011, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.801, \"location_types\": \"rain gauge;\", \"long\": 151.1803, \"name\": \"Chatswood\", \"objectid\": 44078, \"state\": \"NSW\"}",
+        "agency": "Bureau of Meteorology",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 150
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.22529999831997,
+          -33.69080000132715
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "44086",
+        "name": "Terrey Hills AWS",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Bureau of Meteorology\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 66059, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.6908, \"location_types\": \"rain gauge;\", \"long\": 151.2253, \"name\": \"Terrey Hills AWS\", \"objectid\": 44086, \"state\": \"NSW\"}",
+        "agency": "Bureau of Meteorology",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 151
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.30759999829576,
+          -33.67950000136293
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "44091",
+        "name": "Mona Vale",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Bureau of Meteorology\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 66141, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.6795, \"location_types\": \"rain gauge;\", \"long\": 151.3076, \"name\": \"Mona Vale\", \"objectid\": 44091, \"state\": \"NSW\"}",
+        "agency": "Bureau of Meteorology",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 152
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.18179999832333,
+          -33.676100001321466
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "44092",
+        "name": "Duffys Forest (Namba)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Bureau of Meteorology\", \"awrc_stateid\": null, \"basin\": \"Hawkesbury River\", \"bom_stn_num\": 66142, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.6761, \"location_types\": \"rain gauge;\", \"long\": 151.1818, \"name\": \"Duffys Forest (Namba)\", \"objectid\": 44092, \"state\": \"NSW\"}",
+        "agency": "Bureau of Meteorology",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 153
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.11439999836108,
+          -33.72420000126729
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "44098",
+        "name": "Wahroonga (Ada Avenue)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Bureau of Meteorology\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 66211, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.7242, \"location_types\": \"rain gauge;\", \"long\": 151.1144, \"name\": \"Wahroonga (Ada Avenue)\", \"objectid\": 44098, \"state\": \"NSW\"}",
+        "agency": "Bureau of Meteorology",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 154
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.12009999839478,
+          -33.80050000122054
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "44100",
+        "name": "North Ryde",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Local Land Services\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 66213, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.8005, \"location_types\": \"rain gauge;\", \"long\": 151.1201, \"name\": \"North Ryde\", \"objectid\": 44100, \"state\": \"NSW\"}",
+        "agency": "Local Land Services",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 155
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.204799998402,
+          -33.85930000121225
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "44101",
+        "name": "Sydney (Observatory Hill)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Bureau of Meteorology\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 66214, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.8593, \"location_types\": \"rain gauge;\", \"long\": 151.2048, \"name\": \"Sydney (Observatory Hill)\", \"objectid\": 44101, \"state\": \"NSW\"}",
+        "agency": "Bureau of Meteorology",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 156
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.25219999834525,
+          -33.75970000129236
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "48182",
+        "name": "Allambie",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 566056, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.7597, \"location_types\": \"rain gauge;\", \"long\": 151.2522, \"name\": \"Allambie\", \"objectid\": 48182, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 157
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3287999982732,
+          -33.64080000139507
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "48186",
+        "name": "Avalon",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": null, \"basin\": \"Hawkesbury River\", \"bom_stn_num\": 566061, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.6408, \"location_types\": \"rain gauge;\", \"long\": 151.3288, \"name\": \"Avalon\", \"objectid\": 48186, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 158
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.21049999834617,
+          -33.74060000129015
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "48189",
+        "name": "Belrose",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 566066, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.7406, \"location_types\": \"rain gauge;\", \"long\": 151.2105, \"name\": \"Belrose\", \"objectid\": 48189, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 159
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.29169999832789,
+          -33.74170000131759
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "48190",
+        "name": "Cromer",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 566067, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.7417, \"location_types\": \"rain gauge;\", \"long\": 151.2917, \"name\": \"Cromer\", \"objectid\": 48190, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 160
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.30139999829316,
+          -33.6707000013664
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "48191",
+        "name": "Mona Vale",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": null, \"basin\": \"Hawkesbury River\", \"bom_stn_num\": 566068, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.6707, \"location_types\": \"rain gauge;\", \"long\": 151.3014, \"name\": \"Mona Vale\", \"objectid\": 48191, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 161
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.26999999835354,
+          -33.786700001281226
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "48192",
+        "name": "North Manly",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 566069, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.7867, \"location_types\": \"rain gauge;\", \"long\": 151.27, \"name\": \"North Manly\", \"objectid\": 48192, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 162
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.21059999835632,
+          -33.7626000012761
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "48195",
+        "name": "Forestville",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 566080, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.7626, \"location_types\": \"rain gauge;\", \"long\": 151.2106, \"name\": \"Forestville\", \"objectid\": 48195, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 163
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2847999983541,
+          -33.79560000128069
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "48196",
+        "name": "Manly Cbd",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 566081, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.7956, \"location_types\": \"rain gauge;\", \"long\": 151.2848, \"name\": \"Manly Cbd\", \"objectid\": 48196, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 164
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.24559999836725,
+          -33.80430000126155
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "48198",
+        "name": "Mosman (Spit Bridge)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 566083, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.8043, \"location_types\": \"rain gauge;\", \"long\": 151.2456, \"name\": \"Mosman (Spit Bridge)\", \"objectid\": 48198, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 165
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.12949999841567,
+          -33.85070000119173
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "49249",
+        "name": "Abbotsford (Blackwall Point Rd)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Bureau of Meteorology\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 66034, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.8507, \"location_types\": \"rain gauge;\", \"long\": 151.1295, \"name\": \"Abbotsford (Blackwall Point Rd)\", \"objectid\": 49249, \"state\": \"NSW\"}",
+        "agency": "Bureau of Meteorology",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 166
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.30769999832367,
+          -33.74070000132375
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "49251",
+        "name": "Long Reef Golf Club",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Bureau of Meteorology\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 66126, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.7407, \"location_types\": \"rain gauge;\", \"long\": 151.3077, \"name\": \"Long Reef Golf Club\", \"objectid\": 49251, \"state\": \"NSW\"}",
+        "agency": "Bureau of Meteorology",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 167
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.30079999825665,
+          -33.59040000141762
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "Rain gauge locations",
+        "element_code": "",
+        "element": "Rain gauge locations",
+        "site": "49394",
+        "name": "Great Mackeral Beach",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Water NSW\", \"awrc_stateid\": null, \"basin\": \"Hawkesbury River\", \"bom_stn_num\": 566041, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.5904, \"location_types\": \"rain gauge;\", \"long\": 151.3008, \"name\": \"Great Mackeral Beach\", \"objectid\": 49394, \"state\": \"NSW\"}",
+        "agency": "Water NSW",
+        "location_types": "rain gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/4/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 168
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.2253999983952,
+          -33.85510000122205
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "River and Tide gauge locations",
+        "element_code": "",
+        "element": "River and Tide gauge locations",
+        "site": "44080",
+        "name": "Fort Denison (NTC)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Bureau of Meteorology\", \"awrc_stateid\": null, \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 66022, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.8551, \"location_types\": \"tide gauge;\", \"long\": 151.2254, \"name\": \"Fort Denison (NTC)\", \"objectid\": 44080, \"state\": \"NSW\"}",
+        "agency": "Bureau of Meteorology",
+        "location_types": "tide gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/5/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 169
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.27469999824459,
+          -33.55080000143397
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "River and Tide gauge locations",
+        "element_code": "",
+        "element": "River and Tide gauge locations",
+        "site": "48046",
+        "name": "Patonga (Tide Gauge)",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": \"212440\", \"basin\": \"Hawkesbury River\", \"bom_stn_num\": 561149, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.5508, \"location_types\": \"water level gauge;tide gauge;\", \"long\": 151.2747, \"name\": \"Patonga (Tide Gauge)\", \"objectid\": 48046, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "water level gauge;tide gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/5/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 170
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.25849999837385,
+          -33.825400001252504
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "River and Tide gauge locations",
+        "element_code": "",
+        "element": "River and Tide gauge locations",
+        "site": "48193",
+        "name": "Sydney Port Jackson",
+        "in_lga": false,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": \"213470\", \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 566070, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.8254, \"location_types\": \"water level gauge;tide gauge;\", \"long\": 151.2585, \"name\": \"Sydney Port Jackson\", \"objectid\": 48193, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "water level gauge;tide gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/5/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 171
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          151.3046999983074,
+          -33.703600001346445
+        ]
+      },
+      "properties": {
+        "source": "BOM National Flood Gauge Network",
+        "source_layer": "River and Tide gauge locations",
+        "element_code": "",
+        "element": "River and Tide gauge locations",
+        "site": "48200",
+        "name": "Ocean St (Narrabeen Lagoon)",
+        "in_lga": true,
+        "nearby_bbox": true,
+        "tail": "{\"agency\": \"Office of Environment and Heritage\", \"awrc_stateid\": \"213408D\", \"basin\": \"Sydney Coast-Georges River\", \"bom_stn_num\": 566086, \"featreal\": 1769954400000, \"forecast_site_classification\": \"data\", \"lat\": -33.7036, \"location_types\": \"water level gauge;\", \"long\": 151.3047, \"name\": \"Ocean St (Narrabeen Lagoon)\", \"objectid\": 48200, \"state\": \"NSW\"}",
+        "agency": "Office of Environment and Heritage",
+        "location_types": "water level gauge;",
+        "classification": "",
+        "source_url": "https://hosting.wsapi.cloud.bom.gov.au/arcgis/rest/services/flood/National_Flood_Gauge_Network/FeatureServer/5/query?f=geojson&where=1%3D1&outFields=%2A&geometry=151.1%2C-33.86%2C151.37%2C-33.54&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outSR=4326&returnGeometry=true",
+        "record_id": 172
+      }
+    }
+  ]
+};
