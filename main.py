@@ -661,6 +661,32 @@ async def fetch_temperature(lat: float, lon: float) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# BOM rainfall ingest store
+# ---------------------------------------------------------------------------
+import os
+
+BOM_INGEST_SECRET = os.environ.get("BOM_INGEST_SECRET", "nbc-bom-ingest-2024")
+BOM_STORE_PATH = Path(__file__).parent / "bom_rainfall.json"
+BOM_RETAIN_HOURS = 48
+
+def _bom_load_store() -> dict:
+    if BOM_STORE_PATH.exists():
+        try: return json.loads(BOM_STORE_PATH.read_text())
+        except: pass
+    return {}
+
+def _bom_save_store(store: dict):
+    BOM_STORE_PATH.write_text(json.dumps(store))
+
+def _bom_prune_store(store: dict):
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=BOM_RETAIN_HOURS)).isoformat()
+    for site_data in store.values():
+        readings = site_data.get("readings", {})
+        for ts in [ts for ts in readings if ts < cutoff]:
+            del readings[ts]
+
+
+# ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
 
@@ -952,3 +978,38 @@ async def analyse(
         **rainfall_data,
         "temperature": temp_data
     }
+
+
+@app.post("/ingest-bom-rainfall")
+async def ingest_bom_rainfall(request: Request):
+    if request.headers.get("X-Ingest-Secret","") != BOM_INGEST_SECRET:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    body = await request.json()
+    stations = body.get("stations", [])
+    if not stations:
+        return {"ok": True, "message": "no stations"}
+    store = _bom_load_store()
+    total_new = 0
+    for s in stations:
+        site = s["site"]
+        if site not in store:
+            store[site] = {"site":site,"name":s["name"],"lat":s["lat"],"lon":s["lon"],"ts_id":s["ts_id"],"readings":{}}
+        existing = store[site]["readings"]
+        before = len(existing)
+        for r in s.get("readings", []):
+            existing[r["ts"]] = r["value"]
+        total_new += len(existing) - before
+    _bom_prune_store(store)
+    _bom_save_store(store)
+    return {"ok":True,"stations":len(stations),"new_readings":total_new,"store_sites":len(store)}
+
+
+@app.get("/bom-rainfall/{site}")
+async def get_bom_rainfall_store(site: str, hours: int = 2):
+    store = _bom_load_store()
+    if site not in store:
+        raise HTTPException(status_code=404, detail=f"Site {site} not found in BOM store")
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=hours)).isoformat()
+    readings = store[site]["readings"]
+    values = sorted([[ts,v] for ts,v in readings.items() if ts >= cutoff], key=lambda x: x[0])
+    return {"site":site,"name":store[site]["name"],"lat":store[site]["lat"],"lon":store[site]["lon"],"ts_id":store[site]["ts_id"],"values":values,"count":len(values)}
