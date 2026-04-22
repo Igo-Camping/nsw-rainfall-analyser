@@ -1,77 +1,63 @@
-Generated: 2026-04-22T12:51:21
-Boundary: C:\Users\fonzi\Weather App Folder\nsw_lga_boundaries.geojson
-BBOX: {'min_lon': 151.1, 'max_lon': 151.37, 'min_lat': -33.86, 'max_lat': -33.54}
-Total records: 172
-Inside Northern Beaches LGA: 49
-Nearby bbox but outside LGA: 122
+Generated: 2026-04-22T13:01:11
+Scope: all NSW BOM Climate Data Online station-list records plus BOM National Flood Gauge Network records spatially inside any NSW LGA boundary.
+Total records: 10688
+Northern Beaches LGA records: 49
+Unique LGAs with records: 131
 
 By source / element:
-- BOM CDO station list | Air Temperature: 7 total, 1 inside LGA
-- BOM CDO station list | Cloud (Total Amount): 4 total, 0 inside LGA
-- BOM CDO station list | Dew Point (Humidity): 6 total, 1 inside LGA
-- BOM CDO station list | Evaporation: 2 total, 0 inside LGA
-- BOM CDO station list | Evaporimeter (Max Water Temp): 2 total, 0 inside LGA
-- BOM CDO station list | Ground (Terrestrial) MinimumTemperature: 3 total, 0 inside LGA
-- BOM CDO station list | Maximum Air temperature: 6 total, 1 inside LGA
-- BOM CDO station list | Maximum Wind Gust Speed: 5 total, 2 inside LGA
-- BOM CDO station list | Mean Sea Level Pressure: 2 total, 0 inside LGA
-- BOM CDO station list | Rainfall: 89 total, 25 inside LGA
-- BOM CDO station list | Rainfall Intensity (pluviograph data): 3 total, 1 inside LGA
-- BOM CDO station list | Soil Temperature (10cm Depth): 1 total, 0 inside LGA
-- BOM CDO station list | Solar Radiation: 1 total, 0 inside LGA
-- BOM CDO station list | Wind Run (Above 3m): 5 total, 2 inside LGA
-- BOM CDO station list | Wind Run (Below 3m): 2 total, 0 inside LGA
-- BOM CDO station list | Wind Speed: 11 total, 2 inside LGA
-- BOM National Flood Gauge Network | Rain gauge locations: 19 total, 13 inside LGA
-- BOM National Flood Gauge Network | River and Tide gauge locations: 4 total, 1 inside LGA
+- BOM CDO station list | Air Temperature: 436
+- BOM CDO station list | Cloud (Total Amount): 394
+- BOM CDO station list | Dew Point (Humidity): 360
+- BOM CDO station list | Evaporation: 108
+- BOM CDO station list | Evaporimeter (Max Water Temp): 61
+- BOM CDO station list | Ground (Terrestrial) MinimumTemperature: 101
+- BOM CDO station list | Maximum Air temperature: 455
+- BOM CDO station list | Maximum Wind Gust Speed: 146
+- BOM CDO station list | Mean Sea Level Pressure: 161
+- BOM CDO station list | Rainfall: 5139
+- BOM CDO station list | Rainfall Intensity (pluviograph data): 276
+- BOM CDO station list | River Height: 45
+- BOM CDO station list | Sea State: 20
+- BOM CDO station list | Soil Temperature (10cm Depth): 43
+- BOM CDO station list | Sunshine Duration: 39
+- BOM CDO station list | Upper Air Temperature: 13
+- BOM CDO station list | Upper Air Wind Speed: 17
+- BOM CDO station list | Wind Run (Above 3m): 151
+- BOM CDO station list | Wind Run (Below 3m): 85
+- BOM CDO station list | Wind Speed: 447
+- BOM National Flood Gauge Network | Forecast locations: 173
+- BOM National Flood Gauge Network | Information locations: 33
+- BOM National Flood Gauge Network | Rain gauge locations: 1028
+- BOM National Flood Gauge Network | River and Tide gauge locations: 957
 
-Inside-LGA names:
-- BOM CDO station list | Rainfall | 66079 | AVALON BEACH (AVALON (PALMGROVE RD)) | -33.6358,151.3223
-- BOM CDO station list | Rainfall | 66053 | AVALON (WOLLSTONECRAFT AVE) | -33.63,151.3291
-- BOM CDO station list | Rainfall | 66002 | BALGOWLAH (ETHEL STREET) | -33.7997,151.2508
-- BOM CDO station list | Rainfall | 66127 | BEACON HILL RAAF | -33.75,151.25
-- BOM CDO station list | Rainfall | 66188 | BELROSE (EVELYN PLACE) | -33.7402,151.2173
-- BOM CDO station list | Rainfall | 66126 | COLLAROY (LONG REEF GOLF CLUB) | -33.7407,151.3077
-- BOM CDO station list | Rainfall | 66044 | CROMER GOLF CLUB | -33.7255,151.272
-- BOM CDO station list | Rainfall | 66142 | DUFFYS FOREST (NAMBA RD) | -33.6761,151.1818
-- BOM CDO station list | Rainfall | 66118 | FRENCHS FOREST FITSPATRICK AVE | -33.75,151.2333
-- BOM CDO station list | Rainfall | 66182 | FRENCHS FOREST (FRENCHS FOREST RD) | -33.7493,151.2334
-- BOM CDO station list | Rainfall | 66123 | INGLESIDE | -33.6833,151.2667
-- BOM CDO station list | Rainfall | 66183 | INGLESIDE (ANIMAL WELFARE LEAGUE NSW) | -33.671,151.274
-- BOM CDO station list | Rainfall | 66143 | KURING-GAI CHASE (WEST HEAD) | -33.58,151.2983
-- BOM CDO station list | Rainfall | 66099 | MANLY (FAIRLIGHT) | -33.8,151.2667
-- BOM CDO station list | Rainfall | 66088 | MANLY NORTH | -33.7833,151.2833
-- BOM CDO station list | Rainfall | 66089 | MANLY NORTH BOWLING CLUB | -33.7939,151.2692
-- BOM CDO station list | Rainfall | 66138 | MANLY (NORTH HEAD) | -33.815,151.2969
-- BOM CDO station list | Rainfall | 66153 | MANLY VALE (MANLY DAM) | -33.7822,151.2556
-- BOM CDO station list | Rainfall | 66141 | MONA VALE GOLF CLUB | -33.6795,151.3076
-- BOM CDO station list | Rainfall | 66045 | NEWPORT BOWLING CLUB | -33.6572,151.3187
-- BOM CDO station list | Rainfall | 66083 | PALM BEACH COASTERS RETREAT | -33.6,151.3
-- BOM CDO station list | Rainfall | 66128 | PALM BEACH (SUNRISE ROAD) | -33.5965,151.3221
-- BOM CDO station list | Rainfall | 66145 | SEAFORTH CASTLE CIRCUIT | -33.7894,151.2392
-- BOM CDO station list | Rainfall | 66077 | TERREY HILLS | -33.6833,151.2333
-- BOM CDO station list | Rainfall | 66059 | TERREY HILLS AWS | -33.6908,151.2253
-- BOM CDO station list | Rainfall Intensity (pluviograph data) | 66142 | DUFFYS FOREST (NAMBA RD) | -33.6761,151.1818
-- BOM CDO station list | Air Temperature | 66059 | TERREY HILLS AWS | -33.6908,151.2253
-- BOM CDO station list | Maximum Air temperature | 66059 | TERREY HILLS AWS | -33.6908,151.2253
-- BOM CDO station list | Dew Point (Humidity) | 66059 | TERREY HILLS AWS | -33.6908,151.2253
-- BOM CDO station list | Wind Speed | 66197 | MANLY (NORTH HEAD) | -33.8152,151.2986
-- BOM CDO station list | Wind Speed | 66059 | TERREY HILLS AWS | -33.6908,151.2253
-- BOM CDO station list | Maximum Wind Gust Speed | 66197 | MANLY (NORTH HEAD) | -33.8152,151.2986
-- BOM CDO station list | Maximum Wind Gust Speed | 66059 | TERREY HILLS AWS | -33.6908,151.2253
-- BOM CDO station list | Wind Run (Above 3m) | 66197 | MANLY (NORTH HEAD) | -33.8152,151.2986
-- BOM CDO station list | Wind Run (Above 3m) | 66059 | TERREY HILLS AWS | -33.6908,151.2253
-- BOM National Flood Gauge Network | Rain gauge locations | 44086 | Terrey Hills AWS | -33.69080000132715,151.22529999831997
-- BOM National Flood Gauge Network | Rain gauge locations | 44091 | Mona Vale | -33.67950000136293,151.30759999829576
-- BOM National Flood Gauge Network | Rain gauge locations | 44092 | Duffys Forest (Namba) | -33.676100001321466,151.18179999832333
-- BOM National Flood Gauge Network | Rain gauge locations | 48182 | Allambie | -33.75970000129236,151.25219999834525
-- BOM National Flood Gauge Network | Rain gauge locations | 48186 | Avalon | -33.64080000139507,151.3287999982732
-- BOM National Flood Gauge Network | Rain gauge locations | 48189 | Belrose | -33.74060000129015,151.21049999834617
-- BOM National Flood Gauge Network | Rain gauge locations | 48190 | Cromer | -33.74170000131759,151.29169999832789
-- BOM National Flood Gauge Network | Rain gauge locations | 48191 | Mona Vale | -33.6707000013664,151.30139999829316
-- BOM National Flood Gauge Network | Rain gauge locations | 48192 | North Manly | -33.786700001281226,151.26999999835354
-- BOM National Flood Gauge Network | Rain gauge locations | 48195 | Forestville | -33.7626000012761,151.21059999835632
-- BOM National Flood Gauge Network | Rain gauge locations | 48196 | Manly Cbd | -33.79560000128069,151.2847999983541
-- BOM National Flood Gauge Network | Rain gauge locations | 49251 | Long Reef Golf Club | -33.74070000132375,151.30769999832367
-- BOM National Flood Gauge Network | Rain gauge locations | 49394 | Great Mackeral Beach | -33.59040000141762,151.30079999825665
-- BOM National Flood Gauge Network | River and Tide gauge locations | 48200 | Ocean St (Narrabeen Lagoon) | -33.703600001346445,151.3046999983074
+Top LGAs by record count:
+- Unknown: 292
+- SNOWY MONARO REGIONAL: 290
+- TAMWORTH REGIONAL: 289
+- INVERELL: 240
+- UPPER HUNTER: 224
+- MID-COAST: 208
+- SNOWY VALLEYS: 201
+- SHOALHAVEN: 200
+- UNINCORPORATED - FAR WEST AREA: 194
+- MOREE PLAINS: 185
+- CENTRAL COAST: 179
+- CLARENCE VALLEY: 178
+- CENTRAL DARLING: 171
+- ARMIDALE REGIONAL: 155
+- COBAR: 154
+- WALGETT: 153
+- BEGA VALLEY: 141
+- BOURKE: 140
+- PORT MACQUARIE-HASTINGS: 135
+- QUEANBEYAN-PALERANG REGIONAL: 131
+- SINGLETON: 131
+- WINGECARRIBEE: 130
+- TWEED: 130
+- WARRUMBUNGLE: 128
+- WAGGA WAGGA: 121
+- DUBBO REGIONAL: 119
+- LACHLAN: 117
+- COFFS HARBOUR: 113
+- UPPER LACHLAN SHIRE: 111
+- MID-WESTERN REGIONAL: 111
