@@ -97,6 +97,7 @@ except ZoneInfoNotFoundError:
     SYDNEY_TZ = timezone(timedelta(hours=10))
 _bom_station_map: dict = {}
 _bom_station_map_loaded_at: Optional[datetime] = None
+_bom_idcjdw_map: dict = {}  # Cache: bom_id -> IDCJDW number
 
 
 async def fetch_mhl_timeseries(
@@ -300,6 +301,46 @@ async def resolve_bom_wmo(bom_id: Optional[str] = None, wmo: Optional[str] = Non
     return station
 
 
+async def resolve_bom_idcjdw(bom_id: str) -> Optional[str]:
+    """
+    Resolve the IDCJDW number for a BoM station from the CDO scraper page.
+    Caches the mapping in-memory so we only resolve each station once per process.
+    Returns IDCJDW string (e.g. '6342') or None if not found.
+    """
+    global _bom_idcjdw_map
+    clean_bom_id = normalise_bom_id(bom_id)
+    if not clean_bom_id:
+        return None
+
+    if clean_bom_id in _bom_idcjdw_map:
+        return _bom_idcjdw_map[clean_bom_id]
+
+    timeout = httpx.Timeout(30.0, connect=15.0)
+    params = {
+        "p_nccObsCode": "136",
+        "p_display_type": "dailyDataFile",
+        "p_startYear": "",
+        "p_c": "",
+        "p_stn_num": clean_bom_id,
+    }
+    try:
+        async with httpx.AsyncClient(timeout=timeout, follow_redirects=True, headers=BOM_HEADERS) as client:
+            resp = await client.get(BOM_CDO_DAILY_URL, params=params)
+            resp.raise_for_status()
+
+        # Look for a link like /climate/dwo/IDCJDW{NNNN}.shtml
+        match = re.search(r'/climate/dwo/IDCJDW(\d+)', resp.text)
+        if match:
+            idcjdw = match.group(1)
+            _bom_idcjdw_map[clean_bom_id] = idcjdw
+            return idcjdw
+    except Exception:
+        pass
+
+    _bom_idcjdw_map[clean_bom_id] = None
+    return None
+
+
 async def fetch_bom_observation_readings(
     bom_id: Optional[str],
     wmo: Optional[str],
@@ -439,6 +480,138 @@ async def fetch_bom_cdo_daily_readings(
         },
         "readings": readings,
         "source": "BoM Climate Data Online daily rainfall",
+        "resolution_minutes": 1440,
+    }
+
+
+async def fetch_bom_dwo_daily_readings(
+    bom_id: Optional[str],
+    from_dt: datetime,
+    to_dt: datetime,
+) -> dict:
+    """
+    Fetch daily rainfall from BoM Daily Weather Observations (DWO) CSV files.
+    Covers the months in the date range (typically current and previous month).
+    Returns 24-hour rainfall totals to 9am Sydney time for each day.
+    """
+    clean_bom_id = normalise_bom_id(bom_id or "")
+    if not clean_bom_id:
+        raise HTTPException(status_code=400, detail="BoM station number is required for DWO daily rainfall")
+
+    idcjdw = await resolve_bom_idcjdw(clean_bom_id)
+    if not idcjdw:
+        raise HTTPException(status_code=404, detail="IDCJDW number not found for this BoM station")
+
+    timeout = httpx.Timeout(30.0, connect=15.0)
+    readings = []
+    station_name = None
+
+    # Determine months to fetch based on date range
+    months_to_fetch = []
+    current = from_dt.replace(day=1)
+    end_month = to_dt.replace(day=1)
+    while current <= end_month:
+        months_to_fetch.append(current)
+        # Move to next month
+        if current.month == 12:
+            current = current.replace(year=current.year + 1, month=1)
+        else:
+            current = current.replace(month=current.month + 1)
+
+    for month_dt in months_to_fetch:
+        month_str = month_dt.strftime("%Y%m")
+        url = f"http://www.bom.gov.au/climate/dwo/{month_str}/text/IDCJDW{idcjdw}.{month_str}.csv"
+
+        try:
+            async with httpx.AsyncClient(timeout=timeout, follow_redirects=True, headers=BOM_HEADERS) as client:
+                resp = await client.get(url)
+                resp.raise_for_status()
+
+            lines = resp.text.strip().split('\n')
+            if len(lines) < 8:
+                continue
+
+            # Skip header rows (typically first 6 lines), find data start
+            data_start = 0
+            header_row = None
+            for i, line in enumerate(lines):
+                if 'Date' in line and 'Rainfall' in line:
+                    header_row = line
+                    data_start = i + 1
+                    break
+
+            if header_row is None:
+                continue
+
+            # Find the column indices for Date and Rainfall
+            headers = [h.strip() for h in header_row.split(',')]
+            date_idx = None
+            rain_idx = None
+            for idx, h in enumerate(headers):
+                if 'Date' in h:
+                    date_idx = idx
+                elif 'Rainfall' in h and '(mm)' in h:
+                    rain_idx = idx
+
+            if date_idx is None or rain_idx is None:
+                continue
+
+            # Parse data rows
+            for line in lines[data_start:]:
+                if not line.strip():
+                    continue
+                cols = [c.strip() for c in line.split(',')]
+                if len(cols) <= max(date_idx, rain_idx):
+                    continue
+
+                date_str = cols[date_idx]
+                rain_str = cols[rain_idx]
+
+                try:
+                    rain_val = float(rain_str) if rain_str and rain_str.upper() != 'N/A' else None
+                    if rain_val is None:
+                        continue
+                except ValueError:
+                    continue
+
+                try:
+                    # Date format is typically YYYY-MM-DD
+                    local_time = datetime.strptime(date_str, "%Y-%m-%d").replace(hour=9, tzinfo=SYDNEY_TZ)
+                except ValueError:
+                    continue
+
+                timestamp = local_time.astimezone(timezone.utc)
+                if from_dt <= timestamp <= to_dt:
+                    readings.append({
+                        "timestamp": local_time.isoformat(),
+                        "value": round(max(0.0, rain_val), 2),
+                    })
+                    if station_name is None:
+                        # Try to extract station name from file header
+                        for line in lines[:6]:
+                            if 'Station' in line:
+                                station_name = line.split(':')[-1].strip() if ':' in line else None
+                                break
+
+        except Exception:
+            # If a month fails, try the next month
+            continue
+
+    if not readings:
+        raise HTTPException(status_code=404, detail="No BoM DWO daily rainfall data found for this station in the requested period")
+
+    readings.sort(key=lambda item: item["timestamp"])
+
+    return {
+        "station": {
+            "bom_id": clean_bom_id,
+            "wmo": None,
+            "name": station_name or f"BoM station {clean_bom_id}",
+            "lat": None,
+            "lon": None,
+        },
+        "readings": readings,
+        "source": "BoM Daily Weather Observations",
         "resolution_minutes": 1440,
     }
 
@@ -867,21 +1040,43 @@ async def get_bom_rainfall(
     if end <= start:
         raise HTTPException(status_code=400, detail="End datetime must be after start datetime")
 
+    bom_data = None
+    errors = []
+
     try:
         if end - start <= timedelta(hours=72):
-            bom_data = await fetch_bom_observation_readings(bom_id, wmo, start, end)
-        else:
-            bom_data = await fetch_bom_cdo_daily_readings(bom_id, start, end)
+            try:
+                bom_data = await fetch_bom_observation_readings(bom_id, wmo, start, end)
+            except HTTPException as e:
+                errors.append(f"AWS: {e.detail}")
+                bom_data = None
 
-        if not bom_data["readings"] and bom_id:
-            cdo_data = await fetch_bom_cdo_daily_readings(bom_id, start, end)
-            if cdo_data["readings"]:
-                bom_data = cdo_data
-    except HTTPException as exc:
-        if exc.status_code == 404 and bom_id:
-            bom_data = await fetch_bom_cdo_daily_readings(bom_id, start, end)
-        else:
-            raise
+        if not bom_data:
+            # Try DWO (Daily Weather Observations) as primary daily source for BoM-only stations
+            if bom_id:
+                try:
+                    bom_data = await fetch_bom_dwo_daily_readings(bom_id, start, end)
+                except HTTPException as e:
+                    errors.append(f"DWO: {e.detail}")
+                    bom_data = None
+
+        if not bom_data:
+            # Fall back to CDO (Climate Data Online)
+            if bom_id:
+                try:
+                    bom_data = await fetch_bom_cdo_daily_readings(bom_id, start, end)
+                except HTTPException as e:
+                    errors.append(f"CDO: {e.detail}")
+                    bom_data = None
+
+        if not bom_data:
+            detail = "No BoM rainfall data available"
+            if errors:
+                detail += f": {'; '.join(errors)}"
+            raise HTTPException(status_code=404, detail=detail)
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"BoM rainfall fetch failed: {str(e)}")
 

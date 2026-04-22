@@ -2258,7 +2258,7 @@ function plotAllMarkers(stations) {
       try {
         const [wxRes, rainRes] = await Promise.allSettled([
           fetchWeather(s.lat, s.lon),
-          fetchRainfallSinceMidnight(s.ts_id)
+          fetchRainfallSinceMidnight(s)
         ]);
         const wx = wxRes.status==='fulfilled' ? wxRes.value : null;
         const rain = rainRes.status==='fulfilled' ? rainRes.value : null;
@@ -2768,7 +2768,7 @@ async function runAnalysis() {
     let wx = null, rainToday = null;
     try { wx = await fetchWeather(selected.lat, selected.lon); } catch(e){ console.warn(e); }
     try {
-      rainToday = selected.ts_id ? await fetchRainfallSinceMidnight(selected.ts_id) : null;
+      rainToday = selected ? await fetchRainfallSinceMidnight(selected) : null;
     } catch(e){ console.warn(e); }
 
     lastResults = {
@@ -2983,37 +2983,65 @@ async function fetchWeather(lat, lon) {
   };
 }
 function degToCompass(d){const a=['N','NE','E','SE','S','SW','W','NW'];return a[Math.round(d/45)%8];}
-async function fetchRainfallSinceMidnight(tsId) {
+async function fetchRainfallSinceMidnight(station) {
   const now = new Date();
   const mid = new Date(now);
   mid.setHours(0, 0, 0, 0);
-  const fmt = d => d.toISOString().slice(0, 19);
-  const params = new URLSearchParams({
-    service:      'kisters',
-    type:         'queryServices',
-    request:      'getTimeseriesValues',
-    ts_id:        tsId,
-    from:         fmt(mid),
-    to:           fmt(now),
-    format:       'json',
-    returnfields: 'Timestamp,Value'
-  });
-  const resp = await fetch(`${MHL_BASE}?${params}`);
-  if (!resp.ok) throw new Error(`MHL midnight fetch ${resp.status}`);
-  const data = await resp.json();
-  const rows = data?.[0]?.data || [];
-  return rows.reduce((sum, r) => {
-    const v = parseFloat(r[1]);
-    return sum + (isFinite(v) && v > 0 ? v : 0);
-  }, 0);
+
+  if (station?.ts_id) {
+    // MHL gauge
+    const fmt = d => d.toISOString().slice(0, 19);
+    const params = new URLSearchParams({
+      service:      'kisters',
+      type:         'queryServices',
+      request:      'getTimeseriesValues',
+      ts_id:        station.ts_id,
+      from:         fmt(mid),
+      to:           fmt(now),
+      format:       'json',
+      returnfields: 'Timestamp,Value'
+    });
+    const resp = await fetch(`${MHL_BASE}?${params}`);
+    if (!resp.ok) throw new Error(`MHL midnight fetch ${resp.status}`);
+    const data = await resp.json();
+    const rows = data?.[0]?.data || [];
+    return rows.reduce((sum, r) => {
+      const v = parseFloat(r[1]);
+      return sum + (isFinite(v) && v > 0 ? v : 0);
+    }, 0);
+  }
+
+  if (station?.isBomGauge) {
+    // BoM gauge - sum today's readings via DWO/CDO
+    const bomId = getBomStationNumber(station);
+    if (!bomId) return null;
+    try {
+      const params = new URLSearchParams({
+        bom_id: bomId,
+        from_dt: mid.toISOString(),
+        to_dt: now.toISOString(),
+        duration_minutes: '1440'
+      });
+      const data = await api(`/bom/rainfall?${params}`);
+      const readings = data.readings || [];
+      return readings.reduce((sum, r) => sum + (r.value || 0), 0);
+    } catch (e) {
+      console.warn('BoM midnight rainfall fetch failed:', e);
+      return null;
+    }
+  }
+
+  return null;
 }
 
 // â”€â”€ Analyse one station (used by multi-site analysis) â”€â”€â”€â”€â”€â”€â”€
 async function analyseStation(station, dur, fromDt, toDt) {
   try {
-    const readings = await fetchMhlData(station.ts_id, fromDt, toDt);
+    const rainfallData = await fetchStationRainfall(station, fromDt, toDt, dur);
+    const readings = rainfallData.readings;
+    const intervalMinutes = rainfallData.intervalMinutes;
     await loadStationIfd(station);
-    const rolling  = calcRollingMax(readings, dur);
+    const rolling  = calcRollingMax(readings, dur, intervalMinutes);
     let aep = null;
     if (rolling?.max_depth_mm > 0) {
       try {
@@ -3074,13 +3102,18 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
 
     // Fetch raw data once per station (covers entire window)
     let readings = [];
+    let intervalMinutes = 5;
     try {
-      readings = await fetchMhlData(s.ts_id, fromDt, toDt);
+      const rainfallData = await fetchStationRainfall(s, fromDt, toDt, 5);
+      readings = rainfallData.readings;
+      intervalMinutes = rainfallData.intervalMinutes;
     } catch(e) {
       if (rangeDays > 31) {
         await new Promise(resolve => setTimeout(resolve, 250));
         try {
-          readings = await fetchMhlData(s.ts_id, fromDt, toDt);
+          const rainfallData = await fetchStationRainfall(s, fromDt, toDt, 5);
+          readings = rainfallData.readings;
+          intervalMinutes = rainfallData.intervalMinutes;
         } catch(e2) {
           failedStations.push(s.name);
           continue;
@@ -3097,7 +3130,7 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
     let bestAepVal = Infinity;
 
     for (const d of allDurs) {
-      const rolling = calcRollingMax(readings, d);
+      const rolling = calcRollingMax(readings, d, intervalMinutes);
       if (!rolling || rolling.max_depth_mm <= 0) continue;
       const aep = calcAEP(s.station_id, d, rolling.max_depth_mm);
       if (!aep) continue;
@@ -3217,7 +3250,8 @@ async function openTopSiteDailyTotals(stationId) {
   const toDt = new Date(result.to);
   try {
     showLoad(`Loading daily totals for ${result.station_name}...`);
-    const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
+    const rainfallData = await fetchStationRainfall(selected, fromDt, toDt, 1440);
+    const readings = rainfallData.readings;
     hideLoad();
     renderDailyTotals({
       station_name: selected.name,
@@ -3411,7 +3445,8 @@ function renderTopDurations(results) {
 async function runDailyTotals(fromDt, toDt) {
   showLoad('Calculating daily totals...');
   try {
-    const readings = await fetchMhlData(selected.ts_id, fromDt, toDt);
+    const rainfallData = await fetchStationRainfall(selected, fromDt, toDt, 1440);
+    const readings = rainfallData.readings;
     lastDailyData = {
       station_name: selected.name,
       readings,
