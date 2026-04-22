@@ -2021,6 +2021,15 @@ function onLgaChange() {
   drawLgaBoundary(lga);
 }
 
+function selectLgaFromMap(lgaName) {
+  const lgaSel = document.getElementById('lgaSel');
+  if (!lgaSel || !lgaName) return;
+  const option = [...lgaSel.options].find(opt => opt.value === lgaName);
+  if (!option) return;
+  lgaSel.value = lgaName;
+  onLgaChange();
+}
+
 function stationMatchesFilters(station, q, lga) {
   if (q && !station.name.toLowerCase().includes(q)) return false;
   if (lga && getLGA(station) !== lga) return false;
@@ -6388,7 +6397,12 @@ async function loadAllLgaBoundaries() {
           fillOpacity: 0.3
         };
       },
-      interactive: false
+      interactive: true,
+      onEachFeature: (feature, layer) => {
+        const name = getFeatureLgaName(feature);
+        layer.on('click', () => selectLgaFromMap(name));
+        layer.bindTooltip(name, { sticky: true, direction: 'top' });
+      }
     }).addTo(map).bringToBack();
   } catch(e) {
     console.warn('LGA boundaries unavailable:', e.message);
