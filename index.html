@@ -12,6 +12,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="./nsw_lga_boundaries.js"></script>
 <script src="./bom_northern_beaches_all_gauges.js"></script>
+<script src="./bom_ifd_cache.js"></script>
 <style>
 :root {
   --teal:       #00847F;
@@ -2298,6 +2299,10 @@ function getBomRainfallMarkerColour(gauge) {
   return '#60717D';
 }
 
+function getBomIfdKey(lat, lon) {
+  return `${Number(lat).toFixed(5)},${Number(lon).toFixed(5)}`;
+}
+
 function loadBomRainfallReferenceGauges() {
   const data = window.BOM_NORTHERN_BEACHES_GAUGES;
   const features = data?.features || [];
@@ -2327,6 +2332,8 @@ function loadBomRainfallReferenceGauges() {
         lga: lgaName,
         lat,
         lon,
+        ifdKey: getBomIfdKey(lat, lon),
+        has_ifd: !!window.BOM_IFD_CACHE?.[getBomIfdKey(lat, lon)],
         tail: String(props.tail || '').trim()
       };
     })
@@ -2339,7 +2346,7 @@ function buildBomRainfallPopup(gauge) {
     <small>${escapeHtml(gauge.element || 'BOM record')}</small><br>
     <small>${escapeHtml(gauge.source || 'BOM')}${gauge.agency ? ` · ${escapeHtml(gauge.agency)}` : ''}</small><br>
     <small>${escapeHtml(getLGA(gauge))} · ${gauge.lat.toFixed(5)}, ${gauge.lon.toFixed(5)}</small><br>
-    <small style="color:#888">Reference gauge only. Live analysis remains on official gauges.</small>`;
+    <small style="color:#888">${window.BOM_IFD_CACHE?.[gauge.ifdKey] ? 'IFD table available.' : 'IFD table unavailable.'} Live rainfall analysis remains on official gauges.</small>`;
 }
 
 function plotBomRainfallMarkers() {
@@ -2401,6 +2408,7 @@ function selectStation(id) {
     : `Analyse ${selected.name.split(' ').slice(0,3).join(' ')}`;
   const exportBtn = document.getElementById('exportAllBtn');
   if (exportBtn) exportBtn.disabled = true;
+  if (selected.isBomGauge) loadStationIfd(selected);
 }
 
 async function ensureRainfallTemplateLoaded() {
@@ -6127,6 +6135,12 @@ const wxCache = {};
 function loadStationIfd(station) {
   if (!station?.station_id) return Promise.resolve(null);
   if (ifdCache[station.station_id]) return Promise.resolve(ifdCache[station.station_id]);
+  if (station.isBomGauge) {
+    const key = station.ifdKey || getBomIfdKey(station.lat, station.lon);
+    const ifd = window.BOM_IFD_CACHE?.[key] || null;
+    if (ifd) ifdCache[station.station_id] = ifd;
+    return Promise.resolve(ifd);
+  }
   if (ifdLoadPromises[station.station_id]) return ifdLoadPromises[station.station_id];
 
   ifdLoadPromises[station.station_id] = (async () => {
