@@ -393,6 +393,8 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .cctv-map-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
 .cctv-map-sub{font-size:11px;color:var(--text-l);margin-top:3px}
 #cctvPackagesMap{flex:1;min-height:420px}
+.cctv-selected-tooltip{background:#111827!important;color:#FFD166!important;border:2px solid #FFD166!important;border-radius:999px!important;box-shadow:0 8px 20px rgba(17,24,39,.28);font-weight:900;letter-spacing:.04em}
+.cctv-selected-tooltip::before{border-top-color:#111827!important}
 @media (max-width: 820px){
   .pkg-grid{grid-template-columns:1fr}
   .pkg-hero{flex-direction:column}
@@ -6460,9 +6462,11 @@ function getCctvPackageColor(pkg, index = 0) {
 
 function getCctvPackageMapStyle(pkg, index = 0) {
   const isSelected = selectedCctvPackageId && pkg.package_id === selectedCctvPackageId;
+  const isDimmed = selectedCctvPackageId && !isSelected;
   return {
     color: getCctvPackageColor(pkg, index),
-    isSelected
+    isSelected,
+    isDimmed
   };
 }
 
@@ -6510,7 +6514,11 @@ function renderCctvPackagesMap() {
   }
 
   let drawn = 0;
-  packages.forEach((pkg, packageIndex) => {
+  const mapPackages = selectedCctvPackageId
+    ? packages.filter(pkg => pkg.package_id !== selectedCctvPackageId).concat(packages.filter(pkg => pkg.package_id === selectedCctvPackageId))
+    : packages;
+  mapPackages.forEach((pkg) => {
+    const packageIndex = packages.findIndex(item => item.package_id === pkg.package_id);
     const assets = (pkg.assets || []).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
     if (!assets.length) return;
     const style = getCctvPackageMapStyle(pkg, packageIndex);
@@ -6520,33 +6528,50 @@ function renderCctvPackagesMap() {
       L.polyline(points, {
         color,
         weight: style.isSelected ? 8 : 3,
-        opacity: style.isSelected ? 1 : 0.75,
+        opacity: style.isSelected ? 1 : (style.isDimmed ? 0.16 : 0.75),
         dashArray: style.isSelected ? '' : '6 6'
       }).addTo(cctvPackagesLayer);
       if (style.isSelected) {
-        L.polyline(points, { color: '#FFD166', weight: 13, opacity: 0.45 }).addTo(cctvPackagesLayer);
+        L.polyline(points, { color: '#FFD166', weight: 18, opacity: 0.72 }).addTo(cctvPackagesLayer);
+        L.polyline(points, { color: '#111827', weight: 11, opacity: 0.95 }).addTo(cctvPackagesLayer);
+        L.polyline(points, { color: '#FFD166', weight: 5, opacity: 1 }).addTo(cctvPackagesLayer);
       }
     }
     assets.forEach(item => {
-      const radius = style.isSelected ? 10 : (item.isTbaCondition ? 7 : 5);
+      if (style.isSelected) {
+        L.circleMarker([item.lat, item.lon], {
+          radius: 18,
+          color: '#111827',
+          weight: 4,
+          fillColor: '#FFD166',
+          fillOpacity: 0.42
+        }).addTo(cctvPackagesLayer);
+      }
+      const radius = style.isSelected ? 11 : (item.isTbaCondition ? 7 : 5);
       const assetMarker = L.circleMarker([item.lat, item.lon], {
         radius,
         color: style.isSelected ? '#111827' : '#fff',
         weight: style.isSelected ? 3 : 1.5,
         fillColor: color,
-        fillOpacity: style.isSelected ? 1 : (item.isTbaCondition ? 0.95 : 0.78)
+        fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : (item.isTbaCondition ? 0.95 : 0.78)),
+        opacity: style.isDimmed ? 0.2 : 1
       }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
       if (!cctvPackageFocusLayers.has(pkg.package_id)) cctvPackageFocusLayers.set(pkg.package_id, assetMarker);
       drawn += 1;
     });
     if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) {
       const focusMarker = L.circleMarker([pkg.lat, pkg.lon], {
-        radius: style.isSelected ? 18 : 11,
+        radius: style.isSelected ? 24 : 11,
         color: style.isSelected ? '#111827' : color,
-        weight: style.isSelected ? 5 : 3,
+        weight: style.isSelected ? 7 : 3,
         fillColor: style.isSelected ? '#FFD166' : '#fff',
-        fillOpacity: style.isSelected ? 0.95 : 0.7
-      }).bindTooltip(pkg.package_id, { permanent: false }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
+        fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : 0.7),
+        opacity: style.isDimmed ? 0.2 : 1
+      }).bindTooltip(style.isSelected ? `SELECTED ${pkg.package_id}` : pkg.package_id, {
+        permanent: style.isSelected,
+        direction: 'top',
+        className: style.isSelected ? 'cctv-selected-tooltip' : ''
+      }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
       cctvPackageFocusLayers.set(pkg.package_id, focusMarker);
     }
   });
