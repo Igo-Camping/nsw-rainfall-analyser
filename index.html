@@ -6498,23 +6498,18 @@ function buildCctvPackagePopup(pkg) {
     ? `<div><strong>ESRI link:</strong> <a href="${escapeHtml(pkg.package_map_link)}" target="_blank" rel="noopener">Open package</a></div>`
     : '';
   return `
-    <div style="min-width:220px">
+    <div style="min-width:180px">
       <div style="font-weight:800;color:var(--navy);margin-bottom:6px">${escapeHtml(pkg.package_id)}</div>
-      <div style="font-size:11px;color:var(--text-l);line-height:1.7">
-        <div><strong>Primary suburb:</strong> ${escapeHtml(pkg.primary_suburb || pkg.suburb)}</div>
+      <div style="font-size:11px;color:var(--text-l);line-height:1.55">
         <div><strong>Suburbs:</strong> ${escapeHtml((pkg.suburbs || [pkg.suburb]).join(', '))}</div>
         <div><strong>Pipes:</strong> ${pkg.pipe_count}</div>
-        <div><strong>TBA pipes:</strong> ${pkg.tba_pipe_count || 0}</div>
-        <div><strong>Critical pipes:</strong> ${pkg.critical_pipe_count || 0}</div>
         <div><strong>Length:</strong> ${Number(pkg.total_length_m || 0).toFixed(1)} m</div>
         <div><strong>Max span:</strong> ${Number(pkg.max_span_m || 0).toFixed(0)} m</div>
-        <div><strong>Coordinate sources:</strong> ${escapeHtml(pkg.coordinate_sources || 'Unknown')}</div>
         ${pkg.distance_warning ? `<div style="color:#C0392B"><strong>Warning:</strong> ${escapeHtml(pkg.distance_warning)}</div>` : ''}
         <div><strong>Package radius:</strong> ${pkg.package_radius_m || 0} m</div>
-        <div><strong>Cluster centre:</strong> ${Number.isFinite(pkg.cluster_center_lat) && Number.isFinite(pkg.cluster_center_lon) ? `${pkg.cluster_center_lat.toFixed(6)}, ${pkg.cluster_center_lon.toFixed(6)}` : 'Not available'}</div>
         <div><strong>CCTV hours:</strong> ${Number(pkg.cctv_hours || 0).toFixed(2)}</div>
         <div><strong>Cost:</strong> ${formatCurrency(pkg.total_cost || 0)}</div>
-        <div><strong>Sample assets:</strong> ${escapeHtml(assetList || 'None')}</div>
+        <div><strong>Assets:</strong> ${escapeHtml(assetList || 'None')}</div>
         ${packageLink}
       </div>
     </div>`;
