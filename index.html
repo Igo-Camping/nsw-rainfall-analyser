@@ -268,6 +268,7 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 /* Packaging */
 #page-relining{flex:1;min-height:0;display:none;overflow:hidden;background:var(--panel);padding:20px}
 .pkg-shell{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px;overflow:auto;width:100%;min-height:0}
+#page-cctvpackaging .pkg-shell{max-width:1480px}
 .pkg-hero{background:var(--navy);color:white;border-radius:var(--r);padding:22px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .pkg-title{font-size:24px;font-weight:800;margin-bottom:4px}
 .pkg-sub{font-size:12px;color:rgba(255,255,255,.72);line-height:1.5;max-width:700px}
@@ -388,11 +389,17 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .ca-legend-item{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--text-l)}
 .ca-legend-swatch{width:12px;height:12px;border-radius:999px;background:#60717D}
 .ca-legend-swatch.line{border-radius:4px;height:6px}
-.cctv-map-wrap{height:520px;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.cctv-map-wrap{height:720px;background:white;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;position:relative}
 .cctv-map-toolbar{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F8FAFB}
 .cctv-map-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
 .cctv-map-sub{font-size:11px;color:var(--text-l);margin-top:3px}
-#cctvPackagesMap{flex:1;min-height:420px}
+#cctvPackagesMap{flex:1;min-height:620px;position:relative}
+.cctv-selected-map-card{position:absolute;top:12px;left:12px;z-index:650;max-width:260px;background:rgba(255,255,255,.96);border:2px solid #111827;border-radius:12px;box-shadow:0 12px 28px rgba(17,24,39,.22);padding:10px 12px;color:var(--text);font-size:11px;line-height:1.45;pointer-events:auto}
+.cctv-selected-map-card .title{font-weight:900;color:#111827;margin-bottom:4px;letter-spacing:.03em}
+.cctv-selected-map-card .meta{color:var(--text-l)}
+.cctv-selected-leader{position:absolute;inset:0;z-index:640;pointer-events:none;overflow:visible}
+.cctv-selected-leader line{stroke:#111827;stroke-width:4;stroke-linecap:round}
+.cctv-selected-leader circle{fill:#FFD166;stroke:#111827;stroke-width:3}
 .cctv-selected-banner{margin-top:5px;display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:#111827;color:#FFD166;border:1px solid #FFD166;font-size:10px;font-weight:900;letter-spacing:.035em;box-shadow:0 5px 12px rgba(17,24,39,.18)}
 .cctv-selected-tooltip{background:#111827!important;color:#FFD166!important;border:1px solid #FFD166!important;border-radius:999px!important;box-shadow:0 5px 14px rgba(17,24,39,.2);font-size:10px!important;font-weight:900;letter-spacing:.035em;padding:2px 6px!important}
 .cctv-selected-tooltip::before{border-top-color:#111827!important}
@@ -1864,6 +1871,8 @@ let cctvPackagesMap = null;
 let cctvPackagesLayer = null;
 let cctvPackageFocusLayers = new Map();
 let selectedCctvPackageId = null;
+let cctvSelectedOverlayCard = null;
+let cctvSelectedLeaderSvg = null;
 let futureWorksWorkbookMeta = null;
 let futureWorksReliningFileName = '';
 let futureWorksExtraFileName = '';
@@ -6466,6 +6475,7 @@ function ensureCctvPackagesMap() {
     return;
   }
   cctvPackagesMap = L.map('cctvPackagesMap').setView([-33.75, 151.25], 11);
+  cctvPackagesMap.on('move zoom resize', updateCctvSelectedMapOverlay);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '© OpenStreetMap © CARTO',
     subdomains: 'abcd',
@@ -6519,6 +6529,84 @@ function buildCctvPackagePopup(pkg) {
     </div>`;
 }
 
+function getSelectedCctvPackage() {
+  if (!selectedCctvPackageId) return null;
+  return (lastCctvPackagingGeneration?.packages || []).find(pkg => pkg.package_id === selectedCctvPackageId) || null;
+}
+
+function getCctvPackageAnchorLatLng(pkg) {
+  if (!pkg) return null;
+  if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) return L.latLng(pkg.lat, pkg.lon);
+  const assets = (pkg.assets || []).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
+  if (!assets.length) return null;
+  const center = meanCoordinate(assets);
+  return center ? L.latLng(center.lat, center.lon) : null;
+}
+
+function ensureCctvSelectedMapOverlay() {
+  const mapEl = document.getElementById('cctvPackagesMap');
+  if (!mapEl) return false;
+  if (!cctvSelectedLeaderSvg) {
+    cctvSelectedLeaderSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    cctvSelectedLeaderSvg.classList.add('cctv-selected-leader');
+    cctvSelectedLeaderSvg.innerHTML = '<line></line><circle r="6"></circle>';
+    mapEl.appendChild(cctvSelectedLeaderSvg);
+  }
+  if (!cctvSelectedOverlayCard) {
+    cctvSelectedOverlayCard = document.createElement('div');
+    cctvSelectedOverlayCard.className = 'cctv-selected-map-card';
+    mapEl.appendChild(cctvSelectedOverlayCard);
+  }
+  return true;
+}
+
+function renderCctvSelectedMapOverlay() {
+  if (!ensureCctvSelectedMapOverlay()) return;
+  const pkg = getSelectedCctvPackage();
+  if (!pkg) {
+    cctvSelectedOverlayCard.style.display = 'none';
+    cctvSelectedLeaderSvg.style.display = 'none';
+    return;
+  }
+  const assetList = (pkg.assets || []).slice(0, 8).map(item => item.assetId).join(', ');
+  cctvSelectedOverlayCard.innerHTML = `
+    <div class="title">${escapeHtml(pkg.package_id)}</div>
+    <div class="meta">
+      <div><strong>Suburbs:</strong> ${escapeHtml((pkg.suburbs || [pkg.suburb]).join(', '))}</div>
+      <div><strong>Pipes:</strong> ${pkg.pipe_count} · <strong>Span:</strong> ${Number(pkg.max_span_m || 0).toFixed(0)} m</div>
+      <div><strong>Length:</strong> ${Number(pkg.total_length_m || 0).toFixed(1)} m · <strong>Cost:</strong> ${formatCurrency(pkg.total_cost || 0)}</div>
+      <div><strong>Assets:</strong> ${escapeHtml(assetList || 'None')}</div>
+    </div>
+  `;
+  cctvSelectedOverlayCard.style.display = 'block';
+  cctvSelectedLeaderSvg.style.display = 'block';
+  updateCctvSelectedMapOverlay();
+}
+
+function updateCctvSelectedMapOverlay() {
+  if (!cctvPackagesMap || !cctvSelectedOverlayCard || !cctvSelectedLeaderSvg || cctvSelectedOverlayCard.style.display === 'none') return;
+  const pkg = getSelectedCctvPackage();
+  const anchor = getCctvPackageAnchorLatLng(pkg);
+  if (!anchor) {
+    cctvSelectedLeaderSvg.style.display = 'none';
+    return;
+  }
+  const point = cctvPackagesMap.latLngToContainerPoint(anchor);
+  const cardRect = cctvSelectedOverlayCard.getBoundingClientRect();
+  const mapRect = cctvPackagesMap.getContainer().getBoundingClientRect();
+  const startX = Math.min(cardRect.right - mapRect.left, cardRect.left - mapRect.left + cardRect.width);
+  const startY = cardRect.top - mapRect.top + cardRect.height;
+  const line = cctvSelectedLeaderSvg.querySelector('line');
+  const circle = cctvSelectedLeaderSvg.querySelector('circle');
+  line.setAttribute('x1', String(startX));
+  line.setAttribute('y1', String(startY));
+  line.setAttribute('x2', String(point.x));
+  line.setAttribute('y2', String(point.y));
+  circle.setAttribute('cx', String(point.x));
+  circle.setAttribute('cy', String(point.y));
+  cctvSelectedLeaderSvg.style.display = 'block';
+}
+
 function renderCctvPackagesMap(options = {}) {
   ensureCctvPackagesMap();
   const subtitle = document.getElementById('cctvMapSubtitle');
@@ -6533,6 +6621,7 @@ function renderCctvPackagesMap(options = {}) {
   if (!packages.length) {
     if (subtitle) subtitle.textContent = 'Generate packages to draw package groups on the map.';
     if (selectedBanner) selectedBanner.style.display = 'none';
+    renderCctvSelectedMapOverlay();
     return;
   }
   const selectedPackage = selectedCctvPackageId
@@ -6587,7 +6676,7 @@ function renderCctvPackagesMap(options = {}) {
         fillColor: color,
         fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : (item.isTbaCondition ? 0.95 : 0.78)),
         opacity: style.isDimmed ? 0.2 : 1
-      }).on('click', () => selectCctvPackageFromMap(pkg.package_id)).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
+      }).on('click', () => selectCctvPackageFromMap(pkg.package_id)).addTo(cctvPackagesLayer);
       if (!cctvPackageFocusLayers.has(pkg.package_id)) cctvPackageFocusLayers.set(pkg.package_id, assetMarker);
       drawn += 1;
     });
@@ -6603,13 +6692,14 @@ function renderCctvPackagesMap(options = {}) {
         permanent: style.isSelected,
         direction: 'top',
         className: style.isSelected ? 'cctv-selected-tooltip' : ''
-      }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
+      }).addTo(cctvPackagesLayer);
       cctvPackageFocusLayers.set(pkg.package_id, focusMarker);
     }
   });
   if (subtitle) {
     subtitle.textContent = `${packages.length.toLocaleString()} package${packages.length === 1 ? '' : 's'} mapped with ${drawn.toLocaleString()} pipe point${drawn === 1 ? '' : 's'}. Each package has a distinct colour${selectedCctvPackageId ? `; ${selectedCctvPackageId} is highlighted.` : '.'}`;
   }
+  renderCctvSelectedMapOverlay();
   if (!selectedPackage && options.fit !== false) fitCctvPackagesMap();
 }
 
@@ -6627,6 +6717,7 @@ function clearCctvPackageSelection() {
   selectedCctvPackageId = null;
   renderGeneratedCctvPackages(lastCctvPackagingGeneration?.packages || []);
   renderCctvPackagesMap();
+  renderCctvSelectedMapOverlay();
   fitCctvPackagesMap();
 }
 
@@ -6634,6 +6725,7 @@ function refreshCctvPackagesMap() {
   selectedCctvPackageId = null;
   renderGeneratedCctvPackages(lastCctvPackagingGeneration?.packages || []);
   renderCctvPackagesMap({ fit: false });
+  renderCctvSelectedMapOverlay();
 }
 
 function focusCctvPackageOnMap(packageId, options = {}) {
@@ -6647,8 +6739,7 @@ function focusCctvPackageOnMap(packageId, options = {}) {
   setTimeout(() => {
     const pkg = (lastCctvPackagingGeneration?.packages || []).find(item => item.package_id === id);
     if (!pkg || !cctvPackagesMap) return;
-    const focusLayer = cctvPackageFocusLayers.get(id);
-    if (focusLayer?.openPopup) focusLayer.openPopup();
+    renderCctvSelectedMapOverlay();
   }, 150);
 }
 
