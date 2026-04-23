@@ -1608,7 +1608,7 @@ window.addEventListener('keydown', (event) => {
           </div>
           <div class="ca-actions">
             <button class="export-btn" onclick="clearCctvPackageSelection()">Fit Packages</button>
-            <button class="export-btn" onclick="clearCctvPackageSelection()">Refresh Map</button>
+            <button class="export-btn" onclick="refreshCctvPackagesMap()">Refresh Map</button>
           </div>
         </div>
         <div id="cctvPackagesMap"></div>
@@ -6629,6 +6629,12 @@ function clearCctvPackageSelection() {
   renderGeneratedCctvPackages(lastCctvPackagingGeneration?.packages || []);
   renderCctvPackagesMap();
   fitCctvPackagesMap();
+}
+
+function refreshCctvPackagesMap() {
+  selectedCctvPackageId = null;
+  renderGeneratedCctvPackages(lastCctvPackagingGeneration?.packages || []);
+  renderCctvPackagesMap({ fit: false });
 }
 
 function focusCctvPackageOnMap(packageId) {
