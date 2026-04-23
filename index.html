@@ -1859,6 +1859,7 @@ let lastCctvPackagingGeneration = null;
 let cctvPackagesMap = null;
 let cctvPackagesLayer = null;
 let cctvPackageFocusLayers = new Map();
+let selectedCctvPackageId = null;
 let futureWorksWorkbookMeta = null;
 let futureWorksReliningFileName = '';
 let futureWorksExtraFileName = '';
@@ -6445,10 +6446,24 @@ function ensureCctvPackagesMap() {
   cctvPackagesLayer = L.layerGroup().addTo(cctvPackagesMap);
 }
 
-function getCctvPackageColor(pkg) {
-  if ((pkg.tba_pipe_count || 0) > 0) return '#C0392B';
-  if ((pkg.critical_pipe_count || 0) > 0) return '#E67E22';
-  return '#00847F';
+const CCTV_PACKAGE_COLORS = [
+  '#007C89', '#C44536', '#6A994E', '#F18F01', '#5B5F97', '#2D9CDB',
+  '#8E5572', '#3A7D44', '#D95D39', '#7B2CBF', '#2A9D8F', '#E76F51',
+  '#4D908E', '#B56576', '#577590', '#BC6C25'
+];
+
+function getCctvPackageColor(pkg, index = 0) {
+  const parsed = String(pkg?.package_id || '').match(/(\d+)$/);
+  const colorIndex = parsed ? Number(parsed[1]) - 1 : index;
+  return CCTV_PACKAGE_COLORS[Math.abs(colorIndex) % CCTV_PACKAGE_COLORS.length];
+}
+
+function getCctvPackageMapStyle(pkg, index = 0) {
+  const isSelected = selectedCctvPackageId && pkg.package_id === selectedCctvPackageId;
+  return {
+    color: getCctvPackageColor(pkg, index),
+    isSelected
+  };
 }
 
 function buildCctvPackagePopup(pkg) {
@@ -6495,39 +6510,48 @@ function renderCctvPackagesMap() {
   }
 
   let drawn = 0;
-  packages.forEach(pkg => {
+  packages.forEach((pkg, packageIndex) => {
     const assets = (pkg.assets || []).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
     if (!assets.length) return;
-    const color = getCctvPackageColor(pkg);
+    const style = getCctvPackageMapStyle(pkg, packageIndex);
+    const color = style.color;
     const points = assets.map(item => [item.lat, item.lon]);
     if (points.length > 1) {
-      L.polyline(points, { color, weight: 3, opacity: 0.75, dashArray: '6 6' }).addTo(cctvPackagesLayer);
+      L.polyline(points, {
+        color,
+        weight: style.isSelected ? 8 : 3,
+        opacity: style.isSelected ? 1 : 0.75,
+        dashArray: style.isSelected ? '' : '6 6'
+      }).addTo(cctvPackagesLayer);
+      if (style.isSelected) {
+        L.polyline(points, { color: '#FFD166', weight: 13, opacity: 0.45 }).addTo(cctvPackagesLayer);
+      }
     }
     assets.forEach(item => {
-      const radius = item.isTbaCondition ? 7 : 5;
+      const radius = style.isSelected ? 10 : (item.isTbaCondition ? 7 : 5);
       const assetMarker = L.circleMarker([item.lat, item.lon], {
         radius,
-        color: '#fff',
-        weight: 1.5,
+        color: style.isSelected ? '#111827' : '#fff',
+        weight: style.isSelected ? 3 : 1.5,
         fillColor: color,
-        fillOpacity: item.isTbaCondition ? 0.95 : 0.78
+        fillOpacity: style.isSelected ? 1 : (item.isTbaCondition ? 0.95 : 0.78)
       }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
       if (!cctvPackageFocusLayers.has(pkg.package_id)) cctvPackageFocusLayers.set(pkg.package_id, assetMarker);
       drawn += 1;
     });
     if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) {
       const focusMarker = L.circleMarker([pkg.lat, pkg.lon], {
-        radius: 11,
-        color,
-        weight: 3,
-        fillColor: '#fff',
-        fillOpacity: 0.7
+        radius: style.isSelected ? 18 : 11,
+        color: style.isSelected ? '#111827' : color,
+        weight: style.isSelected ? 5 : 3,
+        fillColor: style.isSelected ? '#FFD166' : '#fff',
+        fillOpacity: style.isSelected ? 0.95 : 0.7
       }).bindTooltip(pkg.package_id, { permanent: false }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
       cctvPackageFocusLayers.set(pkg.package_id, focusMarker);
     }
   });
   if (subtitle) {
-    subtitle.textContent = `${packages.length.toLocaleString()} package${packages.length === 1 ? '' : 's'} mapped with ${drawn.toLocaleString()} pipe point${drawn === 1 ? '' : 's'}. Red packages contain TBA condition pipes.`;
+    subtitle.textContent = `${packages.length.toLocaleString()} package${packages.length === 1 ? '' : 's'} mapped with ${drawn.toLocaleString()} pipe point${drawn === 1 ? '' : 's'}. Each package has a distinct colour${selectedCctvPackageId ? `; ${selectedCctvPackageId} is highlighted.` : '.'}`;
   }
   fitCctvPackagesMap();
 }
@@ -6545,6 +6569,7 @@ function fitCctvPackagesMap() {
 function focusCctvPackageOnMap(packageId) {
   const id = String(packageId || '');
   if (!id) return;
+  selectedCctvPackageId = id;
   switchPage('cctvpackaging');
   ensureCctvPackagesMap();
   renderCctvPackagesMap();
