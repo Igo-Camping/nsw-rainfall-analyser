@@ -90,6 +90,8 @@ select:focus,input:focus{border-color:var(--teal)}
 /* Main area */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
 #map{flex:1}
+#map-bar-chart{display:none;flex:1;padding:20px 24px;box-sizing:border-box;flex-direction:column;min-height:0;background:#fff}
+#map-bar-chart-inner{flex:1;min-height:0;position:relative}
 
 /* Results panel */
 .results{background:white;border-top:2px solid var(--teal);display:none;overflow-y:auto;flex:0 0 auto;max-height:min(42vh,360px)}
@@ -268,6 +270,7 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 /* Packaging */
 #page-relining{flex:1;min-height:0;display:none;overflow:hidden;background:var(--panel);padding:20px}
 .pkg-shell{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px;overflow:auto;width:100%;min-height:0}
+#page-relining .pkg-shell{max-width:1480px}
 #page-cctvpackaging .pkg-shell{max-width:1480px}
 .pkg-hero{background:var(--navy);color:white;border-radius:var(--r);padding:22px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .pkg-title{font-size:24px;font-weight:800;margin-bottom:4px}
@@ -394,7 +397,8 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 .cctv-map-title{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text-l)}
 .cctv-map-sub{font-size:11px;color:var(--text-l);margin-top:3px}
 #cctvPackagesMap{flex:1;min-height:620px;position:relative}
-.cctv-selected-map-card{position:absolute;top:12px;left:12px;z-index:650;max-width:260px;background:rgba(255,255,255,.96);border:2px solid #111827;border-radius:12px;box-shadow:0 12px 28px rgba(17,24,39,.22);padding:10px 12px;color:var(--text);font-size:11px;line-height:1.45;pointer-events:auto}
+#reliningPackagesMap{flex:1;min-height:620px;position:relative}
+.cctv-selected-map-card{position:absolute;top:12px;right:12px;z-index:650;max-width:min(300px,calc(100% - 78px));background:rgba(255,255,255,.96);border:2px solid #111827;border-radius:12px;box-shadow:0 12px 28px rgba(17,24,39,.22);padding:10px 12px;color:var(--text);font-size:11px;line-height:1.45;pointer-events:auto}
 .cctv-selected-map-card .title{font-weight:900;color:#111827;margin-bottom:4px;letter-spacing:.03em}
 .cctv-selected-map-card .meta{color:var(--text-l)}
 .cctv-selected-leader{position:absolute;inset:0;z-index:640;pointer-events:none;overflow:visible}
@@ -412,6 +416,7 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
   #bomGaugesMap{min-height:360px}
   .cctv-map-wrap{height:420px}
   #cctvPackagesMap{min-height:320px}
+  #reliningPackagesMap{min-height:320px}
 }
 </style>
 </head>
@@ -720,6 +725,7 @@ window.addEventListener('keydown', (event) => {
   <!-- Main -->
   <div class="main">
     <div id="map"></div>
+    <div id="map-bar-chart"><div id="map-bar-chart-inner"><canvas id="map-bar-chart-canvas"></canvas></div></div>
 
     <!-- Loading overlay -->
     <div class="loading" id="loading">
@@ -1278,29 +1284,19 @@ window.addEventListener('keydown', (event) => {
     </div>
 
     <div class="pkg-panel">
-      <div class="row2" style="align-items:end">
+      <div class="lbl">Packaging Rules</div>
+      <div class="pkg-grid" style="grid-template-columns:1.2fr 1.2fr 1fr 1fr auto">
         <div class="fg">
-          <label for="pkgReliningMode">Relining Preview Mode</label>
-          <select id="pkgReliningMode">
+          <label for="pkgReliningMode">Pipe Condition Selection</label>
+          <select id="pkgReliningMode" onchange="renderReliningPackagingReasoning(getReliningPackagingOptions(), lastReliningPackagingPreview)">
             <option>Condition 8 only</option>
             <option>Condition 7 only</option>
             <option selected>Condition 7 and 8</option>
           </select>
         </div>
         <div class="fg">
-          <label>&nbsp;</label>
-          <button class="run-btn" style="margin-top:0" id="pkgPreviewBtn" onclick="loadPackagingPreview()">Load Stream Preview</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Upload both files above before running the stream preview.</div>
-    </div>
-
-    <div class="pkg-panel">
-      <div class="lbl">Relining Package Generation</div>
-      <div class="pkg-grid" style="grid-template-columns:1.2fr 1fr 1fr auto">
-        <div class="fg">
           <label for="pkgMethod">Packaging Method</label>
-          <select id="pkgMethod" onchange="togglePackagingInputs()">
+          <select id="pkgMethod" onchange="togglePackagingInputs();renderReliningPackagingReasoning(getReliningPackagingOptions(), lastReliningPackagingPreview)">
             <option value="value" selected>Value based</option>
             <option value="count">Pipe count based</option>
           </select>
@@ -1322,21 +1318,54 @@ window.addEventListener('keydown', (event) => {
         </div>
         <div class="fg">
           <label>&nbsp;</label>
-          <button class="run-btn" style="margin-top:0" id="pkgGenerateBtn" onclick="generateReliningPackages()">Generate Packages</button>
+          <button class="run-btn" style="margin-top:0" id="pkgPreviewBtn" onclick="loadPackagingPreview()">Preview Candidates</button>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Packaging runs locally in the browser against the uploaded files and keeps the output to summary tables for now.</div>
+      <div class="pkg-grid" style="grid-template-columns:auto 1fr;margin-top:12px">
+        <div class="fg">
+          <label>&nbsp;</label>
+          <button class="run-btn" style="margin-top:0" id="pkgGenerateBtn" onclick="generateReliningPackages()">Generate Packages</button>
+        </div>
+        <div class="fg">
+          <label>&nbsp;</label>
+          <div style="font-size:11px;color:var(--text-l);line-height:1.5;padding-top:8px">
+            Packaging runs locally in the browser against the uploaded files. Generated packages now retain package assets, coordinates, cost warnings, and map-ready geometry for review and export.
+          </div>
+        </div>
+      </div>
+      <div class="pkg-assumptions" id="pkgReasoning">
+        <strong>Packaging Reasoning:</strong>
+        Upload files and preview candidates to see the current relining rules applied to the data.
+      </div>
     </div>
 
     <div class="pkg-meta" id="pkgMeta"></div>
     <div class="pkg-card-grid" id="pkgCards"></div>
     <div class="pkg-panel">
-      <div class="lbl">Sample Assets</div>
-      <div id="pkgSampleArea" class="pkg-empty">Upload files and run the stream preview to see sample assets.</div>
+      <div class="lbl">Eligible Candidate Sample</div>
+      <div id="pkgSampleArea" class="pkg-empty">Upload files and run the preview to see eligible relining candidates.</div>
     </div>
     <div class="pkg-panel">
       <div class="lbl">Generated Packages</div>
       <div id="pkgPackagesArea" class="pkg-empty">Generate relining packages to see package counts, cost totals, and sample package rows.</div>
+    </div>
+    <div class="pkg-panel">
+      <div class="lbl">Package Map</div>
+      <div class="cctv-map-wrap">
+        <div class="cctv-map-toolbar">
+          <div>
+            <div class="cctv-map-title">Relining Package Map</div>
+            <div class="cctv-map-sub" id="reliningMapSubtitle">Generate packages to draw package groups on the map.</div>
+            <div class="cctv-selected-banner" id="reliningSelectedPackageBanner" style="display:none"></div>
+          </div>
+          <div class="ca-actions">
+            <button class="export-btn" onclick="fitReliningPackagesMap()">Fit Packages</button>
+            <button class="export-btn" onclick="refreshReliningPackagesMap()">Refresh Map</button>
+            <button class="export-btn" onclick="clearReliningPackageSelection()">Clear Selection</button>
+          </div>
+        </div>
+        <div id="reliningPackagesMap"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1850,7 +1879,7 @@ let allStations = [], selected = null, markers = {}, mode = 'recent';
 let bomRainfallGauges = [], bomRainfallMarkers = {};
 let lastResults = null, allSiteResults = null;
 let lastTopDurResults = null;
-let rainChart = null, compareChart = null;
+let rainChart = null, compareChart = null, mapBarChart = null;
 let currentTab = 'map';
 let packagingConfig = null;
 let lastPackagingGeneration = null;
@@ -1864,6 +1893,13 @@ let reliningAssetsRows = [];
 let reliningRatesRows = [];
 let reliningAssetsFileName = '';
 let reliningRatesFileName = '';
+let lastReliningPackagingPreview = null;
+let reliningPackagesMap = null;
+let reliningPackagesLayer = null;
+let reliningPackageFocusLayers = new Map();
+let selectedReliningPackageId = null;
+let reliningSelectedOverlayCard = null;
+let reliningSelectedLeaderSvg = null;
 let cctvPackagingAssetsData = null;
 let cctvPackagingRatesData = null;
 let lastCctvPackagingPreview = null;
@@ -1919,6 +1955,10 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
   attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
 }).addTo(map);
 const lgaBoundaryLoadPromise = loadAllLgaBoundaries();
+
+// Map View tab is default: hide Leaflet map, show chart div
+document.getElementById('map').style.display = 'none';
+document.getElementById('map-bar-chart').style.display = 'flex';
 
 // â”€â”€ Startup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function init() {
@@ -2447,6 +2487,16 @@ function switchTab(tab, skipRun = false) {
   document.querySelectorAll('.tab').forEach((el,i) => {
     el.classList.toggle('active', ['map','top-site','top-dur','daily','monitors'][i] === tab);
   });
+  const leafletMap = document.getElementById('map');
+  const barChartDiv = document.getElementById('map-bar-chart');
+  if (tab === 'map') {
+    leafletMap.style.display = 'none';
+    barChartDiv.style.display = 'flex';
+  } else {
+    leafletMap.style.display = '';
+    barChartDiv.style.display = 'none';
+    map.invalidateSize();
+  }
   updateRecalcButton();
   if (tab === 'monitors') {
     loadOtherMonitors();
@@ -3656,6 +3706,7 @@ function renderResults(data, wx, rainToday) {
 
   renderChart(data.readings, rm?.peak_start, rm?.peak_end);
   renderIFDTable(aep, rm?.max_depth_mm, dur);
+  renderMapBarChart(data.readings, data.from, data.to);
   setMarkerStyle(data.station_id, rm?.max_depth_mm > 0 ? 'result' : 'selected');
   switchRTab('r-summary');
 }
@@ -3706,6 +3757,88 @@ function renderChart(readings, peakStart, peakEnd) {
       scales:{
         x:{grid:{display:false},ticks:{maxTicksLimit:12,font:{size:10},color:'#5A6B7A'}},
         y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{font:{size:10},color:'#5A6B7A',callback:v=>v+' mm'}}
+      }
+    }
+  });
+}
+
+// â”€â”€ Map View rainfall totals bar chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function renderMapBarChart(readings, fromStr, toStr) {
+  const canvas = document.getElementById('map-bar-chart-canvas');
+  if (!canvas) return;
+
+  const fromMs = new Date(fromStr).getTime();
+  const toMs   = new Date(toStr).getTime();
+  const rangeDays = (toMs - fromMs) / 86400000;
+
+  const blockMin = rangeDays < 5 ? 60 : rangeDays <= 11 ? 120 : 720;
+  const blockMs  = blockMin * 60000;
+
+  // Bucket readings into blocks
+  const buckets = {};
+  if (readings && readings.length) {
+    for (const r of readings) {
+      const ts = new Date(r.timestamp.replace(' ', 'T')).getTime();
+      const key = Math.floor(ts / blockMs) * blockMs;
+      buckets[key] = (buckets[key] || 0) + (r.value || 0);
+    }
+  }
+
+  const keys = Object.keys(buckets).map(Number).sort((a, b) => a - b);
+
+  function fmtBlock(ms) {
+    const d = new Date(ms);
+    if (blockMin >= 720) {
+      return d.toLocaleDateString('en-AU', {day:'2-digit',month:'short'}) + ' ' +
+             d.toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit',hour12:false});
+    }
+    return d.toLocaleDateString('en-AU', {day:'2-digit',month:'short'}) + ' ' +
+           d.toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+
+  const labels = keys.map(fmtBlock);
+  const values = keys.map(k => +buckets[k].toFixed(2));
+
+  const blockLabel = blockMin === 60 ? '1-hr' : blockMin === 120 ? '2-hr' : '12-hr';
+
+  if (mapBarChart) { mapBarChart.destroy(); mapBarChart = null; }
+
+  mapBarChart = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: { labels, datasets: [{
+      label: 'Rainfall (mm)',
+      data: values,
+      backgroundColor: 'rgba(0,132,127,0.55)',
+      borderColor: 'rgba(0,132,127,0.85)',
+      borderWidth: 1,
+      borderRadius: 2,
+      barPercentage: 0.9,
+      categoryPercentage: 1
+    }]},
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: `Rainfall Totals — ${blockLabel} blocks`,
+          font: { size: 11, weight: '700' },
+          color: '#5A6B7A',
+          padding: { bottom: 10 }
+        },
+        tooltip: { callbacks: { label: c => `${c.parsed.y.toFixed(2)} mm` } }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { maxTicksLimit: 14, font: { size: 10 }, color: '#5A6B7A', maxRotation: 45 }
+        },
+        y: {
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          ticks: { font: { size: 10 }, color: '#5A6B7A', callback: v => v + ' mm' },
+          title: { display: true, text: 'mm', font: { size: 10 }, color: '#5A6B7A' }
+        }
       }
     }
   });
@@ -4296,20 +4429,56 @@ function normaliseNumeric(value) {
   if (value == null || value === '') return null;
   const cleaned = String(value).replace(/[$,\s]/g, '');
   const num = Number(cleaned);
-  return Number.isFinite(num) ? num : null;
+  if (Number.isFinite(num)) return num;
+  const embedded = cleaned.match(/-?\d+(\.\d+)?/);
+  return embedded ? Number(embedded[0]) : null;
 }
 
 function getReliningConditionNumber(row) {
-  const raw = row?.['SW_Condition'] ?? row?.['Observed_Condition'] ?? row?.['Calculated_Condition'] ?? row?.['Schedule7_Condition'];
-  const match = String(raw ?? '').match(/(\d+)/);
-  return match ? Number(match[1]) : null;
+  const candidates = [
+    row?.['SW_Condition'],
+    row?.['Observed_Condition'],
+    row?.['Calculated_Condition'],
+    row?.['Schedule7_Condition'],
+    row?.['Schedule_7_Condition'],
+    getValueByAliases(row, [
+      'SW_Condition',
+      'Observed_Condition',
+      'Observed Condition',
+      'Calculated_Condition',
+      'Calculated Condition',
+      'Schedule7_Condition',
+      'Schedule_7_Condition',
+      'Schedule 7 Condition',
+      'Condition'
+    ])
+  ];
+  for (const raw of candidates) {
+    const text = String(raw ?? '').trim();
+    if (!text) continue;
+    const numericOnly = text.match(/^\d+(\.\d+)?$/);
+    if (numericOnly) return Number(numericOnly[0]);
+    const leadingCondition = text.match(/\bcondition\s*(\d+)\b/i);
+    if (leadingCondition) return Number(leadingCondition[1]);
+    const compactCondition = text.match(/\bcond\.?\s*(\d+)\b/i);
+    if (compactCondition) return Number(compactCondition[1]);
+  }
+  return null;
 }
 
 function parseDescriptorDiameters(desc) {
   const text = String(desc ?? '');
   const mmMatches = [...text.matchAll(/[ØO]?(\d+)\s*mm/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
   if (mmMatches.length) return mmMatches;
-  return [...text.matchAll(/[ØO](\d+)/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
+  const symbolMatches = [...text.matchAll(/[ØO](\d+)/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
+  if (symbolMatches.length) return symbolMatches;
+  if (/relining|connection/i.test(text)) {
+    const genericMatches = [...text.matchAll(/(\d{2,4})/g)]
+      .map(match => Number(match[1]))
+      .filter(d => d >= 50 && d <= 3000);
+    if (genericMatches.length) return [genericMatches[0]];
+  }
+  return [];
 }
 
 function parseLengthBand(desc) {
@@ -4329,15 +4498,21 @@ function cleanRateRows(rows) {
 }
 
 function getReliningRateForRow(row) {
+  return getReliningRateInfoForRow(row).rate;
+}
+
+function getReliningRateInfoForRow(row) {
   const diameter = normaliseNumeric(row?.['SWP_Pipe Diameter_mm'] ?? row?.['Pipe Diameter'] ?? row?.['Diameter']);
   const lengthM = normaliseNumeric(row?.['Spatial Length_m'] ?? row?.['Length'] ?? row?.['Length_m']);
-  if (!Number.isFinite(diameter) || !Number.isFinite(lengthM) || !reliningRatesRows.length) return null;
+  if (!Number.isFinite(diameter)) return { rate: null, reason: 'Missing diameter', diameter, lengthM };
+  if (!Number.isFinite(lengthM)) return { rate: null, reason: 'Missing length', diameter, lengthM };
+  if (!reliningRatesRows.length) return { rate: null, reason: 'Rates not loaded', diameter, lengthM };
 
   let matches = reliningRatesRows.filter(rate => {
     const diameters = parseDescriptorDiameters(rate?.['Size/Descriptor']);
     return diameters.includes(diameter);
   });
-  if (!matches.length) return null;
+  if (!matches.length) return { rate: null, reason: 'No matching diameter rate', diameter, lengthM };
 
   const inBand = matches.filter(rate => {
     const band = parseLengthBand(rate?.['Size/Descriptor']);
@@ -4345,7 +4520,9 @@ function getReliningRateForRow(row) {
     return lengthM >= band[0] && lengthM <= band[1];
   });
   if (inBand.length) matches = inBand;
-  else if (matches.some(rate => parseLengthBand(rate?.['Size/Descriptor']))) return null;
+  else if (matches.some(rate => parseLengthBand(rate?.['Size/Descriptor']))) {
+    return { rate: null, reason: 'No matching length band', diameter, lengthM };
+  }
 
   const assetClassMatches = matches.filter(rate => /Median/i.test(String(rate?.['Asset Class'] || '')));
   if (assetClassMatches.length) matches = assetClassMatches;
@@ -4355,9 +4532,16 @@ function getReliningRateForRow(row) {
   }
 
   const numericRates = matches.map(rate => normaliseNumeric(rate?.['Unit Rate'])).filter(value => Number.isFinite(value));
-  if (!numericRates.length) return null;
+  if (!numericRates.length) return { rate: null, reason: 'Matching rate has no unit rate', diameter, lengthM };
   numericRates.sort((a, b) => a - b);
-  return numericRates[Math.floor(numericRates.length / 2)];
+  return {
+    rate: numericRates[Math.floor(numericRates.length / 2)],
+    reason: '',
+    diameter,
+    lengthM,
+    matchCount: matches.length,
+    descriptor: String(matches[0]?.['Size/Descriptor'] || '')
+  };
 }
 
 function getReliningRowsForMode(mode) {
@@ -4406,6 +4590,220 @@ function buildSplitStreams(mode) {
       buildPackagingStreamSummary('Amplification', amplificationRows, suburbCol)
     ]
   };
+}
+
+function getReliningPackagingOptions() {
+  const method = document.getElementById('pkgMethod')?.value || 'value';
+  const reliningMode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
+  const maxPackageValue = Number(String(document.getElementById('pkgMaxValue')?.value || '500000').replace(/,/g, ''));
+  const pipesPerPackage = Number(String(document.getElementById('pkgPipeCount')?.value || '25').replace(/,/g, ''));
+  return {
+    reliningMode,
+    method,
+    maxPackageValue: Math.max(Number.isFinite(maxPackageValue) ? maxPackageValue : 500000, 1),
+    pipesPerPackage: Math.max(Number.isFinite(pipesPerPackage) ? Math.round(pipesPerPackage) : 25, 1),
+    groupBySuburb: (document.getElementById('pkgGroupSuburb')?.value || 'yes') === 'yes'
+  };
+}
+
+function reliningModeLabel(mode) {
+  if (mode === 'Condition 8 only') return 'Condition 8';
+  if (mode === 'Condition 7 only') return 'Condition 7';
+  return 'Condition 7 and Condition 8';
+}
+
+function resolveReliningCoordinate(row) {
+  return resolveCctvCoordinate(row);
+}
+
+function resolveReliningSuburb(row, suburbCol) {
+  return formatSuburbName(getRowSuburb(row, suburbCol)) || getRowSuburb(row, suburbCol) || resolveCctvSuburb(row) || 'Unknown';
+}
+
+function normaliseReliningCandidateRow(row, index, options, suburbCol) {
+  const condition = getReliningConditionNumber(row);
+  const allowed = options.reliningMode === 'Condition 8 only' ? new Set([8]) : (options.reliningMode === 'Condition 7 only' ? new Set([7]) : new Set([7, 8]));
+  if (!allowed.has(condition)) return null;
+  const rateInfo = getReliningRateInfoForRow(row);
+  const lengthM = Number.isFinite(rateInfo.lengthM) ? rateInfo.lengthM : 0;
+  const diameterMm = Number.isFinite(rateInfo.diameter) ? rateInfo.diameter : null;
+  const pipeCost = Number.isFinite(rateInfo.rate) && Number.isFinite(lengthM) ? rateInfo.rate * lengthM : null;
+  const coord = resolveReliningCoordinate(row);
+  const assetId = String(getValueByAliases(row, ['Asset', 'Asset Number', 'Asset_Number', 'OBJECTID', 'MAPKEY', 'CATLG_ID']) || `asset-${index + 1}`).trim();
+  return {
+    assetId,
+    suburb: resolveReliningSuburb(row, suburbCol),
+    condition,
+    conditionLabel: String(condition || ''),
+    diameterMm,
+    lengthM,
+    ratePerM: rateInfo.rate,
+    rateDescriptor: rateInfo.descriptor || '',
+    rateMatchCount: rateInfo.matchCount || 0,
+    pipeCost,
+    costStatus: Number.isFinite(pipeCost) ? 'Costed' : 'Uncosted',
+    costReason: Number.isFinite(pipeCost) ? '' : (rateInfo.reason || 'Unable to cost'),
+    lat: coord?.lat ?? null,
+    lon: coord?.lon ?? null,
+    coordinateSource: coord?.source || '',
+    raw: row
+  };
+}
+
+function buildReliningPackagingPreview(assetRows, options) {
+  const suburbCol = resolveSuburbColumn(assetRows);
+  const streams = buildSplitStreams(options.reliningMode).streams;
+  const eligible = (assetRows || [])
+    .map((row, index) => normaliseReliningCandidateRow(row, index, options, suburbCol))
+    .filter(Boolean);
+  const costed = eligible.filter(item => Number.isFinite(item.pipeCost));
+  const uncosted = eligible.filter(item => !Number.isFinite(item.pipeCost));
+  const withCoords = eligible.filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
+  const noCoords = eligible.filter(item => !Number.isFinite(item.lat) || !Number.isFinite(item.lon));
+  return {
+    asset_count: assetRows?.length || 0,
+    suburb_column: suburbCol,
+    streams,
+    eligible,
+    costed,
+    uncosted,
+    withCoords,
+    noCoords
+  };
+}
+
+function splitReliningItemsByCount(items, options) {
+  const sorted = [...items].sort((a, b) => {
+    if (options.groupBySuburb) {
+      const suburbCompare = String(a.suburb || '').localeCompare(String(b.suburb || ''));
+      if (suburbCompare !== 0) return suburbCompare;
+    }
+    return String(a.assetId || '').localeCompare(String(b.assetId || ''));
+  });
+  let pkgIndex = 0;
+  let countInPkg = 0;
+  let lastGroup = null;
+  return sorted.map(item => {
+    const group = options.groupBySuburb ? (item.suburb || 'Unknown') : '__all__';
+    if (lastGroup === null) lastGroup = group;
+    if (group !== lastGroup || countInPkg >= options.pipesPerPackage) {
+      pkgIndex += 1;
+      countInPkg = 0;
+      lastGroup = group;
+    }
+    countInPkg += 1;
+    return { ...item, package_id: `RLN_${String(pkgIndex + 1).padStart(3, '0')}` };
+  });
+}
+
+function splitReliningItemsByValue(items, options) {
+  const groups = new Map();
+  items.forEach(item => {
+    const key = options.groupBySuburb ? (item.suburb || 'Unknown') : '__all__';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  });
+  const packaged = [];
+  let pkgCounter = 1;
+  groups.forEach(groupItems => {
+    const sorted = [...groupItems].sort((a, b) => (b.pipeCost || 0) - (a.pipeCost || 0));
+    let current = [];
+    let currentValue = 0;
+    sorted.forEach(item => {
+      const pipeValue = Number(item.pipeCost || 0);
+      if (current.length && (currentValue + pipeValue > options.maxPackageValue)) {
+        current.forEach(entry => packaged.push({ ...entry, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
+        pkgCounter += 1;
+        current = [];
+        currentValue = 0;
+      }
+      current.push(item);
+      currentValue += pipeValue;
+    });
+    if (current.length) {
+      current.forEach(entry => packaged.push({ ...entry, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
+      pkgCounter += 1;
+    }
+  });
+  return packaged;
+}
+
+function maxReliningPackageSpanM(items) {
+  const valid = (items || []).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
+  let maxSpan = 0;
+  for (let i = 0; i < valid.length; i++) {
+    for (let j = i + 1; j < valid.length; j++) {
+      maxSpan = Math.max(maxSpan, haversineDistanceM(valid[i], valid[j]));
+    }
+  }
+  return maxSpan;
+}
+
+function buildReliningPackageObjects(packagedItems) {
+  const byPackage = new Map();
+  packagedItems.forEach(item => {
+    if (!byPackage.has(item.package_id)) byPackage.set(item.package_id, []);
+    byPackage.get(item.package_id).push(item);
+  });
+  return [...byPackage.entries()].map(([packageId, items]) => {
+    const totalLengthM = items.reduce((sum, item) => sum + (Number(item.lengthM) || 0), 0);
+    const totalCost = items.reduce((sum, item) => sum + (Number(item.pipeCost) || 0), 0);
+    const suburbCounts = {};
+    items.forEach(item => { suburbCounts[item.suburb || 'Unknown'] = (suburbCounts[item.suburb || 'Unknown'] || 0) + 1; });
+    const suburbs = Object.entries(suburbCounts)
+      .filter(([suburb]) => suburb && suburb !== 'Unknown')
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([suburb]) => suburb);
+    const center = meanCoordinate(items);
+    const maxSpanM = maxReliningPackageSpanM(items);
+    const diameters = [...new Set(items.map(item => item.diameterMm).filter(value => Number.isFinite(value)))].sort((a, b) => a - b);
+    return {
+      package_id: packageId,
+      suburb: suburbs[0] || 'Unknown',
+      primary_suburb: suburbs[0] || 'Unknown',
+      suburbs: suburbs.length ? suburbs : ['Unknown'],
+      pipe_count: items.length,
+      condition_7_count: items.filter(item => item.condition === 7).length,
+      condition_8_count: items.filter(item => item.condition === 8).length,
+      total_length_m: Number(totalLengthM.toFixed(1)),
+      total_cost: Number(totalCost.toFixed(2)),
+      diameters_mm: diameters,
+      max_span_m: Number(maxSpanM.toFixed(0)),
+      distance_warning: maxSpanM > 2000 ? 'Check package spread or coordinate quality' : '',
+      coordinate_sources: packageCoordinateSourceSummary(items),
+      asset_ids: items.map(item => item.assetId),
+      lat: center?.lat ?? null,
+      lon: center?.lon ?? null,
+      assets: items.map(item => ({
+        ...item,
+        asset_id_text: item.assetId,
+        package_center_distance_m: center && Number.isFinite(item.lat) && Number.isFinite(item.lon)
+          ? haversineDistanceM(center, item)
+          : null
+      }))
+    };
+  });
+}
+
+function reliningPackagePriorityCompare(a, b) {
+  const valueDiff = (Number(b?.total_cost) || 0) - (Number(a?.total_cost) || 0);
+  if (valueDiff !== 0) return valueDiff;
+  const lengthDiff = (Number(b?.total_length_m) || 0) - (Number(a?.total_length_m) || 0);
+  if (lengthDiff !== 0) return lengthDiff;
+  const cond8Diff = (Number(b?.condition_8_count) || 0) - (Number(a?.condition_8_count) || 0);
+  if (cond8Diff !== 0) return cond8Diff;
+  return String(a?.package_id || '').localeCompare(String(b?.package_id || ''));
+}
+
+function prioritiseAndRenumberReliningPackages(packages) {
+  return [...(packages || [])]
+    .sort(reliningPackagePriorityCompare)
+    .map((pkg, index) => ({
+      ...pkg,
+      original_package_id: pkg.original_package_id || pkg.package_id,
+      package_id: `RLN_${String(index + 1).padStart(3, '0')}`,
+      assets: (pkg.assets || []).map(asset => ({ ...asset, package_id: `RLN_${String(index + 1).padStart(3, '0')}` }))
+    }));
 }
 
 function splitIntoPackagesByCount(rows, pipesPerPackage, groupBySuburb, suburbCol) {
@@ -4508,11 +4906,17 @@ function samplePackageAssets(rows, suburbCol) {
 function renderPackagingMeta(meta) {
   const el = document.getElementById('pkgMeta');
   if (!el) return;
+  const preview = lastReliningPackagingPreview;
+  const generatedPackages = lastPackagingGeneration?.packages?.length || 0;
   const rows = [
     ['Assets File', reliningAssetsFileName || 'Required'],
     ['Rates File', reliningRatesFileName || 'Required'],
     ['Assets Loaded', meta?.asset_count?.toLocaleString?.() ?? '-'],
-    ['Suburb Column', meta?.suburb_column ? displayTableHeader(meta.suburb_column) : '-']
+    ['Suburb Column', meta?.suburb_column ? displayTableHeader(meta.suburb_column) : '-'],
+    ['Eligible Candidates', preview ? preview.eligible.length.toLocaleString() : 'Run preview'],
+    ['Costed Pipes', preview ? preview.costed.length.toLocaleString() : 'Run preview'],
+    ['Uncosted Pipes', preview ? preview.uncosted.length.toLocaleString() : 'Run preview'],
+    ['Total Packages', generatedPackages ? generatedPackages.toLocaleString() : 'Not generated']
   ];
   el.innerHTML = rows.map(([label, value]) => `
     <div class="pkg-meta-item">
@@ -4542,6 +4946,24 @@ function renderPackagingPaths(meta) {
 function renderPackagingCards(streams) {
   const el = document.getElementById('pkgCards');
   if (!el) return;
+  const preview = lastReliningPackagingPreview;
+  if (preview) {
+    const uncostedReasons = new Set(preview.uncosted.map(item => item.costReason).filter(Boolean));
+    const cards = [
+      ['Candidates After Filters', preview.eligible.length, `${reliningModeLabel(getReliningPackagingOptions().reliningMode)} selected`],
+      ['Costed Pipes', preview.costed.length, 'Matched to relining rates by diameter and length band'],
+      ['Uncosted Pipes', preview.uncosted.length, uncostedReasons.size ? `${uncostedReasons.size} costing issue type${uncostedReasons.size === 1 ? '' : 's'}` : 'No costing gaps'],
+      ['With Location', preview.withCoords.length, 'Can be shown on the package map']
+    ];
+    el.innerHTML = cards.map(([title, value, sub]) => `
+      <div class="pkg-card">
+        <div class="pkg-card-title">${escapeHtml(title)}</div>
+        <div class="pkg-card-val">${Number(value || 0).toLocaleString()}</div>
+        <div class="pkg-card-sub">${escapeHtml(sub)}</div>
+      </div>
+    `).join('');
+    return;
+  }
   el.innerHTML = (streams || []).map(stream => `
     <div class="pkg-card">
       <div class="pkg-card-title">${escapeHtml(stream.name)}</div>
@@ -4551,13 +4973,63 @@ function renderPackagingCards(streams) {
   `).join('');
 }
 
+function renderReliningPackagingReasoning(options, preview = null) {
+  const el = document.getElementById('pkgReasoning');
+  if (!el || !options) return;
+  const costedText = preview ? ` (<strong>${preview.costed.length.toLocaleString()}</strong> costed, <strong>${preview.uncosted.length.toLocaleString()}</strong> uncosted)` : '';
+  const methodText = options.method === 'count'
+    ? `Packages are split after about <strong>${options.pipesPerPackage.toLocaleString()}</strong> pipes.`
+    : `Packages are split when the next pipe would push the package above <strong>${formatCurrency(options.maxPackageValue)}</strong>.`;
+  el.innerHTML = `
+    <strong>Packaging Reasoning:</strong>
+    <ul style="margin:8px 0 0 18px;line-height:1.7">
+      <li>Only <strong>${escapeHtml(reliningModeLabel(options.reliningMode))}</strong> pipes are considered for relining${costedText}.</li>
+      <li>Relining rates are matched by pipe diameter first, then by the length band in <code>Size/Descriptor</code>.</li>
+      <li>Median/Panel rate rows are preferred where available, then the median numeric unit rate is applied per metre.</li>
+      <li>${methodText}</li>
+      <li>${options.groupBySuburb ? 'Packages are kept within suburb groups before value or count splitting.' : 'Suburb grouping is switched off, so eligible pipes are packaged together across the uploaded dataset.'}</li>
+      <li>Generated packages are prioritised and renumbered by estimated value first, then length, then Condition 8 count.</li>
+      <li>Packages with usable coordinates are drawn on the map. The table flags packages with very wide spatial spread so they can be reviewed.</li>
+    </ul>
+  `;
+}
+
 function renderPackagingSamples(streams) {
   const area = document.getElementById('pkgSampleArea');
   if (!area) return;
+  const preview = lastReliningPackagingPreview;
+  if (preview) {
+    if (!preview.eligible.length) {
+      area.className = 'pkg-empty';
+      area.textContent = 'No eligible relining candidates were found with the current rules.';
+      return;
+    }
+    const rows = preview.eligible.slice(0, 12).map(item => ({
+      asset_id: item.assetId,
+      suburb: item.suburb,
+      condition: item.conditionLabel,
+      diameter_mm: item.diameterMm ?? '',
+      length_m: Number(item.lengthM || 0).toFixed(1),
+      rate_per_m: Number.isFinite(item.ratePerM) ? formatCurrency(item.ratePerM) : '',
+      pipe_cost: Number.isFinite(item.pipeCost) ? formatCurrency(item.pipeCost) : '',
+      cost_status: item.costStatus,
+      cost_reason: item.costReason,
+      coordinate_source: item.coordinateSource || ''
+    }));
+    const headers = Object.keys(rows[0]);
+    area.className = 'pkg-table-wrap';
+    area.innerHTML = `
+      <table>
+        <thead><tr>${headers.map(header => `<th>${escapeHtml(displayTableHeader(header))}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map(row => `<tr>${headers.map(header => `<td>${escapeHtml(row[header])}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>
+    `;
+    return;
+  }
   const firstWithSamples = (streams || []).find(s => (s.sample_assets || []).length);
   if (!firstWithSamples) {
     area.className = 'pkg-empty';
-    area.textContent = 'No sample assets available for the current preview.';
+    area.textContent = 'No eligible relining candidates were found with the current rules.';
     return;
   }
 
@@ -4597,20 +5069,46 @@ function renderGeneratedPackages(data) {
     return;
   }
 
-  const displayPackages = data.packages.map(pkg => ({ ...pkg, suburb: formatSuburbName(pkg.suburb) || pkg.suburb }));
-  const displaySamples = (data.sample_assets || []).map(asset => ({ ...asset }));
+  const displayPackages = data.packages.map(pkg => ({
+    package_id: renderReliningPackageIdLink(pkg.package_id),
+    suburb: (pkg.suburbs || [pkg.suburb]).filter(Boolean).join(', '),
+    pipe_count: pkg.pipe_count,
+    condition_7_count: pkg.condition_7_count,
+    condition_8_count: pkg.condition_8_count,
+    total_length_m: Number(pkg.total_length_m || 0).toFixed(1),
+    total_cost: formatCurrency(pkg.total_cost),
+    diameters_mm: (pkg.diameters_mm || []).join(', '),
+    max_span_m: Number(pkg.max_span_m || 0).toFixed(0),
+    distance_warning: pkg.distance_warning || '',
+    coordinate_sources: pkg.coordinate_sources || '',
+    asset_ids: (pkg.asset_ids || []).join(', ')
+  }));
+  const firstPackage = data.packages[0];
+  const displaySamples = (firstPackage?.assets || []).slice(0, 12).map(asset => ({
+    package_id: firstPackage.package_id,
+    asset_id: asset.assetId,
+    suburb: asset.suburb,
+    condition: asset.conditionLabel,
+    diameter_mm: asset.diameterMm ?? '',
+    length_m: Number(asset.lengthM || 0).toFixed(1),
+    rate_per_m: Number.isFinite(asset.ratePerM) ? formatCurrency(asset.ratePerM) : '',
+    pipe_cost: Number.isFinite(asset.pipeCost) ? formatCurrency(asset.pipeCost) : '',
+    coordinate_source: asset.coordinateSource || '',
+    centre_distance_m: asset.package_center_distance_m != null ? asset.package_center_distance_m.toFixed(0) : ''
+  }));
   const packageHeaders = Object.keys(displayPackages[0]);
   const sampleHeaders = displaySamples.length ? Object.keys(displaySamples[0]) : [];
   area.className = 'pkg-table-wrap';
   area.innerHTML = `
     <div style="padding:12px;background:white;border-bottom:1px solid var(--border)">
       <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">
-        ${Number(data.package_count || 0).toLocaleString()} packages · ${Number(data.costed_pipe_count || 0).toLocaleString()} costed pipes · ${Number(data.uncosted_pipe_count || 0).toLocaleString()} uncosted pipes
+        Total Packages: ${Number(data.package_count || 0).toLocaleString()} · Packaged Pipes: ${Number(data.costed_pipe_count || 0).toLocaleString()} · Uncosted Pipes: ${Number(data.uncosted_pipe_count || 0).toLocaleString()}
       </div>
       <div style="font-size:11px;color:var(--text-l)">
         Total length ${Number(data.total_length_m || 0).toLocaleString()} m · Total cost $${Number(data.total_cost || 0).toLocaleString(undefined, {maximumFractionDigits: 2})}
       </div>
-      <div style="margin-top:10px">
+      <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+        <button class="export-btn" onclick="exportReliningPackagesCsv()">Export ESRI CSV</button>
         <button class="export-btn" onclick="loadFutureWorksFromRelining(true)">Load Into Future Works Plan</button>
       </div>
     </div>
@@ -4620,7 +5118,7 @@ function renderGeneratedPackages(data) {
       </thead>
       <tbody>
         ${displayPackages.map(row => `
-          <tr>${packageHeaders.map(h => `<td>${escapeHtml(Array.isArray(row[h]) ? row[h].join(', ') : row[h])}</td>`).join('')}</tr>
+          <tr>${packageHeaders.map(h => `<td>${h === 'package_id' ? row[h] : escapeHtml(Array.isArray(row[h]) ? row[h].join(', ') : row[h])}</td>`).join('')}</tr>
         `).join('')}
       </tbody>
     </table>
@@ -4917,6 +5415,7 @@ function mapReliningPackagesToFutureWorksRows(packages) {
     const pipeCount = Number(pkg.pipe_count || 0);
     const totalLength = Number(pkg.total_length_m || 0);
     const totalCost = Number(pkg.total_cost || 0);
+    const assetIds = (pkg.asset_ids || pkg.assets?.map(asset => asset.assetId) || []).filter(Boolean).join(', ');
     return {
       exhibition: '',
       packageId,
@@ -4929,9 +5428,9 @@ function mapReliningPackagesToFutureWorksRows(packages) {
       lengthM: totalLength ? totalLength.toFixed(1) : '',
       ward: defaults.ward,
       stage: defaults.stage,
-      assetNumbers: '',
-      lat: '',
-      lon: '',
+      assetNumbers: assetIds,
+      lat: pkg.lat ?? '',
+      lon: pkg.lon ?? '',
       q1_2728: '',
       q2_2728: '',
       q3_2728: '',
@@ -5015,6 +5514,28 @@ function refreshPackagingConnection() {
   updateReliningStatus();
 }
 
+function clearReliningPackagingOutputs(clearPreview = true) {
+  selectedReliningPackageId = null;
+  lastPackagingGeneration = null;
+  if (clearPreview) {
+    lastReliningPackagingPreview = null;
+    const sample = document.getElementById('pkgSampleArea');
+    if (sample) {
+      sample.className = 'pkg-empty';
+      sample.textContent = 'Upload files and run the preview to see eligible relining candidates.';
+    }
+    const cards = document.getElementById('pkgCards');
+    if (cards) cards.innerHTML = '';
+  }
+  const pkgArea = document.getElementById('pkgPackagesArea');
+  if (pkgArea) {
+    pkgArea.className = 'pkg-empty';
+    pkgArea.textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
+  }
+  renderReliningPackagingReasoning(getReliningPackagingOptions(), lastReliningPackagingPreview);
+  renderReliningPackagesMap();
+}
+
 async function loadReliningAssetsFile(event) {
   const file = event?.target?.files?.[0];
   if (!file) return;
@@ -5033,19 +5554,18 @@ async function loadReliningAssetsFile(event) {
     reliningAssetsRows = rows;
     reliningAssetsData = rows;
     reliningAssetsFileName = file.name;
-    lastPackagingGeneration = null;
+    clearReliningPackagingOutputs();
     const statusEl = document.getElementById('pkgAssetsStatus');
-    if (statusEl) statusEl.textContent = `Assets: ${escapeHtml(file.name)} (${rows.length.toLocaleString()} rows)`;
+    const conditionHint = getCctvConditionHeaderHint(rows);
+    const suburbCol = resolveSuburbColumn(rows);
+    const coordCount = rows.filter(row => {
+      const coord = resolveReliningCoordinate(row);
+      return Number.isFinite(coord?.lat) && Number.isFinite(coord?.lon);
+    }).length;
+    if (statusEl) statusEl.textContent = `Assets: ${escapeHtml(file.name)} (${rows.length.toLocaleString()} rows).${conditionHint} Suburb column: ${suburbCol || 'not detected'}. Coordinates: ${coordCount.toLocaleString()} rows.`;
     renderPackagingPaths();
     renderPackagingMeta({ asset_count: rows.length, suburb_column: resolveSuburbColumn(rows) });
     setPackagingStatus(reliningRatesRows.length > 0, reliningRatesRows.length > 0 ? 'Required files loaded' : 'Upload panel rates workbook to continue');
-    renderPackagingCards([]);
-    renderPackagingSamples([]);
-    const pkgArea = document.getElementById('pkgPackagesArea');
-    if (pkgArea) {
-      pkgArea.className = 'pkg-empty';
-      pkgArea.textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
-    }
   } catch (e) {
     reliningAssetsRows = [];
     reliningAssetsData = null;
@@ -5067,23 +5587,18 @@ async function loadReliningRatesFile(event) {
   try {
     if (typeof XLSX === 'undefined') throw new Error('Excel library not loaded.');
     const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array' });
-    const rows = cleanRateRows(readWorkbookRows(workbook, '_Tables'))
+    const rows = cleanRateRows(readReliningRateRowsFromWorkbook(workbook))
       .filter(row => /SP6 Pipeline Relining/i.test(String(row?.Category || '')));
-    if (!rows.length) throw new Error('No SP6 Pipeline Relining rows were found in the _Tables sheet.');
+    if (!rows.length) throw new Error('No SP6 Pipeline Relining rows were found in _Tables, Rates_SP6, or the first workbook sheet.');
     reliningRatesRows = rows;
     reliningRatesData = { name: file.name, rows };
     reliningRatesFileName = file.name;
-    lastPackagingGeneration = null;
+    clearReliningPackagingOutputs();
     const statusEl = document.getElementById('pkgRatesStatus');
     if (statusEl) statusEl.textContent = `Rates: ${escapeHtml(file.name)} (${rows.length.toLocaleString()} relining rates)`;
     renderPackagingPaths();
     renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
     setPackagingStatus(reliningAssetsRows.length > 0, reliningAssetsRows.length > 0 ? 'Required files loaded' : 'Upload assets file to continue');
-    const pkgArea = document.getElementById('pkgPackagesArea');
-    if (pkgArea) {
-      pkgArea.className = 'pkg-empty';
-      pkgArea.textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
-    }
   } catch (e) {
     reliningRatesRows = [];
     reliningRatesData = null;
@@ -5098,6 +5613,17 @@ async function loadReliningRatesFile(event) {
   }
 }
 
+function readReliningRateRowsFromWorkbook(workbook) {
+  const preferredSheets = ['_Tables', 'Rates_SP6'];
+  for (const sheetName of preferredSheets) {
+    if (workbook.SheetNames.includes(sheetName)) {
+      const rows = readWorkbookRows(workbook, sheetName);
+      if (rows.length) return rows;
+    }
+  }
+  return readWorkbookRows(workbook);
+}
+
 function updateReliningStatus() {
   const dot = document.getElementById('pkgDot');
   const text = document.getElementById('pkgStatusText');
@@ -5107,18 +5633,29 @@ function updateReliningStatus() {
 }
 
 async function loadPackagingPreview() {
-  const mode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
   try {
     if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
-    const data = buildSplitStreams(mode);
-    setPackagingStatus(true, `${data.asset_count.toLocaleString()} assets previewed`);
+    showLoad('Filtering relining candidates...');
+    await waitForPaint();
+    const options = getReliningPackagingOptions();
+    const data = buildReliningPackagingPreview(reliningAssetsRows, options);
+    lastReliningPackagingPreview = data;
+    setLoadTxt('Rendering relining candidate preview...');
+    await waitForPaint();
+    setPackagingStatus(true, `${data.eligible.length.toLocaleString()} relining candidates previewed`);
     renderPackagingMeta({
       asset_count: data.asset_count,
       suburb_column: data.suburb_column
     });
     renderPackagingPaths();
     renderPackagingCards(data.streams);
+    renderReliningPackagingReasoning(options, data);
     renderPackagingSamples(data.streams);
+    const pkgArea = document.getElementById('pkgPackagesArea');
+    if (pkgArea) {
+      pkgArea.className = 'pkg-empty';
+      pkgArea.textContent = 'Preview complete. Generate packages to build grouped relining packages, cost estimates, and the package map.';
+    }
   } catch (e) {
     setPackagingStatus(false, 'Preview failed');
     const area = document.getElementById('pkgSampleArea');
@@ -5126,50 +5663,57 @@ async function loadPackagingPreview() {
       area.className = 'pkg-empty';
       area.textContent = String(e.message || e);
     }
+  } finally {
+    hideLoad();
   }
 }
 
 async function generateReliningPackages() {
-  const method = document.getElementById('pkgMethod')?.value || 'value';
-  const reliningMode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
-  const maxPackageValue = Number(String(document.getElementById('pkgMaxValue')?.value || '500000').replace(/,/g, ''));
-  const pipesPerPackage = Number(String(document.getElementById('pkgPipeCount')?.value || '25').replace(/,/g, ''));
-  const groupBySuburb = (document.getElementById('pkgGroupSuburb')?.value || 'yes') === 'yes';
   try {
     if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
     if (!reliningRatesRows.length) throw new Error('Upload the panel rates workbook first.');
-    const preview = buildSplitStreams(reliningMode);
-    const suburbCol = preview.suburb_column;
-    const reliningRows = getReliningRowsForMode(reliningMode)
-      .map(row => {
-        const ratePerM = getReliningRateForRow(row);
-        const lengthM = normaliseNumeric(row?.['Spatial Length_m'] ?? row?.['Length'] ?? row?.['Length_m']);
-        return {
-          ...row,
-          rate_per_m: ratePerM,
-          pipe_cost: Number.isFinite(ratePerM) && Number.isFinite(lengthM) ? ratePerM * lengthM : null
-        };
-      });
-    const costed = reliningRows.filter(row => Number.isFinite(row.pipe_cost));
-    const uncosted = reliningRows.filter(row => !Number.isFinite(row.pipe_cost));
-    const packaged = method === 'count'
-      ? splitIntoPackagesByCount(costed, Math.max(Number.isFinite(pipesPerPackage) ? pipesPerPackage : 25, 1), groupBySuburb, suburbCol)
-      : splitIntoValuePackages(costed, Math.max(Number.isFinite(maxPackageValue) ? maxPackageValue : 500000, 1), groupBySuburb, suburbCol);
-    const packageSummaries = summarisePackages(packaged, suburbCol);
-    const totalLength = packaged.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m'] ?? row?.['Length'] ?? row?.['Length_m']) || 0), 0);
-    const totalCost = packaged.reduce((sum, row) => sum + (Number(row?.pipe_cost) || 0), 0);
+    showLoad('Filtering relining candidates...');
+    await waitForPaint();
+    const options = getReliningPackagingOptions();
+    const preview = buildReliningPackagingPreview(reliningAssetsRows, options);
+    lastReliningPackagingPreview = preview;
+    setLoadTxt('Matching relining rates...');
+    await waitForPaint();
+    const packagedItems = options.method === 'count'
+      ? splitReliningItemsByCount(preview.costed, options)
+      : splitReliningItemsByValue(preview.costed, options);
+    setLoadTxt('Building relining packages...');
+    await waitForPaint();
+    let packages = buildReliningPackageObjects(packagedItems);
+    setLoadTxt('Prioritising and renumbering packages...');
+    await waitForPaint();
+    packages = prioritiseAndRenumberReliningPackages(packages);
+    const totalLength = packages.reduce((sum, pkg) => sum + (Number(pkg.total_length_m) || 0), 0);
+    const totalCost = packages.reduce((sum, pkg) => sum + (Number(pkg.total_cost) || 0), 0);
     const data = {
-      package_count: packageSummaries.length,
-      costed_pipe_count: costed.length,
-      uncosted_pipe_count: uncosted.length,
+      options,
+      preview,
+      package_count: packages.length,
+      costed_pipe_count: preview.costed.length,
+      uncosted_pipe_count: preview.uncosted.length,
       total_length_m: Number(totalLength.toFixed(1)),
       total_cost: Number(totalCost.toFixed(2)),
-      packages: packageSummaries,
-      sample_assets: samplePackageAssets(packaged, suburbCol)
+      packages,
+      uncosted_assets: preview.uncosted
     };
     lastPackagingGeneration = data;
     setPackagingStatus(true, `${data.package_count.toLocaleString()} packages generated`);
+    setLoadTxt('Rendering package tables and map...');
+    await waitForPaint();
+    renderPackagingMeta({
+      asset_count: preview.asset_count,
+      suburb_column: preview.suburb_column
+    });
+    renderReliningPackagingReasoning(options, preview);
+    renderPackagingCards(preview.streams);
+    renderPackagingSamples(preview.streams);
     renderGeneratedPackages(data);
+    renderReliningPackagesMap();
   } catch (e) {
     setPackagingStatus(false, 'Package generation failed');
     const area = document.getElementById('pkgPackagesArea');
@@ -5177,7 +5721,354 @@ async function generateReliningPackages() {
       area.className = 'pkg-empty';
       area.textContent = String(e.message || e);
     }
+  } finally {
+    hideLoad();
   }
+}
+
+function renderReliningPackageIdLink(packageId) {
+  const id = String(packageId || '');
+  const encodedId = encodeURIComponent(id);
+  const selectedStyle = selectedReliningPackageId === id
+    ? 'background:#111827;color:#FFD166;border:2px solid #FFD166;padding:3px 8px;border-radius:999px;text-decoration:none'
+    : 'color:var(--teal);text-decoration:underline';
+  return `<a href="#reliningPackagesMap" data-relining-package-id="${encodedId}" title="Show ${escapeHtml(id)} on the map" style="font-weight:800;${selectedStyle}">${escapeHtml(id)}</a>`;
+}
+
+function selectReliningPackage(packageId, shouldRefreshTable = true) {
+  const id = String(packageId || '');
+  if (!id) return false;
+  selectedReliningPackageId = id;
+  if (shouldRefreshTable) renderGeneratedPackages(lastPackagingGeneration);
+  renderReliningPackagesMap({ fit: false });
+  return true;
+}
+
+document.addEventListener('click', (event) => {
+  const link = event.target?.closest?.('[data-relining-package-id]');
+  if (!link) return;
+  event.preventDefault();
+  focusReliningPackageOnMap(decodeURIComponent(link.getAttribute('data-relining-package-id') || ''));
+});
+
+function exportReliningPackagesCsv() {
+  const packages = lastPackagingGeneration?.packages || [];
+  if (!packages.length) {
+    alert('Generate relining packages before exporting.');
+    return;
+  }
+  const rows = [[
+    'package_id',
+    'original_package_id',
+    'asset_id_text',
+    'primary_suburb',
+    'package_suburbs',
+    'suburb',
+    'condition',
+    'diameter_mm',
+    'length_m',
+    'rate_per_m',
+    'pipe_cost',
+    'package_total_length_m',
+    'package_total_cost',
+    'package_max_span_m',
+    'distance_warning',
+    'coordinate_sources',
+    'latitude',
+    'longitude',
+    'coordinate_source',
+    'centre_distance_m',
+    'cost_status',
+    'cost_reason'
+  ]];
+  packages.forEach(pkg => {
+    (pkg.assets || []).forEach(item => {
+      rows.push([
+        pkg.package_id,
+        pkg.original_package_id || '',
+        item.asset_id_text || item.assetId,
+        pkg.primary_suburb || pkg.suburb || '',
+        (pkg.suburbs || [pkg.suburb]).join(', '),
+        item.suburb || pkg.suburb || '',
+        item.conditionLabel || item.condition || '',
+        item.diameterMm ?? '',
+        Number(item.lengthM || 0).toFixed(1),
+        Number.isFinite(item.ratePerM) ? Number(item.ratePerM).toFixed(2) : '',
+        Number.isFinite(item.pipeCost) ? Number(item.pipeCost).toFixed(2) : '',
+        Number(pkg.total_length_m || 0).toFixed(1),
+        Number(pkg.total_cost || 0).toFixed(2),
+        Number(pkg.max_span_m || 0).toFixed(0),
+        pkg.distance_warning || '',
+        pkg.coordinate_sources || '',
+        item.lat ?? '',
+        item.lon ?? '',
+        item.coordinateSource || '',
+        item.package_center_distance_m != null ? item.package_center_distance_m.toFixed(0) : '',
+        item.costStatus || '',
+        item.costReason || ''
+      ]);
+    });
+  });
+  const csv = rows.map(row => row.map(value => `"${String(value ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+  origPriDownload(`relining_packages_esri_${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv;charset=utf-8');
+}
+
+const RELINING_PACKAGE_COLORS = [
+  '#007C89', '#C44536', '#6A994E', '#F18F01', '#5B5F97', '#2D9CDB',
+  '#8E5572', '#3A7D44', '#D95D39', '#7B2CBF', '#2A9D8F', '#E76F51',
+  '#4D908E', '#B56576', '#577590', '#BC6C25'
+];
+
+function ensureReliningPackagesMap() {
+  const mapEl = document.getElementById('reliningPackagesMap');
+  if (!mapEl || typeof L === 'undefined') return;
+  if (reliningPackagesMap) {
+    setTimeout(() => reliningPackagesMap.invalidateSize(), 50);
+    return;
+  }
+  reliningPackagesMap = L.map('reliningPackagesMap').setView([-33.75, 151.25], 11);
+  reliningPackagesMap.on('move zoom resize', updateReliningSelectedMapOverlay);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(reliningPackagesMap);
+  reliningPackagesLayer = L.layerGroup().addTo(reliningPackagesMap);
+}
+
+function getReliningPackageColor(pkg, index = 0) {
+  const parsed = String(pkg?.package_id || '').match(/(\d+)$/);
+  const colorIndex = parsed ? Number(parsed[1]) - 1 : index;
+  return RELINING_PACKAGE_COLORS[Math.abs(colorIndex) % RELINING_PACKAGE_COLORS.length];
+}
+
+function getReliningPackageMapStyle(pkg, index = 0) {
+  const isSelected = selectedReliningPackageId && pkg.package_id === selectedReliningPackageId;
+  const isDimmed = selectedReliningPackageId && !isSelected;
+  return {
+    color: getReliningPackageColor(pkg, index),
+    isSelected,
+    isDimmed
+  };
+}
+
+function buildReliningPackagePopup(pkg) {
+  const assetList = (pkg.assets || []).slice(0, 10).map(item => item.assetId).join(', ');
+  return `
+    <div style="min-width:180px">
+      <div style="font-weight:800;color:var(--navy);margin-bottom:6px">${escapeHtml(pkg.package_id)}</div>
+      <div style="font-size:11px;color:var(--text-l);line-height:1.55">
+        <div><strong>Suburbs:</strong> ${escapeHtml((pkg.suburbs || [pkg.suburb]).join(', '))}</div>
+        <div><strong>Pipes:</strong> ${pkg.pipe_count}</div>
+        <div><strong>Length:</strong> ${Number(pkg.total_length_m || 0).toFixed(1)} m</div>
+        <div><strong>Max span:</strong> ${Number(pkg.max_span_m || 0).toFixed(0)} m</div>
+        ${pkg.distance_warning ? `<div style="color:#C0392B"><strong>Warning:</strong> ${escapeHtml(pkg.distance_warning)}</div>` : ''}
+        <div><strong>Cost:</strong> ${formatCurrency(pkg.total_cost || 0)}</div>
+        <div><strong>Assets:</strong> ${escapeHtml(assetList || 'None')}</div>
+      </div>
+    </div>`;
+}
+
+function getSelectedReliningPackage() {
+  if (!selectedReliningPackageId) return null;
+  return (lastPackagingGeneration?.packages || []).find(pkg => pkg.package_id === selectedReliningPackageId) || null;
+}
+
+function getReliningPackageAnchorLatLng(pkg) {
+  if (!pkg) return null;
+  if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) return L.latLng(pkg.lat, pkg.lon);
+  const assets = (pkg.assets || []).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
+  const center = meanCoordinate(assets);
+  return center ? L.latLng(center.lat, center.lon) : null;
+}
+
+function ensureReliningSelectedMapOverlay() {
+  const mapEl = document.getElementById('reliningPackagesMap');
+  if (!mapEl) return false;
+  if (!reliningSelectedLeaderSvg) {
+    reliningSelectedLeaderSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    reliningSelectedLeaderSvg.classList.add('cctv-selected-leader');
+    reliningSelectedLeaderSvg.innerHTML = '<line></line><circle r="6"></circle>';
+    mapEl.appendChild(reliningSelectedLeaderSvg);
+  }
+  if (!reliningSelectedOverlayCard) {
+    reliningSelectedOverlayCard = document.createElement('div');
+    reliningSelectedOverlayCard.className = 'cctv-selected-map-card';
+    mapEl.appendChild(reliningSelectedOverlayCard);
+  }
+  return true;
+}
+
+function renderReliningSelectedMapOverlay() {
+  if (!ensureReliningSelectedMapOverlay()) return;
+  const pkg = getSelectedReliningPackage();
+  if (!pkg) {
+    reliningSelectedOverlayCard.style.display = 'none';
+    reliningSelectedLeaderSvg.style.display = 'none';
+    return;
+  }
+  const assetList = (pkg.assets || []).slice(0, 8).map(item => item.assetId).join(', ');
+  reliningSelectedOverlayCard.innerHTML = `
+    <div class="title">${escapeHtml(pkg.package_id)}</div>
+    <div class="meta">
+      <div><strong>Suburbs:</strong> ${escapeHtml((pkg.suburbs || [pkg.suburb]).join(', '))}</div>
+      <div><strong>Pipes:</strong> ${pkg.pipe_count} · <strong>Span:</strong> ${Number(pkg.max_span_m || 0).toFixed(0)} m</div>
+      <div><strong>Length:</strong> ${Number(pkg.total_length_m || 0).toFixed(1)} m · <strong>Cost:</strong> ${formatCurrency(pkg.total_cost || 0)}</div>
+      <div><strong>Assets:</strong> ${escapeHtml(assetList || 'None')}</div>
+    </div>
+  `;
+  reliningSelectedOverlayCard.style.display = 'block';
+  reliningSelectedLeaderSvg.style.display = 'block';
+  updateReliningSelectedMapOverlay();
+}
+
+function updateReliningSelectedMapOverlay() {
+  if (!reliningPackagesMap || !reliningSelectedOverlayCard || !reliningSelectedLeaderSvg || reliningSelectedOverlayCard.style.display === 'none') return;
+  const anchor = getReliningPackageAnchorLatLng(getSelectedReliningPackage());
+  if (!anchor) {
+    reliningSelectedLeaderSvg.style.display = 'none';
+    return;
+  }
+  const point = reliningPackagesMap.latLngToContainerPoint(anchor);
+  const cardRect = reliningSelectedOverlayCard.getBoundingClientRect();
+  const mapRect = reliningPackagesMap.getContainer().getBoundingClientRect();
+  const startX = point.x < (cardRect.left - mapRect.left)
+    ? cardRect.left - mapRect.left
+    : cardRect.left - mapRect.left + cardRect.width / 2;
+  const startY = cardRect.top - mapRect.top + cardRect.height;
+  const line = reliningSelectedLeaderSvg.querySelector('line');
+  const circle = reliningSelectedLeaderSvg.querySelector('circle');
+  line.setAttribute('x1', String(startX));
+  line.setAttribute('y1', String(startY));
+  line.setAttribute('x2', String(point.x));
+  line.setAttribute('y2', String(point.y));
+  circle.setAttribute('cx', String(point.x));
+  circle.setAttribute('cy', String(point.y));
+  reliningSelectedLeaderSvg.style.display = 'block';
+}
+
+function renderReliningPackagesMap(options = {}) {
+  ensureReliningPackagesMap();
+  const subtitle = document.getElementById('reliningMapSubtitle');
+  const selectedBanner = document.getElementById('reliningSelectedPackageBanner');
+  if (!reliningPackagesMap || !reliningPackagesLayer) {
+    if (subtitle) subtitle.textContent = 'Map is not available in this browser.';
+    return;
+  }
+  reliningPackagesLayer.clearLayers();
+  reliningPackageFocusLayers = new Map();
+  const packages = lastPackagingGeneration?.packages || [];
+  if (!packages.length) {
+    if (subtitle) subtitle.textContent = 'Generate packages to draw package groups on the map.';
+    if (selectedBanner) selectedBanner.style.display = 'none';
+    renderReliningSelectedMapOverlay();
+    return;
+  }
+  const selectedPackage = selectedReliningPackageId
+    ? packages.find(pkg => pkg.package_id === selectedReliningPackageId)
+    : null;
+  if (selectedBanner) {
+    selectedBanner.style.display = selectedPackage ? 'inline-flex' : 'none';
+    selectedBanner.textContent = selectedPackage
+      ? `Selected: ${selectedPackage.package_id} · ${selectedPackage.pipe_count} pipes · ${Number(selectedPackage.max_span_m || 0).toFixed(0)} m span`
+      : '';
+  }
+  let drawn = 0;
+  const mapPackages = selectedReliningPackageId
+    ? packages.filter(pkg => pkg.package_id !== selectedReliningPackageId).concat(packages.filter(pkg => pkg.package_id === selectedReliningPackageId))
+    : packages;
+  mapPackages.forEach(pkg => {
+    const packageIndex = packages.findIndex(item => item.package_id === pkg.package_id);
+    const assets = (pkg.assets || []).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
+    if (!assets.length) return;
+    const style = getReliningPackageMapStyle(pkg, packageIndex);
+    const color = style.color;
+    const points = assets.map(item => [item.lat, item.lon]);
+    if (points.length > 1) {
+      L.polyline(points, {
+        color,
+        weight: style.isSelected ? 8 : 3,
+        opacity: style.isSelected ? 1 : (style.isDimmed ? 0.16 : 0.75),
+        dashArray: style.isSelected ? '' : '6 6'
+      }).on('click', () => focusReliningPackageOnMap(pkg.package_id, { scroll: false })).addTo(reliningPackagesLayer);
+    }
+    assets.forEach(item => {
+      if (style.isSelected) {
+        L.circleMarker([item.lat, item.lon], {
+          radius: 18,
+          color: '#111827',
+          weight: 4,
+          fillColor: '#FFD166',
+          fillOpacity: 0.42
+        }).addTo(reliningPackagesLayer);
+      }
+      const marker = L.circleMarker([item.lat, item.lon], {
+        radius: style.isSelected ? 11 : 5,
+        color: style.isSelected ? '#111827' : '#fff',
+        weight: style.isSelected ? 3 : 1.5,
+        fillColor: color,
+        fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : 0.78),
+        opacity: style.isDimmed ? 0.2 : 1
+      }).on('click', () => focusReliningPackageOnMap(pkg.package_id, { scroll: false }))
+        .bindPopup(buildReliningPackagePopup(pkg))
+        .addTo(reliningPackagesLayer);
+      if (!reliningPackageFocusLayers.has(pkg.package_id)) reliningPackageFocusLayers.set(pkg.package_id, marker);
+      drawn += 1;
+    });
+    if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) {
+      const focusMarker = L.circleMarker([pkg.lat, pkg.lon], {
+        radius: style.isSelected ? 24 : 11,
+        color: style.isSelected ? '#111827' : color,
+        weight: style.isSelected ? 7 : 3,
+        fillColor: style.isSelected ? '#FFD166' : '#fff',
+        fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : 0.7),
+        opacity: style.isDimmed ? 0.2 : 1
+      }).on('click', () => focusReliningPackageOnMap(pkg.package_id, { scroll: false })).bindTooltip(style.isSelected ? `SELECTED ${pkg.package_id}` : pkg.package_id, {
+        permanent: style.isSelected,
+        direction: 'top',
+        className: style.isSelected ? 'cctv-selected-tooltip' : ''
+      }).addTo(reliningPackagesLayer);
+      reliningPackageFocusLayers.set(pkg.package_id, focusMarker);
+    }
+  });
+  if (subtitle) {
+    subtitle.textContent = `${packages.length.toLocaleString()} package${packages.length === 1 ? '' : 's'} mapped with ${drawn.toLocaleString()} pipe point${drawn === 1 ? '' : 's'}.${selectedReliningPackageId ? ` ${selectedReliningPackageId} is highlighted.` : ''}`;
+  }
+  renderReliningSelectedMapOverlay();
+  if (!selectedPackage && options.fit !== false) fitReliningPackagesMap();
+}
+
+function fitReliningPackagesMap() {
+  ensureReliningPackagesMap();
+  if (!reliningPackagesMap || !reliningPackagesLayer) return;
+  const layers = reliningPackagesLayer.getLayers();
+  if (!layers.length) return;
+  const group = L.featureGroup(layers);
+  reliningPackagesMap.fitBounds(group.getBounds().pad(0.15));
+  updateReliningSelectedMapOverlay();
+  setTimeout(() => reliningPackagesMap.invalidateSize(), 50);
+}
+
+function clearReliningPackageSelection() {
+  selectedReliningPackageId = null;
+  renderGeneratedPackages(lastPackagingGeneration);
+  renderReliningPackagesMap({ fit: false });
+}
+
+function refreshReliningPackagesMap() {
+  renderGeneratedPackages(lastPackagingGeneration);
+  renderReliningPackagesMap({ fit: false });
+}
+
+function focusReliningPackageOnMap(packageId, options = {}) {
+  const id = String(packageId || '');
+  if (!id) return;
+  switchPage('relining');
+  ensureReliningPackagesMap();
+  selectReliningPackage(id);
+  const mapEl = document.getElementById('reliningPackagesMap');
+  if (mapEl && options.scroll !== false) mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => renderReliningSelectedMapOverlay(), 150);
 }
 
 function setCctvPackagingStatus(ok, text) {
@@ -6595,7 +7486,9 @@ function updateCctvSelectedMapOverlay() {
   const point = cctvPackagesMap.latLngToContainerPoint(anchor);
   const cardRect = cctvSelectedOverlayCard.getBoundingClientRect();
   const mapRect = cctvPackagesMap.getContainer().getBoundingClientRect();
-  const startX = Math.min(cardRect.right - mapRect.left, cardRect.left - mapRect.left + cardRect.width);
+  const startX = point.x < (cardRect.left - mapRect.left)
+    ? cardRect.left - mapRect.left
+    : cardRect.left - mapRect.left + cardRect.width / 2;
   const startY = cardRect.top - mapRect.top + cardRect.height;
   const line = cctvSelectedLeaderSvg.querySelector('line');
   const circle = cctvSelectedLeaderSvg.querySelector('circle');
@@ -8498,7 +9391,13 @@ function switchPage(page, options = {}) {
       window._packagingInited = true;
       togglePackagingInputs();
       refreshPackagingConnection();
+      renderReliningPackagingReasoning(getReliningPackagingOptions(), lastReliningPackagingPreview);
     }
+    setTimeout(() => {
+      ensureReliningPackagesMap();
+      reliningPackagesMap?.invalidateSize();
+      renderReliningPackagesMap();
+    }, 50);
   }
   if (page === 'cctvpackaging') {
     if (!window._cctvPackagingInited) {
