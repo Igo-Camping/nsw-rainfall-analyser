@@ -5413,6 +5413,38 @@ function calculateCctvSurveyHours(totalLengthM, pipeCount, options) {
   return Math.max(lengthBasedHours, minimumPipeHours);
 }
 
+function cctvCriticalitySortScore(item, options) {
+  return (Number(item?.criticalityScore) || 0) * Math.max(0, Number(options?.criticalityWeight) || 0);
+}
+
+function cctvPackageCriticalityTotal(items) {
+  return (items || []).reduce((sum, item) => sum + (Number(item?.criticalityScore) || 0), 0);
+}
+
+function cctvPackagePriorityCompare(a, b) {
+  const valueDiff = (Number(b?.total_cost) || 0) - (Number(a?.total_cost) || 0);
+  if (valueDiff !== 0) return valueDiff;
+  const lengthDiff = (Number(b?.total_length_m) || 0) - (Number(a?.total_length_m) || 0);
+  if (lengthDiff !== 0) return lengthDiff;
+  const criticalityDiff = (Number(b?.criticality_score) || 0) - (Number(a?.criticality_score) || 0);
+  if (criticalityDiff !== 0) return criticalityDiff;
+  const criticalCountDiff = (Number(b?.critical_pipe_count) || 0) - (Number(a?.critical_pipe_count) || 0);
+  if (criticalCountDiff !== 0) return criticalCountDiff;
+  const tbaDiff = (Number(b?.tba_pipe_count) || 0) - (Number(a?.tba_pipe_count) || 0);
+  if (tbaDiff !== 0) return tbaDiff;
+  return String(a?.package_id || '').localeCompare(String(b?.package_id || ''));
+}
+
+function prioritiseAndRenumberCctvPackages(packages) {
+  return [...(packages || [])]
+    .sort(cctvPackagePriorityCompare)
+    .map((pkg, index) => ({
+      ...pkg,
+      original_package_id: pkg.original_package_id || pkg.package_id,
+      package_id: `CCTV_${String(index + 1).padStart(3, '0')}`
+    }));
+}
+
 function renderCctvPackagingReasoning(options, preview = null) {
   const el = document.getElementById('cctvPkgReasoning');
   if (!el || !options) return;
@@ -5432,7 +5464,7 @@ function renderCctvPackagingReasoning(options, preview = null) {
       <li>TBA condition pipes are treated as high-priority candidates when TBA is selected, because their condition is unknown.</li>
       <li>Packages are spatially bounded: every pipe in a package must sit within <strong>${options.proximityM.toLocaleString()} m</strong> of one recomputed package centre.</li>
       <li>Packages also have a hard maximum pipe-to-pipe span of <strong>${CCTV_MAX_PACKAGE_SPAN_M.toLocaleString()} m</strong>, so distant pipes cannot be pulled into the same package.</li>
-      <li>The package target is ${escapeHtml(targetModeLabel(options))}; criticality only nudges ordering and does not override the spatial rule.</li>
+      <li>The package target is ${escapeHtml(targetModeLabel(options))}; criticality affects seed and candidate ordering, and final packages are renumbered using relining-style package priority: higher value/effort first, then criticality. It cannot override the radius or max-span rules.</li>
       <li>${escapeHtml(consolidationText)}</li>
       <li>CCTV cost is estimated from package length divided by <strong>${options.metresPerHour.toLocaleString()} m/hr</strong>, with a minimum allowance of <strong>${CCTV_MIN_HOURS_PER_PIPE} hours per pipe</strong>, multiplied by the median CCTV panel rate.</li>
     </ul>
@@ -5893,6 +5925,7 @@ function buildCctvPackagesPortable(candidates, options, rateMeta) {
       pipe_count: items.length,
       tba_pipe_count: items.filter(item => item.isTbaCondition).length,
       critical_pipe_count: items.filter(item => item.criticalityScore > 0).length,
+      criticality_score: cctvPackageCriticalityTotal(items),
       total_length_m: totalLengthM,
       cctv_hours: surveyHours,
       cctv_rate: cctvRate,
@@ -5948,7 +5981,8 @@ function buildFixedCentreCctvPackages(candidates, options, rateMeta) {
         const densityDiff = bNearby - aNearby;
         if (densityDiff !== 0) return densityDiff;
       }
-      if (b.criticalityScore !== a.criticalityScore) return b.criticalityScore - a.criticalityScore;
+      const criticalityDiff = cctvCriticalitySortScore(b, options) - cctvCriticalitySortScore(a, options);
+      if (criticalityDiff !== 0) return criticalityDiff;
       return String(a.assetId).localeCompare(String(b.assetId));
     })[0];
 
@@ -5968,7 +6002,11 @@ function buildFixedCentreCctvPackages(candidates, options, rateMeta) {
             : Number.POSITIVE_INFINITY
         }))
         .filter(entry => Number.isFinite(entry.distanceM) && entry.distanceM <= options.proximityM * 1.5)
-        .sort((a, b) => a.distanceM - b.distanceM);
+        .sort((a, b) => {
+          const criticalityDiff = cctvCriticalitySortScore(b.item, options) - cctvCriticalitySortScore(a.item, options);
+          if (criticalityDiff !== 0) return criticalityDiff;
+          return a.distanceM - b.distanceM;
+        });
 
       for (const entry of candidatesInsideRadius) {
         if (!canAddToCctvPackage(items, entry.item, options)) continue;
@@ -6079,6 +6117,7 @@ function rebuildCctvPackageFromItems(items, index, options, rateMeta, esriOption
     pipe_count: items.length,
     tba_pipe_count: items.filter(item => item.isTbaCondition).length,
     critical_pipe_count: items.filter(item => item.criticalityScore > 0).length,
+    criticality_score: cctvPackageCriticalityTotal(items),
     total_length_m: totalLengthM,
     cctv_hours: surveyHours,
     cctv_rate: cctvRate,
@@ -6257,6 +6296,7 @@ function renderGeneratedCctvPackages(packages) {
     package_id: pkg.package_id,
     suburb: (pkg.suburbs || [pkg.suburb]).filter(Boolean).join(', '),
     pipe_count: pkg.pipe_count,
+    criticality_score: Number(pkg.criticality_score || 0).toFixed(1),
     total_length_m: pkg.total_length_m.toFixed(1),
     cctv_hours: pkg.cctv_hours.toFixed(2),
     cctv_rate: formatCurrency(pkg.cctv_rate),
@@ -6510,6 +6550,9 @@ async function generateCctvPackages() {
       await waitForPaint();
       packages = consolidateSmallCctvPackages(packages, options, cctvPackagingRatesData.meta);
     }
+    setLoadTxt('Prioritising and renumbering packages...');
+    await waitForPaint();
+    packages = prioritiseAndRenumberCctvPackages(packages);
     lastCctvPackagingGeneration = { options, preview, packages, rateMeta: cctvPackagingRatesData.meta };
     setLoadTxt('Rendering package tables and map...');
     await waitForPaint();
