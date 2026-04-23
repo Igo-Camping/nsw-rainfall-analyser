@@ -5418,8 +5418,9 @@ function renderCctvPackagingReasoning(options, preview = null) {
   if (!el || !options) return;
   const recentExcluded = preview?.recentExcluded?.length;
   const conditionText = conditionGroupsLabel(options.conditionGroups);
+  const consolidationSpanM = (options.consolidateSmallDistanceM || 0) * 2;
   const consolidationText = options.consolidateSmallPackages
-    ? `After the normal package run, original packages with fewer than 5 pipes are moved once into the nearest original non-small package within ${options.consolidateSmallDistanceM.toLocaleString()} m. This consolidation step is allowed to override the ${CCTV_MAX_PACKAGE_SPAN_M.toLocaleString()} m max-span rule. Small packages are not chained into other small packages.`
+    ? `After the normal package run, original packages with fewer than 5 pipes are moved once into the nearest original non-small package within ${options.consolidateSmallDistanceM.toLocaleString()} m. This consolidation step is allowed to override the ${CCTV_MAX_PACKAGE_SPAN_M.toLocaleString()} m normal max-span rule, but the consolidated package span must stay within ${consolidationSpanM.toLocaleString()} m. Small packages are not chained into other small packages.`
     : 'Small-package consolidation is switched off, so the fixed-centre package results are left as generated.';
   el.innerHTML = `
     <strong>Packaging Reasoning:</strong>
@@ -6133,7 +6134,9 @@ function consolidateSmallCctvPackages(packages, options, rateMeta) {
       }
     });
     if (!bestTarget) return;
-    bestTarget.items.push(...donor.items);
+    const tentativeItems = [...bestTarget.items, ...donor.items];
+    if (maxPackageSpanM(tentativeItems) > maxDistanceM * 2) return;
+    bestTarget.items = tentativeItems;
     bestTarget.center = meanCoordinate(bestTarget.items) || bestTarget.center;
     donor.mergedInto = bestTarget.originalIndex;
   });
