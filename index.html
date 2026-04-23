@@ -10,6 +10,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.umd.min.js"></script>
+<script>if(window.ChartZoom)Chart.register(window.ChartZoom);</script>
 <script src="./nsw_lga_boundaries.js"></script>
 <script src="./bom_northern_beaches_all_gauges.js"></script>
 <script src="./bom_ifd_cache.js"></script>
@@ -728,7 +731,7 @@ window.addEventListener('keydown', (event) => {
   <!-- Main -->
   <div class="main">
     <div id="map"></div>
-    <div id="tab-rainfall"><button id="rainfall-download-btn" class="btn-secondary" style="align-self:flex-end;margin:4px 8px 6px 0;font-size:12px" onclick="downloadRainfallTotalsPNG()">Download PNG</button><div id="tab-rainfall-inner"><canvas id="rainfall-totals-canvas"></canvas></div></div>
+    <div id="tab-rainfall"><div style="display:flex;gap:6px;align-self:flex-end;margin:4px 0 6px"><button id="rainfall-download-btn" class="btn-secondary" style="font-size:12px" onclick="downloadRainfallTotalsPNG()">Download PNG</button><button id="rainfall-reset-zoom-btn" class="btn-secondary" style="font-size:12px" onclick="if(rainfallTotalsChart){rainfallTotalsChart.options.scales.y.max=undefined;rainfallTotalsChart.resetZoom();}">Reset Zoom</button></div><div id="tab-rainfall-inner"><canvas id="rainfall-totals-canvas"></canvas></div></div>
 
     <!-- Loading overlay -->
     <div class="loading" id="loading">
@@ -3820,6 +3823,16 @@ function renderRainfallTotals(data) {
     v > 100 ? 'rgba(0,0,0,1)' : v > 50 ? 'rgba(0,50,48,1)' : 'rgba(0,90,87,1)'
   );
 
+  const rescaleY = ch => {
+    const xScale = ch.scales.x;
+    const minIdx = Math.max(0, Math.floor(xScale.min));
+    const maxIdx = Math.min(values.length - 1, Math.ceil(xScale.max));
+    const visible = values.slice(minIdx, maxIdx + 1);
+    const peak = visible.length ? Math.max(...visible) : 0;
+    ch.options.scales.y.max = peak > 0 ? Math.ceil(peak * 1.1) : undefined;
+    ch.update('none');
+  };
+
   if (rainfallTotalsChart) { rainfallTotalsChart.destroy(); rainfallTotalsChart = null; }
 
   rainfallTotalsChart = new Chart(c.getContext('2d'), {
@@ -3846,7 +3859,22 @@ function renderRainfallTotals(data) {
           color: '#5A6B7A',
           padding: { bottom: 12 }
         },
-        tooltip: { callbacks: { label: c => `${c.parsed.y.toFixed(2)} mm` } }
+        tooltip: { callbacks: { label: c => `${c.parsed.y.toFixed(2)} mm` } },
+        zoom: {
+          pan: {
+            enabled: true,
+            mode: 'x',
+            onPanComplete: ({ chart: ch }) => rescaleY(ch)
+          },
+          zoom: {
+            wheel: { enabled: true },
+            pinch: { enabled: true },
+            drag: { enabled: true, modifierKey: 'shift' },
+            mode: 'x',
+            onZoomComplete: ({ chart: ch }) => rescaleY(ch)
+          },
+          limits: { x: { minRange: 2 } }
+        }
       },
       scales: {
         x: {
