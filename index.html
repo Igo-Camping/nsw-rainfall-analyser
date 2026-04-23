@@ -1578,14 +1578,9 @@ window.addEventListener('keydown', (event) => {
           </div>
         </div>
       </div>
-      <div class="pkg-assumptions">
-        Assumptions for this first version:
-        <code>TBA</code> pipes are treated as highest-priority candidates where selected,
-        <code>Condition 1-6</code> remains available as the normal condition filter,
-        assets with no CCTV date remain eligible,
-        each package has one fixed centre and includes only pipes inside the selected radius from that centre,
-        criticality only nudges ordering,
-        and CCTV cost is estimated from package length divided by the survey production rate, multiplied by the median CCTV panel rate.
+      <div class="pkg-assumptions" id="cctvPkgReasoning">
+        <strong>Packaging Reasoning:</strong>
+        Run a preview to see the current rules applied to the uploaded data.
       </div>
     </div>
 
@@ -5054,6 +5049,36 @@ function conditionGroupsLabel(groups) {
   return selected.map(group => group === 'tba' ? 'TBA' : `Condition ${group}`).join(', ');
 }
 
+function targetModeLabel(options) {
+  if (options.targetMode === 'count') return `targeting about ${options.pipesPerPackage} pipes per package`;
+  if (options.targetMode === 'both') return `targeting about ${options.targetLengthM.toLocaleString()} m and ${options.pipesPerPackage} pipes per package`;
+  return `targeting about ${options.targetLengthM.toLocaleString()} m per package`;
+}
+
+function renderCctvPackagingReasoning(options, preview = null) {
+  const el = document.getElementById('cctvPkgReasoning');
+  if (!el || !options) return;
+  const recentExcluded = preview?.recentExcluded?.length;
+  const conditionText = conditionGroupsLabel(options.conditionGroups);
+  const consolidationText = options.consolidateSmallPackages
+    ? `After the normal package run, original packages with fewer than 5 pipes are moved once into the nearest original non-small package within ${options.consolidateSmallDistanceM.toLocaleString()} m. Small packages are not chained into other small packages.`
+    : 'Small-package consolidation is switched off, so the fixed-centre package results are left as generated.';
+  el.innerHTML = `
+    <strong>Packaging Reasoning:</strong>
+    <ul style="margin:8px 0 0 18px;line-height:1.7">
+      <li>Only selected pipe condition groups are considered: <strong>${escapeHtml(conditionText)}</strong>.</li>
+      <li>Assets with CCTV within the last <strong>${options.lookbackYears} years</strong> are excluded before packaging${recentExcluded != null ? ` (<strong>${Number(recentExcluded).toLocaleString()}</strong> currently excluded)` : ''}.</li>
+      <li>CCTV recency is read from explicit CCTV/inspection date fields where present. If the observation method says <code>CCTV</code>, the tool also uses update dates such as <code>Date_Changed</code> or <code>Date_Created</code>.</li>
+      <li>Assets with no CCTV date remain eligible, because there is no evidence of a recent inspection.</li>
+      <li>TBA condition pipes are treated as high-priority candidates when TBA is selected, because their condition is unknown.</li>
+      <li>Packages are spatially bounded: every pipe in a package must sit within <strong>${options.proximityM.toLocaleString()} m</strong> of one recomputed package centre.</li>
+      <li>The package target is ${escapeHtml(targetModeLabel(options))}; criticality only nudges ordering and does not override the spatial rule.</li>
+      <li>${escapeHtml(consolidationText)}</li>
+      <li>CCTV cost is estimated from package length divided by <strong>${options.metresPerHour.toLocaleString()} m/hr</strong>, multiplied by the median CCTV panel rate.</li>
+    </ul>
+  `;
+}
+
 function resolveCctvConditionValue(row) {
   const direct = getValueByAliases(row, [
     'Observed_Condition',
@@ -5842,6 +5867,7 @@ async function previewCctvPackaging() {
     await waitForPaint();
     lastCctvPackagingPreview = preview;
     renderCctvPackagingMeta(preview, cctvPackagingRatesData?.meta, options);
+    renderCctvPackagingReasoning(options, preview);
     renderCctvPackagingCards(preview);
     renderCctvCandidateSample(preview.eligible);
     const pkgArea = document.getElementById('cctvPkgPackagesArea');
@@ -6125,6 +6151,7 @@ async function generateCctvPackages() {
     setLoadTxt('Rendering package tables and map...');
     await waitForPaint();
     renderCctvPackagingMeta(preview, cctvPackagingRatesData.meta, options);
+    renderCctvPackagingReasoning(options, preview);
     renderCctvPackagingCards(preview);
     renderGeneratedCctvPackages(packages);
     renderCctvPackagesMap();
@@ -7862,6 +7889,7 @@ function switchPage(page, options = {}) {
       window._cctvPackagingInited = true;
       toggleCctvPackageTargetInputs();
       refreshCctvPackagingConnection();
+      renderCctvPackagingReasoning(getCctvPackagingOptions(), lastCctvPackagingPreview);
     }
     setTimeout(() => {
       ensureCctvPackagesMap();
