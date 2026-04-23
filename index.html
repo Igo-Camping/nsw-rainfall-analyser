@@ -1614,8 +1614,9 @@ window.addEventListener('keydown', (event) => {
             <div class="cctv-selected-banner" id="cctvSelectedPackageBanner" style="display:none"></div>
           </div>
           <div class="ca-actions">
-            <button class="export-btn" onclick="clearCctvPackageSelection()">Fit Packages</button>
+            <button class="export-btn" onclick="fitCctvPackagesMap()">Fit Packages</button>
             <button class="export-btn" onclick="refreshCctvPackagesMap()">Refresh Map</button>
+            <button class="export-btn" onclick="clearCctvPackageSelection()">Clear Selection</button>
           </div>
         </div>
         <div id="cctvPackagesMap"></div>
@@ -6710,22 +6711,19 @@ function fitCctvPackagesMap() {
   if (!layers.length) return;
   const group = L.featureGroup(layers);
   cctvPackagesMap.fitBounds(group.getBounds().pad(0.15));
+  updateCctvSelectedMapOverlay();
   setTimeout(() => cctvPackagesMap.invalidateSize(), 50);
 }
 
 function clearCctvPackageSelection() {
   selectedCctvPackageId = null;
   renderGeneratedCctvPackages(lastCctvPackagingGeneration?.packages || []);
-  renderCctvPackagesMap();
-  renderCctvSelectedMapOverlay();
-  fitCctvPackagesMap();
+  renderCctvPackagesMap({ fit: false });
 }
 
 function refreshCctvPackagesMap() {
-  selectedCctvPackageId = null;
   renderGeneratedCctvPackages(lastCctvPackagingGeneration?.packages || []);
   renderCctvPackagesMap({ fit: false });
-  renderCctvSelectedMapOverlay();
 }
 
 function focusCctvPackageOnMap(packageId, options = {}) {
