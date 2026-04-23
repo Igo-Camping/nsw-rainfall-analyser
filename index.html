@@ -5405,6 +5405,7 @@ function targetModeLabel(options) {
 }
 
 const CCTV_MIN_HOURS_PER_PIPE = 4;
+const CCTV_MAX_PACKAGE_SPAN_M = 1000;
 
 function calculateCctvSurveyHours(totalLengthM, pipeCount, options) {
   const lengthBasedHours = totalLengthM / Math.max(1, options?.metresPerHour || 80);
@@ -5429,6 +5430,7 @@ function renderCctvPackagingReasoning(options, preview = null) {
       <li>Assets with no CCTV date remain eligible, because there is no evidence of a recent inspection.</li>
       <li>TBA condition pipes are treated as high-priority candidates when TBA is selected, because their condition is unknown.</li>
       <li>Packages are spatially bounded: every pipe in a package must sit within <strong>${options.proximityM.toLocaleString()} m</strong> of one recomputed package centre.</li>
+      <li>Packages also have a hard maximum pipe-to-pipe span of <strong>${CCTV_MAX_PACKAGE_SPAN_M.toLocaleString()} m</strong>, so distant pipes cannot be pulled into the same package.</li>
       <li>The package target is ${escapeHtml(targetModeLabel(options))}; criticality only nudges ordering and does not override the spatial rule.</li>
       <li>${escapeHtml(consolidationText)}</li>
       <li>CCTV cost is estimated from package length divided by <strong>${options.metresPerHour.toLocaleString()} m/hr</strong>, with a minimum allowance of <strong>${CCTV_MIN_HOURS_PER_PIPE} hours per pipe</strong>, multiplied by the median CCTV panel rate.</li>
@@ -5978,6 +5980,7 @@ function buildFixedCentreCctvPackages(candidates, options, rateMeta) {
           haversineDistanceM(tentativeCenter, item) <= options.proximityM
         );
         if (!allWithinPackageRadius) continue;
+        if (maxPackageSpanM(tentativeItems) > CCTV_MAX_PACKAGE_SPAN_M) continue;
         items.push(entry.item);
         acceptedInPass = true;
         break;
@@ -6130,7 +6133,9 @@ function consolidateSmallCctvPackages(packages, options, rateMeta) {
       }
     });
     if (!bestTarget) return;
-    bestTarget.items.push(...donor.items);
+    const tentativeItems = [...bestTarget.items, ...donor.items];
+    if (maxPackageSpanM(tentativeItems) > CCTV_MAX_PACKAGE_SPAN_M) return;
+    bestTarget.items = tentativeItems;
     bestTarget.center = meanCoordinate(bestTarget.items) || bestTarget.center;
     donor.mergedInto = bestTarget.originalIndex;
   });
