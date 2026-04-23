@@ -5404,6 +5404,14 @@ function targetModeLabel(options) {
   return `targeting about ${options.targetLengthM.toLocaleString()} m per package`;
 }
 
+const CCTV_MIN_HOURS_PER_PIPE = 4;
+
+function calculateCctvSurveyHours(totalLengthM, pipeCount, options) {
+  const lengthBasedHours = totalLengthM / Math.max(1, options?.metresPerHour || 80);
+  const minimumPipeHours = Math.max(0, pipeCount || 0) * CCTV_MIN_HOURS_PER_PIPE;
+  return Math.max(lengthBasedHours, minimumPipeHours);
+}
+
 function renderCctvPackagingReasoning(options, preview = null) {
   const el = document.getElementById('cctvPkgReasoning');
   if (!el || !options) return;
@@ -5423,7 +5431,7 @@ function renderCctvPackagingReasoning(options, preview = null) {
       <li>Packages are spatially bounded: every pipe in a package must sit within <strong>${options.proximityM.toLocaleString()} m</strong> of one recomputed package centre.</li>
       <li>The package target is ${escapeHtml(targetModeLabel(options))}; criticality only nudges ordering and does not override the spatial rule.</li>
       <li>${escapeHtml(consolidationText)}</li>
-      <li>CCTV cost is estimated from package length divided by <strong>${options.metresPerHour.toLocaleString()} m/hr</strong>, multiplied by the median CCTV panel rate.</li>
+      <li>CCTV cost is estimated from package length divided by <strong>${options.metresPerHour.toLocaleString()} m/hr</strong>, with a minimum allowance of <strong>${CCTV_MIN_HOURS_PER_PIPE} hours per pipe</strong>, multiplied by the median CCTV panel rate.</li>
     </ul>
   `;
 }
@@ -5858,7 +5866,7 @@ function buildCctvPackagesPortable(candidates, options, rateMeta) {
     const { items, clusterCenter } = packageDraft;
     const centroid = meanCoordinate(items);
     const totalLengthM = items.reduce((sum, item) => sum + (item.lengthM || 0), 0);
-    const surveyHours = totalLengthM / options.metresPerHour;
+    const surveyHours = calculateCctvSurveyHours(totalLengthM, items.length, options);
     const cctvRate = rateMeta?.medianRate || 0;
     const totalCost = surveyHours * cctvRate;
     const maxSpanM = maxPackageSpanM(items);
@@ -5987,7 +5995,7 @@ function buildFixedCentreCctvPackages(candidates, options, rateMeta) {
     const { items, clusterCenter } = packageDraft;
     const centroid = meanCoordinate(items);
     const totalLengthM = items.reduce((sum, item) => sum + (item.lengthM || 0), 0);
-    const surveyHours = totalLengthM / options.metresPerHour;
+    const surveyHours = calculateCctvSurveyHours(totalLengthM, items.length, options);
     const cctvRate = rateMeta?.medianRate || 0;
     const totalCost = surveyHours * cctvRate;
     const maxSpanM = maxPackageSpanM(items);
@@ -6043,7 +6051,7 @@ function buildFixedCentreCctvPackages(candidates, options, rateMeta) {
 function rebuildCctvPackageFromItems(items, index, options, rateMeta, esriOptions) {
   const clusterCenter = meanCoordinate(items);
   const totalLengthM = items.reduce((sum, item) => sum + (item.lengthM || 0), 0);
-  const surveyHours = totalLengthM / options.metresPerHour;
+  const surveyHours = calculateCctvSurveyHours(totalLengthM, items.length, options);
   const cctvRate = rateMeta?.medianRate || 0;
   const totalCost = surveyHours * cctvRate;
   const maxSpanM = maxPackageSpanM(items);
