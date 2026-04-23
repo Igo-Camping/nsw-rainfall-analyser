@@ -90,8 +90,8 @@ select:focus,input:focus{border-color:var(--teal)}
 /* Main area */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
 #map{flex:1}
-#map-bar-chart{display:none;flex:1;padding:20px 24px;box-sizing:border-box;flex-direction:column;min-height:0;background:#fff}
-#map-bar-chart-inner{flex:1;min-height:0;position:relative}
+#tab-rainfall{display:none;flex:1;padding:20px 24px;box-sizing:border-box;flex-direction:column;min-height:0;background:#fff}
+#tab-rainfall-inner{flex:1;min-height:0;position:relative}
 
 /* Results panel */
 .results{background:white;border-top:2px solid var(--teal);display:none;overflow-y:auto;flex:0 0 auto;max-height:min(42vh,360px)}
@@ -599,6 +599,7 @@ window.addEventListener('keydown', (event) => {
 <div id="page-aep" style="flex-direction:column;flex:1;min-height:0;overflow:hidden;display:flex">
 <div class="tab-bar">
   <div class="tab active" onclick="switchTab('map')">Map View</div>
+  <div class="tab" onclick="switchTab('rainfall-totals')">Rainfall Totals</div>
   <div class="tab" onclick="switchTab('top-site')">Top Intensity Per Site</div>
   <div class="tab" onclick="switchTab('top-dur')">All Durations</div>
   <div class="tab" onclick="switchTab('daily')">Daily Totals</div>
@@ -725,7 +726,7 @@ window.addEventListener('keydown', (event) => {
   <!-- Main -->
   <div class="main">
     <div id="map"></div>
-    <div id="map-bar-chart"><div id="map-bar-chart-inner"><canvas id="map-bar-chart-canvas"></canvas></div></div>
+    <div id="tab-rainfall"><div id="tab-rainfall-inner"><canvas id="rainfall-totals-canvas"></canvas></div></div>
 
     <!-- Loading overlay -->
     <div class="loading" id="loading">
@@ -1879,7 +1880,7 @@ let allStations = [], selected = null, markers = {}, mode = 'recent';
 let bomRainfallGauges = [], bomRainfallMarkers = {};
 let lastResults = null, allSiteResults = null;
 let lastTopDurResults = null;
-let rainChart = null, compareChart = null, mapBarChart = null;
+let rainChart = null, compareChart = null, rainfallTotalsChart = null;
 let currentTab = 'map';
 let packagingConfig = null;
 let lastPackagingGeneration = null;
@@ -1955,10 +1956,6 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
   attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
 }).addTo(map);
 const lgaBoundaryLoadPromise = loadAllLgaBoundaries();
-
-// Map View tab is default: hide Leaflet map, show chart div
-document.getElementById('map').style.display = 'none';
-document.getElementById('map-bar-chart').style.display = 'flex';
 
 // â”€â”€ Startup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function init() {
@@ -2485,17 +2482,20 @@ function setMode(m) {
 function switchTab(tab, skipRun = false) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach((el,i) => {
-    el.classList.toggle('active', ['map','top-site','top-dur','daily','monitors'][i] === tab);
+    el.classList.toggle('active', ['map','rainfall-totals','top-site','top-dur','daily','monitors'][i] === tab);
   });
   const leafletMap = document.getElementById('map');
-  const barChartDiv = document.getElementById('map-bar-chart');
-  if (tab === 'map') {
+  const rainfallTab = document.getElementById('tab-rainfall');
+  if (tab === 'rainfall-totals') {
     leafletMap.style.display = 'none';
-    barChartDiv.style.display = 'flex';
+    rainfallTab.style.display = 'flex';
+    document.getElementById('results').classList.remove('show');
   } else {
-    leafletMap.style.display = '';
-    barChartDiv.style.display = 'none';
-    map.invalidateSize();
+    rainfallTab.style.display = 'none';
+    if (leafletMap.style.display === 'none') {
+      leafletMap.style.display = '';
+      setTimeout(() => map.invalidateSize(), 0);
+    }
   }
   updateRecalcButton();
   if (tab === 'monitors') {
@@ -2633,6 +2633,17 @@ function renderCachedCurrentTab(context = null) {
         'No analysis cached for the current settings',
         'Use the <strong>Analyse</strong> button to run this location first.'
       );
+    }
+    return;
+  }
+
+  if (currentTab === 'rainfall-totals') {
+    if (lastResults?.analysisKey === ctx.summaryKey) {
+      renderRainfallTotals(lastResults);
+    } else {
+      const inner = document.getElementById('tab-rainfall-inner');
+      if (inner) inner.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-l);font-size:13px">Use the <strong style="margin:0 4px">Analyse</strong> button to load data for this station.</div>';
+      if (rainfallTotalsChart) { rainfallTotalsChart.destroy(); rainfallTotalsChart = null; }
     }
     return;
   }
@@ -3706,7 +3717,6 @@ function renderResults(data, wx, rainToday) {
 
   renderChart(data.readings, rm?.peak_start, rm?.peak_end);
   renderIFDTable(aep, rm?.max_depth_mm, dur);
-  renderMapBarChart(data.readings, data.from, data.to);
   setMarkerStyle(data.station_id, rm?.max_depth_mm > 0 ? 'result' : 'selected');
   switchRTab('r-summary');
 }
@@ -3762,22 +3772,22 @@ function renderChart(readings, peakStart, peakEnd) {
   });
 }
 
-// â”€â”€ Map View rainfall totals bar chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function renderMapBarChart(readings, fromStr, toStr) {
-  const canvas = document.getElementById('map-bar-chart-canvas');
-  if (!canvas) return;
+// â”€â”€ Rainfall Totals tab chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function renderRainfallTotals(data) {
+  const inner = document.getElementById('tab-rainfall-inner');
+  const canvas = document.getElementById('rainfall-totals-canvas');
+  if (!inner || !canvas) return;
 
-  const fromMs = new Date(fromStr).getTime();
-  const toMs   = new Date(toStr).getTime();
+  const fromMs = new Date(data.from).getTime();
+  const toMs   = new Date(data.to).getTime();
   const rangeDays = (toMs - fromMs) / 86400000;
 
   const blockMin = rangeDays < 5 ? 60 : rangeDays <= 11 ? 120 : 720;
   const blockMs  = blockMin * 60000;
 
-  // Bucket readings into blocks
   const buckets = {};
-  if (readings && readings.length) {
-    for (const r of readings) {
+  if (data.readings && data.readings.length) {
+    for (const r of data.readings) {
       const ts = new Date(r.timestamp.replace(' ', 'T')).getTime();
       const key = Math.floor(ts / blockMs) * blockMs;
       buckets[key] = (buckets[key] || 0) + (r.value || 0);
@@ -3786,24 +3796,28 @@ function renderMapBarChart(readings, fromStr, toStr) {
 
   const keys = Object.keys(buckets).map(Number).sort((a, b) => a - b);
 
-  function fmtBlock(ms) {
+  if (!keys.length) {
+    inner.innerHTML = '<div style=”display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-l);font-size:13px”>No rainfall data for this period.</div>';
+    if (rainfallTotalsChart) { rainfallTotalsChart.destroy(); rainfallTotalsChart = null; }
+    return;
+  }
+
+  inner.innerHTML = '<canvas id=”rainfall-totals-canvas”></canvas>';
+  const c = document.getElementById('rainfall-totals-canvas');
+
+  const fmtBlock = ms => {
     const d = new Date(ms);
-    if (blockMin >= 720) {
-      return d.toLocaleDateString('en-AU', {day:'2-digit',month:'short'}) + ' ' +
-             d.toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit',hour12:false});
-    }
     return d.toLocaleDateString('en-AU', {day:'2-digit',month:'short'}) + ' ' +
            d.toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit',hour12:false});
-  }
+  };
 
   const labels = keys.map(fmtBlock);
   const values = keys.map(k => +buckets[k].toFixed(2));
-
   const blockLabel = blockMin === 60 ? '1-hr' : blockMin === 120 ? '2-hr' : '12-hr';
 
-  if (mapBarChart) { mapBarChart.destroy(); mapBarChart = null; }
+  if (rainfallTotalsChart) { rainfallTotalsChart.destroy(); rainfallTotalsChart = null; }
 
-  mapBarChart = new Chart(canvas.getContext('2d'), {
+  rainfallTotalsChart = new Chart(c.getContext('2d'), {
     type: 'bar',
     data: { labels, datasets: [{
       label: 'Rainfall (mm)',
@@ -3822,10 +3836,10 @@ function renderMapBarChart(readings, fromStr, toStr) {
         legend: { display: false },
         title: {
           display: true,
-          text: `Rainfall Totals — ${blockLabel} blocks`,
-          font: { size: 11, weight: '700' },
+          text: `${data.station_name} — Rainfall Totals (${blockLabel} blocks)`,
+          font: { size: 12, weight: '700' },
           color: '#5A6B7A',
-          padding: { bottom: 10 }
+          padding: { bottom: 12 }
         },
         tooltip: { callbacks: { label: c => `${c.parsed.y.toFixed(2)} mm` } }
       },
