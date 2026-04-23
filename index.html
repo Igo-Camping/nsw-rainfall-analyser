@@ -976,22 +976,22 @@ window.addEventListener('keydown', (event) => {
           <select id="pri-flow" onchange="priCalc()">
             <option value="0">No observable impact</option>
             <option value="1">Very minor - isolated ponding only</option>
-            <option value="2">Minor â€” road flooding, no property entry</option>
+            <option value="2">Minor â€" road flooding, no property entry</option>
             <option value="3">Moderate - property entry or road closed</option>
             <option value="4">Significant - habitable floor flooding</option>
-            <option value="5">Severe â€” major habitable floor or safety hazard</option>
+            <option value="5">Severe â€" major habitable floor or safety hazard</option>
           </select>
         </div>
         <div class="pri-field"><label>Properties with Habitable Floor at Risk</label>
           <select id="pri-props" onchange="priCalc()">
-            <option value="0">0</option><option value="1">1â€“2</option><option value="2">3â€“5</option>
-            <option value="3">6â€“15</option><option value="4">16â€“40</option><option value="5">&gt; 40</option>
+            <option value="0">0</option><option value="1">1â€"2</option><option value="2">3â€"5</option>
+            <option value="3">6â€"15</option><option value="4">16â€"40</option><option value="5">&gt; 40</option>
           </select>
         </div>
         <div class="pri-field"><label>People at Safety Risk</label>
           <select id="pri-people" onchange="priCalc()">
-            <option value="0">0</option><option value="1">1â€“5</option><option value="2">6â€“20</option>
-            <option value="3">21â€“50</option><option value="4">51â€“150</option><option value="5">&gt; 150</option>
+            <option value="0">0</option><option value="1">1â€"5</option><option value="2">6â€"20</option>
+            <option value="3">21â€"50</option><option value="4">51â€"150</option><option value="5">&gt; 150</option>
           </select>
         </div>
         <div class="pri-pillar-result">
@@ -1011,29 +1011,29 @@ window.addEventListener('keydown', (event) => {
       <div class="pri-sec-body">
         <div class="pri-field"><label>Structural Condition</label>
           <select id="pri-struct" onchange="priCalc()">
-            <option value="1">1â€“2 (New / Very Good)</option>
-            <option value="2">3â€“4 (Good)</option>
-            <option value="3">5â€“6 (Fair)</option>
-            <option value="4">7â€“8 (Poor)</option>
-            <option value="5">9â€“10 (Failed / Critical)</option>
+            <option value="1">1â€"2 (New / Very Good)</option>
+            <option value="2">3â€"4 (Good)</option>
+            <option value="3">5â€"6 (Fair)</option>
+            <option value="4">7â€"8 (Poor)</option>
+            <option value="5">9â€"10 (Failed / Critical)</option>
           </select>
         </div>
         <div class="pri-field"><label>Remaining Useful Life</label>
           <select id="pri-life" onchange="priCalc()">
             <option value="1">&gt; 40 years</option>
-            <option value="2">21â€“40 years</option>
-            <option value="3">11â€“20 years</option>
-            <option value="4">5â€“10 years</option>
+            <option value="2">21â€"40 years</option>
+            <option value="3">11â€"20 years</option>
+            <option value="4">5â€"10 years</option>
             <option value="5">&lt; 5 years</option>
           </select>
         </div>
         <div class="pri-field"><label>Capacity Deficiency</label>
           <select id="pri-cap" onchange="priCalc()">
             <option value="0">No deficiency - at or above design standard</option>
-            <option value="1">Minor â€” slightly under capacity</option>
+            <option value="1">Minor â€" slightly under capacity</option>
             <option value="2">Moderate - undersized for current demand</option>
             <option value="3">Significant - regular surcharge</option>
-            <option value="4">Severe â€” surcharge in minor events</option>
+            <option value="4">Severe â€" surcharge in minor events</option>
             <option value="5">Critical - overflows in very minor events</option>
           </select>
         </div>
@@ -1844,7 +1844,7 @@ window.addEventListener('keydown', (event) => {
 
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script>
-// â”€â”€ Config â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Config â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
 
 // All durations the tool supports (matching NBC tool)
@@ -1875,7 +1875,7 @@ function decodeInlineArg(value) {
   return decodeURIComponent(String(value ?? ''));
 }
 
-// â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ State â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 let allStations = [], selected = null, markers = {}, mode = 'recent';
 let bomRainfallGauges = [], bomRainfallMarkers = {};
 let lastResults = null, allSiteResults = null;
@@ -1950,21 +1950,21 @@ const ACTIVE_GAUGE_CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const activeGaugeCache = loadActiveGaugeCache();
 const activeGaugePromises = {};
 
-// â”€â”€ Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Map â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 const map = L.map('map').setView([-33.75, 151.25], 11);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
   attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
 }).addTo(map);
 const lgaBoundaryLoadPromise = loadAllLgaBoundaries();
 
-// â”€â”€ Startup â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Startup â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function init() {
   try {
     const h = await api('/health');
     setStatus(true, `${h.stations_loaded.toLocaleString()} stations`);
     await loadStations();
   } catch(e) {
-    setStatus(false, 'API offline â€” start backend on port 8000');
+    setStatus(false, 'API offline â€" start backend on port 8000');
     document.getElementById('slist').innerHTML =
       '<div style="padding:20px;font-size:12px;color:var(--text-l);text-align:center">âš  Cannot connect to API.<br>Run: py -m uvicorn main:app --reload</div>';
   }
@@ -2107,7 +2107,7 @@ async function filterStationsByRecentReadings(stations) {
   return ordered.filter(station => keepIds.has(station.station_id));
 }
 
-// â”€â”€ LGA dropdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ LGA dropdown â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function buildLgaDropdown() {
   const lgaSel = document.getElementById('lgaSel');
   const priority = ['Northern Beaches','Central Coast','Ku-ring-gai','Newcastle','Hunter Valley','Greater Sydney West','Lane Cove'];
@@ -2250,7 +2250,7 @@ function filterList() {
   syncFilteredStationViews(getFilteredDisplayStations());
 }
 
-// â”€â”€ Station list â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Station list â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function renderList(stations) {
   const el = document.getElementById('slist');
   if (!stations.length) {
@@ -2273,7 +2273,7 @@ function renderList(stations) {
   `).join('');
 }
 
-// â”€â”€ Map markers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Map markers â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function plotAllMarkers(stations) {
   stations.forEach(s => {
     const m = L.circleMarker([s.lat, s.lon], {
@@ -2435,7 +2435,7 @@ function findDisplayStationById(id) {
   return allStations.find(s => s.station_id === id) || bomRainfallGauges.find(s => s.station_id === id);
 }
 
-// â”€â”€ Station selection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Station selection â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function selectStation(id) {
   if (selected) setMarkerStyle(selected.station_id, 'default');
   selected = findDisplayStationById(id);
@@ -2469,7 +2469,7 @@ async function ensureRainfallTemplateLoaded() {
   return true;
 }
 
-// â”€â”€ Mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Mode â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function setMode(m) {
   mode = m;
   document.getElementById('m-recent').classList.toggle('active', m==='recent');
@@ -2478,7 +2478,7 @@ function setMode(m) {
   document.getElementById('p-custom').style.display = m==='custom'?'':'none';
 }
 
-// â”€â”€ Tab switching â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Tab switching â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function switchTab(tab, skipRun = false) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach((el,i) => {
@@ -2697,7 +2697,7 @@ function switchRTab(id) {
   document.getElementById(id).classList.add('active');
 }
 
-// â”€â”€ AEP classification â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ AEP classification â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function classifyAEP(aepStr) {
   if (!aepStr) return {cls:'aep-vfreq', label:'> 63.2%'};
   const clean = aepStr.replace(/[~<>%]/g,'').trim();
@@ -2724,7 +2724,7 @@ function aepToARI(aepStrOrObj) {
   if (inMatch) return `1 in ${inMatch[1]} yrs`;
   const clean = aepStr.replace(/[~<>%]/g,'').trim();
   const pct = parseFloat(clean);
-  if (isNaN(pct)) return 'â€”';
+  if (isNaN(pct)) return 'â€"';
   const ari = 1 / (pct / 100);
   if (ari < 2)    return '< 1 in 2 yrs';
   if (ari < 5)    return `1 in ${ari.toFixed(0)} yrs`;
@@ -2741,7 +2741,7 @@ if (aepStr.startsWith('>')) return 'Very frequent - less than 2-year ARI';
   return interpretAEP(clean);
 }
 
-// â”€â”€ Main analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Main analysis â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function runAnalysis() {
   const ctx = getCurrentAnalysisContext();
   if (!ctx || !selected) return;
@@ -2878,7 +2878,7 @@ async function runAnalysis() {
 }
 
 
-// â”€â”€ NBC Standard 15 gauges (from NBC_Rainfall_Calculator.xlsm) â”€
+// â"€â"€ NBC Standard 15 gauges (from NBC_Rainfall_Calculator.xlsm) â"€
 const NBC_STANDARD_15 = [
   'Avalon Rain', 'Cromer Depot', 'Great Mackerel Rain',
   'Middle Creek', 'Mona Vale Rain', 'Newport Rain',
@@ -2923,7 +2923,7 @@ function onNbcSubChange() {
   syncFilteredStationViews(getFilteredDisplayStations());
 }
 
-// â”€â”€ MHL data fetch (browser â†’ MHL directly, no backend) â”€â”€â”€â”€
+// â"€â"€ MHL data fetch (browser â†’ MHL directly, no backend) â"€â"€â"€â"€
 const MHL_BASE = 'https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS';
 
 async function fetchMhlData(tsId, fromDt, toDt) {
@@ -2992,7 +2992,7 @@ function isDurationSupportedForInterval(durationMinutes, intervalMinutes) {
   return duration >= interval && duration % interval === 0;
 }
 
-// â”€â”€ Rolling max calculation (in browser) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Rolling max calculation (in browser) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function calcRollingMax(readings, durationMinutes, intervalMinutes = 5) {
   if (!readings || !readings.length) return null;
 
@@ -3027,7 +3027,7 @@ function calcRollingMax(readings, durationMinutes, intervalMinutes = 5) {
   };
 }
 
-// â”€â”€ Temperature (browser â†’ Open-Meteo directly) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Temperature (browser â†’ Open-Meteo directly) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function fetchWeather(lat, lon) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
     `&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m&timezone=Australia/Sydney`;
@@ -3095,7 +3095,7 @@ async function fetchRainfallSinceMidnight(station) {
   return null;
 }
 
-// â”€â”€ Analyse one station (used by multi-site analysis) â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Analyse one station (used by multi-site analysis) â"€â"€â"€â"€â"€â"€â"€
 async function analyseStation(station, dur, fromDt, toDt) {
   try {
     const rainfallData = await fetchStationRainfall(station, fromDt, toDt, dur);
@@ -3124,8 +3124,8 @@ async function analyseStation(station, dur, fromDt, toDt) {
   }
 }
 
-// â”€â”€ Top Intensity Per Site â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// â”€â”€ Top Intensity Per Site â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Top Intensity Per Site â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// â"€â"€ Top Intensity Per Site â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 // Matches Excel tool: finds the worst AEP across ALL standard durations per station
 async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   const { render = true, manageLoader = true } = options;
@@ -3150,7 +3150,7 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
     return [];
   }
 
-  // All 25 standard durations â€” same as Excel tool
+  // All 25 standard durations â€" same as Excel tool
   const allDurs = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
   const rangeDays = Math.max(1, Math.ceil((toDt - fromDt) / 86400000));
   const failedStations = [];
@@ -3429,7 +3429,7 @@ function renderCompareChart(results, dur) {
   });
 }
 
-// â”€â”€ Top 5 Durations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Top 5 Durations â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function runTopDurations(fromDt, toDt) {
   if (!selected) return;
   showLoad('Analysing all durations...');
@@ -3502,7 +3502,7 @@ function renderTopDurations(results) {
   switchRTab('r-allsite');
 }
 
-// â”€â”€ Daily totals â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Daily totals â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function runDailyTotals(fromDt, toDt) {
   showLoad('Calculating daily totals...');
   try {
@@ -3655,7 +3655,7 @@ function renderHourlyTable() {
     </div>`;
 }
 
-// â”€â”€ Render single station results â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Render single station results â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function renderResults(data, wx, rainToday) {
   const panel = document.getElementById('results');
   updateRecalcButton();
@@ -3721,7 +3721,7 @@ function renderResults(data, wx, rainToday) {
   switchRTab('r-summary');
 }
 
-// â”€â”€ Rainfall chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Rainfall chart â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function renderChart(readings, peakStart, peakEnd) {
   const el = document.getElementById('r-chart');
 
@@ -3772,7 +3772,7 @@ function renderChart(readings, peakStart, peakEnd) {
   });
 }
 
-// â”€â”€ Rainfall Totals tab chart â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Rainfall Totals tab chart â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function renderRainfallTotals(data) {
   const inner = document.getElementById('tab-rainfall-inner');
   const canvas = document.getElementById('rainfall-totals-canvas');
@@ -3797,12 +3797,12 @@ function renderRainfallTotals(data) {
   const keys = Object.keys(buckets).map(Number).sort((a, b) => a - b);
 
   if (!keys.length) {
-    inner.innerHTML = '<div style=”display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-l);font-size:13px”>No rainfall data for this period.</div>';
+    inner.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-l);font-size:13px">No rainfall data for this period.</div>';
     if (rainfallTotalsChart) { rainfallTotalsChart.destroy(); rainfallTotalsChart = null; }
     return;
   }
 
-  inner.innerHTML = '<canvas id=”rainfall-totals-canvas”></canvas>';
+  inner.innerHTML = '<canvas id="rainfall-totals-canvas"></canvas>';
   const c = document.getElementById('rainfall-totals-canvas');
 
   const fmtBlock = ms => {
@@ -3858,7 +3858,7 @@ function renderRainfallTotals(data) {
   });
 }
 
-// â”€â”€ IFD reference table â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ IFD reference table â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function renderIFDTable(aep, observedDepth, dur) {
   const el = document.getElementById('r-ifd');
   if (!aep?.ifd_reference) {
@@ -3905,14 +3905,14 @@ function renderIFDTable(aep, observedDepth, dur) {
   `;
 }
 
-// â”€â”€ Export CSV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Export CSV â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function exportCSV() {
   let csv = '';
   const ts = new Date().toLocaleString('en-AU');
 
   if (allSiteResults?.length) {
     // All sites export
-    csv = `NSW Rainfall Analyser â€” All Sites Export\nGenerated: ${ts}\n\n`;
+    csv = `NSW Rainfall Analyser â€" All Sites Export\nGenerated: ${ts}\n\n`;
     csv += 'Rank,Station,Peak Depth (mm),Total Depth (mm),AEP%,Return Period,Peak Start,Peak End\n';
     const sorted = [...allSiteResults]
       .filter(r => r.rolling_max)
@@ -3924,7 +3924,7 @@ function exportCSV() {
     });
   } else if (lastResults?.readings) {
     // Single station export
-    csv = `NSW Rainfall Analyser â€” ${lastResults.station_name}\nGenerated: ${ts}\n\n`;
+    csv = `NSW Rainfall Analyser â€" ${lastResults.station_name}\nGenerated: ${ts}\n\n`;
     csv += `AEP:,${lastResults.aep?.aep||''}\nReturn Period:,${aepToARI(lastResults.aep || lastResults.aep?.aep || '')}\n`;
     csv += `Peak Depth (mm):,${lastResults.rolling_max?.max_depth_mm||''}\n`;
     csv += `Total Depth (mm):,${lastResults.rolling_max?.total_depth_mm||''}\n\n`;
@@ -4398,7 +4398,7 @@ async function exportAllXlsx() {
   XLSX.writeFile(wb, `rainfall_analysis_${safeStation || 'station'}_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
-// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Helpers â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function api(path) {
   const r = await fetch(API + path);
   if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
@@ -7882,7 +7882,7 @@ function exportCostingCsv() {
   URL.revokeObjectURL(url);
 }
 
-// â”€â”€ IFD data loader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ IFD data loader â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 // Loads full station data (including IFD tables) in the background
 // so AEP calc can run entirely in the browser
 const ifdCache = {};  // station_id -> ifd object
@@ -7929,7 +7929,7 @@ async function loadIfdData() {
   console.log(`IFD data loaded for ${Object.keys(ifdCache).length} stations`);
 }
 
-// â”€â”€ Browser-side AEP calculation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Browser-side AEP calculation â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 // Replicates the IFD_Rare_Compat logic from the Excel tool
 // Piecewise log-linear interpolation in ln(AEP) space
 // Extends to 1:200, 1:500, 1:1000 for NBC Standard 15 stations
@@ -7949,7 +7949,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
   if (!ifd) return null;
   if (depthMm <= 0) return { aep: '>63.2%', interpretation: 'Very frequent - less than 2-year ARI' };
 
-  // Require exact duration match â€” no fallback to nearest (wrong IFD = wrong AEP)
+  // Require exact duration match â€" no fallback to nearest (wrong IFD = wrong AEP)
   const availDurs = Object.keys(ifd).map(Number).sort((a,b)=>a-b);
   const durKey = durationMinutes;
   if (!ifd[durKey] && !ifd[String(durKey)]) return null;
@@ -7990,7 +7990,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
     };
   }
 
-  // Above all thresholds â€” tail extrapolation beyond last column
+  // Above all thresholds â€" tail extrapolation beyond last column
   if (depthMm >= depths[depths.length - 1]) {
     const n = depths.length;
     // Use log-linear slope from last two points (matches Excel 500â†’1000 method)
@@ -8025,7 +8025,7 @@ function calcAEP(stationId, durationMinutes, depthMm) {
         bracket_lower_aep: available[i],
         bracket_upper_aep: available[i+1],
         ifd_reference: row,
-        interpretation: `${cat} â€” approximately 1 in ${ari.toLocaleString()} years`
+        interpretation: `${cat} â€" approximately 1 in ${ari.toLocaleString()} years`
       };
     }
   }
@@ -8089,9 +8089,9 @@ function closeResults() {
 }
 
 
-// â”€â”€ Other Monitors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Other Monitors â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 // Stream/river gauges, tide, estuary from MHL KiWIS
-// These are fetched live â€” not in the station cache
+// These are fetched live â€" not in the station cache
 
 const MONITOR_PARAM_TYPES = [
   { key: 'stream',  label: 'Stream & River',  params: ['Water Level','Stage','Flow','Discharge'], colour: '#2980B9' },
@@ -8221,7 +8221,7 @@ function filterMonitors(typeKey) {
   }
 
   listEl.innerHTML = `
-    <div style="font-size:11px;color:var(--text-l);margin-bottom:10px">${filtered.length} stations â€” click to view level chart</div>
+    <div style="font-size:11px;color:var(--text-l);margin-bottom:10px">${filtered.length} stations â€" click to view level chart</div>
     <table>
       <thead><tr>
         <th>Station</th><th>Location</th><th style="text-align:center">Action</th>
@@ -8311,7 +8311,7 @@ async function showLevelChart(stationId, stationName, colour) {
                    levelTs.ts_name?.includes('mm') ? 'mm' : 'm AHD';
 
     chartEl.innerHTML = `
-      <div class="chart-title">${stationName} â€” Level (${unit}) â€” Last 7 Days</div>
+      <div class="chart-title">${stationName} â€" Level (${unit}) â€" Last 7 Days</div>
       <div style="font-size:11px;color:var(--text-l);margin-bottom:8px">
         Timeseries: ${levelTs.ts_name} Â· ${readings.length} readings
       </div>
@@ -8359,8 +8359,8 @@ async function showLevelChart(stationId, stationName, colour) {
   }
 }
 
-// â”€â”€ LGA Boundary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// â”€â”€ All LGA boundaries (background layer) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ LGA Boundary â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// â"€â"€ All LGA boundaries (background layer) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function loadAllLgaBoundaries() {
   try {
     await Promise.resolve();
@@ -9349,7 +9349,7 @@ function resetBomGaugeFilters() {
   fitBomGaugesToVisible();
 }
 
-// â”€â”€ Page navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Page navigation â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 const PAGES = ['home','aep','criticalassets','bomgauges','prioritisation','costing','relining','cctvpackaging','futureworks'];
 let currentPage = 'home';
 
@@ -9439,7 +9439,7 @@ function switchPage(page, options = {}) {
 // Show home on load
 document.addEventListener('DOMContentLoaded', () => switchPage('home'));
 
-// â”€â”€ Prioritisation Tool â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â"€â"€ Prioritisation Tool â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 let currentPriTool = 'original';
 let priList = [];
 
