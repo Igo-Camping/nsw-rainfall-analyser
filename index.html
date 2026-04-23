@@ -1589,40 +1589,6 @@ window.addEventListener('keydown', (event) => {
       </div>
     </div>
 
-    <div class="pkg-panel">
-      <div class="lbl">ESRI Link Settings</div>
-      <div class="pkg-grid" style="grid-template-columns:2fr 1fr 1fr">
-        <div class="fg">
-          <label for="cctvEsriBaseUrl">ESRI App URL</label>
-          <input type="text" id="cctvEsriBaseUrl" placeholder="https://experience.arcgis.com/experience/... or Dashboard URL"/>
-        </div>
-        <div class="fg">
-          <label for="cctvEsriParam">Asset Parameter</label>
-          <input type="text" id="cctvEsriParam" value="asset"/>
-        </div>
-        <div class="fg">
-          <label for="cctvEsriLinkMode">Link Mode</label>
-          <select id="cctvEsriLinkMode">
-            <option value="query" selected>Query parameter</option>
-            <option value="experience">Experience Builder data_s</option>
-          </select>
-        </div>
-      </div>
-      <div class="pkg-grid" style="grid-template-columns:1fr 1fr;margin-top:12px">
-        <div class="fg">
-          <label for="cctvEsriDataSourceId">Experience Builder Data Source ID</label>
-          <input type="text" id="cctvEsriDataSourceId" placeholder="Only needed for data_s links"/>
-        </div>
-        <div class="fg">
-          <label for="cctvEsriIdField">Stable Asset ID Field</label>
-          <input type="text" id="cctvEsriIdField" value="asset_id_text"/>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px;line-height:1.6">
-        Leave the ESRI URL blank until the final app exists. The export will still include stable asset IDs, and once the URL is added it will generate clickable asset/package links without needing access to the ESRI server files.
-      </div>
-    </div>
-
     <div class="pkg-meta" id="cctvPkgMeta"></div>
     <div class="pkg-card-grid" id="cctvPkgCards"></div>
     <div class="pkg-panel">
@@ -5905,11 +5871,12 @@ function renderGeneratedCctvPackages(packages) {
   const sampleHeaders = sampleRows.length ? Object.keys(sampleRows[0]) : [];
   const totalCost = packages.reduce((sum, pkg) => sum + pkg.total_cost, 0);
   const totalLength = packages.reduce((sum, pkg) => sum + pkg.total_length_m, 0);
+  const recentCctvExcluded = lastCctvPackagingGeneration?.preview?.recentExcluded?.length || 0;
   area.className = 'pkg-table-wrap';
   area.innerHTML = `
     <div style="padding:12px;background:white;border-bottom:1px solid var(--border)">
       <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px">
-        ${packages.length.toLocaleString()} packages · ${packages.reduce((sum, pkg) => sum + pkg.pipe_count, 0).toLocaleString()} pipes
+        Total Packages: ${packages.length.toLocaleString()} · Packaged Pipes: ${packages.reduce((sum, pkg) => sum + pkg.pipe_count, 0).toLocaleString()} · Recent CCTV Excluded: ${recentCctvExcluded.toLocaleString()}
       </div>
       <div style="font-size:11px;color:var(--text-l)">
         Total length ${totalLength.toLocaleString(undefined, { maximumFractionDigits: 1 })} m · Estimated CCTV cost ${formatCurrency(totalCost)}
