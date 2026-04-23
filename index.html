@@ -1858,6 +1858,7 @@ let lastCctvPackagingPreview = null;
 let lastCctvPackagingGeneration = null;
 let cctvPackagesMap = null;
 let cctvPackagesLayer = null;
+let cctvPackageFocusLayers = new Map();
 let futureWorksWorkbookMeta = null;
 let futureWorksReliningFileName = '';
 let futureWorksExtraFileName = '';
@@ -6189,10 +6190,12 @@ function consolidateSmallCctvPackages(packages, options, rateMeta) {
 function renderCctvPackagingMeta(preview, rateMeta, options) {
   const el = document.getElementById('cctvPkgMeta');
   if (!el) return;
+  const generatedPackages = lastCctvPackagingGeneration?.packages?.length || 0;
   const rows = [
     ['Condition Filter', conditionGroupsLabel(options.conditionGroups)],
     ['Recent CCTV Exclusion', `${options.lookbackYears} years`],
     ['Eligible Candidates', preview.eligible.length.toLocaleString()],
+    ['Total Packages', generatedPackages ? generatedPackages.toLocaleString() : 'Not generated'],
     ['TBA Candidates', preview.eligible.filter(item => item.isTbaCondition).length.toLocaleString()],
     ['Recent CCTV Excluded', preview.recentExcluded.length.toLocaleString()],
     ['Missing Coordinates', preview.noCoords.length.toLocaleString()],
@@ -6284,6 +6287,11 @@ async function previewCctvPackaging() {
   }
 }
 
+function renderCctvPackageIdLink(packageId) {
+  const id = String(packageId || '');
+  return `<a href="#cctvPackagesMap" style="font-weight:800;color:var(--teal);text-decoration:underline" onclick="focusCctvPackageOnMap(${JSON.stringify(id)});return false;">${escapeHtml(id)}</a>`;
+}
+
 function renderGeneratedCctvPackages(packages) {
   const area = document.getElementById('cctvPkgPackagesArea');
   if (!area) return;
@@ -6293,7 +6301,7 @@ function renderGeneratedCctvPackages(packages) {
     return;
   }
   const summaryRows = packages.map(pkg => ({
-    package_id: pkg.package_id,
+    package_id: renderCctvPackageIdLink(pkg.package_id),
     suburb: (pkg.suburbs || [pkg.suburb]).filter(Boolean).join(', '),
     pipe_count: pkg.pipe_count,
     criticality_score: Number(pkg.criticality_score || 0).toFixed(1),
@@ -6336,7 +6344,7 @@ function renderGeneratedCctvPackages(packages) {
     </div>
     <table>
       <thead><tr>${summaryHeaders.map(header => `<th>${escapeHtml(displayTableHeader(header))}</th>`).join('')}</tr></thead>
-      <tbody>${summaryRows.map(row => `<tr>${summaryHeaders.map(header => `<td>${escapeHtml(row[header])}</td>`).join('')}</tr>`).join('')}</tbody>
+      <tbody>${summaryRows.map(row => `<tr>${summaryHeaders.map(header => `<td>${header === 'package_id' ? row[header] : escapeHtml(row[header])}</td>`).join('')}</tr>`).join('')}</tbody>
     </table>
     ${sampleHeaders.length ? `
       <div style="padding:12px;font-size:12px;font-weight:700;color:var(--navy);background:white;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
@@ -6479,6 +6487,7 @@ function renderCctvPackagesMap() {
     return;
   }
   cctvPackagesLayer.clearLayers();
+  cctvPackageFocusLayers = new Map();
   const packages = lastCctvPackagingGeneration?.packages || [];
   if (!packages.length) {
     if (subtitle) subtitle.textContent = 'Generate packages to draw package groups on the map.';
@@ -6496,23 +6505,25 @@ function renderCctvPackagesMap() {
     }
     assets.forEach(item => {
       const radius = item.isTbaCondition ? 7 : 5;
-      L.circleMarker([item.lat, item.lon], {
+      const assetMarker = L.circleMarker([item.lat, item.lon], {
         radius,
         color: '#fff',
         weight: 1.5,
         fillColor: color,
         fillOpacity: item.isTbaCondition ? 0.95 : 0.78
       }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
+      if (!cctvPackageFocusLayers.has(pkg.package_id)) cctvPackageFocusLayers.set(pkg.package_id, assetMarker);
       drawn += 1;
     });
     if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) {
-      L.circleMarker([pkg.lat, pkg.lon], {
+      const focusMarker = L.circleMarker([pkg.lat, pkg.lon], {
         radius: 11,
         color,
         weight: 3,
         fillColor: '#fff',
         fillOpacity: 0.7
       }).bindTooltip(pkg.package_id, { permanent: false }).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
+      cctvPackageFocusLayers.set(pkg.package_id, focusMarker);
     }
   });
   if (subtitle) {
@@ -6529,6 +6540,29 @@ function fitCctvPackagesMap() {
   const group = L.featureGroup(layers);
   cctvPackagesMap.fitBounds(group.getBounds().pad(0.15));
   setTimeout(() => cctvPackagesMap.invalidateSize(), 50);
+}
+
+function focusCctvPackageOnMap(packageId) {
+  const id = String(packageId || '');
+  if (!id) return;
+  switchPage('cctvpackaging');
+  ensureCctvPackagesMap();
+  renderCctvPackagesMap();
+  const mapEl = document.getElementById('cctvPackagesMap');
+  if (mapEl) mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => {
+    const pkg = (lastCctvPackagingGeneration?.packages || []).find(item => item.package_id === id);
+    if (!pkg || !cctvPackagesMap) return;
+    const assets = (pkg.assets || []).filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lon));
+    if (assets.length) {
+      const bounds = L.latLngBounds(assets.map(item => [item.lat, item.lon]));
+      cctvPackagesMap.fitBounds(bounds.pad(0.25));
+    } else if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) {
+      cctvPackagesMap.setView([pkg.lat, pkg.lon], 16);
+    }
+    const focusLayer = cctvPackageFocusLayers.get(id);
+    if (focusLayer?.openPopup) focusLayer.openPopup();
+  }, 150);
 }
 
 async function generateCctvPackages() {
