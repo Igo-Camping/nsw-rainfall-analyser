@@ -1315,7 +1315,7 @@ window.addEventListener('keydown', (event) => {
           <button class="run-btn" style="margin-top:0" id="pkgGenerateBtn" onclick="generateReliningPackages()">Generate Packages</button>
         </div>
       </div>
-      <div style="font-size:11px;color:var(--text-l);margin-top:10px">In-browser package generation coming in a future update. Upload files above to enable.</div>
+      <div style="font-size:11px;color:var(--text-l);margin-top:10px">Packaging runs locally in the browser against the uploaded files and keeps the output to summary tables for now.</div>
     </div>
 
     <div class="pkg-meta" id="pkgMeta"></div>
@@ -1326,7 +1326,7 @@ window.addEventListener('keydown', (event) => {
     </div>
     <div class="pkg-panel">
       <div class="lbl">Generated Packages</div>
-      <div id="pkgPackagesArea" class="pkg-empty">Package generation coming in a future update.</div>
+      <div id="pkgPackagesArea" class="pkg-empty">Generate relining packages to see package counts, cost totals, and sample package rows.</div>
     </div>
   </div>
 </div>
@@ -1848,6 +1848,10 @@ let futureWorksRows = [];
 let futureWorksWorkbookFile = null;
 let reliningAssetsData = null;  // in-memory only, never saved
 let reliningRatesData = null;   // in-memory only, never saved
+let reliningAssetsRows = [];
+let reliningRatesRows = [];
+let reliningAssetsFileName = '';
+let reliningRatesFileName = '';
 let cctvPackagingAssetsData = null;
 let cctvPackagingRatesData = null;
 let lastCctvPackagingPreview = null;
@@ -4246,12 +4250,252 @@ function setPackagingStatus(ok, text) {
   if (label) label.textContent = text;
 }
 
+function resolveSuburbColumn(rows) {
+  if (!rows?.length) return null;
+  const candidates = ['Asset Suburb', 'Location - Suburb', 'Suburb', 'SUBURB'];
+  return candidates.find(name => Object.prototype.hasOwnProperty.call(rows[0], name)) || null;
+}
+
+function deriveSuburbFromText(value) {
+  const text = String(value ?? '').trim();
+  if (!text || text.toUpperCase() === 'TBA') return '';
+  const nswMatch = text.match(/\b([A-Z]+(?: [A-Z]+)*) NSW \d{4}\b/);
+  if (nswMatch) return nswMatch[1].trim();
+  const trailingMatch = text.match(/,\s*([A-Z]+(?: [A-Z]+)*)\s*$/);
+  if (trailingMatch) return trailingMatch[1].trim();
+  return '';
+}
+
+function getRowSuburb(row, suburbCol = null) {
+  const direct = suburbCol ? String(row?.[suburbCol] ?? '').trim() : '';
+  if (direct && direct.toUpperCase() !== 'TBA') return direct;
+  for (const candidate of ['Formatted_Address', 'Asset_Address', 'Physical_Location']) {
+    const derived = deriveSuburbFromText(row?.[candidate]);
+    if (derived) return derived;
+  }
+  return '';
+}
+
+function normaliseNumeric(value) {
+  if (value == null || value === '') return null;
+  const cleaned = String(value).replace(/[$,\s]/g, '');
+  const num = Number(cleaned);
+  return Number.isFinite(num) ? num : null;
+}
+
+function getReliningConditionNumber(row) {
+  const raw = row?.['SW_Condition'] ?? row?.['Observed_Condition'] ?? row?.['Calculated_Condition'] ?? row?.['Schedule7_Condition'];
+  const match = String(raw ?? '').match(/(\d+)/);
+  return match ? Number(match[1]) : null;
+}
+
+function parseDescriptorDiameters(desc) {
+  const text = String(desc ?? '');
+  const mmMatches = [...text.matchAll(/[ØO]?(\d+)\s*mm/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
+  if (mmMatches.length) return mmMatches;
+  return [...text.matchAll(/[ØO](\d+)/gi)].map(match => Number(match[1])).filter(d => d >= 50 && d <= 3000);
+}
+
+function parseLengthBand(desc) {
+  const text = String(desc ?? '');
+  const plus = text.match(/\+(\d+)/);
+  if (plus) return [Number(plus[1]), Infinity];
+  const range = text.match(/(\d+)\s*-\s*(\d+)/);
+  if (range) return [Number(range[1]), Number(range[2])];
+  return null;
+}
+
+function cleanRateRows(rows) {
+  return (rows || []).map(row => ({
+    ...row,
+    'Unit Rate': normaliseNumeric(row?.['Unit Rate'])
+  }));
+}
+
+function getReliningRateForRow(row) {
+  const diameter = normaliseNumeric(row?.['SWP_Pipe Diameter_mm'] ?? row?.['Pipe Diameter'] ?? row?.['Diameter']);
+  const lengthM = normaliseNumeric(row?.['Spatial Length_m'] ?? row?.['Length'] ?? row?.['Length_m']);
+  if (!Number.isFinite(diameter) || !Number.isFinite(lengthM) || !reliningRatesRows.length) return null;
+
+  let matches = reliningRatesRows.filter(rate => {
+    const diameters = parseDescriptorDiameters(rate?.['Size/Descriptor']);
+    return diameters.includes(diameter);
+  });
+  if (!matches.length) return null;
+
+  const inBand = matches.filter(rate => {
+    const band = parseLengthBand(rate?.['Size/Descriptor']);
+    if (!band) return false;
+    return lengthM >= band[0] && lengthM <= band[1];
+  });
+  if (inBand.length) matches = inBand;
+  else if (matches.some(rate => parseLengthBand(rate?.['Size/Descriptor']))) return null;
+
+  const assetClassMatches = matches.filter(rate => /Median/i.test(String(rate?.['Asset Class'] || '')));
+  if (assetClassMatches.length) matches = assetClassMatches;
+  else {
+    const panelMatches = matches.filter(rate => /Panel/i.test(String(rate?.['Asset Class'] || '')));
+    if (panelMatches.length) matches = panelMatches;
+  }
+
+  const numericRates = matches.map(rate => normaliseNumeric(rate?.['Unit Rate'])).filter(value => Number.isFinite(value));
+  if (!numericRates.length) return null;
+  numericRates.sort((a, b) => a - b);
+  return numericRates[Math.floor(numericRates.length / 2)];
+}
+
+function getReliningRowsForMode(mode) {
+  const allowed = mode === 'Condition 8 only' ? new Set([8]) : (mode === 'Condition 7 only' ? new Set([7]) : new Set([7, 8]));
+  return reliningAssetsRows.filter(row => allowed.has(getReliningConditionNumber(row)));
+}
+
+function buildPackagingStreamSummary(name, rows, suburbCol) {
+  const totalLength = rows.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m'] ?? row?.['Length'] ?? row?.['Length_m']) || 0), 0);
+  const sampleCols = ['Asset', suburbCol, 'SWP_Pipe Diameter_mm', 'Spatial Length_m', 'SW_Condition'].filter(Boolean);
+  const sampleAssets = rows.slice(0, 8).map(row => {
+    const item = {};
+    sampleCols.forEach(col => item[col] = row?.[col] ?? '');
+    if (!suburbCol) item.Suburb = getRowSuburb(row, suburbCol) || 'TBA';
+    return item;
+  });
+  return {
+    name,
+    pipe_count: rows.length,
+    total_length_m: Number(totalLength.toFixed(1)),
+    sample_assets: sampleAssets
+  };
+}
+
+function buildSplitStreams(mode) {
+  const suburbCol = resolveSuburbColumn(reliningAssetsRows);
+  const reliningPreviewRows = getReliningRowsForMode(mode);
+  const reliningDefaultRows = reliningAssetsRows.filter(row => getReliningConditionNumber(row) === 8);
+  const reconstructionRows = reliningAssetsRows.filter(row => {
+    const cond = getReliningConditionNumber(row);
+    return cond === 9 || cond === 10;
+  });
+  const amplificationRows = reliningAssetsRows.filter(row => {
+    const cond = getReliningConditionNumber(row);
+    const flood = String(row?.['SW LGA 20% H1-H6'] || '').trim().toUpperCase();
+    const diameter = normaliseNumeric(row?.['SWP_Pipe Diameter_mm'] ?? row?.['Pipe Diameter'] ?? row?.['Diameter']) || 0;
+    return [4, 5, 6, 7].includes(cond) && ['H3', 'H4', 'H5', 'H6'].includes(flood) && diameter >= 300;
+  });
+  return {
+    suburb_column: suburbCol,
+    asset_count: reliningAssetsRows.length,
+    streams: [
+      buildPackagingStreamSummary('Relining Preview', reliningPreviewRows, suburbCol),
+      buildPackagingStreamSummary('Relining Default (Condition 8)', reliningDefaultRows, suburbCol),
+      buildPackagingStreamSummary('Reconstruction', reconstructionRows, suburbCol),
+      buildPackagingStreamSummary('Amplification', amplificationRows, suburbCol)
+    ]
+  };
+}
+
+function splitIntoPackagesByCount(rows, pipesPerPackage, groupBySuburb, suburbCol) {
+  const sorted = [...rows].sort((a, b) => {
+    if (!groupBySuburb || !suburbCol) return String(a?.Asset || '').localeCompare(String(b?.Asset || ''));
+    const suburbCompare = getRowSuburb(a, suburbCol).localeCompare(getRowSuburb(b, suburbCol));
+    if (suburbCompare !== 0) return suburbCompare;
+    return String(a?.Asset || '').localeCompare(String(b?.Asset || ''));
+  });
+  let pkgIndex = 0;
+  let countInPkg = 0;
+  let lastGroup = null;
+  return sorted.map(row => {
+    const group = groupBySuburb ? getRowSuburb(row, suburbCol) : '';
+    if (lastGroup === null) lastGroup = group;
+    if (group !== lastGroup || countInPkg >= pipesPerPackage) {
+      pkgIndex += 1;
+      countInPkg = 0;
+      lastGroup = group;
+    }
+    const packageId = `RLN_${String(pkgIndex + 1).padStart(3, '0')}`;
+    countInPkg += 1;
+    return { ...row, package_id: packageId };
+  });
+}
+
+function splitIntoValuePackages(rows, maxPackageValue, groupBySuburb, suburbCol) {
+  const groups = new Map();
+  rows.forEach(row => {
+    const key = groupBySuburb ? (getRowSuburb(row, suburbCol) || '__unknown__') : '__all__';
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  });
+  const packaged = [];
+  let pkgCounter = 1;
+  groups.forEach(groupRows => {
+    const sorted = [...groupRows].sort((a, b) => (b.pipe_cost || 0) - (a.pipe_cost || 0));
+    let current = [];
+    let currentValue = 0;
+    sorted.forEach(row => {
+      const pipeValue = Number(row.pipe_cost || 0);
+      if (current.length && (currentValue + pipeValue > maxPackageValue)) {
+        current.forEach(item => packaged.push({ ...item, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
+        pkgCounter += 1;
+        current = [];
+        currentValue = 0;
+      }
+      current.push(row);
+      currentValue += pipeValue;
+    });
+    if (current.length) {
+      current.forEach(item => packaged.push({ ...item, package_id: `RLN_${String(pkgCounter).padStart(3, '0')}` }));
+      pkgCounter += 1;
+    }
+  });
+  return packaged;
+}
+
+function summarisePackages(rows, suburbCol) {
+  const packages = new Map();
+  rows.forEach(row => {
+    const key = String(row.package_id || '');
+    if (!key) return;
+    if (!packages.has(key)) packages.set(key, []);
+    packages.get(key).push(row);
+  });
+  const summaries = [];
+  [...packages.keys()].sort().forEach(packageId => {
+    const pkgRows = packages.get(packageId) || [];
+    const totalLength = pkgRows.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m'] ?? row?.['Length'] ?? row?.['Length_m']) || 0), 0);
+    const totalCost = pkgRows.reduce((sum, row) => sum + (Number(row?.pipe_cost) || 0), 0);
+    const suburbs = [...new Set(pkgRows.map(row => getRowSuburb(row, suburbCol)).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    summaries.push({
+      package_id: packageId,
+      pipe_count: pkgRows.length,
+      total_length_m: Number(totalLength.toFixed(1)),
+      total_cost: Number(totalCost.toFixed(2)),
+      ...(suburbs.length ? { suburb: suburbs.join(', ') } : { suburb: 'TBA' })
+    });
+  });
+  return summaries;
+}
+
+function samplePackageAssets(rows, suburbCol) {
+  const firstPackageId = [...new Set(rows.map(row => row.package_id).filter(Boolean))].sort()[0];
+  if (!firstPackageId) return [];
+  return rows.filter(row => row.package_id === firstPackageId).slice(0, 12).map(row => {
+    const item = {
+      package_id: row.package_id,
+      Asset: row.Asset ?? row.ASSET_ID ?? row.OBJECTID ?? '',
+      'SWP_Pipe Diameter_mm': row['SWP_Pipe Diameter_mm'] ?? row['Pipe Diameter'] ?? row.Diameter ?? '',
+      'Spatial Length_m': row['Spatial Length_m'] ?? row.Length ?? row.Length_m ?? '',
+      pipe_cost: row.pipe_cost != null ? Number(row.pipe_cost.toFixed(2)) : ''
+    };
+    item.Suburb = getRowSuburb(row, suburbCol) || 'TBA';
+    return item;
+  });
+}
+
 function renderPackagingMeta(meta) {
   const el = document.getElementById('pkgMeta');
   if (!el) return;
   const rows = [
+    ['Assets File', reliningAssetsFileName || 'Required'],
+    ['Rates File', reliningRatesFileName || 'Required'],
     ['Assets Loaded', meta?.asset_count?.toLocaleString?.() ?? '-'],
-    ['Assets Path', meta?.assets_path || '-'],
     ['Suburb Column', meta?.suburb_column ? displayTableHeader(meta.suburb_column) : '-']
   ];
   el.innerHTML = rows.map(([label, value]) => `
@@ -4265,15 +4509,11 @@ function renderPackagingMeta(meta) {
 function renderPackagingPaths(meta) {
   const el = document.getElementById('pkgPathMeta');
   if (!el) return;
-  const dataPath = meta?.data_path || '-';
-  const outputsPath = meta?.outputs_path || '-';
-  const ratesPath = meta?.rates_path || '-';
-  const sharedHint = String(dataPath).includes('OneDrive - Northern Beaches Council') ? 'Council OneDrive path' : 'Local fallback path';
   const rows = [
-    ['Input Data Folder', dataPath],
-    ['Rates Workbook', ratesPath],
-    ['Outputs Folder', outputsPath],
-    ['Path Mode', sharedHint]
+    ['Assets Upload', reliningAssetsFileName || 'Not loaded'],
+    ['Rates Upload', reliningRatesFileName || 'Not loaded'],
+    ['Storage Mode', 'In-browser memory only'],
+    ['Server Copy', 'None']
   ];
   el.innerHTML = rows.map(([label, value]) => `
     <div class="pkg-meta-item">
@@ -4609,6 +4849,12 @@ function parseSimpleCsv(text) {
   });
 }
 
+function readWorkbookRows(workbook, sheetName = null) {
+  const targetSheet = sheetName || workbook.SheetNames[0];
+  if (!targetSheet || !workbook.Sheets[targetSheet]) return [];
+  return XLSX.utils.sheet_to_json(workbook.Sheets[targetSheet], { defval: '' });
+}
+
 async function importFutureWorksFile(event) {
   const file = event?.target?.files?.[0];
   if (!file) return;
@@ -4753,39 +4999,47 @@ function refreshPackagingConnection() {
   updateReliningStatus();
 }
 
-function loadPackagingPreview() {
-  if (!reliningAssetsData) {
-    alert('Upload the assets CSV file first.');
-    return;
-  }
-  const sampleArea = document.getElementById('pkgSampleArea');
-  const count = reliningAssetsData.length;
-  if (sampleArea) sampleArea.textContent = `${count.toLocaleString()} assets loaded from file. In-browser stream preview coming in a future update.`;
-}
-
-function generateReliningPackages() {
-  if (!reliningAssetsData || !reliningRatesData) {
-    alert('Upload both the assets CSV and Panel_Rates.xlsx files first.');
-    return;
-  }
-  const area = document.getElementById('pkgPackagesArea');
-  if (area) area.textContent = 'In-browser package generation coming in a future update.';
-}
-
 async function loadReliningAssetsFile(event) {
   const file = event?.target?.files?.[0];
   if (!file) return;
+  showLoad('Loading relining assets file...');
   try {
-    const text = await file.text();
-    // Basic CSV parse — just count rows for now
-    const lines = text.replace(/\r/g, '').split('\n').filter(Boolean);
-    reliningAssetsData = lines.slice(1); // store rows excluding header
+    const lower = file.name.toLowerCase();
+    let rows = [];
+    if (lower.endsWith('.csv')) {
+      rows = parseSimpleCsv(await file.text());
+    } else {
+      if (typeof XLSX === 'undefined') throw new Error('Excel import library did not load.');
+      const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+      rows = readWorkbookRows(workbook);
+    }
+    if (!rows.length) throw new Error('No asset rows were found in that file.');
+    reliningAssetsRows = rows;
+    reliningAssetsData = rows;
+    reliningAssetsFileName = file.name;
+    lastPackagingGeneration = null;
     const statusEl = document.getElementById('pkgAssetsStatus');
-    if (statusEl) statusEl.textContent = `Assets: ${escapeHtml(file.name)} (${(lines.length - 1).toLocaleString()} rows)`;
-    updateReliningStatus();
+    if (statusEl) statusEl.textContent = `Assets: ${escapeHtml(file.name)} (${rows.length.toLocaleString()} rows)`;
+    renderPackagingPaths();
+    renderPackagingMeta({ asset_count: rows.length, suburb_column: resolveSuburbColumn(rows) });
+    setPackagingStatus(reliningRatesRows.length > 0, reliningRatesRows.length > 0 ? 'Required files loaded' : 'Upload panel rates workbook to continue');
+    renderPackagingCards([]);
+    renderPackagingSamples([]);
+    const pkgArea = document.getElementById('pkgPackagesArea');
+    if (pkgArea) {
+      pkgArea.className = 'pkg-empty';
+      pkgArea.textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
+    }
   } catch (e) {
-    alert(`Failed to load assets file: ${e.message || e}`);
+    reliningAssetsRows = [];
+    reliningAssetsData = null;
+    reliningAssetsFileName = '';
+    setPackagingStatus(false, 'Assets upload failed');
+    renderPackagingPaths();
+    renderPackagingMeta({ asset_count: 0, suburb_column: '-' });
+    alert(`Assets upload failed: ${e.message || e}`);
   } finally {
+    hideLoad();
     if (event?.target) event.target.value = '';
   }
 }
@@ -4793,16 +5047,37 @@ async function loadReliningAssetsFile(event) {
 async function loadReliningRatesFile(event) {
   const file = event?.target?.files?.[0];
   if (!file) return;
+  showLoad('Loading relining rates workbook...');
   try {
     if (typeof XLSX === 'undefined') throw new Error('Excel library not loaded.');
-    const buffer = await file.arrayBuffer();
-    reliningRatesData = { name: file.name, buffer }; // hold reference in memory only
+    const workbook = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+    const rows = cleanRateRows(readWorkbookRows(workbook, '_Tables'))
+      .filter(row => /SP6 Pipeline Relining/i.test(String(row?.Category || '')));
+    if (!rows.length) throw new Error('No SP6 Pipeline Relining rows were found in the _Tables sheet.');
+    reliningRatesRows = rows;
+    reliningRatesData = { name: file.name, rows };
+    reliningRatesFileName = file.name;
+    lastPackagingGeneration = null;
     const statusEl = document.getElementById('pkgRatesStatus');
-    if (statusEl) statusEl.textContent = `Rates: ${escapeHtml(file.name)}`;
-    updateReliningStatus();
+    if (statusEl) statusEl.textContent = `Rates: ${escapeHtml(file.name)} (${rows.length.toLocaleString()} relining rates)`;
+    renderPackagingPaths();
+    renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
+    setPackagingStatus(reliningAssetsRows.length > 0, reliningAssetsRows.length > 0 ? 'Required files loaded' : 'Upload assets file to continue');
+    const pkgArea = document.getElementById('pkgPackagesArea');
+    if (pkgArea) {
+      pkgArea.className = 'pkg-empty';
+      pkgArea.textContent = 'Generate relining packages to see package counts, cost totals, and sample package rows.';
+    }
   } catch (e) {
-    alert(`Failed to load rates file: ${e.message || e}`);
+    reliningRatesRows = [];
+    reliningRatesData = null;
+    reliningRatesFileName = '';
+    setPackagingStatus(false, 'Rates upload failed');
+    renderPackagingPaths();
+    renderPackagingMeta({ asset_count: reliningAssetsRows.length, suburb_column: resolveSuburbColumn(reliningAssetsRows) });
+    alert(`Rates upload failed: ${e.message || e}`);
   } finally {
+    hideLoad();
     if (event?.target) event.target.value = '';
   }
 }
@@ -4810,9 +5085,83 @@ async function loadReliningRatesFile(event) {
 function updateReliningStatus() {
   const dot = document.getElementById('pkgDot');
   const text = document.getElementById('pkgStatusText');
-  const bothLoaded = reliningAssetsData && reliningRatesData;
+  const bothLoaded = reliningAssetsRows.length && reliningRatesRows.length;
   if (dot) dot.style.background = bothLoaded ? '#2e7d32' : '#888';
-  if (text) text.textContent = bothLoaded ? 'Files loaded' : (reliningAssetsData ? 'Rates file needed' : (reliningRatesData ? 'Assets file needed' : 'No files loaded'));
+  if (text) text.textContent = bothLoaded ? 'Required files loaded' : (reliningAssetsRows.length ? 'Rates file needed' : (reliningRatesRows.length ? 'Assets file needed' : 'No files loaded'));
+}
+
+async function loadPackagingPreview() {
+  const mode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
+  try {
+    if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
+    const data = buildSplitStreams(mode);
+    setPackagingStatus(true, `${data.asset_count.toLocaleString()} assets previewed`);
+    renderPackagingMeta({
+      asset_count: data.asset_count,
+      suburb_column: data.suburb_column
+    });
+    renderPackagingPaths();
+    renderPackagingCards(data.streams);
+    renderPackagingSamples(data.streams);
+  } catch (e) {
+    setPackagingStatus(false, 'Preview failed');
+    const area = document.getElementById('pkgSampleArea');
+    if (area) {
+      area.className = 'pkg-empty';
+      area.textContent = String(e.message || e);
+    }
+  }
+}
+
+async function generateReliningPackages() {
+  const method = document.getElementById('pkgMethod')?.value || 'value';
+  const reliningMode = document.getElementById('pkgReliningMode')?.value || 'Condition 7 and 8';
+  const maxPackageValue = Number(String(document.getElementById('pkgMaxValue')?.value || '500000').replace(/,/g, ''));
+  const pipesPerPackage = Number(String(document.getElementById('pkgPipeCount')?.value || '25').replace(/,/g, ''));
+  const groupBySuburb = (document.getElementById('pkgGroupSuburb')?.value || 'yes') === 'yes';
+  try {
+    if (!reliningAssetsRows.length) throw new Error('Upload the assets file first.');
+    if (!reliningRatesRows.length) throw new Error('Upload the panel rates workbook first.');
+    const preview = buildSplitStreams(reliningMode);
+    const suburbCol = preview.suburb_column;
+    const reliningRows = getReliningRowsForMode(reliningMode)
+      .map(row => {
+        const ratePerM = getReliningRateForRow(row);
+        const lengthM = normaliseNumeric(row?.['Spatial Length_m'] ?? row?.['Length'] ?? row?.['Length_m']);
+        return {
+          ...row,
+          rate_per_m: ratePerM,
+          pipe_cost: Number.isFinite(ratePerM) && Number.isFinite(lengthM) ? ratePerM * lengthM : null
+        };
+      });
+    const costed = reliningRows.filter(row => Number.isFinite(row.pipe_cost));
+    const uncosted = reliningRows.filter(row => !Number.isFinite(row.pipe_cost));
+    const packaged = method === 'count'
+      ? splitIntoPackagesByCount(costed, Math.max(Number.isFinite(pipesPerPackage) ? pipesPerPackage : 25, 1), groupBySuburb, suburbCol)
+      : splitIntoValuePackages(costed, Math.max(Number.isFinite(maxPackageValue) ? maxPackageValue : 500000, 1), groupBySuburb, suburbCol);
+    const packageSummaries = summarisePackages(packaged, suburbCol);
+    const totalLength = packaged.reduce((sum, row) => sum + (normaliseNumeric(row?.['Spatial Length_m'] ?? row?.['Length'] ?? row?.['Length_m']) || 0), 0);
+    const totalCost = packaged.reduce((sum, row) => sum + (Number(row?.pipe_cost) || 0), 0);
+    const data = {
+      package_count: packageSummaries.length,
+      costed_pipe_count: costed.length,
+      uncosted_pipe_count: uncosted.length,
+      total_length_m: Number(totalLength.toFixed(1)),
+      total_cost: Number(totalCost.toFixed(2)),
+      packages: packageSummaries,
+      sample_assets: samplePackageAssets(packaged, suburbCol)
+    };
+    lastPackagingGeneration = data;
+    setPackagingStatus(true, `${data.package_count.toLocaleString()} packages generated`);
+    renderGeneratedPackages(data);
+  } catch (e) {
+    setPackagingStatus(false, 'Package generation failed');
+    const area = document.getElementById('pkgPackagesArea');
+    if (area) {
+      area.className = 'pkg-empty';
+      area.textContent = String(e.message || e);
+    }
+  }
 }
 
 function setCctvPackagingStatus(ok, text) {
