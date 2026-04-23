@@ -6310,6 +6310,10 @@ function selectCctvPackage(packageId, shouldRefreshTable = true) {
   return true;
 }
 
+function selectCctvPackageFromMap(packageId) {
+  focusCctvPackageOnMap(packageId, { scroll: false });
+}
+
 document.addEventListener('click', (event) => {
   const link = event.target?.closest?.('[data-cctv-package-id]');
   if (!link) return;
@@ -6558,7 +6562,7 @@ function renderCctvPackagesMap(options = {}) {
         weight: style.isSelected ? 8 : 3,
         opacity: style.isSelected ? 1 : (style.isDimmed ? 0.16 : 0.75),
         dashArray: style.isSelected ? '' : '6 6'
-      }).on('click', () => selectCctvPackage(pkg.package_id)).addTo(cctvPackagesLayer);
+      }).on('click', () => selectCctvPackageFromMap(pkg.package_id)).addTo(cctvPackagesLayer);
       if (style.isSelected) {
         L.polyline(points, { color: '#FFD166', weight: 18, opacity: 0.72 }).addTo(cctvPackagesLayer);
         L.polyline(points, { color: '#111827', weight: 11, opacity: 0.95 }).addTo(cctvPackagesLayer);
@@ -6583,7 +6587,7 @@ function renderCctvPackagesMap(options = {}) {
         fillColor: color,
         fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : (item.isTbaCondition ? 0.95 : 0.78)),
         opacity: style.isDimmed ? 0.2 : 1
-      }).on('click', () => selectCctvPackage(pkg.package_id)).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
+      }).on('click', () => selectCctvPackageFromMap(pkg.package_id)).bindPopup(buildCctvPackagePopup(pkg)).addTo(cctvPackagesLayer);
       if (!cctvPackageFocusLayers.has(pkg.package_id)) cctvPackageFocusLayers.set(pkg.package_id, assetMarker);
       drawn += 1;
     });
@@ -6595,7 +6599,7 @@ function renderCctvPackagesMap(options = {}) {
         fillColor: style.isSelected ? '#FFD166' : '#fff',
         fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : 0.7),
         opacity: style.isDimmed ? 0.2 : 1
-      }).on('click', () => selectCctvPackage(pkg.package_id)).bindTooltip(style.isSelected ? `SELECTED ${pkg.package_id}` : pkg.package_id, {
+      }).on('click', () => selectCctvPackageFromMap(pkg.package_id)).bindTooltip(style.isSelected ? `SELECTED ${pkg.package_id}` : pkg.package_id, {
         permanent: style.isSelected,
         direction: 'top',
         className: style.isSelected ? 'cctv-selected-tooltip' : ''
@@ -6632,14 +6636,14 @@ function refreshCctvPackagesMap() {
   renderCctvPackagesMap({ fit: false });
 }
 
-function focusCctvPackageOnMap(packageId) {
+function focusCctvPackageOnMap(packageId, options = {}) {
   const id = String(packageId || '');
   if (!id) return;
   switchPage('cctvpackaging');
   ensureCctvPackagesMap();
   selectCctvPackage(id);
   const mapEl = document.getElementById('cctvPackagesMap');
-  if (mapEl) mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (mapEl && options.scroll !== false) mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
   setTimeout(() => {
     const pkg = (lastCctvPackagingGeneration?.packages || []).find(item => item.package_id === id);
     if (!pkg || !cctvPackagesMap) return;
