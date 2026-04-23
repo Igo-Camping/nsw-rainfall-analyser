@@ -6294,11 +6294,19 @@ async function previewCctvPackaging() {
 
 function renderCctvPackageIdLink(packageId) {
   const id = String(packageId || '');
+  const encodedId = encodeURIComponent(id);
   const selectedStyle = selectedCctvPackageId === id
     ? 'background:#111827;color:#FFD166;border:2px solid #FFD166;padding:3px 8px;border-radius:999px;text-decoration:none'
     : 'color:var(--teal);text-decoration:underline';
-  return `<a href="#cctvPackagesMap" style="font-weight:800;${selectedStyle}" onclick="focusCctvPackageOnMap(${JSON.stringify(id)});return false;">${escapeHtml(id)}</a>`;
+  return `<a href="#cctvPackagesMap" data-cctv-package-id="${encodedId}" title="Show ${escapeHtml(id)} on the map" style="font-weight:800;${selectedStyle}">${escapeHtml(id)}</a>`;
 }
+
+document.addEventListener('click', (event) => {
+  const link = event.target?.closest?.('[data-cctv-package-id]');
+  if (!link) return;
+  event.preventDefault();
+  focusCctvPackageOnMap(decodeURIComponent(link.getAttribute('data-cctv-package-id') || ''));
+});
 
 function renderGeneratedCctvPackages(packages) {
   const area = document.getElementById('cctvPkgPackagesArea');
