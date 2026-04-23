@@ -3866,52 +3866,76 @@ function downloadRainfallTotalsPNG() {
     return;
   }
 
-  const meta = lastResults || {};
-  const sanitise = s => String(s).replace(/[\s:/\\]/g, '_');
-  const name = sanitise(meta.station_name || 'station');
-  const from = sanitise((meta.from || '').slice(0, 19));
-  const to   = sanitise((meta.to   || '').slice(0, 19));
-  const filename = `rainfall_totals_${name}_${from}_${to}.png`;
+  try {
+    const meta = lastResults || {};
+    const sanitise = s => String(s).replace(/[\s:/\\]/g, '_');
+    const name = sanitise(meta.station_name || 'station');
+    const from = sanitise((meta.from || '').slice(0, 19));
+    const to   = sanitise((meta.to   || '').slice(0, 19));
+    const filename = `rainfall_totals_${name}_${from}_${to}.png`;
 
-  const oc = document.createElement('canvas');
-  oc.width  = 3840;
-  oc.height = 1600;
+    const oc = document.createElement('canvas');
+    oc.width  = 3840;
+    oc.height = 1600;
 
-  const srcData = rainfallTotalsChart.data;
-  const srcOpts = rainfallTotalsChart.options;
+    const srcData = rainfallTotalsChart.data;
 
-  const offChart = new Chart(oc.getContext('2d'), {
-    type: 'bar',
-    plugins: [{
-      id: 'whiteBg',
-      beforeDraw(ch) {
-        const ctx = ch.canvas.getContext('2d');
-        ctx.save();
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, ch.width, ch.height);
-        ctx.restore();
+    const offChart = new Chart(oc.getContext('2d'), {
+      type: 'bar',
+      plugins: [{
+        id: 'whiteBg',
+        beforeDraw(ch) {
+          const ctx = ch.canvas.getContext('2d');
+          ctx.save();
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, ch.width, ch.height);
+          ctx.restore();
+        }
+      }],
+      data: {
+        labels: [...srcData.labels],
+        datasets: srcData.datasets.map(ds => ({ ...ds }))
+      },
+      options: {
+        responsive: false,
+        animation: false,
+        devicePixelRatio: 2,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: rainfallTotalsChart.options.plugins.title.text,
+            font: { size: 12, weight: '700' },
+            color: '#5A6B7A',
+            padding: { bottom: 12 }
+          },
+          tooltip: { callbacks: { label: c => `${c.parsed.y.toFixed(2)} mm` } }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { maxTicksLimit: 14, font: { size: 10 }, color: '#5A6B7A', maxRotation: 45 }
+          },
+          y: {
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            ticks: { font: { size: 10 }, color: '#5A6B7A', callback: v => v + ' mm' },
+            title: { display: true, text: 'mm', font: { size: 10 }, color: '#5A6B7A' }
+          }
+        }
       }
-    }],
-    data: {
-      labels: [...srcData.labels],
-      datasets: srcData.datasets.map(ds => ({ ...ds }))
-    },
-    options: {
-      ...srcOpts,
-      responsive: false,
-      animation: false,
-      devicePixelRatio: 2
-    }
-  });
+    });
 
-  offChart.update('none');
-  const url = oc.toDataURL('image/png');
-  offChart.destroy();
+    offChart.update('none');
+    const url = oc.toDataURL('image/png');
+    offChart.destroy();
 
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+  } catch (e) {
+    console.error('downloadRainfallTotalsPNG failed:', e);
+  }
 }
 
 // â"€â"€ IFD reference table â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
