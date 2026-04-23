@@ -92,6 +92,8 @@ select:focus,input:focus{border-color:var(--teal)}
 #map{flex:1}
 #tab-rainfall{display:none;flex:1;padding:20px 24px;box-sizing:border-box;flex-direction:column;min-height:0;background:#fff}
 #tab-rainfall-inner{flex:1;min-height:0;position:relative}
+.btn-secondary{padding:5px 12px;background:var(--panel);color:var(--text);border:1.5px solid var(--border);border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer}
+.btn-secondary:hover{background:var(--border)}
 
 /* Results panel */
 .results{background:white;border-top:2px solid var(--teal);display:none;overflow-y:auto;flex:0 0 auto;max-height:min(42vh,360px)}
@@ -726,7 +728,7 @@ window.addEventListener('keydown', (event) => {
   <!-- Main -->
   <div class="main">
     <div id="map"></div>
-    <div id="tab-rainfall"><div id="tab-rainfall-inner"><canvas id="rainfall-totals-canvas"></canvas></div></div>
+    <div id="tab-rainfall"><button id="rainfall-download-btn" class="btn-secondary" style="align-self:flex-end;margin:4px 8px 6px 0;font-size:12px" onclick="downloadRainfallTotalsPNG()">Download PNG</button><div id="tab-rainfall-inner"><canvas id="rainfall-totals-canvas"></canvas></div></div>
 
     <!-- Loading overlay -->
     <div class="loading" id="loading">
@@ -3856,6 +3858,60 @@ function renderRainfallTotals(data) {
       }
     }
   });
+}
+
+function downloadRainfallTotalsPNG() {
+  if (!rainfallTotalsChart) {
+    alert('Run an analysis first.');
+    return;
+  }
+
+  const meta = lastResults || {};
+  const sanitise = s => String(s).replace(/[\s:/\\]/g, '_');
+  const name = sanitise(meta.station_name || 'station');
+  const from = sanitise((meta.from || '').slice(0, 19));
+  const to   = sanitise((meta.to   || '').slice(0, 19));
+  const filename = `rainfall_totals_${name}_${from}_${to}.png`;
+
+  const oc = document.createElement('canvas');
+  oc.width  = 3840;
+  oc.height = 1600;
+
+  const srcData = rainfallTotalsChart.data;
+  const srcOpts = rainfallTotalsChart.options;
+
+  const offChart = new Chart(oc.getContext('2d'), {
+    type: 'bar',
+    plugins: [{
+      id: 'whiteBg',
+      beforeDraw(ch) {
+        const ctx = ch.canvas.getContext('2d');
+        ctx.save();
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, ch.width, ch.height);
+        ctx.restore();
+      }
+    }],
+    data: {
+      labels: [...srcData.labels],
+      datasets: srcData.datasets.map(ds => ({ ...ds }))
+    },
+    options: {
+      ...srcOpts,
+      responsive: false,
+      animation: false,
+      devicePixelRatio: 2
+    }
+  });
+
+  offChart.update('none');
+  const url = oc.toDataURL('image/png');
+  offChart.destroy();
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
 }
 
 // â"€â"€ IFD reference table â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
