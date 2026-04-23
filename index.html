@@ -3809,13 +3809,16 @@ function renderRainfallTotals(data) {
 
   const fmtBlock = ms => {
     const d = new Date(ms);
-    return d.toLocaleDateString('en-AU', {day:'2-digit',month:'short'}) + ' ' +
+    return d.toLocaleDateString('en-AU', {day:'2-digit',month:'short',year:'2-digit'}) + ' ' +
            d.toLocaleTimeString('en-AU', {hour:'2-digit',minute:'2-digit',hour12:false});
   };
 
   const labels = keys.map(fmtBlock);
   const values = keys.map(k => +buckets[k].toFixed(2));
   const blockLabel = blockMin === 60 ? '1-hr' : blockMin === 120 ? '2-hr' : '12-hr';
+  const barColours = values.map(v =>
+    v > 100 ? 'rgba(0,0,0,1)' : v > 50 ? 'rgba(0,50,48,1)' : 'rgba(0,90,87,1)'
+  );
 
   if (rainfallTotalsChart) { rainfallTotalsChart.destroy(); rainfallTotalsChart = null; }
 
@@ -3824,8 +3827,8 @@ function renderRainfallTotals(data) {
     data: { labels, datasets: [{
       label: 'Rainfall (mm)',
       data: values,
-      backgroundColor: 'rgba(0,132,127,1)',
-      borderColor: 'rgba(0,132,127,1)',
+      backgroundColor: barColours,
+      borderColor: barColours,
       borderWidth: 1,
       borderRadius: 2,
       barPercentage: 0.9,
