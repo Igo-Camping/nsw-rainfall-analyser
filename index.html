@@ -2007,7 +2007,7 @@ async function loadStations() {
   console.log('loadStations called');
   setStatus(true, 'Loading stations...');
   await lgaBoundaryLoadPromise;
-  const data = await fetchJsonWithTimeout('https://nsw-rainfall-analyser-api.onrender.com/stations', 15000);
+  const data = await fetchJsonWithTimeout('https://nsw-rainfall-analyser-api.onrender.com/stations?limit=2000', 15000);
   console.log('stations received:', data);
   const stations = data.stations || [];
   if (!stations.length) {
