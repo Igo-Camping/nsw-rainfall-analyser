@@ -862,7 +862,7 @@ window.addEventListener('keydown', (event) => {
               <div class="pri-field"><label>Notes</label><input type="text" id="opri-safety-notes" placeholder="Guidance notes" oninput="origPriUpdate()"/></div>
             </div>
             <div class="opri-grid-3">
-              <div class="opri-matrix-head">NBC Asset Risk (CIA)</div><div class="opri-matrix-head">Likelihood</div><div class="opri-matrix-head">Consequence</div><div class="opri-matrix-head"></div><div class="opri-matrix-head"></div>
+              <div class="opri-matrix-head">Pluviometrics Asset Risk (CIA)</div><div class="opri-matrix-head">Likelihood</div><div class="opri-matrix-head">Consequence</div><div class="opri-matrix-head"></div><div class="opri-matrix-head"></div>
             </div>
             <div class="opri-grid-2">
               <div class="pri-field"><label>Community and Staff Safety</label><select id="opri-risk-safety" onchange="origPriUpdate()"><option>Rare</option><option>Unlikely</option><option>Possible</option><option>Likely</option><option>Almost Certain</option></select></div>
@@ -1971,14 +1971,24 @@ const lgaBoundaryLoadPromise = loadAllLgaBoundaries();
 
 // â"€â"€ Startup â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function init() {
+  fetch('https://nsw-rainfall-analyser-api.onrender.com/')
+    .catch(() => {});
   try {
-    const h = await api('/health');
-    setStatus(true, `${h.stations_loaded.toLocaleString()} stations`);
+    try {
+      const h = await api('/health', 15000);
+      if (h?.stations_loaded != null) {
+        setStatus(true, `${h.stations_loaded.toLocaleString()} stations`);
+      } else {
+        setStatus(true, 'Loading stations...');
+      }
+    } catch {
+      setStatus(true, 'Waking station service...');
+    }
     await loadStations();
   } catch(e) {
-    setStatus(false, 'API offline â€" start backend on port 8000');
+    setStatus(false, 'Unable to connect to station data');
     document.getElementById('slist').innerHTML =
-      '<div style="padding:20px;font-size:12px;color:var(--text-l);text-align:center">âš  Cannot connect to API.<br>Run: py -m uvicorn main:app --reload</div>';
+      '<div style="padding:20px;font-size:12px;color:var(--text-l);text-align:center">Unable to connect to station data. Please try again in 30 seconds.</div>';
   }
 }
 
@@ -1990,8 +2000,11 @@ function setStatus(ok, txt) {
 async function loadStations() {
   setStatus(true, 'Loading stations...');
   await lgaBoundaryLoadPromise;
-  const data = await api('/stations?limit=2000');
+  const data = await fetchJsonWithTimeout('https://nsw-rainfall-analyser-api.onrender.com/stations', 15000);
   const stations = data.stations || [];
+  if (!stations.length) {
+    throw new Error('No station data returned.');
+  }
   setStatus(true, `Checking active gauges... 0/${stations.length}`);
   allStations = await filterStationsByRecentReadings(stations);
   assignStationsToLgas(allStations);
@@ -4517,10 +4530,26 @@ async function exportAllXlsx() {
 }
 
 // â"€â"€ Helpers â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-async function api(path) {
-  const r = await fetch(API + path);
-  if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
-  return r.json();
+async function fetchJsonWithTimeout(url, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const r = await fetch(url, { signal: controller.signal });
+    if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
+    return r.json();
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      throw new Error(`Request timed out after ${timeoutMs}ms`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function api(path, timeoutMs = 15000) {
+  const r = await fetchJsonWithTimeout(API + path, timeoutMs);
+  return r;
 }
 
 
