@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
-<title>Pluviometrics — Stormwater Intelligence</title>
+<title>Pluviometrics | Northern Beaches</title>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-084LXB5NXM"></script>
 <script>
@@ -528,11 +528,7 @@ window.addEventListener('keydown', (event) => {
 
 <header>
   <div class="h-left">
-    <img src="assets/logos/PLUVIOMETRICS.png" style="height:50px;display:block">
-  </div>
-  <div class="h-status">
-    <div class="dot" id="dot"></div>
-    <span id="status-txt">Connecting...</span>
+    <img src="assets/logos/PLUVIOMETRICS.png" height="50" alt="Pluviometrics">
   </div>
 </header>
 
@@ -553,11 +549,11 @@ window.addEventListener('keydown', (event) => {
 <div id="page-home" style="display:none">
   <div class="home-hero">
     <h1>Pluviometrics</h1>
-    <p>Northern Beaches Council - Stormwater Engineering</p>
+    <p>Northern Beaches</p>
   </div>
   <div class="home-cards">
     <div class="home-card" onclick="switchPage('aep')" style="flex:0 0 100%;width:100%;background:#0b0f1f;border:2px solid transparent;background-image:linear-gradient(#0b0f1f,#0b0f1f),linear-gradient(135deg,#0066cc,#00847F);background-clip:padding-box,border-box;background-origin:padding-box,border-box;align-items:center;text-align:center">
-      <img src="assets/logos/STORMGAUGE.png" style="width:100%;max-width:280px;margin-bottom:12px;display:block">
+      <img src="assets/logos/STORMGAUGE.png" style="width:180px; display:block; margin:0 auto 12px;">
       <div class="hc-title" style="color:white;font-size:18px">Stormgauge</div>
       <div class="hc-icon" style="color:rgba(255,255,255,0.55);font-size:12px;margin-top:2px">Pluvio Stormgauge</div>
       <div class="hc-desc" style="color:rgba(255,255,255,0.6);margin-top:6px">Live 5-minute MHL gauge data with BoM IFD AEP analysis across all stations. Powered by Stormgauge.</div>
@@ -1412,19 +1408,19 @@ window.addEventListener('keydown', (event) => {
           <div class="pkg-meta-val">Latest relining package generation</div>
         </div>
         <div class="pkg-meta-item">
-          <div class="pkg-meta-lbl">Council Program Folder</div>
-          <div class="pkg-meta-val" id="fwLocalFolderPath">%USERPROFILE%\OneDrive - Northern Beaches Council\Stormwater Engineering - General\Program</div>
+          <div class="pkg-meta-lbl">Program Folder</div>
+          <div class="pkg-meta-val" id="fwLocalFolderPath">%USERPROFILE%\OneDrive - Northern Beaches\General\Program</div>
         </div>
         <div class="pkg-meta-item">
           <div class="pkg-meta-lbl">Expected Workbook Path</div>
-          <div class="pkg-meta-val" id="fwLocalWorkbookPath">%USERPROFILE%\OneDrive - Northern Beaches Council\Stormwater Engineering - General\Program\2027-2031 CAPEX Project Brief - Program of Works Details - E&amp;R - Rolling.xlsx</div>
+          <div class="pkg-meta-val" id="fwLocalWorkbookPath">%USERPROFILE%\OneDrive - Northern Beaches\General\Program\2027-2031 CAPEX Project Brief - Program of Works Details - E&amp;R - Rolling.xlsx</div>
         </div>
       </div>
       <div class="fw-actions" style="margin-top:12px">
         <button class="export-btn" onclick="copyFutureWorksLocalPath('folder')">Copy Folder Path</button>
         <button class="export-btn" onclick="copyFutureWorksLocalPath('workbook')">Copy Workbook Path</button>
       </div>
-      <div class="fw-note" style="margin-top:12px">Direct SharePoint workbook editing is the next step. This first pass keeps the row structure aligned with the backlog sheet so the later Graph sync can write the same fields into a machine-managed table. The local OneDrive path above is the expected Council-synced location for normal Excel editing.</div>
+      <div class="fw-note" style="margin-top:12px">Direct SharePoint workbook editing is the next step. This first pass keeps the row structure aligned with the backlog sheet so the later Graph sync can write the same fields into a machine-managed table. The local OneDrive path above is the expected synced location for normal Excel editing.</div>
     </div>
 
     <div class="fw-panel">
@@ -1942,7 +1938,7 @@ const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
 const FUTURE_WORKS_URL_KEY = 'nbc_futureworks_workbook_url';
 const FUTURE_WORKS_WORKBOOK_NAME = '2027-2031 CAPEX Project Brief - Program of Works Details - E&R - Rolling.xlsx';
-const FUTURE_WORKS_LOCAL_FOLDER_TEMPLATE = '%USERPROFILE%\\OneDrive - Northern Beaches Council\\Stormwater Engineering - General\\Program';
+const FUTURE_WORKS_LOCAL_FOLDER_TEMPLATE = '%USERPROFILE%\\OneDrive - Northern Beaches\\General\\Program';
 const FUTURE_WORKS_COLUMNS = [
   { key: 'exhibition', label: 'In exhibition map?' },
   { key: 'packageId', label: 'Package' },
