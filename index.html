@@ -1998,9 +1998,11 @@ function setStatus(ok, txt) {
 }
 
 async function loadStations() {
+  console.log('loadStations called');
   setStatus(true, 'Loading stations...');
   await lgaBoundaryLoadPromise;
   const data = await fetchJsonWithTimeout('https://nsw-rainfall-analyser-api.onrender.com/stations', 15000);
+  console.log('stations received:', data);
   const stations = data.stations || [];
   if (!stations.length) {
     throw new Error('No station data returned.');
