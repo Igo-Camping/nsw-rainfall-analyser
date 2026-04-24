@@ -60,6 +60,9 @@ header{background:var(--navy);color:white;padding:0 16px;height:52px;display:fle
 .sidebar{width:320px;flex-shrink:0;background:white;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;min-height:0;height:100%}
 .sb-section{padding:12px;border-bottom:1px solid var(--border);flex-shrink:0}
 .sb-section:last-child{border-bottom:none}
+.sb-station-section{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;padding:0}
+.sb-station-header{padding:12px 12px 8px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-analysis-section{margin-top:auto}
 .lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-l);margin-bottom:8px}
 
 /* Form controls */
@@ -80,7 +83,7 @@ select:focus,input:focus{border-color:var(--teal)}
 .run-btn:disabled{background:var(--border);color:var(--text-l);cursor:not-allowed}
 
 /* Station list */
-.slist{flex:1 1 auto;min-height:120px;max-height:clamp(160px,30vh,260px);overflow-y:auto}
+.slist{flex:1 1 auto;min-height:0;max-height:none;overflow-y:auto}
 .sitem{padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;display:flex;align-items:center;gap:8px}
 .sitem:hover{background:var(--panel)}
 .sitem.active{background:#E8F5F4;border-left:3px solid var(--teal)}
@@ -637,12 +640,17 @@ window.addEventListener('keydown', (event) => {
     </div>
 
     <!-- Station list -->
-    <div class="slist" id="slist">
-      <div style="padding:20px;color:var(--text-l);font-size:12px;text-align:center">Loading stations...</div>
+    <div class="sb-section sb-station-section">
+      <div class="sb-station-header">
+        <div class="lbl" style="margin-bottom:0">Stations</div>
+      </div>
+      <div class="slist" id="slist">
+        <div style="padding:20px;color:var(--text-l);font-size:12px;text-align:center">Loading stations...</div>
+      </div>
     </div>
 
     <!-- Parameters -->
-    <div class="sb-section">
+    <div class="sb-section sb-analysis-section">
       <div class="lbl">Analysis Parameters</div>
 
       <div class="mode-tog">

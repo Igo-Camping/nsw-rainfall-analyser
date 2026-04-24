@@ -113,7 +113,20 @@ def parse_all_diameters(desc: str) -> list[float]:
     symbol_matches = re.findall(r"[ØO](\d+)", desc)
     if symbol_matches:
         return [float(d) for d in symbol_matches if 50 <= float(d) <= 3000]
+    if re.search(r"relining|connection", desc, flags=re.IGNORECASE):
+        generic_matches = re.findall(r"(\d{2,4})", desc)
+        if generic_matches:
+            return [float(d) for d in generic_matches if 50 <= float(d) <= 3000][:1]
     return []
+
+
+def parse_number_value(value: Any) -> float | None:
+    if value is None:
+        return None
+    if isinstance(value, (int, float)) and pd.notna(value):
+        return float(value)
+    match = re.search(r"-?\d+(\.\d+)?", str(value).replace(",", ""))
+    return float(match.group(0)) if match else None
 
 
 def parse_length_band(desc: str) -> tuple[float, float] | None:
@@ -137,7 +150,10 @@ def lookup_sp6_rate(diameter: float, length_m: float, rates: pd.DataFrame, mode:
     df["parsed_all_diams"] = df["Size/Descriptor"].apply(parse_all_diameters)
     df["parsed_band"] = df["Size/Descriptor"].apply(parse_length_band)
 
-    target = float(diameter)
+    target = parse_number_value(diameter)
+    length_value = parse_number_value(length_m)
+    if target is None or length_value is None:
+        return None
     subset = df[
         df["parsed_all_diams"].apply(lambda diams: target in diams if diams else False)
         | (df["parsed_diam"] == target)
@@ -149,7 +165,7 @@ def lookup_sp6_rate(diameter: float, length_m: float, rates: pd.DataFrame, mode:
         if band is None:
             return False
         low, high = band
-        return (length_m >= low) and (length_m <= high)
+        return (length_value >= low) and (length_value <= high)
 
     band_filtered = subset[subset["parsed_band"].apply(length_in_band)]
     if band_filtered.empty:
@@ -176,14 +192,37 @@ def get_relining_rate(diameter: float, length_m: float, rates: pd.DataFrame, mod
     return lookup_sp6_rate(diameter, length_m, rates, mode)
 
 
+def condition_number_series(df: pd.DataFrame) -> pd.Series:
+    candidates = [
+        CONDITION_COL,
+        "Observed_Condition",
+        "Observed Condition",
+        "Calculated_Condition",
+        "Calculated Condition",
+        "Schedule7_Condition",
+        "Schedule_7_Condition",
+        "Schedule 7 Condition",
+        "Condition",
+    ]
+    result = pd.Series(pd.NA, index=df.index, dtype="Float64")
+    for col in candidates:
+        if col not in df.columns:
+            continue
+        text = df[col].astype(str).str.strip()
+        numeric = pd.to_numeric(text.where(text.str.fullmatch(r"\d+(\.\d+)?", na=False)), errors="coerce")
+        condition_text = pd.to_numeric(text.str.extract(r"\bcondition\s*(\d+)\b", flags=re.IGNORECASE)[0], errors="coerce")
+        compact_text = pd.to_numeric(text.str.extract(r"\bcond\.?\s*(\d+)\b", flags=re.IGNORECASE)[0], errors="coerce")
+        parsed = numeric.combine_first(condition_text).combine_first(compact_text)
+        result = result.combine_first(parsed.astype("Float64"))
+    return result
+
+
 def split_streams(assets_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     df = assets_df.copy()
-    if CONDITION_COL not in df.columns:
+    cond = condition_number_series(df)
+    if cond.isna().all():
         empty = df.iloc[0:0].copy()
         return empty, empty, df
-
-    raw = df[CONDITION_COL].astype(str).str.extract(r"(\d+)")[0]
-    cond = pd.to_numeric(raw, errors="coerce")
     rel_df = df[cond == 8].copy()
     rec_df = df[cond.isin([9, 10])].copy()
 
@@ -320,7 +359,7 @@ def _cost_relining_df(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
         lambda row: get_relining_rate(row.get(ASSET_DIAM_COL), row.get(ASSET_LEN_COL), rates, mode="median"),
         axis=1,
     )
-    lengths = pd.to_numeric(costed[ASSET_LEN_COL], errors="coerce") if ASSET_LEN_COL in costed.columns else pd.Series(index=costed.index, dtype=float)
+    lengths = costed[ASSET_LEN_COL].apply(parse_number_value) if ASSET_LEN_COL in costed.columns else pd.Series(index=costed.index, dtype=float)
     rates_num = pd.to_numeric(costed["rate_per_m"], errors="coerce")
     costed["pipe_cost"] = rates_num * lengths
     uncosted = costed[costed["pipe_cost"].isna()].copy()
@@ -410,10 +449,7 @@ def packaging_split_streams(payload: SplitPreviewRequest) -> dict[str, Any]:
     suburb_col = resolve_suburb_column(assets_df)
     rel_df, rec_df, amp_df = split_streams(assets_df)
 
-    raw_cond = pd.to_numeric(
-        assets_df[CONDITION_COL].astype(str).str.extract(r"(\d+)")[0],
-        errors="coerce",
-    ) if CONDITION_COL in assets_df.columns else pd.Series(dtype=float)
+    raw_cond = condition_number_series(assets_df)
 
     if payload.relining_mode == "Condition 8 only":
         relining_df = assets_df[raw_cond == 8].copy()
@@ -443,10 +479,7 @@ def packaging_generate_relining_packages(payload: GenerateReliningPackagesReques
     preview = packaging_split_streams(SplitPreviewRequest(relining_mode=payload.relining_mode))
     assets_df = load_assets()
     suburb_col = preview["suburb_column"]
-    raw_cond = pd.to_numeric(
-        assets_df[CONDITION_COL].astype(str).str.extract(r"(\d+)")[0],
-        errors="coerce",
-    ) if CONDITION_COL in assets_df.columns else pd.Series(dtype=float)
+    raw_cond = condition_number_series(assets_df)
 
     if payload.relining_mode == "Condition 8 only":
         relining_df = assets_df[raw_cond == 8].copy()
