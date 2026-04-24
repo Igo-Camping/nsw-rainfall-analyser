@@ -5,7 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
-<title>NBC Stormwater Tools - Northern Beaches Council</title>
+<title>Pluviometrics — Stormwater Intelligence</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-084LXB5NXM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-084LXB5NXM');
+</script>
 <!-- v3 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -433,9 +442,8 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
 <!-- Password Gate -->
 <div id="gate" style="position:fixed;inset:0;background:rgba(26,43,60,.92);display:none;align-items:center;justify-content:center;z-index:9999">
   <div style="background:white;border-radius:12px;padding:40px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
-    <div style="width:52px;height:52px;background:#00847F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;margin:0 auto 16px">NBC</div>
-    <div style="font-size:18px;font-weight:700;color:#1A2B3C;margin-bottom:4px">NBC Stormwater Tools</div>
-    <div style="font-size:11px;color:#5A6B7A;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em">Northern Beaches Council - Stormwater</div>
+    <img src="assets/logos/PLUVIOMETRICS.png" style="height:44px;display:block;margin:0 auto 16px">
+    <div style="font-size:18px;font-weight:700;color:#1A2B3C;margin-bottom:24px">Pluviometrics</div>
     <input type="text" id="user-input" placeholder="Enter username"
       autocomplete="username"
       style="width:100%;padding:11px 14px;border:1.5px solid #DDE3E8;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;text-align:center;color:#1A2B3C"
@@ -454,7 +462,7 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
       style="width:100%;padding:10px;margin-top:8px;background:#EEF3F6;color:#1A2B3C;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">
       Cancel
     </button>
-    <div style="margin-top:16px;font-size:11px;color:#6B8A99">Rainfall Calculator is public. All other tools require NBC Stormwater Team access.</div>
+    <div style="margin-top:16px;font-size:11px;color:#6B8A99">Stormgauge is public. All other tools require team access.</div>
   </div>
 </div>
 
@@ -520,11 +528,7 @@ window.addEventListener('keydown', (event) => {
 
 <header>
   <div class="h-left">
-    <div class="logo" style="font-size:11px;font-weight:700">NBC</div>
-    <div>
-      <div class="h-title">NBC Stormwater Tools</div>
-      <div class="h-sub">Northern Beaches Council - Stormwater</div>
-    </div>
+    <img src="assets/logos/PLUVIOMETRICS.png" style="height:50px;display:block">
   </div>
   <div class="h-status">
     <div class="dot" id="dot"></div>
@@ -534,7 +538,7 @@ window.addEventListener('keydown', (event) => {
 
 <!-- Page Nav (hidden on home) -->
 <div id="page-nav" style="display:none">
-  <button class="pnav-btn active" data-page="aep" onclick="switchPage('aep')">Rainfall Calculator</button>
+  <button class="pnav-btn active" data-page="aep" onclick="switchPage('aep')">Stormgauge</button>
   <button class="pnav-btn" data-page="criticalassets" onclick="switchPage('criticalassets')">Critical Assets</button>
   <button class="pnav-btn" data-page="bomgauges" onclick="switchPage('bomgauges')">BOM Gauges</button>
   <button class="pnav-btn" data-page="prioritisation" onclick="switchPage('prioritisation')">Prioritisation Tool</button>
@@ -548,15 +552,16 @@ window.addEventListener('keydown', (event) => {
 <!-- Home Screen -->
 <div id="page-home" style="display:none">
   <div class="home-hero">
-    <h1>NBC Stormwater Tools</h1>
+    <h1>Pluviometrics</h1>
     <p>Northern Beaches Council - Stormwater Engineering</p>
   </div>
   <div class="home-cards">
-    <div class="home-card" onclick="switchPage('aep')">
-      <div class="hc-icon">Rainfall</div>
-      <div class="hc-title">Rainfall</div>
-      <div class="hc-desc">Live 5-minute gauge data with BoM IFD AEP analysis across official stations, plus BOM reference gauges by LGA.</div>
-      <div><span class="hc-badge live">Live</span></div>
+    <div class="home-card" onclick="switchPage('aep')" style="flex:0 0 100%;width:100%;background:#0b0f1f;border:2px solid transparent;background-image:linear-gradient(#0b0f1f,#0b0f1f),linear-gradient(135deg,#0066cc,#00847F);background-clip:padding-box,border-box;background-origin:padding-box,border-box;align-items:center;text-align:center">
+      <img src="assets/logos/STORMGAUGE.png" style="width:100%;max-width:280px;margin-bottom:12px;display:block">
+      <div class="hc-title" style="color:white;font-size:18px">Stormgauge</div>
+      <div class="hc-icon" style="color:rgba(255,255,255,0.55);font-size:12px;margin-top:2px">Pluvio Stormgauge</div>
+      <div class="hc-desc" style="color:rgba(255,255,255,0.6);margin-top:6px">Live 5-minute MHL gauge data with BoM IFD AEP analysis across all stations. Powered by Stormgauge.</div>
+      <div style="margin-top:8px"><span class="hc-badge live">Live</span></div>
     </div>
     <div class="home-card" onclick="switchPage('prioritisation')">
       <div class="hc-icon">Prioritisation</div>
@@ -1931,7 +1936,7 @@ let topSiteResultsCache = [];
 let topSiteResultsKey = null;
 let lastAnalysisContext = null;
 let rainfallTemplateBytes = null;
-const RAINFALL_TEMPLATE_URL = 'templates/NBC Rainfall Calculator.xlsm';
+const RAINFALL_TEMPLATE_URL = 'templates/Stormgauge Calculator.xlsm';
 let topSiteSort = { key: 'aep', dir: 'asc' };
 const ACTIVE_GAUGE_MAX_AGE_DAYS = 90;
 const ACTIVE_GAUGE_WINDOWS_DAYS = [1, 7, 30, ACTIVE_GAUGE_MAX_AGE_DAYS];
