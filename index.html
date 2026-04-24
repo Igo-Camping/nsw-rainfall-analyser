@@ -2143,6 +2143,7 @@ async function filterStationsByRecentReadings(stations) {
 // â"€â"€ LGA dropdown â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function buildLgaDropdown() {
   const lgaSel = document.getElementById('lgaSel');
+  lgaSel.innerHTML = '<option value="">All stations</option>';
   const priority = ['Northern Beaches','Central Coast','Ku-ring-gai','Newcastle','Hunter Valley','Greater Sydney West','Lane Cove'];
   const lgas = new Set();
   Object.keys(lgaBoundaryCache).forEach(lga => {
@@ -2164,10 +2165,9 @@ function buildLgaDropdown() {
     opt.textContent = `${lga} (${count})`;
     lgaSel.appendChild(opt);
   });
-  lgaSel.value = 'Northern Beaches';
-  onLgaChange();
   document.getElementById('nbcSub').value = 'official';
-  onNbcSubChange();
+  lgaSel.value = '';
+  onLgaChange();
 }
 
 function getLGA(station) {
