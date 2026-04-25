@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
-<title>NBC Stormwater Tools - Northern Beaches Council</title>
+<title>Stormgauge Rainfall Analysis</title>
 <!-- v3 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -20,100 +20,13 @@
 </head>
 <body>
 
-<!-- Password Gate -->
-<div id="gate" style="position:fixed;inset:0;background:rgba(26,43,60,.92);display:none;align-items:center;justify-content:center;z-index:9999">
-  <div style="background:white;border-radius:12px;padding:40px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
-    <div style="width:52px;height:52px;background:#00847F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;margin:0 auto 16px">NBC</div>
-    <div style="font-size:18px;font-weight:700;color:#1A2B3C;margin-bottom:4px">NBC Stormwater Tools</div>
-    <div style="font-size:11px;color:#5A6B7A;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em">Northern Beaches Council - Stormwater</div>
-    <input type="text" id="user-input" placeholder="Enter username"
-      autocomplete="username"
-      style="width:100%;padding:11px 14px;border:1.5px solid #DDE3E8;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;text-align:center;color:#1A2B3C"
-      onkeydown="if(event.key==='Enter')checkPW()"/>
-    <input type="password" id="pw-input" placeholder="Enter password"
-      autocomplete="current-password"
-      style="width:100%;padding:11px 14px;border:1.5px solid #DDE3E8;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;text-align:center;letter-spacing:.15em;color:#1A2B3C"
-      onkeydown="if(event.key==='Enter')checkPW()"/>
-    <div id="pw-err" style="color:#E74C3C;font-size:12px;height:16px;margin-bottom:8px"></div>
-    <button onclick="checkPW()"
-      style="width:100%;padding:12px;background:#00847F;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s"
-      onmouseover="this.style.background='#005F5B'" onmouseout="this.style.background='#00847F'">
-      Sign In
-    </button>
-    <button onclick="closeGate()"
-      style="width:100%;padding:10px;margin-top:8px;background:#EEF3F6;color:#1A2B3C;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">
-      Cancel
-    </button>
-    <div style="margin-top:16px;font-size:11px;color:#6B8A99">Rainfall Calculator is public. All other tools require NBC Stormwater Team access.</div>
-  </div>
-</div>
-
-<script>
-// Password - change this to whatever you want
-const APP_USERNAME = 'stormwater';
-const APP_PASSWORD = 'NBC2024';
-const SESSION_KEY  = 'nbc_rain_auth';
-let pendingProtectedPage = null;
-
-function isAuthenticated() {
-  return sessionStorage.getItem(SESSION_KEY) === '1';
-}
-
-function isProtectedPage(page) {
-  return ['prioritisation','costing','relining','cctvpackaging','futureworks','criticalassets','bomgauges'].includes(page);
-}
-
-function openGate(targetPage = null) {
-  pendingProtectedPage = targetPage;
-  const gate = document.getElementById('gate');
-  if (gate) gate.style.display = 'flex';
-  const userInput = document.getElementById('user-input');
-  const input = document.getElementById('pw-input');
-  const err = document.getElementById('pw-err');
-  if (err) err.textContent = '';
-  if (userInput) userInput.value = '';
-  if (input) {
-    input.value = '';
-    setTimeout(() => (userInput || input).focus(), 30);
-  }
-}
-
-function closeGate() {
-  const gate = document.getElementById('gate');
-  if (gate) gate.style.display = 'none';
-  pendingProtectedPage = null;
-}
-
-function checkPW() {
-  const userVal = document.getElementById('user-input').value.trim();
-  const val = document.getElementById('pw-input').value;
-  if (userVal === APP_USERNAME && val === APP_PASSWORD) {
-    sessionStorage.setItem(SESSION_KEY, '1');
-    document.getElementById('gate').style.display = 'none';
-    const nextPage = pendingProtectedPage;
-    pendingProtectedPage = null;
-    if (nextPage) switchPage(nextPage, { skipAuth: true });
-  } else {
-    const err = document.getElementById('pw-err');
-    err.textContent = 'Incorrect username or password';
-    document.getElementById('user-input').value = '';
-    document.getElementById('pw-input').value = '';
-    document.getElementById('user-input').focus();
-    setTimeout(() => err.textContent = '', 3000);
-  }
-}
-
-window.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') closeGate();
-});
-</script>
 
 <header>
   <div class="h-left">
-    <div class="logo" style="font-size:11px;font-weight:700">NBC</div>
+    <img class="logo" src="Assets/Logos/STORMGAUGE.png" alt="Stormgauge">
     <div>
-      <div class="h-title">NBC Stormwater Tools</div>
-      <div class="h-sub">Northern Beaches Council - Stormwater</div>
+      <div class="h-title">PLUVIOMETRICS</div>
+      <div class="h-sub">Stormwater rainfall analysis</div>
     </div>
   </div>
   <div class="h-status">
@@ -3688,10 +3601,6 @@ const PAGES = ['aep'];
 let currentPage = 'aep';
 
 function switchPage(page, options = {}) {
-  if (!options.skipAuth && isProtectedPage(page) && !isAuthenticated()) {
-    openGate(page);
-    return;
-  }
   currentPage = page;
   const flexPages = new Set(['aep']);
   PAGES.forEach(p => {

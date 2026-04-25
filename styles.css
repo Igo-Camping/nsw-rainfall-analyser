@@ -13,17 +13,22 @@
   --text-l:     #5A6B7A;
   --r:          8px;
   --sh:         0 2px 12px rgba(0,0,0,0.08);
+  --brand-bg:        #071B2A;
+  --brand-accent:    #003B2F;
+  --brand-tagline:   #48D36C;
+  --brand-grad-blue: #18B8F4;
+  --brand-name:      #FFFFFF;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--panel);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
 /* Header */
-header{background:var(--navy);color:white;padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.3);z-index:200}
+header{background:var(--brand-bg);color:var(--brand-name);padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.3);z-index:200}
 .h-left{display:flex;align-items:center;gap:12px}
-.logo{width:34px;height:34px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.h-title{font-size:15px;font-weight:700;line-height:1.2}
-.h-sub{font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:.06em}
+.logo{width:34px;height:34px;object-fit:contain;flex-shrink:0;display:block}
+.h-title{font-family:'Inter','Helvetica Neue',Helvetica,system-ui,sans-serif;font-size:14px;font-weight:700;line-height:1.2;color:var(--brand-name);letter-spacing:0.18em;text-transform:uppercase}
+.h-sub{font-family:'Inter','Helvetica Neue',Helvetica,system-ui,sans-serif;font-size:10px;color:var(--brand-tagline);letter-spacing:0.14em;text-transform:none}
 .h-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mid)}
 .dot{width:8px;height:8px;border-radius:50%;background:#27AE60;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
