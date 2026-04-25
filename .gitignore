@@ -1,5 +1,6 @@
 index working.html
 index working.txt
+index.before-recovered-lost-work.html
 packaging_data/
 packaging_outputs/
 costing_lookup.json
@@ -14,3 +15,7 @@ Imports/*.xlsm
 Imports/*.xls
 Imports/*.xlsb
 nsw_lga_boundaries.geojson
+*.csv
+*.xlsm
+*.xlsx
+nbc-rainfall-tool-standalone/
