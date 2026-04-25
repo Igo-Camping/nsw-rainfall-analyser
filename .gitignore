@@ -18,4 +18,6 @@ nsw_lga_boundaries.geojson
 *.csv
 *.xlsm
 *.xlsx
+*.geojson
+*.log
 nbc-rainfall-tool-standalone/

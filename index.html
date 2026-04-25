@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
-<title>NBC Stormwater Tools - Northern Beaches Council</title>
+<title>NBC Stormwater Tools - Northern Beaches</title>
 <!-- v3 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -341,7 +341,7 @@ body.busy-ui button,body.busy-ui .run-btn,body.busy-ui .export-btn{cursor:progre
   <div style="background:white;border-radius:12px;padding:40px;width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
     <div style="width:52px;height:52px;background:#00847F;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;margin:0 auto 16px">NBC</div>
     <div style="font-size:18px;font-weight:700;color:#1A2B3C;margin-bottom:4px">NBC Stormwater Tools</div>
-    <div style="font-size:11px;color:#5A6B7A;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em">Northern Beaches Council - Stormwater</div>
+    <div style="font-size:11px;color:#5A6B7A;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em">Northern Beaches - Stormwater</div>
     <input type="text" id="user-input" placeholder="Enter username"
       autocomplete="username"
       style="width:100%;padding:11px 14px;border:1.5px solid #DDE3E8;border-radius:8px;font-size:14px;outline:none;margin-bottom:10px;text-align:center;color:#1A2B3C"
@@ -429,7 +429,7 @@ window.addEventListener('keydown', (event) => {
     <div class="logo" style="font-size:11px;font-weight:700">NBC</div>
     <div>
       <div class="h-title">NBC Stormwater Tools</div>
-      <div class="h-sub">Northern Beaches Council - Stormwater</div>
+      <div class="h-sub">Northern Beaches - Stormwater</div>
     </div>
   </div>
   <div class="h-status">
@@ -452,7 +452,7 @@ window.addEventListener('keydown', (event) => {
 <div id="page-home" style="display:none">
   <div class="home-hero">
     <h1>NBC Stormwater Tools</h1>
-    <p>Northern Beaches Council - Stormwater Engineering</p>
+    <p>Northern Beaches - Stormwater Engineering</p>
   </div>
   <div class="home-cards">
     <div class="home-card" onclick="switchPage('aep')">
@@ -1269,19 +1269,19 @@ window.addEventListener('keydown', (event) => {
           <div class="pkg-meta-val">Current in-browser relining package generation</div>
         </div>
         <div class="pkg-meta-item">
-          <div class="pkg-meta-lbl">Council Program Folder</div>
-          <div class="pkg-meta-val" id="fwLocalFolderPath">%USERPROFILE%\OneDrive - Northern Beaches Council\Stormwater Engineering - General\Program</div>
+          <div class="pkg-meta-lbl">Program Folder</div>
+          <div class="pkg-meta-val" id="fwLocalFolderPath">%USERPROFILE%\OneDrive - Northern Beaches\Stormwater Engineering - General\Program</div>
         </div>
         <div class="pkg-meta-item">
           <div class="pkg-meta-lbl">Expected Workbook Path</div>
-          <div class="pkg-meta-val" id="fwLocalWorkbookPath">%USERPROFILE%\OneDrive - Northern Beaches Council\Stormwater Engineering - General\Program\2027-2031 CAPEX Project Brief - Program of Works Details - E&amp;R - Rolling.xlsx</div>
+          <div class="pkg-meta-val" id="fwLocalWorkbookPath">%USERPROFILE%\OneDrive - Northern Beaches\Stormwater Engineering - General\Program\2027-2031 CAPEX Project Brief - Program of Works Details - E&amp;R - Rolling.xlsx</div>
         </div>
       </div>
       <div class="fw-actions" style="margin-top:12px">
         <button class="export-btn" onclick="copyFutureWorksLocalPath('folder')">Copy Folder Path</button>
         <button class="export-btn" onclick="copyFutureWorksLocalPath('workbook')">Copy Workbook Path</button>
       </div>
-      <div class="fw-note" style="margin-top:12px">Direct SharePoint workbook editing is the next step. This first pass keeps the row structure aligned with the backlog sheet so the later Graph sync can write the same fields into a machine-managed table. The local OneDrive path above is the expected Council-synced location for normal Excel editing.</div>
+      <div class="fw-note" style="margin-top:12px">Direct SharePoint workbook editing is the next step. This first pass keeps the row structure aligned with the backlog sheet so the later Graph sync can write the same fields into a machine-managed table. The local OneDrive path above is the expected synced location for normal Excel editing.</div>
     </div>
 
     <div class="fw-panel">
@@ -1454,7 +1454,7 @@ const MONTHLY_CHART_COLORS = [
   '#2980B9', '#F39C12', '#117A65', '#6C3483'
 ];
 const FUTURE_WORKS_WORKBOOK_NAME = '2027-2031 CAPEX Project Brief - Program of Works Details - E&R - Rolling.xlsx';
-const FUTURE_WORKS_LOCAL_FOLDER_TEMPLATE = '%USERPROFILE%\\OneDrive - Northern Beaches Council\\Stormwater Engineering - General\\Program';
+const FUTURE_WORKS_LOCAL_FOLDER_TEMPLATE = '%USERPROFILE%\\OneDrive - Northern Beaches\\Stormwater Engineering - General\\Program';
 const FUTURE_WORKS_COLUMNS = [
   { key: 'exhibition', label: 'In exhibition map?' },
   { key: 'packageId', label: 'Package' },
