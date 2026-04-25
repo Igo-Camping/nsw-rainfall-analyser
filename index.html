@@ -5,155 +5,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta
     http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+    content="default-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
   >
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <title>Pluvio Atmos | Rainfall AEP Analysis</title>
+  <meta
+    name="description"
+    content="Pluviometrics is the product hub for rainfall intelligence, stormwater analysis, and engineering-grade weather tools."
+  >
+  <title>Pluviometrics</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js" defer></script>
-  <script src="app.js" type="module"></script>
 </head>
 <body>
-  <div class="pa-app">
-    <header class="pa-topbar">
-      <a class="pa-brand" href="/" aria-label="Pluvio Atmos home">
-        <span class="pa-brand__mark" aria-hidden="true"></span>
-        <span>
-          <span class="pa-brand__name">Pluvio Atmos</span>
-          <span class="pa-brand__platform">Pluviometrics Platform</span>
-        </span>
+  <main class="hub-shell">
+    <section class="hub-hero" aria-labelledby="page-title">
+      <div class="hub-brand">
+        <img
+          class="hub-brand__logo"
+          src="Assets/Logos/PLUVIOMETRICS.png"
+          alt="Pluviometrics"
+          width="520"
+          height="160"
+        >
+      </div>
+
+      <div class="hub-intro">
+        <p class="hub-kicker">Product hub</p>
+        <h1 id="page-title">Pluviometrics</h1>
+        <p>
+          Engineering-grade rainfall and stormwater intelligence products for analysis, planning, and operational decision-making.
+        </p>
+      </div>
+    </section>
+
+    <section class="product-grid" aria-label="Pluviometrics products">
+      <a class="product-card" href="https://atmos.pluviometrics.com.au">
+        <img
+          class="product-card__logo"
+          src="Assets/Logos/ATMOS.png"
+          alt="Pluvio Atmos"
+          width="360"
+          height="180"
+        >
+        <span class="product-card__meta">Rainfall analysis</span>
+        <span class="product-card__link">Open Atmos</span>
       </a>
 
-      <div class="pa-status" aria-label="Application status">
-        <span class="pa-status__dot" aria-hidden="true"></span>
-        <span>Analysis engine ready</span>
-      </div>
-    </header>
-
-    <main class="pa-main">
-      <section class="pa-hero pa-linework" aria-labelledby="page-title">
-        <div class="pa-container pa-hero__inner">
-          <div class="pa-hero__copy">
-            <p class="pa-section-label">Rainfall frequency analysis</p>
-            <h1 id="page-title" class="pa-display">Calculate rainfall AEP from depth and duration.</h1>
-            <p class="pa-subtitle">
-              A clean baseline for fast screening of storm intensity against duration-based rainfall thresholds.
-            </p>
-          </div>
-          <div class="pa-hero__metrics" aria-label="Supported analysis range">
-            <div class="pa-stat">
-              <span class="pa-stat__value">5 min</span>
-              <span class="pa-stat__label">Minimum duration</span>
-            </div>
-            <div class="pa-stat">
-              <span class="pa-stat__value">24 hr</span>
-              <span class="pa-stat__label">Maximum duration</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="pa-container pa-workspace" aria-label="AEP calculator workspace">
-        <form class="pa-panel pa-calculator" id="aep-form" novalidate>
-          <div class="pa-card__header">
-            <div>
-              <p class="pa-section-label">Inputs</p>
-              <h2 class="pa-title">Rainfall event</h2>
-            </div>
-            <span class="pa-badge">Screening estimate</span>
-          </div>
-
-          <div class="pa-field">
-            <label class="pa-label" for="location">Select location</label>
-            <select class="pa-select" id="location" name="location" required></select>
-          </div>
-
-          <div class="pa-field">
-            <label class="pa-label" for="rainfall-depth">Rainfall depth</label>
-            <div class="pa-input-unit">
-              <input
-                class="pa-input"
-                id="rainfall-depth"
-                name="rainfallDepth"
-                type="number"
-                min="0.1"
-                step="0.1"
-                inputmode="decimal"
-                placeholder="Enter depth"
-                required
-              >
-              <span class="pa-unit">mm</span>
-            </div>
-            <p class="pa-help" id="depth-help">Total rainfall accumulated over the selected duration.</p>
-          </div>
-
-          <div class="pa-field">
-            <label class="pa-label" for="duration">Duration</label>
-            <select class="pa-select" id="duration" name="duration" required></select>
-          </div>
-
-          <p class="pa-error" id="form-error" role="alert" aria-live="polite"></p>
-
-          <button class="pa-btn pa-btn--primary" type="submit">Calculate AEP</button>
-        </form>
-
-        <aside class="pa-panel pa-result" aria-labelledby="result-title">
-          <div class="pa-card__header">
-            <div>
-              <p class="pa-section-label">Result</p>
-              <h2 id="result-title" class="pa-title">Annual Exceedance Probability</h2>
-            </div>
-            <span class="pa-badge pa-badge--live" id="result-band">Ready</span>
-          </div>
-
-          <div class="pa-result__empty" id="empty-state">
-            <p>Enter rainfall depth and duration to calculate the estimated AEP.</p>
-          </div>
-
-          <section class="pa-chart-panel" aria-labelledby="chart-title">
-            <div class="pa-chart-panel__header">
-              <div>
-                <p class="pa-section-label">IFD curves</p>
-                <h3 id="chart-title" class="pa-chart-title">Rainfall depth by duration</h3>
-              </div>
-              <span class="pa-meta" id="chart-location">--</span>
-            </div>
-            <div class="pa-chart-wrap">
-              <canvas id="aep-chart" aria-label="Rainfall depth versus duration chart"></canvas>
-            </div>
-            <p class="pa-chart-status" id="chart-status" aria-live="polite"></p>
-          </section>
-
-          <div class="pa-result__content" id="result-content" hidden>
-            <div class="pa-aep-value">
-              <span class="pa-aep-value__number" id="aep-value">--</span>
-              <span class="pa-aep-value__unit" id="aep-event-label"></span>
-            </div>
-
-            <div class="pa-result-grid">
-              <div class="pa-stat">
-                <span class="pa-stat__value" id="ari-value">--</span>
-                <span class="pa-stat__label">Approx. ARI</span>
-              </div>
-              <div class="pa-stat">
-                <span class="pa-stat__value" id="intensity-value">--</span>
-                <span class="pa-stat__label">Intensity</span>
-              </div>
-              <div class="pa-stat">
-                <span class="pa-stat__value" id="depth-value">--</span>
-                <span class="pa-stat__label">Depth</span>
-              </div>
-              <div class="pa-stat">
-                <span class="pa-stat__value" id="duration-value">--</span>
-                <span class="pa-stat__label">Duration</span>
-              </div>
-            </div>
-
-            <p class="pa-result__interpretation" id="interpretation"></p>
-          </div>
-        </aside>
-      </section>
-    </main>
-  </div>
+      <a class="product-card" href="https://stormgauge.pluviometrics.com.au">
+        <img
+          class="product-card__logo"
+          src="Assets/Logos/STORMGAUGE.png"
+          alt="Stormgauge"
+          width="360"
+          height="180"
+        >
+        <span class="product-card__meta">Stormwater intelligence</span>
+        <span class="product-card__link">Open Stormgauge</span>
+      </a>
+    </section>
+  </main>
 </body>
 </html>
