@@ -1505,9 +1505,13 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
     station.wmo = data.wmo || station.wmo || '';
     station.bom_id = data.bom_id || station.bom_id || bomId;
     const intervalMin = data.resolution_minutes || 30;
-    _bomDataDiag(data.readings || [], sName, intervalMin, bomId);
+    const rawReadings = data.readings || [];
+    _bomDataDiag(rawReadings, sName, intervalMin, bomId);
+    const parsedReadings = _isBomCumulative(rawReadings)
+      ? _bomCumulativeToIncrements(rawReadings, sName, bomId)
+      : rawReadings;
     return {
-      readings: applyRainfallQc(data.readings || [], intervalMin, sName),
+      readings: applyRainfallQc(parsedReadings, intervalMin, sName),
       source: data.source || 'BoM 72-hour AWS observations',
       intervalMinutes: intervalMin
     };
@@ -1652,6 +1656,41 @@ function _bomDataDiag(readings, stationName, intervalMin, bomId) {
   const maxIdx = vals.indexOf(maxVal);
   console.warn(`max value: ${maxVal}mm at index ${maxIdx} ts=${readings[maxIdx]?.timestamp}`);
   console.groupEnd();
+}
+
+// Returns true when the series looks like a cumulative accumulator
+// (≥75% of consecutive pairs are non-decreasing, ≤15% are drops/resets).
+function _isBomCumulative(readings) {
+  if (readings.length < 3) return false;
+  let nUp = 0, nFlat = 0, nDown = 0;
+  for (let i = 1; i < readings.length; i++) {
+    const diff = readings[i].value - readings[i - 1].value;
+    if (diff > 0.01) nUp++;
+    else if (diff < -0.01) nDown++;
+    else nFlat++;
+  }
+  const n = readings.length - 1;
+  return (nUp + nFlat) / n >= 0.75 && nDown / n <= 0.15;
+}
+
+// Convert cumulative readings to per-interval increments.
+// Negative diffs (resets) are discarded; first reading is skipped.
+function _bomCumulativeToIncrements(readings, stationName, bomId) {
+  const rawCount = readings.length;
+  const increments = [];
+  for (let i = 1; i < readings.length; i++) {
+    const inc = readings[i].value - readings[i - 1].value;
+    if (!isFinite(inc) || inc < 0) continue;
+    increments.push({ timestamp: readings[i].timestamp, value: inc });
+  }
+  console.log('[BOM Parse]', {
+    stationName,
+    mode: 'cumulative',
+    rawCount,
+    incrementCount: increments.length,
+    first5Increments: increments.slice(0, 5).map(r => `${r.timestamp}: ${r.value}mm`)
+  });
+  return increments;
 }
 
 async function fetchRainfallSinceMidnight(station) {
