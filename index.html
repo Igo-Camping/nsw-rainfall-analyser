@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com; connect-src 'self' https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com; connect-src 'self' https://data.pluviometrics.com.au https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <title>Stormgauge Rainfall Analysis</title>
 <!-- v3 -->
@@ -231,6 +231,7 @@
 <script>
 // â"€â"€ Config â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
+const PLUVIOMETRICS_RAINFALL_STATION_DATA_URL = 'https://data.pluviometrics.com.au/pluviometrics_rainfall_stations.json';
 
 // All durations the tool supports (matching NBC tool)
 const ALL_DURATIONS = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
@@ -290,13 +291,11 @@ const lgaBoundaryLoadPromise = loadAllLgaBoundaries();
 // â"€â"€ Startup â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function init() {
   try {
-    const h = await api('/health');
-    setStatus(true, `${h.stations_loaded.toLocaleString()} stations`);
     await loadStations();
   } catch(e) {
-    setStatus(false, 'API offline â€" start backend on port 8000');
+    setStatus(false, 'Station dataset unavailable');
     document.getElementById('slist').innerHTML =
-      '<div style="padding:20px;font-size:12px;color:var(--text-l);text-align:center">âš  Cannot connect to API.<br>Run: py -m uvicorn main:app --reload</div>';
+      `<div style="padding:20px;font-size:12px;color:var(--text-l);text-align:center">Cannot load consolidated rainfall stations.<br>${escapeHtml(e.message || e)}</div>`;
   }
 }
 
@@ -308,18 +307,87 @@ function setStatus(ok, txt) {
 async function loadStations() {
   setStatus(true, 'Loading stations...');
   await lgaBoundaryLoadPromise;
-  const data = await api('/stations?limit=2000');
-  const stations = data.stations || [];
-  setStatus(true, `Checking active gauges... 0/${stations.length}`);
-  allStations = await filterStationsByRecentReadings(stations);
+  const stationDataset = await loadPluviometricsRainfallStationDataset();
+  const stations = (stationDataset.stations || []).map(normaliseConsolidatedRainfallStation).filter(Boolean);
+  const mhlStations = stations.filter(station => station.source === 'mhl');
+  const bomStations = stations.filter(station => station.source === 'bom');
+  console.info('[Pluviometrics stations] dataset URL:', PLUVIOMETRICS_RAINFALL_STATION_DATA_URL);
+  console.info('[Pluviometrics stations] consolidated rainfall stations loaded:', stations.length);
+  console.info('[Pluviometrics stations] MHL stations:', mhlStations.length);
+  console.info('[Pluviometrics stations] BOM stations:', bomStations.length);
+  console.info('[Pluviometrics stations] generated_at:', stationDataset.generated_at || 'unknown');
+  allStations = mhlStations;
   assignStationsToLgas(allStations);
-  loadBomRainfallReferenceGauges();
+  loadBomRainfallReferenceGauges(bomStations);
   // Fetch full IFD data for all stations (needed for browser-side AEP calc)
   loadIfdData();
   plotAllMarkers(allStations);
   plotBomRainfallMarkers();
   buildLgaDropdown();
-  setStatus(true, `${allStations.length.toLocaleString()} active official gauges + ${bomRainfallGauges.length.toLocaleString()} BOM records`);
+  setStatus(true, `${allStations.length.toLocaleString()} MHL rainfall stations + ${bomRainfallGauges.length.toLocaleString()} BOM rainfall stations`);
+}
+
+async function loadPluviometricsRainfallStationDataset() {
+  const resp = await fetch(`${PLUVIOMETRICS_RAINFALL_STATION_DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
+  if (!resp.ok) throw new Error(`${PLUVIOMETRICS_RAINFALL_STATION_DATA_URL} returned ${resp.status}`);
+  const data = await resp.json();
+  if (!Array.isArray(data?.stations)) throw new Error(`${PLUVIOMETRICS_RAINFALL_STATION_DATA_URL} is missing stations[]`);
+  return data;
+}
+
+function extractDataIdentifierId(station, prefix) {
+  const raw = String(station?.data_identifier || '');
+  return raw.toLowerCase().startsWith(`${prefix}:`) ? raw.slice(prefix.length + 1) : '';
+}
+
+function normaliseConsolidatedRainfallStation(station) {
+  if (!station || station.station_type !== 'rainfall') return null;
+  const source = String(station.source || '').toLowerCase();
+  const lat = Number(station.lat);
+  const lon = Number(station.lon);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+  if (source === 'bom') return normaliseConsolidatedBomStation(station, lat, lon);
+  if (source === 'mhl') return normaliseConsolidatedMhlStation(station, lat, lon);
+  return null;
+}
+
+function normaliseConsolidatedMhlStation(station, lat, lon) {
+  const tsId = String(station.ts_id || extractDataIdentifierId(station, 'mhl') || '').trim();
+  return {
+    ...station,
+    source: 'mhl',
+    active: true,
+    station_id: String(station.station_id || tsId || '').trim(),
+    station_no: String(station.station_no || '').trim(),
+    ts_id: tsId || null,
+    name: String(station.station_name || station.name || station.station_id || 'MHL rainfall station').trim(),
+    lat: Number(station.lat),
+    lon: Number(station.lon)
+  };
+}
+
+function normaliseConsolidatedBomStation(station, lat, lon) {
+  const bomId = getBomStationNumber({ bom_id: station.bom_id || extractDataIdentifierId(station, 'bom') || station.station_id });
+  const name = String(station.station_name || station.name || `BoM station ${bomId}`).trim();
+  return {
+    ...station,
+    source: 'bom',
+    station_id: String(station.station_id || `bom-${bomId}`).trim(),
+    isBomGauge: true,
+    active: true,
+    ts_id: null,
+    bom_id: bomId,
+    site: bomId,
+    name,
+    baseName: name,
+    element: station.element || 'Rainfall',
+    sourceLayer: station.source_layer || station.rainfall_api_source || '',
+    lga: station.lga || station.region || '',
+    lat,
+    lon,
+    ifdKey: getBomIfdKey(lat, lon),
+    has_ifd: !!window.BOM_IFD_CACHE?.[getBomIfdKey(lat, lon)]
+  };
 }
 
 function loadActiveGaugeCache() {
@@ -681,7 +749,13 @@ function getBomIfdKey(lat, lon) {
   return `${Number(lat).toFixed(5)},${Number(lon).toFixed(5)}`;
 }
 
-function loadBomRainfallReferenceGauges() {
+function loadBomRainfallReferenceGauges(verifiedStations = null) {
+  if (Array.isArray(verifiedStations)) {
+    bomRainfallGauges = verifiedStations
+      .filter(station => Number.isFinite(station.lat) && Number.isFinite(station.lon))
+      .sort((a, b) => a.baseName.localeCompare(b.baseName) || a.element.localeCompare(b.element));
+    return;
+  }
   const data = window.BOM_NORTHERN_BEACHES_GAUGES;
   const features = data?.features || [];
   bomRainfallGauges = features
