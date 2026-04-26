@@ -322,6 +322,7 @@ async function loadStations() {
   allStations = mhlStations;
   assignStationsToLgas(allStations);
   loadBomRainfallReferenceGauges(bomStations);
+  assignStationsToLgas(bomRainfallGauges);
   // Fetch full IFD data for all stations (needed for browser-side AEP calc)
   loadIfdData();
   plotAllMarkers(allStations);
@@ -539,7 +540,14 @@ function buildLgaDropdown() {
 }
 
 function getLGA(station) {
-  if (station?.isBomGauge) return station.lga || 'Northern Beaches';
+  if (!station) return 'Unknown';
+  if (station.isBomGauge || station.source === 'bom') {
+    const lga = String(station.lga || '').trim();
+    if (lga && lga !== 'Unknown') return lga;
+    const region = String(station.region || '').trim();
+    if (region) return region;
+    return 'Unknown';
+  }
   if (isProtectedNbcStation(station)) return 'Northern Beaches';
   if (station.lga && station.lga !== 'Unknown') return station.lga;
   if (station.lga) return station.lga;
@@ -564,6 +572,14 @@ function canAnalyseStation(station) {
 
 function onLgaChange() {
   const lga = document.getElementById('lgaSel').value;
+
+  const allDisplay = getDisplayStations();
+  const matching = allDisplay.filter(s => stationMatchesFilters(s, '', lga));
+  const excluded = allDisplay.filter(s => !stationMatchesFilters(s, '', lga));
+  console.log(`[LGA] selected="${lga || '(all)'}" total=${allDisplay.length} matching=${matching.length} excluded=${excluded.length}`);
+  if (excluded.length) {
+    console.log('[LGA] first 10 excluded:', excluded.slice(0, 10).map(s => `${s.name} | lga=${getLGA(s)} | region=${s.region || ''}`));
+  }
 
   // Show the gauge-set selector when a single LGA is selected.
   const nbcWrap = document.getElementById('nbcSubWrap');
@@ -606,9 +622,14 @@ function selectLgaFromMap(lgaName) {
 function stationMatchesFilters(station, q, lga) {
   const searchable = `${station.name || ''} ${station.site || ''} ${station.element || ''} ${station.sourceLayer || ''} ${station.agency || ''}`.toLowerCase();
   if (q && !searchable.includes(q)) return false;
-  if (lga && getLGA(station) !== lga) return false;
+  if (lga) {
+    const target = lga.trim().toLowerCase();
+    const stationLga = getLGA(station).trim().toLowerCase();
+    const stationRegion = String(station.region || '').trim().toLowerCase();
+    if (stationLga !== target && stationRegion !== target) return false;
+  }
   const sub = lga ? (document.getElementById('nbcSub')?.value || 'official') : 'official';
-  if (sub === 'official' && station.isBomGauge) return false;
+  if (sub === 'official' && (station.isBomGauge || station.source === 'bom')) return false;
   return true;
 }
 
@@ -1564,6 +1585,10 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   let failedBomCount = 0;
 
   allSiteResults = [];
+  let diagFetched = 0;
+  let diagNoData = 0;
+
+  console.log(`[TopPerSite] stations selected: ${stations.length} (lga="${lga || '(all)'}")`);
 
   for (let i = 0; i < stations.length; i++) {
     const s = stations[i];
@@ -1594,6 +1619,8 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
         continue;
       }
     }
+    diagFetched++;
+    if (!readings.length) { diagNoData++; continue; }
     await loadStationIfd(s);
 
     // Find the duration with the worst (lowest) AEP
@@ -1626,7 +1653,7 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
     if (bestResult) allSiteResults.push(bestResult);
   }
 
-  console.log("BOM fetch failures:", failedBomCount);
+  console.log(`[TopPerSite] fetched=${diagFetched} noData=${diagNoData} failed=${failedStations.length} (bomFailed=${failedBomCount}) resultsGenerated=${allSiteResults.length}`);
 
   if (manageLoader) hideLoad();
   if (!allSiteResults.length) {
@@ -1643,6 +1670,7 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   topSiteResultsCache = [...allSiteResults];
   if (render) {
     renderTopPerSite(allSiteResults, null);
+    console.log(`[TopPerSite] displayed=${allSiteResults.length}`);
     document.getElementById('results').classList.add('show');
     switchRTab('r-allsite');
   }
