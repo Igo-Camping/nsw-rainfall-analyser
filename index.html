@@ -1510,8 +1510,9 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
     const parsedReadings = _isBomCumulative(rawReadings)
       ? _bomCumulativeToIncrements(rawReadings, sName, bomId)
       : rawReadings;
+    const { cleanedReadings } = applyBomQc(parsedReadings, intervalMin, sName, bomId);
     return {
-      readings: applyRainfallQc(parsedReadings, intervalMin, sName),
+      readings: cleanedReadings,
       source: data.source || 'BoM 72-hour AWS observations',
       intervalMinutes: intervalMin
     };
@@ -1691,6 +1692,51 @@ function _bomCumulativeToIncrements(readings, stationName, bomId) {
     first5Increments: increments.slice(0, 5).map(r => `${r.timestamp}: ${r.value}mm`)
   });
   return increments;
+}
+
+// Per-reading BOM QC: removes isolated spikes and invalid values.
+// Does NOT exclude the station — caller receives cleanedReadings and
+// continues analysis on whatever is left. Only if cleanedReadings is
+// empty should the station be treated as having no data.
+function applyBomQc(readings, intervalMinutes, stationName, bomId) {
+  if (!readings || !readings.length) {
+    return { cleanedReadings: [], rejectedReadings: [], rejectionReasons: [] };
+  }
+  const cleanedReadings = [];
+  const rejectedReadings = [];
+  const rejectionReasons = [];
+
+  for (let i = 0; i < readings.length; i++) {
+    const r = readings[i];
+    const prev = i > 0 ? readings[i - 1].value : 0;
+    const next = i < readings.length - 1 ? readings[i + 1].value : 0;
+    const neighborMax = Math.max(prev, next, 0.1);
+
+    let reason = null;
+    if (!isFinite(r.value) || r.value < 0) {
+      reason = 'invalid value';
+    } else if (r.value > neighborMax * 10 && r.value > 20) {
+      reason = `isolated spike: ${r.value}mm vs neighbor max ${neighborMax}mm`;
+    }
+
+    if (reason) {
+      rejectedReadings.push(r);
+      rejectionReasons.push(reason);
+    } else {
+      cleanedReadings.push(r);
+    }
+  }
+
+  console.log('[BOM RainQC]', {
+    stationName,
+    bom_id: bomId,
+    originalCount: readings.length,
+    cleanedCount: cleanedReadings.length,
+    rejectedCount: rejectedReadings.length,
+    rejectedSamples: rejectedReadings.slice(0, 3).map(r => ({ timestamp: r.timestamp, value: r.value }))
+  });
+
+  return { cleanedReadings, rejectedReadings, rejectionReasons };
 }
 
 async function fetchRainfallSinceMidnight(station) {
