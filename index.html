@@ -316,6 +316,9 @@ async function loadStations() {
   console.info('[Pluviometrics stations] MHL stations:', mhlStations.length);
   console.info('[Pluviometrics stations] BOM stations:', bomStations.length);
   console.info('[Pluviometrics stations] generated_at:', stationDataset.generated_at || 'unknown');
+  console.log("Stations total:", stations.length);
+  console.log("MHL stations:", mhlStations.length);
+  console.log("BOM stations:", bomStations.length);
   allStations = mhlStations;
   assignStationsToLgas(allStations);
   loadBomRainfallReferenceGauges(bomStations);
@@ -1368,7 +1371,7 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
     };
   }
 
-  if (station?.isBomGauge) {
+  if (station?.source === 'bom' || station?.isBomGauge) {
     const bomId = getBomStationNumber(station);
     if (!bomId) throw new Error('BoM station number unavailable for this reference station');
     const params = new URLSearchParams({
@@ -1476,7 +1479,7 @@ async function fetchRainfallSinceMidnight(station) {
     }, 0);
   }
 
-  if (station?.isBomGauge) {
+  if (station?.source === 'bom' || station?.isBomGauge) {
     // BoM gauge - sum today's readings via DWO/CDO
     const bomId = getBomStationNumber(station);
     if (!bomId) return null;
@@ -1537,11 +1540,11 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   const q = document.getElementById('search').value.toLowerCase().trim();
   let stations;
   if (lga === 'Northern Beaches') {
-    stations = getNbcSubStations();
+    stations = getDisplayStations().filter(s => getLGA(s) === 'Northern Beaches' && canAnalyseStation(s));
   } else if (lga) {
-    stations = allStations.filter(s => getLGA(s) === lga);
+    stations = getDisplayStations().filter(s => getLGA(s) === lga && canAnalyseStation(s));
   } else {
-    stations = allStations.slice();
+    stations = getDisplayStations().filter(canAnalyseStation);
   }
 
   if (q) {
@@ -1558,6 +1561,7 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   const allDurs = [5,10,15,20,25,30,45,60,90,120,180,270,360,540,720,1080,1440,1800,2160,2880,4320,5760,7200,8640,10080];
   const rangeDays = Math.max(1, Math.ceil((toDt - fromDt) / 86400000));
   const failedStations = [];
+  let failedBomCount = 0;
 
   allSiteResults = [];
 
@@ -1581,10 +1585,12 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
           intervalMinutes = rainfallData.intervalMinutes;
         } catch(e2) {
           failedStations.push(s.name);
+          if (s.source === 'bom' || s.isBomGauge) failedBomCount++;
           continue;
         }
       } else {
         failedStations.push(s.name);
+        if (s.source === 'bom' || s.isBomGauge) failedBomCount++;
         continue;
       }
     }
@@ -1619,6 +1625,8 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
 
     if (bestResult) allSiteResults.push(bestResult);
   }
+
+  console.log("BOM fetch failures:", failedBomCount);
 
   if (manageLoader) hideLoad();
   if (!allSiteResults.length) {
@@ -2928,7 +2936,7 @@ const wxCache = {};
 function loadStationIfd(station) {
   if (!station?.station_id) return Promise.resolve(null);
   if (ifdCache[station.station_id]) return Promise.resolve(ifdCache[station.station_id]);
-  if (station.isBomGauge) {
+  if (station.source === 'bom' || station.isBomGauge) {
     const key = station.ifdKey || getBomIfdKey(station.lat, station.lon);
     const ifd = window.BOM_IFD_CACHE?.[key] || null;
     if (ifd) ifdCache[station.station_id] = ifd;
