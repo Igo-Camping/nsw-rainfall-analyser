@@ -3127,15 +3127,39 @@ const ifdLoadPromises = {};
 const rainfallCache = {};
 const wxCache = {};
 
+// Enriched IFD table (data/pluviometrics_ifd_table.json) — loaded async at startup
+const _pluvIfdTablePromise = fetch(`./data/pluviometrics_ifd_table.json?v=${Date.now()}`, { cache: 'no-store' })
+  .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+  .catch(e => { console.warn('[IFD] enriched table unavailable:', e.message); return null; });
+let _pluvIfdTable = null;
+const _ifdDiag = { tableEntries: 0, newTable: 0, legacyBom: 0, legacyMhl: 0, missing: 0 };
+
 function loadStationIfd(station) {
   if (!station?.station_id) return Promise.resolve(null);
   if (ifdCache[station.station_id]) return Promise.resolve(ifdCache[station.station_id]);
+
+  // 1. Enriched table (station_id primary key) — checked first for all sources
+  if (_pluvIfdTable?.stations?.[station.station_id]?.ifd) {
+    const ifd = _pluvIfdTable.stations[station.station_id].ifd;
+    ifdCache[station.station_id] = ifd;
+    _ifdDiag.newTable++;
+    return Promise.resolve(ifd);
+  }
+
+  // 2. Legacy BOM: lat/lon key in BOM_IFD_CACHE
   if (station.source === 'bom' || station.isBomGauge) {
     const key = station.ifdKey || getBomIfdKey(station.lat, station.lon);
     const ifd = window.BOM_IFD_CACHE?.[key] || null;
-    if (ifd) ifdCache[station.station_id] = ifd;
+    if (ifd) {
+      ifdCache[station.station_id] = ifd;
+      _ifdDiag.legacyBom++;
+    } else {
+      _ifdDiag.missing++;
+    }
     return Promise.resolve(ifd);
   }
+
+  // 3. Legacy MHL: live API fetch
   if (ifdLoadPromises[station.station_id]) return ifdLoadPromises[station.station_id];
 
   ifdLoadPromises[station.station_id] = (async () => {
@@ -3143,10 +3167,13 @@ function loadStationIfd(station) {
       const full = await api(`/stations/${station.station_id}`);
       if (full.ifd) {
         ifdCache[station.station_id] = full.ifd;
+        _ifdDiag.legacyMhl++;
         return full.ifd;
       }
+      _ifdDiag.missing++;
       return null;
     } catch(e) {
+      _ifdDiag.missing++;
       return null;
     } finally {
       delete ifdLoadPromises[station.station_id];
@@ -3157,13 +3184,23 @@ function loadStationIfd(station) {
 }
 
 async function loadIfdData() {
-  // Fetch all stations with full IFD data in batches
+  // Await enriched table before per-station resolution
+  _pluvIfdTable = await _pluvIfdTablePromise;
+  if (_pluvIfdTable?.stations) {
+    _ifdDiag.tableEntries = Object.keys(_pluvIfdTable.stations).length;
+    console.log(`[IFD] enriched table loaded: ${_ifdDiag.tableEntries} entries (enriched ${_pluvIfdTable.enriched_count}, errors ${_pluvIfdTable.error_count})`);
+  } else {
+    console.warn('[IFD] enriched table not available — falling back to BOM_IFD_CACHE + live MHL API');
+  }
+
   const BATCH = 20;
   for (let i = 0; i < allStations.length; i += BATCH) {
     const batch = allStations.slice(i, i + BATCH);
     await Promise.all(batch.map(s => loadStationIfd(s)));
   }
-  console.log(`IFD data loaded for ${Object.keys(ifdCache).length} stations`);
+
+  console.log(`[IFD] cache populated: ${Object.keys(ifdCache).length} stations`);
+  console.log(`[IFD] sources — new table: ${_ifdDiag.newTable}, legacy BOM: ${_ifdDiag.legacyBom}, legacy MHL API: ${_ifdDiag.legacyMhl}, missing: ${_ifdDiag.missing}`);
 }
 
 // â"€â"€ Browser-side AEP calculation â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
