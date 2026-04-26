@@ -312,13 +312,28 @@ async function loadStations() {
   const mhlStations = stations.filter(station => station.source === 'mhl');
   const bomStations = stations.filter(station => station.source === 'bom');
   console.info('[Pluviometrics stations] dataset URL:', PLUVIOMETRICS_RAINFALL_STATION_DATA_URL);
-  console.info('[Pluviometrics stations] consolidated rainfall stations loaded:', stations.length);
-  console.info('[Pluviometrics stations] MHL stations:', mhlStations.length);
-  console.info('[Pluviometrics stations] BOM stations:', bomStations.length);
-  console.info('[Pluviometrics stations] generated_at:', stationDataset.generated_at || 'unknown');
-  console.log("Stations total:", stations.length);
-  console.log("MHL stations:", mhlStations.length);
-  console.log("BOM stations:", bomStations.length);
+  console.info('[Pluviometrics stations] consolidated rainfall stations loaded:', stations.length, '| MHL:', mhlStations.length, '| BOM:', bomStations.length, '| generated_at:', stationDataset.generated_at || 'unknown');
+
+  // Debug: trace Oliver St Freshwater through normalisation
+  const _oliverRaw = (stationDataset.stations || []).find(s => (s.station_name || s.name || '').toLowerCase().includes('oliver st freshwater'));
+  const _oliverNorm = stations.find(s => (s.name || '').toLowerCase().includes('oliver st freshwater'));
+  if (_oliverRaw) {
+    console.group('[DEBUG Oliver St] Raw JSON entry:');
+    console.log(JSON.parse(JSON.stringify(_oliverRaw)));
+    console.groupEnd();
+  } else {
+    console.warn('[DEBUG Oliver St] NOT found in raw JSON. Partial matches:', (stationDataset.stations||[]).filter(s=>(s.station_name||s.name||'').toLowerCase().includes('oliver')).map(s=>s.station_name||s.name));
+  }
+  if (_oliverNorm) {
+    console.group('[DEBUG Oliver St] Normalised station:');
+    console.log(JSON.parse(JSON.stringify(_oliverNorm)));
+    console.log('source:', _oliverNorm.source, '| data_identifier:', _oliverNorm.data_identifier, '| ts_id:', _oliverNorm.ts_id, '| bom_id:', _oliverNorm.bom_id);
+    console.log('lga:', _oliverNorm.lga, '| region:', _oliverNorm.region, '| lat/lon:', _oliverNorm.lat, _oliverNorm.lon);
+    console.log('canAnalyse:', canAnalyseStation(_oliverNorm));
+    console.groupEnd();
+  } else {
+    console.warn('[DEBUG Oliver St] NOT found after normalisation. Was filtered out.');
+  }
   allStations = mhlStations;
   assignStationsToLgas(allStations);
   loadBomRainfallReferenceGauges(bomStations);
@@ -1394,7 +1409,7 @@ function onNbcSubChange() {
 // â"€â"€ MHL data fetch (browser â†’ MHL directly, no backend) â"€â"€â"€â"€
 const MHL_BASE = 'https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS';
 
-async function fetchMhlData(tsId, fromDt, toDt) {
+async function fetchMhlData(tsId, fromDt, toDt, debug) {
   const fmt = d => {
     const p = n => String(n).padStart(2,'0');
     return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
@@ -1409,25 +1424,54 @@ async function fetchMhlData(tsId, fromDt, toDt) {
     format:       'json',
     returnfields: 'Timestamp,Value'
   });
+  const url = `${MHL_BASE}?${params}`;
+  if (debug) console.log('[DEBUG Oliver St] MHL endpoint:', url);
 
-  const resp = await fetch(`${MHL_BASE}?${params}`);
+  const resp = await fetch(url);
   if (!resp.ok) throw new Error(`MHL API ${resp.status}`);
   const data = await resp.json();
 
-  if (!data || data.length < 1) return [];
+  if (!data || data.length < 1) {
+    if (debug) console.warn('[DEBUG Oliver St] MHL returned empty top-level array');
+    return [];
+  }
   const raw = data[0]?.data || [];
+  if (debug) console.log('[DEBUG Oliver St] MHL raw rows:', raw.length, '| first 5:', raw.slice(0,5), '| last 5:', raw.slice(-5));
 
-  return raw.map(row => ({
-    timestamp: row[0],
-    value: (row[1] === null || row[1] === '' || row[1] === '--') ? 0 : Math.max(0, parseFloat(row[1]) || 0)
-  })).filter(r => r.timestamp);
+  let rejected = 0;
+  const readings = raw.map(row => {
+    if (!row[0]) { rejected++; return null; }
+    const v = row[1];
+    if (v === null || v === undefined || v === '' || v === '--') { rejected++; return null; }
+    const parsed = parseFloat(v);
+    if (!isFinite(parsed)) { rejected++; return null; }
+    if (parsed < 0) { rejected++; return null; }
+    return { timestamp: row[0], value: parsed };
+  }).filter(Boolean);
+
+  if (debug) console.log('[DEBUG Oliver St] MHL accepted:', readings.length, '| rejected:', rejected,
+    '| first 5:', readings.slice(0,5), '| last 5:', readings.slice(-5));
+  return readings;
 }
 
 async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30) {
+  const sName = station?.name || station?.station_id || '?';
+  const dbg = (sName.toLowerCase().includes('oliver st freshwater'));
+  if (dbg) {
+    console.group(`[DEBUG Oliver St] fetchStationRainfall`);
+    console.log('station object:', JSON.parse(JSON.stringify(station)));
+    console.log('source:', station?.source, '| ts_id:', station?.ts_id, '| bom_id:', station?.bom_id, '| isBomGauge:', station?.isBomGauge);
+    console.log('from:', fromDt.toISOString(), '| to:', toDt.toISOString(), '| durationMinutes:', durationMinutes);
+  }
+
   if (station?.ts_id) {
-    const mhlReadings = await fetchMhlData(station.ts_id, fromDt, toDt);
+    const mhlReadings = await fetchMhlData(station.ts_id, fromDt, toDt, dbg);
+    if (dbg) {
+      console.log('[DEBUG Oliver St] MHL readings after fetch:', mhlReadings.length);
+      console.groupEnd();
+    }
     return {
-      readings: applyRainfallQc(mhlReadings, 5),
+      readings: applyRainfallQc(mhlReadings, 5, sName),
       source: 'MHL KiWIS 5-minute rainfall',
       intervalMinutes: 5
     };
@@ -1435,24 +1479,40 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
 
   if (station?.source === 'bom' || station?.isBomGauge) {
     const bomId = getBomStationNumber(station);
-    if (!bomId) throw new Error('BoM station number unavailable for this reference station');
+    if (!bomId) {
+      if (dbg) console.groupEnd();
+      throw new Error('BoM station number unavailable for this reference station');
+    }
     const params = new URLSearchParams({
       bom_id: bomId,
       from_dt: fromDt.toISOString(),
       to_dt: toDt.toISOString(),
       duration_minutes: String(Math.max(30, Number(durationMinutes) || 30))
     });
+    const bomUrl = `${API}/bom/rainfall?${params}`;
+    if (dbg) console.log('[DEBUG Oliver St] BOM endpoint:', bomUrl);
     const data = await api(`/bom/rainfall?${params}`);
+    if (dbg) {
+      console.log('[DEBUG Oliver St] BOM response readings:', (data.readings||[]).length,
+        '| resolution_minutes:', data.resolution_minutes,
+        '| first 5:', (data.readings||[]).slice(0,5),
+        '| last 5:', (data.readings||[]).slice(-5));
+      console.groupEnd();
+    }
     station.wmo = data.wmo || station.wmo || '';
     station.bom_id = data.bom_id || station.bom_id || bomId;
     const intervalMin = data.resolution_minutes || 30;
     return {
-      readings: applyRainfallQc(data.readings || [], intervalMin),
+      readings: applyRainfallQc(data.readings || [], intervalMin, sName),
       source: data.source || 'BoM 72-hour AWS observations',
       intervalMinutes: intervalMin
     };
   }
 
+  if (dbg) {
+    console.warn('[DEBUG Oliver St] No data source matched! ts_id:', station?.ts_id, 'source:', station?.source, 'isBomGauge:', station?.isBomGauge);
+    console.groupEnd();
+  }
   throw new Error('No rainfall data source is available for this station');
 }
 
@@ -1514,22 +1574,22 @@ async function fetchWeather(lat, lon) {
   };
 }
 function degToCompass(d){const a=['N','NE','E','SE','S','SW','W','NW'];return a[Math.round(d/45)%8];}
-function applyRainfallQc(readings, intervalMinutes) {
+function applyRainfallQc(readings, intervalMinutes, stationName) {
   if (!readings || readings.length < 3) return readings;
   const ABS_CAP_MM = 150;
-  return readings.map((r, i) => {
-    if (r.value <= 0) return r;
+  readings.forEach((r, i) => {
+    if (r.value <= 0) return;
     const prev = i > 0 ? readings[i - 1].value : 0;
     const next = i < readings.length - 1 ? readings[i + 1].value : 0;
     const neighborMax = Math.max(prev, next, 0.1);
     const isAbsurdlyLarge = r.value > ABS_CAP_MM;
     const isIsolatedSpike = r.value > neighborMax * 10 && r.value > 20;
     if (isAbsurdlyLarge || isIsolatedSpike) {
-      console.warn(`[QC] Spike at ${r.timestamp}: ${r.value.toFixed(2)}mm (${(r.value / intervalMinutes * 60).toFixed(1)} mm/hr), neighbors prev=${prev} next=${next}`);
-      return { ...r, value: 0, qcFlag: 'spike' };
+      console.warn('[RainQC Suspicious]', stationName || '?', r.value + 'mm', 'at', r.timestamp,
+        `(${(r.value / intervalMinutes * 60).toFixed(1)} mm/hr, neighbors: prev=${prev} next=${next})`);
     }
-    return r;
   });
+  return readings;
 }
 
 async function fetchRainfallSinceMidnight(station) {
@@ -1643,12 +1703,16 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   const rangeDays = Math.max(1, Math.ceil((toDt - fromDt) / 86400000));
   const failedStations = [];
   let failedBomCount = 0;
+  const failureReasons = {};
 
   allSiteResults = [];
   let diagFetched = 0;
   let diagNoData = 0;
+  let diagZeroRaw = 0;
 
-  console.log(`[TopPerSite] stations selected: ${stations.length} (lga="${lga || '(all)'}")`);
+  const mhlCount = stations.filter(s => s.ts_id).length;
+  const bomCount = stations.filter(s => !s.ts_id && (s.isBomGauge || s.source === 'bom')).length;
+  console.log(`[TopPerSite] stations selected: ${stations.length} (MHL: ${mhlCount}, BOM: ${bomCount}, lga="${lga || '(all)'}"}`);
 
   for (let i = 0; i < stations.length; i++) {
     const s = stations[i];
@@ -1671,16 +1735,22 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
         } catch(e2) {
           failedStations.push(s.name);
           if (s.source === 'bom' || s.isBomGauge) failedBomCount++;
+          const reason = e2?.message || 'unknown error';
+          failureReasons[reason] = (failureReasons[reason] || 0) + 1;
           continue;
         }
       } else {
         failedStations.push(s.name);
         if (s.source === 'bom' || s.isBomGauge) failedBomCount++;
+        const reason = e?.message || 'unknown error';
+        failureReasons[reason] = (failureReasons[reason] || 0) + 1;
         continue;
       }
     }
     diagFetched++;
-    if (!readings.length) { diagNoData++; continue; }
+    if (!readings.length) { diagZeroRaw++; continue; }
+    const nonZeroReadings = readings.filter(r => r.value > 0);
+    if (!nonZeroReadings.length) { diagNoData++; }
     await loadStationIfd(s);
 
     // Find the duration with the worst (lowest) AEP
@@ -1713,7 +1783,11 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
     if (bestResult) allSiteResults.push(bestResult);
   }
 
-  console.log(`[TopPerSite] fetched=${diagFetched} noData=${diagNoData} failed=${failedStations.length} (bomFailed=${failedBomCount}) resultsGenerated=${allSiteResults.length}`);
+  console.log(`[TopPerSite] selected=${stations.length} (MHL:${mhlCount} BOM:${bomCount}) | fetched=${diagFetched} zeroRaw=${diagZeroRaw} allZeroValue=${diagNoData} failed=${failedStations.length} (bomFailed=${failedBomCount}) | resultsGenerated=${allSiteResults.length}`);
+  if (Object.keys(failureReasons).length) {
+    const top10 = Object.entries(failureReasons).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    console.log('[TopPerSite] top failure reasons:', top10.map(([r,n])=>`${n}x "${r}"`).join(', '));
+  }
 
   if (manageLoader) hideLoad();
   if (!allSiteResults.length) {
