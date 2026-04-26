@@ -1473,10 +1473,8 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
       console.log('[DEBUG Oliver St] MHL readings after fetch:', mhlReadings.length);
       console.groupEnd();
     }
-    const mhlQc = applyRainfallQc(mhlReadings, 5, sName);
-    console.log(`[MHL RainQC] ${sName}: MHL readings accepted=${mhlQc.length} rejected=0`);
     return {
-      readings: mhlQc,
+      readings: applyRainfallQc(mhlReadings, 5, sName),
       source: 'MHL KiWIS 5-minute rainfall',
       intervalMinutes: 5
     };
@@ -1507,8 +1505,9 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
     station.wmo = data.wmo || station.wmo || '';
     station.bom_id = data.bom_id || station.bom_id || bomId;
     const intervalMin = data.resolution_minutes || 30;
+    _bomDataDiag(data.readings || [], sName, intervalMin, bomId);
     return {
-      readings: applyBomRainfallQc(data.readings || [], intervalMin, sName, bomId),
+      readings: applyRainfallQc(data.readings || [], intervalMin, sName),
       source: data.source || 'BoM 72-hour AWS observations',
       intervalMinutes: intervalMin
     };
@@ -1597,47 +1596,62 @@ function applyRainfallQc(readings, intervalMinutes, stationName) {
   return readings;
 }
 
-// Hard caps for BOM per-interval QC: linearly interpolated between breakpoints.
-// Based on Australian extreme rainfall records — any single-interval value exceeding
-// these thresholds is a data error, not a physical event.
-const _BOM_QC_BP = [[5, 10], [10, 20], [30, 40], [60, 60], [1440, 150]];
+// Diagnostic logger for BOM data shape investigation (targeted stations only).
+// Logs raw values, time deltas, duplicates, resets, large jumps, and a
+// cumulative-vs-interval heuristic. Does not modify or reject any values.
+const _BOM_DIAG_TARGETS = ['terrey hills aws', 'collaroy', 'duffys forest'];
 
-function _getBomIntervalCap(intervalMinutes) {
-  const bp = _BOM_QC_BP;
-  if (intervalMinutes <= bp[0][0]) return bp[0][1];
-  if (intervalMinutes >= bp[bp.length - 1][0]) return bp[bp.length - 1][1];
-  for (let i = 1; i < bp.length; i++) {
-    if (intervalMinutes <= bp[i][0]) {
-      const [x0, y0] = bp[i - 1];
-      const [x1, y1] = bp[i];
-      return y0 + (intervalMinutes - x0) / (x1 - x0) * (y1 - y0);
-    }
-  }
-  return 150;
-}
+function _bomDataDiag(readings, stationName, intervalMin, bomId) {
+  if (!_BOM_DIAG_TARGETS.some(t => (stationName || '').toLowerCase().includes(t))) return;
+  const label = `[BOM DataDiag] ${stationName} (bom_id=${bomId} resolution=${intervalMin}min count=${readings.length})`;
+  if (!readings.length) { console.warn(label, '— no readings'); return; }
 
-function applyBomRainfallQc(readings, intervalMinutes, stationName, bomId) {
-  if (!readings || !readings.length) return readings;
-  const cap = _getBomIntervalCap(Number(intervalMinutes) || 30);
-  let accepted = 0, rejected = 0;
-  const filtered = readings.filter(r => {
-    if (r.value < 0) {
-      console.warn('[BOM RainQC] rejected', { stationName, bom_id: bomId, value: r.value, durationMinutes: intervalMinutes, timestamp: r.timestamp, reason: 'negative value' });
-      rejected++;
-      return false;
-    }
-    if (r.value > cap) {
-      console.warn('[BOM RainQC] rejected', { stationName, bom_id: bomId, value: r.value, durationMinutes: intervalMinutes, timestamp: r.timestamp, reason: `exceeds ${cap.toFixed(1)}mm cap for ${intervalMinutes}min interval` });
-      rejected++;
-      return false;
-    }
-    accepted++;
-    return true;
-  });
-  if (rejected > 0) {
-    console.log(`[BOM RainQC] ${stationName}: BOM readings accepted=${accepted} rejected=${rejected} (interval=${intervalMinutes}min cap=${cap.toFixed(1)}mm)`);
+  console.group(label);
+  console.log('first 10:', readings.slice(0, 10).map(r => `${r.timestamp}: ${r.value}mm`));
+  console.log('last  10:', readings.slice(-10).map(r => `${r.timestamp}: ${r.value}mm`));
+
+  // Time deltas
+  const deltas = [], dupTs = [];
+  for (let i = 1; i < readings.length; i++) {
+    const dt = (new Date(readings[i].timestamp) - new Date(readings[i - 1].timestamp)) / 60000;
+    deltas.push(dt);
+    if (dt === 0) dupTs.push(readings[i].timestamp);
   }
-  return filtered;
+  const minDt = Math.min(...deltas), maxDt = Math.max(...deltas);
+  const uniqDt = [...new Set(deltas)].sort((a, b) => a - b);
+  console.log(`time deltas (min): min=${minDt} max=${maxDt} unique=[${uniqDt.slice(0, 12).join(',')}]`);
+  if (dupTs.length) console.warn(`duplicate timestamps (${dupTs.length}):`, dupTs.slice(0, 10));
+
+  // Drops, large jumps
+  const drops = [], jumps = [];
+  for (let i = 1; i < readings.length; i++) {
+    const diff = readings[i].value - readings[i - 1].value;
+    if (diff < -0.1)  drops.push({ at: readings[i].timestamp, from: readings[i - 1].value, to: readings[i].value, diff: +diff.toFixed(2) });
+    if (diff > 10)    jumps.push({ at: readings[i].timestamp, from: readings[i - 1].value, to: readings[i].value, diff: +diff.toFixed(2) });
+  }
+  if (drops.length) console.warn(`value drops  (${drops.length}):`, drops.slice(0, 10));
+  if (jumps.length) console.warn(`large jumps >10mm (${jumps.length}):`, jumps.slice(0, 10));
+
+  // Cumulative vs interval heuristic
+  let nUp = 0, nFlat = 0, nDown = 0;
+  for (let i = 1; i < readings.length; i++) {
+    const diff = readings[i].value - readings[i - 1].value;
+    if (diff > 0.01) nUp++; else if (diff < -0.01) nDown++; else nFlat++;
+  }
+  const n = readings.length - 1;
+  const pctUp = nUp / n, pctDown = nDown / n;
+  let shape;
+  if (pctUp > 0.80 && drops.length < 4) shape = 'CUMULATIVE — mostly increasing, few resets';
+  else if (pctDown > 0.20 || drops.length > n * 0.1) shape = 'INTERVAL — values vary both ways';
+  else shape = `AMBIGUOUS — ${(pctUp * 100).toFixed(0)}% up, ${(pctDown * 100).toFixed(0)}% down, ${drops.length} drops`;
+  console.log(`data shape: ${shape}`);
+  console.log(`  nUp=${nUp} nFlat=${nFlat} nDown=${nDown}`);
+
+  const vals = readings.map(r => r.value);
+  const maxVal = Math.max(...vals);
+  const maxIdx = vals.indexOf(maxVal);
+  console.warn(`max value: ${maxVal}mm at index ${maxIdx} ts=${readings[maxIdx]?.timestamp}`);
+  console.groupEnd();
 }
 
 async function fetchRainfallSinceMidnight(station) {
