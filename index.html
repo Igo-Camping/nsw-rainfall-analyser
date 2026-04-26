@@ -565,6 +565,9 @@ function getLGA(station) {
   }
   if (isProtectedNbcStation(station)) return 'Northern Beaches';
   if (station.lga && station.lga !== 'Unknown') return station.lga;
+  // Check region field as fallback — consolidated JSON may provide this for MHL stations
+  const mhlRegion = String(station.region || '').trim();
+  if (mhlRegion && mhlRegion !== 'Unknown') return mhlRegion;
   if (station.lga) return station.lga;
   return 'Unknown';
 }
@@ -1680,16 +1683,45 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   const lga = document.getElementById('lgaSel').value;
   const q = document.getElementById('search').value.toLowerCase().trim();
   let stations;
-  if (lga === 'Northern Beaches') {
-    stations = getDisplayStations().filter(s => getLGA(s) === 'Northern Beaches' && canAnalyseStation(s));
-  } else if (lga) {
-    stations = getDisplayStations().filter(s => getLGA(s) === lga && canAnalyseStation(s));
+  if (lga) {
+    // Use stationMatchesFilters so region is checked as fallback and nbcSub gauge-set is respected
+    stations = getDisplayStations().filter(s => canAnalyseStation(s) && stationMatchesFilters(s, q, lga));
   } else {
-    stations = getDisplayStations().filter(canAnalyseStation);
+    // No LGA — include all analysable stations; apply search only
+    stations = getDisplayStations().filter(s => {
+      if (!canAnalyseStation(s)) return false;
+      if (q && !s.name.toLowerCase().includes(q)) return false;
+      return true;
+    });
   }
 
-  if (q) {
-    stations = stations.filter(s => s.name.toLowerCase().includes(q));
+  // Trace Oliver St Freshwater through each filter stage
+  const _allDisplay = getDisplayStations();
+  const _oliver = _allDisplay.find(s => (s.name || '').toLowerCase().includes('oliver st freshwater'));
+  if (_oliver) {
+    const _inAll = true;
+    const _lgaVal = getLGA(_oliver);
+    const _regionVal = String(_oliver.region || '').trim();
+    const _lgaTarget = lga.trim().toLowerCase();
+    const _passesLga = !lga || (_lgaVal.toLowerCase() === _lgaTarget || _regionVal.toLowerCase() === _lgaTarget);
+    const _nbcSub = lga ? (document.getElementById('nbcSub')?.value || 'official') : 'n/a';
+    const _passesGaugeSet = !lga || !(_nbcSub === 'official' && (_oliver.isBomGauge || _oliver.source === 'bom'));
+    const _canAnalyse = canAnalyseStation(_oliver);
+    const _inFinal = stations.some(s => s.station_id === _oliver.station_id);
+    console.group('[DEBUG Oliver St] runTopPerSite filter trace');
+    console.log('inAllDisplayStations: true | getLGA:', _lgaVal, '| region:', _regionVal, '| selectedLga:', lga || '(none)');
+    console.log('passesLgaFilter:', _passesLga, '| nbcSub:', _nbcSub, '| passesGaugeSetFilter:', _passesGaugeSet, '| canAnalyse:', _canAnalyse);
+    console.log('inFinalStationList:', _inFinal);
+    if (!_inFinal) {
+      const why = [];
+      if (lga && !_passesLga) why.push(`LGA mismatch: getLGA="${_lgaVal}", region="${_regionVal}", selected="${lga}"`);
+      if (!_passesGaugeSet) why.push(`nbcSub="${_nbcSub}" excludes source="${_oliver.source}"`);
+      if (!_canAnalyse) why.push('canAnalyseStation=false');
+      console.warn('[DEBUG Oliver St] EXCLUDED. Reason:', why.join('; ') || 'unknown');
+    }
+    console.groupEnd();
+  } else {
+    console.warn('[DEBUG Oliver St] NOT in getDisplayStations() at runTopPerSite time');
   }
 
   if (!stations.length) {
