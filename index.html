@@ -17,6 +17,260 @@
 <script src="./bom_northern_beaches_all_gauges.js"></script>
 <script src="./bom_ifd_cache.js"></script>
 <link rel="stylesheet" href="./styles.css"/>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     STORMGAUGE DARK DASHBOARD THEME — 2026-04-27
+     To rollback completely: delete from this comment to the closing comment.
+     Visual overrides only. No IDs, event handlers, or logic are touched.
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<style id="sg-dark-theme">
+
+/* ── 1. Design tokens ─────────────────────────────────────────────────────── */
+:root {
+  --teal:       #00C4BE;
+  --teal-l:     #00DDD7;
+  --teal-d:     #009E99;
+  --navy:       #0D1E30;
+  --navy-l:     #0E1D2D;
+  --panel:      #0D1826;
+  --border:     #1C2E40;
+  --text:       #DCE8F2;
+  --text-l:     #5E8099;
+  --mid:        #4A6A82;
+  --sh:         0 4px 24px rgba(0,0,0,.55);
+  --brand-bg:        #060E18;
+  --brand-tagline:   #00C4BE;
+  --r:          6px;
+}
+
+/* ── 2. Page base ─────────────────────────────────────────────────────────── */
+body { background: #090F18; }
+
+/* ── 3. Header ────────────────────────────────────────────────────────────── */
+header {
+  height: 56px;
+  padding: 0 20px;
+  background: linear-gradient(90deg, #050D16 0%, #08131F 100%);
+  border-bottom: 2px solid #00706C;
+  box-shadow: 0 2px 20px rgba(0,0,0,.55);
+}
+.logo {
+  width: 38px; height: 38px;
+  filter: drop-shadow(0 0 10px rgba(0,196,190,.4));
+}
+.h-title { font-size: 15px; letter-spacing: .22em; color: #FFFFFF; }
+.h-sub   { font-size: 10px; color: #00C4BE; letter-spacing: .16em; }
+.h-status { color: #3E5E76; }
+.dot { box-shadow: 0 0 6px #27AE60; }
+
+/* ── 4. Tab bar ───────────────────────────────────────────────────────────── */
+.tab-bar {
+  background: #0B1722;
+  border-bottom: 1px solid #172638;
+}
+.tab {
+  padding: 11px 20px;
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: #3E5E76;
+  border-bottom-width: 2px;
+}
+.tab.active {
+  color: #00DDD7;
+  border-bottom-color: #00C4BE;
+  background: rgba(0,196,190,.05);
+}
+.tab:hover:not(.active) { color: #8AAFC8; }
+
+/* ── 5. Sidebar ───────────────────────────────────────────────────────────── */
+.sidebar {
+  width: 296px;
+  background: #0A1520;
+  border-right: 1px solid #162233;
+}
+.sb-section         { border-bottom: 1px solid #142030; padding: 13px 14px; }
+.sb-station-header  { border-bottom: 1px solid #142030; padding: 10px 14px 8px; }
+.sb-analysis-section {
+  background: #08111C;
+  border-top: 1px solid #1C2E40;
+}
+.lbl { color: #3E5E76; letter-spacing: .12em; }
+
+/* ── 6. Form controls ─────────────────────────────────────────────────────── */
+select,
+input[type=text],
+input[type=datetime-local] {
+  background: #08111C;
+  border-color: #1C2E40;
+  color: #DCE8F2;
+  border-radius: var(--r);
+}
+select option { background: #0D1826; color: #DCE8F2; }
+select:focus,
+input:focus {
+  border-color: #00847F;
+  box-shadow: 0 0 0 2px rgba(0,196,190,.1);
+  outline: none;
+}
+
+/* ── 7. Mode toggle ───────────────────────────────────────────────────────── */
+.mode-tog { border-color: #1C2E40; }
+.mode-tog button          { background: #08111C; color: #3E5E76; }
+.mode-tog button.active   { background: #00706C; color: #E0F0F0; }
+.mode-tog button:hover:not(.active) { background: #0E1D2D; color: #8AAFC8; }
+
+/* ── 8. Buttons ───────────────────────────────────────────────────────────── */
+.run-btn {
+  background: #007570;
+  font-size: 12px;
+  letter-spacing: .04em;
+  margin-top: 8px;
+  border-radius: var(--r);
+}
+.run-btn:hover:not(:disabled) {
+  background: #00A89D;
+  box-shadow: 0 0 18px rgba(0,196,190,.22);
+}
+.run-btn:disabled { background: #172638; color: #2E4A60; cursor: not-allowed; }
+
+.export-btn       { background: #007570; }
+.export-btn:hover { background: #00A89D; }
+
+.btn-secondary        { background: #0E1D2D; border-color: #1C2E40; color: #8AAFC8; }
+.btn-secondary:hover  { background: #142232; color: #DCE8F2; }
+
+.close-btn            { background: transparent; border-color: #1C2E40; color: #3E5E76; }
+.close-btn:hover      { background: #0E1D2D; color: #8AAFC8; }
+
+/* ── 9. Station list ──────────────────────────────────────────────────────── */
+.slist { background: #0A1520; }
+.sitem {
+  border-bottom: 1px solid #0F1E2C;
+  padding: 9px 14px;
+}
+.sitem:hover  { background: #0D1F2E; }
+.sitem.active {
+  background: #082420;
+  border-left: 3px solid #00C4BE;
+  padding-left: 11px;
+}
+.sname { color: #C8DCEA; font-size: 12px; }
+.smeta { color: #3E5E76; }
+.s-lga { background: #08111C; border-color: #1C2E40; color: #3E5E76; }
+
+/* ── 10. Map ──────────────────────────────────────────────────────────────── */
+#map { background: #090F18; }
+/* Dark tile layer — tiles only; markers (overlay pane) are unaffected */
+.leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.82) saturate(0.72);
+}
+
+/* ── 11. Main area ────────────────────────────────────────────────────────── */
+.main { background: #07101A; }
+#tab-rainfall { background: #090F18; }
+
+/* ── 12. Results panel ────────────────────────────────────────────────────── */
+.results {
+  background: #0A1520;
+  border-top: 2px solid #007570;
+  max-height: min(46vh, 420px);
+}
+.res-hdr {
+  background: #0B1824;
+  border-bottom: 1px solid #162233;
+  padding: 10px 18px;
+}
+.res-title { color: #DCE8F2; font-size: 13px; }
+.res-sub   { color: #3E5E76; }
+
+/* ── 13. Result inner tabs ────────────────────────────────────────────────── */
+.rtabs {
+  background: #0B1824;
+  border-bottom: 1px solid #162233;
+  padding: 0 14px;
+}
+.rtab { color: #3E5E76; font-size: 11px; padding: 8px 14px; }
+.rtab.active { color: #00C4BE; border-bottom-color: #00C4BE; }
+.rpanel { background: #0A1520; padding: 14px 18px; }
+
+.d-subtabs { border-bottom-color: #1C2E40; }
+.d-subtab  { color: #3E5E76; }
+.d-subtab.active { color: #00C4BE; border-bottom-color: #00C4BE; }
+
+/* ── 14. Tables ───────────────────────────────────────────────────────────── */
+th {
+  background: #0B1824;
+  color: #8AAFC8;
+  border-bottom: 1px solid #1C2E40;
+  font-size: 11px;
+}
+td {
+  border-bottom: 1px solid #0F1E2C;
+  color: #C8DCEA;
+}
+tr:nth-child(even) td   { background: #0C1A28; }
+tr.highlight td         { background: rgba(0,196,190,.1); }
+.daily-highlight td     { background: rgba(0,196,190,.16) !important; color: #00DDD7; font-weight: 700; }
+.obs-row td             { background: rgba(0,196,190,.12) !important; color: #00C4BE; }
+.bracket-hi td          { background: rgba(230,168,34,.1) !important; }
+.results-table-wrap     { background: #0A1520; }
+
+/* ── 15. Summary cards ────────────────────────────────────────────────────── */
+.card     { background: #0C1A28; border-color: #1C2E40; }
+.card-lbl { color: #3E5E76; }
+.card-val { color: #00C4BE; }
+.card-unit, .card-sub { color: #3E5E76; }
+
+/* ── 16. AEP hero ─────────────────────────────────────────────────────────── */
+.aep-hero {
+  background: linear-gradient(135deg, #06251F 0%, #0A1826 100%);
+  border: 1px solid #1A3E3A;
+}
+.aep-hero-lbl { color: #3E5E76; }
+.aep-hero-ari { color: rgba(200,220,234,.5); }
+
+/* ── 17. Loading overlay ──────────────────────────────────────────────────── */
+.loading { background: rgba(5,9,16,.8); backdrop-filter: blur(4px); }
+.loading-card {
+  background: #0C1A28;
+  border: 1px solid #1C2E40;
+  box-shadow: 0 24px 64px rgba(0,0,0,.6);
+}
+.load-txt { color: #DCE8F2; }
+.spinner {
+  border-color: rgba(0,196,190,.1);
+  border-top-color: #00C4BE;
+}
+
+/* ── 18. Progress bar ─────────────────────────────────────────────────────── */
+.bar-wrap { background: #172638; }
+.bar      { background: #007570; }
+
+/* ── 19. Page nav (hidden by default; styled for when shown) ──────────────── */
+#page-nav { background: #0B1722; border-bottom-color: #007570; }
+.pnav-btn        { color: rgba(200,220,234,.4); }
+.pnav-btn.active { color: #DCE8F2; border-bottom-color: #00C4BE; }
+.pnav-btn:hover  { color: #DCE8F2; }
+
+/* ── 20. Table action links ───────────────────────────────────────────────── */
+.station-link       { color: #8AAFC8; }
+.station-link:hover { color: #00C4BE; text-decoration: underline; }
+.day-link           { color: #8AAFC8; }
+.day-link:hover     { color: #00C4BE; }
+
+/* ── 21. Leaflet tooltips ─────────────────────────────────────────────────── */
+.leaflet-tooltip.station-label { background: rgba(5,9,16,.9); }
+.leaflet-tooltip.bom-label     { background: rgba(0,48,128,.9); }
+
+/* ── 22. Scrollbars ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #090F18; }
+::-webkit-scrollbar-thumb { background: #1C2E40; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #2A4060; }
+
+</style>
+<!-- ═══════════════════════════════════════════════════════════════ END THEME -->
+
 </head>
 <body>
 
