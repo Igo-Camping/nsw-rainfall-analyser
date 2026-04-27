@@ -449,8 +449,13 @@ tr.highlight td         { background: rgba(0,196,190,.1); }
           <div class="res-title" id="res-title">Results</div>
           <div class="res-sub" id="res-sub"></div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <button class="export-btn" id="recalcBtn" style="display:none" onclick="recalcCurrentTab()">Recalc</button>
+          <button class="export-btn" id="saveAnalysisBtn" style="display:none" onclick="saveCurrentAnalysis()">Save Analysis</button>
+          <select id="previousAnalysisDropdown" style="display:none" onchange="loadPreviousAnalysis(this.value)">
+            <option value="">Previous Analyses...</option>
+          </select>
+          <button class="export-btn" id="deleteCacheEntryBtn" style="display:none;padding:6px 8px" onclick="deleteSelectedCacheEntry()">Delete</button>
           <button class="export-btn" onclick="exportCSV()">Export CSV</button>
           <button class="close-btn" onclick="closeResults()">Close</button>
         </div>
@@ -520,6 +525,7 @@ let allStations = [], selected = null, markers = {}, mode = 'recent';
 let bomRainfallGauges = [], bomRainfallMarkers = {};
 let lastResults = null, allSiteResults = null;
 let lastTopDurResults = null;
+let lastDailyData = null;
 let rainChart = null, compareChart = null, rainfallTotalsChart = null;
 let currentTab = 'map';
 let topSiteResultsCache = [];
@@ -534,6 +540,210 @@ const ACTIVE_GAUGE_CACHE_KEY = 'activeGaugeCache.v1';
 const ACTIVE_GAUGE_CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const activeGaugeCache = loadActiveGaugeCache();
 const activeGaugePromises = {};
+
+// ── Analysis Cache ────────────────────────────────────────────────────────────────────────────────
+const ANALYSIS_CACHE_KEY = 'nswRainfallAnalyses';
+const ANALYSIS_CACHE_AUTO_LIMIT = 5;
+let analysisCache = { auto: [], saved: [] };
+function loadAnalysisCache() {
+  try {
+    const stored = localStorage.getItem(ANALYSIS_CACHE_KEY);
+    analysisCache = stored ? JSON.parse(stored) : { auto: [], saved: [] };
+  } catch(e) {
+    console.warn('Failed to load analysis cache:', e);
+    analysisCache = { auto: [], saved: [] };
+  }
+}
+function saveAnalysisCache() {
+  try {
+    localStorage.setItem(ANALYSIS_CACHE_KEY, JSON.stringify(analysisCache));
+    const sizeKB = new Blob([JSON.stringify(analysisCache)]).size / 1024;
+    if (sizeKB > 4096) console.warn(`Analysis cache size (${(sizeKB/1024).toFixed(1)}MB) exceeds 4MB warning threshold`);
+  } catch(e) {
+    console.error('Failed to save analysis cache:', e);
+  }
+}
+function getAnalysisId() {
+  return 'a' + Date.now() + Math.random().toString(36).substr(2,9);
+}
+function addAnalysisToCache(mode, timestamp, inputs, results, isManual = false) {
+  const entry = {
+    id: getAnalysisId(),
+    name: null,
+    mode,
+    timestamp,
+    inputs,
+    results
+  };
+  if (isManual) {
+    analysisCache.saved.push(entry);
+  } else {
+    analysisCache.auto.unshift(entry);
+    if (analysisCache.auto.length > ANALYSIS_CACHE_AUTO_LIMIT) {
+      analysisCache.auto.pop();
+    }
+  }
+  saveAnalysisCache();
+  return entry.id;
+}
+function deleteAnalysisFromCache(id) {
+  analysisCache.auto = analysisCache.auto.filter(e => e.id !== id);
+  analysisCache.saved = analysisCache.saved.filter(e => e.id !== id);
+  saveAnalysisCache();
+}
+function renameAnalysisInCache(id, newName) {
+  const entry = analysisCache.auto.find(e => e.id === id) || analysisCache.saved.find(e => e.id === id);
+  if (entry) {
+    entry.name = newName;
+    saveAnalysisCache();
+  }
+}
+loadAnalysisCache();
+updatePreviousAnalysisDropdown();
+
+// ── Analysis Cache UI Management ──────────────────────────────────────────────────────────────────
+function captureAnalysisToCache(mode, ctx) {
+  if (!ctx) return;
+  const timestamp = new Date().toISOString();
+  const inputs = {
+    station_id: selected?.station_id,
+    station_name: selected?.name,
+    fromDt: ctx.fromDt.toISOString(),
+    toDt: ctx.toDt.toISOString(),
+    duration: ctx.dur,
+    activeTab: currentTab
+  };
+  let results = null;
+  if (mode === 'map') {
+    results = { lastResults, lastTopDurResults, lastDailyData };
+  }
+  if (results) {
+    addAnalysisToCache(mode, timestamp, inputs, results, false);
+    updatePreviousAnalysisDropdown();
+    updateSaveAnalysisButtonVisibility();
+  }
+}
+function captureTopSiteAnalysisToCache(fromDt, toDt, siteResults) {
+  const timestamp = new Date().toISOString();
+  const inputs = {
+    lga: document.getElementById('lgaSel').value || '',
+    search: document.getElementById('search').value || '',
+    nbcSub: document.getElementById('nbcSub')?.value || 'official',
+    fromDt: fromDt.toISOString(),
+    toDt: toDt.toISOString()
+  };
+  const results = { topSiteResultsCache: siteResults, topSiteResultsKey };
+  addAnalysisToCache('top-site', timestamp, inputs, results, false);
+  updatePreviousAnalysisDropdown();
+  updateSaveAnalysisButtonVisibility();
+}
+function updateSaveAnalysisButtonVisibility() {
+  const btn = document.getElementById('saveAnalysisBtn');
+  if (!btn) return;
+  btn.style.display = (lastResults || lastTopDurResults || lastDailyData || topSiteResultsCache.length > 0) ? '' : 'none';
+}
+function updatePreviousAnalysisDropdown() {
+  const dropdown = document.getElementById('previousAnalysisDropdown');
+  if (!dropdown) return;
+  const allEntries = [...analysisCache.auto, ...analysisCache.saved];
+  dropdown.innerHTML = '<option value="">Previous Analyses...</option>';
+  allEntries.forEach(entry => {
+    const label = entry.name || generateDefaultAnalysisName(entry);
+    const isSaved = analysisCache.saved.includes(entry) ? ' [saved]' : '';
+    const opt = document.createElement('option');
+    opt.value = entry.id;
+    opt.textContent = label + isSaved;
+    dropdown.appendChild(opt);
+  });
+  dropdown.style.display = allEntries.length > 0 ? '' : 'none';
+  document.getElementById('deleteCacheEntryBtn').style.display = allEntries.length > 0 ? '' : 'none';
+}
+function generateDefaultAnalysisName(entry) {
+  if (entry.mode === 'map') {
+    const stationName = entry.inputs.station_name || 'Unknown';
+    const dur = entry.inputs.duration === 'worst' ? 'worst' : entry.inputs.duration + 'min';
+    return `${stationName} - ${dur} - ${new Date(entry.timestamp).toLocaleString()}`;
+  } else if (entry.mode === 'top-site') {
+    const lga = entry.inputs.lga || 'All areas';
+    return `Top Intensity (${lga}) - ${new Date(entry.timestamp).toLocaleString()}`;
+  }
+  return `Analysis - ${new Date(entry.timestamp).toLocaleString()}`;
+}
+function saveCurrentAnalysis() {
+  let currentEntry = null;
+  if (analysisCache.auto.length > 0) {
+    currentEntry = analysisCache.auto[0];
+  }
+  if (!currentEntry) {
+    alert('No current analysis to save.');
+    return;
+  }
+  const defaultName = generateDefaultAnalysisName(currentEntry);
+  const name = prompt('Enter a name for this analysis:', defaultName);
+  if (name !== null) {
+    currentEntry.name = name;
+    analysisCache.auto = analysisCache.auto.filter(e => e.id !== currentEntry.id);
+    analysisCache.saved.push(currentEntry);
+    saveAnalysisCache();
+    updatePreviousAnalysisDropdown();
+  }
+}
+function loadPreviousAnalysis(id) {
+  if (!id) return;
+  const entry = analysisCache.auto.find(e => e.id === id) || analysisCache.saved.find(e => e.id === id);
+  if (!entry) return;
+  const inputs = entry.inputs;
+  const results = entry.results;
+  if (entry.mode === 'map') {
+    selected = allStations.find(s => s.station_id === inputs.station_id) || null;
+    if (!selected) {
+      alert('Station no longer available.');
+      return;
+    }
+    lastResults = results.lastResults;
+    lastTopDurResults = results.lastTopDurResults;
+    lastDailyData = results.lastDailyData;
+    lastAnalysisContext = {
+      dur: inputs.duration,
+      fromDt: new Date(inputs.fromDt),
+      toDt: new Date(inputs.toDt),
+      baseKey: `${inputs.station_id}|${inputs.fromDt}|${inputs.toDt}`,
+      summaryKey: `${inputs.station_id}|${inputs.fromDt}|${inputs.toDt}|${inputs.duration}`
+    };
+    const targetTab = inputs.activeTab || 'map';
+    if (['map','rainfall-totals','top-dur','daily'].includes(targetTab)) {
+      switchTab(targetTab, true);
+    } else {
+      switchTab('map', true);
+    }
+    renderCachedCurrentTab(lastAnalysisContext);
+  } else if (entry.mode === 'top-site') {
+    document.getElementById('lgaSel').value = inputs.lga || '';
+    document.getElementById('search').value = inputs.search || '';
+    if (inputs.lga === 'Northern Beaches' && document.getElementById('nbcSub')) {
+      document.getElementById('nbcSub').value = inputs.nbcSub || 'official';
+    }
+    topSiteResultsCache = [...results.topSiteResultsCache];
+    topSiteResultsKey = results.topSiteResultsKey;
+    switchTab('top-site', true);
+    renderTopPerSite();
+    document.getElementById('results').classList.add('show');
+  }
+  document.getElementById('previousAnalysisDropdown').value = '';
+  updateSaveAnalysisButtonVisibility();
+}
+function deleteSelectedCacheEntry() {
+  const dropdown = document.getElementById('previousAnalysisDropdown');
+  if (!dropdown || !dropdown.value) {
+    alert('Select an analysis to delete.');
+    return;
+  }
+  if (confirm('Delete this analysis?')) {
+    deleteAnalysisFromCache(dropdown.value);
+    updatePreviousAnalysisDropdown();
+    dropdown.value = '';
+  }
+}
 
 // â"€â"€ Map â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 const map = L.map('map').setView([-33.75, 151.25], 11);
@@ -1251,6 +1461,11 @@ function updateRecalcButton() {
   btn.style.display = currentTab === 'top-site' ? '' : 'none';
 }
 
+function updateCacheUIVisibility() {
+  updateSaveAnalysisButtonVisibility();
+  updatePreviousAnalysisDropdown();
+}
+
 function setResultsTabMode(mode) {
   const results = document.getElementById('results');
   const tabs = {
@@ -1609,6 +1824,7 @@ async function runAnalysis() {
     setLoadTxt('Calculating top intensity per site...');
     await runTopPerSite(dur, fromDt, toDt, { render: false, manageLoader: false });
     hideLoad();
+    captureAnalysisToCache('map', ctx);
     renderCachedCurrentTab(ctx);
   } catch(e) {
     hideLoad();
@@ -2277,6 +2493,7 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
   }
   topSiteResultsKey = getTopSiteAnalysisKey(fromDt, toDt);
   topSiteResultsCache = [...allSiteResults];
+  captureTopSiteAnalysisToCache(fromDt, toDt, allSiteResults);
   if (render) {
     renderTopPerSite(allSiteResults, null);
     console.log(`[TopPerSite] displayed=${allSiteResults.length}`);
@@ -3803,6 +4020,9 @@ function closeResults() {
   r.classList.remove('show', 'no-rtabs');
   setResultsTabMode('map');
   allSiteResults = null;
+  document.getElementById('saveAnalysisBtn').style.display = 'none';
+  document.getElementById('previousAnalysisDropdown').style.display = 'none';
+  document.getElementById('deleteCacheEntryBtn').style.display = 'none';
 }
 
 
