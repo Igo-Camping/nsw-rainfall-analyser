@@ -1925,6 +1925,27 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
     }
     diagFetched++;
     if (!readings.length) { diagZeroRaw++; continue; }
+
+    // BOM calculation-boundary QC — runs regardless of what fetchStationRainfall did.
+    // Re-detects cumulative series and re-converts; then removes per-reading spikes.
+    // This is the definitive gate before any duration/AEP/ranking calculation.
+    if (s.source === 'bom' || s.isBomGauge) {
+      const preQcMax = Math.max(...readings.map(r => r.value));
+      const bomParsed = _isBomCumulative(readings)
+        ? _bomCumulativeToIncrements(readings, s.name, s.bom_id || s.station_id)
+        : readings;
+      const { cleanedReadings, rejectedReadings } = applyBomQc(bomParsed, intervalMinutes, s.name, s.bom_id || s.station_id);
+      console.log('[TopPerSite Input Check]', {
+        stationName: s.name,
+        source: 'bom',
+        maxInputValue: +preQcMax.toFixed(2),
+        inputCount: readings.length,
+        rejectedCount: rejectedReadings.length
+      });
+      readings = cleanedReadings;
+      if (!readings.length) { diagZeroRaw++; continue; }
+    }
+
     const nonZeroReadings = readings.filter(r => r.value > 0);
     if (!nonZeroReadings.length) { diagNoData++; }
     await loadStationIfd(s);
