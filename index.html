@@ -1242,7 +1242,7 @@ async function runAnalysis() {
     const readings = rainfallData.readings;
     const intervalMinutes = rainfallData.intervalMinutes || 5;
     if (dur !== 'worst' && !isDurationSupportedForInterval(dur, intervalMinutes)) {
-      throw new Error(`${rainfallData.source} is ${intervalMinutes}-minute data. Choose a ${intervalMinutes}-minute duration or a multiple of it.`);
+      throw new Error(`${rainfallData.source} is ${intervalMinutes}-minute data. Choose a duration of at least ${intervalMinutes} minutes.`);
     }
     setLoadTxt('Loading IFD data...');
     await loadStationIfd(selected);
@@ -1504,17 +1504,30 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
     }
     station.wmo = data.wmo || station.wmo || '';
     station.bom_id = data.bom_id || station.bom_id || bomId;
-    const intervalMin = data.resolution_minutes || 30;
     const rawReadings = data.readings || [];
-    _bomDataDiag(rawReadings, sName, intervalMin, bomId);
+    let inferredIntervalMinutes = Number(data.resolution_minutes) || 30;
+
+    if (rawReadings.length >= 2) {
+      const deltas = [];
+      for (let i = 1; i < rawReadings.length; i++) {
+        const dt = (new Date(rawReadings[i].timestamp) - new Date(rawReadings[i - 1].timestamp)) / 60000;
+        if (Number.isFinite(dt) && dt > 0) deltas.push(+dt.toFixed(2));
+      }
+      if (deltas.length) {
+        const freq = deltas.reduce((acc, d) => { acc[d] = (acc[d] || 0) + 1; return acc; }, {});
+        inferredIntervalMinutes = +Object.entries(freq).sort((a, b) => b[1] - a[1])[0][0];
+      }
+    }
+
+    _bomDataDiag(rawReadings, sName, inferredIntervalMinutes, bomId);
     const parsedReadings = _isBomCumulative(rawReadings)
       ? _bomCumulativeToIncrements(rawReadings, sName, bomId)
       : rawReadings;
-    const { cleanedReadings } = applyBomQc(parsedReadings, intervalMin, sName, bomId);
+    const { cleanedReadings } = applyBomQc(parsedReadings, inferredIntervalMinutes, sName, bomId);
     return {
       readings: cleanedReadings,
       source: data.source || 'BoM 72-hour AWS observations',
-      intervalMinutes: intervalMin
+      intervalMinutes: inferredIntervalMinutes
     };
   }
 
@@ -1528,7 +1541,7 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
 function isDurationSupportedForInterval(durationMinutes, intervalMinutes) {
   const duration = Number(durationMinutes);
   const interval = Math.max(1, Number(intervalMinutes) || 5);
-  return duration >= interval && duration % interval === 0;
+  return Math.floor(duration / interval) >= 1;
 }
 
 // â"€â"€ Rolling max calculation (in browser) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
@@ -1537,12 +1550,14 @@ function calcRollingMax(readings, durationMinutes, intervalMinutes = 5) {
 
   const n = readings.length;
   const vals = readings.map(r => r.value);
+  const interval = Math.max(1, Number(intervalMinutes) || 5);
+  const count = Math.floor(Number(durationMinutes) / interval);
+  if (count < 1) return null;
 
   // Prefix sums for O(n) sliding window
   const prefix = [0];
   for (let i = 0; i < n; i++) prefix.push(prefix[i] + vals[i]);
 
-  const count = Math.max(1, Math.round(durationMinutes / Math.max(1, intervalMinutes || 5)));
   let maxDepth = 0, peakStart = null, peakEnd = null;
 
   for (let right = count - 1; right < n; right++) {
@@ -1953,8 +1968,17 @@ async function runTopPerSite(dur, fromDt, toDt, options = {}) {
     // Find the duration with the worst (lowest) AEP
     let bestResult = null;
     let bestAepVal = Infinity;
+    const appliedInterval = Math.max(1, Number(intervalMinutes) || 5);
+    const skippedDurations = allDurs.filter(d => Math.floor(d / appliedInterval) < 1);
+    const usedDurations = allDurs.filter(d => Math.floor(d / appliedInterval) >= 1);
+    console.log('[Interval Applied]', {
+      stationName: s.name,
+      intervalMinutes: appliedInterval,
+      skippedDurations,
+      usedDurations
+    });
 
-    for (const d of allDurs) {
+    for (const d of usedDurations) {
       const rolling = calcRollingMax(readings, d, intervalMinutes);
       if (!rolling || rolling.max_depth_mm <= 0) continue;
       const aep = calcAEP(s.station_id, d, rolling.max_depth_mm);
