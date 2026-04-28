@@ -496,6 +496,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   import * as stationMarkers      from './src/modules/stations/stationMarkers.js';
   import * as mapInit             from './src/modules/map/mapInit.js';
   import * as mapLayers           from './src/modules/map/mapLayers.js';
+  import * as uiTheme             from './src/modules/ui/theme.js';
+  import * as uiControls          from './src/modules/ui/controls.js';
   window.buildExportModel    = buildExportModel;
   window.exportCSV           = exportCSV;
   window.exportXLSX          = exportXLSX;
@@ -507,6 +509,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   window.stationMarkers      = stationMarkers;
   window.mapInit             = mapInit;
   window.mapLayers           = mapLayers;
+  window.uiTheme             = uiTheme;
+  window.uiControls          = uiControls;
   window.dispatchEvent(new Event('atmos-modules-ready'));
 </script>
 <script>
@@ -1235,39 +1239,36 @@ async function ensureRainfallTemplateLoaded() {
 }
 
 // â"€â"€ Mode â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+function getUiControlDeps() {
+  return {
+    document,
+    map,
+    mapReadyPromise,
+    pages: PAGES,
+    setModeState: value => { mode = value; },
+    setCurrentTab: value => { currentTab = value; },
+    setCurrentPage: value => { currentPage = value; },
+    getSelected: () => selected,
+    setAllSiteResults: value => { allSiteResults = value; },
+    isAepInited: () => !!window._aepInited,
+    setAepInited: value => { window._aepInited = value; },
+    updateRecalcButton,
+    loadOtherMonitors,
+    renderCachedCurrentTab,
+    setResultsTabMode,
+    init,
+    switchPage,
+    syncTheme: () => window.uiTheme.syncThemeFromDocument()
+  };
+}
+
 function setMode(m) {
-  mode = m;
-  document.getElementById('m-recent').classList.toggle('active', m==='recent');
-  document.getElementById('m-custom').classList.toggle('active', m==='custom');
-  document.getElementById('p-recent').style.display = m==='recent'?'':'none';
-  document.getElementById('p-custom').style.display = m==='custom'?'':'none';
+  return window.uiControls.setMode(m, getUiControlDeps());
 }
 
 // â"€â"€ Tab switching â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function switchTab(tab, skipRun = false) {
-  currentTab = tab;
-  document.querySelectorAll('.tab').forEach((el,i) => {
-    el.classList.toggle('active', ['map','rainfall-totals','top-site','top-dur','daily','monitors'][i] === tab);
-  });
-  const leafletMap = document.getElementById('map');
-  const rainfallTab = document.getElementById('tab-rainfall');
-  if (tab === 'rainfall-totals') {
-    leafletMap.style.display = 'none';
-    rainfallTab.style.display = 'flex';
-    document.getElementById('results').classList.remove('show');
-  } else {
-    rainfallTab.style.display = 'none';
-    if (leafletMap.style.display === 'none') {
-      leafletMap.style.display = '';
-      setTimeout(() => map.invalidateSize(), 0);
-    }
-  }
-  updateRecalcButton();
-  if (tab === 'monitors') {
-    loadOtherMonitors();
-  } else if (!skipRun && selected) {
-    renderCachedCurrentTab();
-  }
+  return window.uiControls.switchTab(tab, skipRun, getUiControlDeps());
 }
 
 function updateRecalcButton() {
@@ -3759,20 +3760,14 @@ function tempIcon(code) {
 }
 
 function showLoad(txt) {
-  document.getElementById('load-txt').textContent = txt;
-  document.getElementById('loading').classList.add('show');
-  document.body.classList.add('busy-ui');
+  return window.uiControls.showLoad(txt, getUiControlDeps());
 }
-function setLoadTxt(txt) { document.getElementById('load-txt').textContent = txt; }
+function setLoadTxt(txt) { return window.uiControls.setLoadTxt(txt, getUiControlDeps()); }
 function hideLoad() {
-  document.getElementById('loading').classList.remove('show');
-  document.body.classList.remove('busy-ui');
+  return window.uiControls.hideLoad(getUiControlDeps());
 }
 function closeResults() {
-  const r = document.getElementById('results');
-  r.classList.remove('show', 'no-rtabs');
-  setResultsTabMode('map');
-  allSiteResults = null;
+  return window.uiControls.closeResults(getUiControlDeps());
 }
 
 
@@ -4327,45 +4322,28 @@ const PAGES = ['aep'];
 let currentPage = 'aep';
 
 function switchPage(page, options = {}) {
-  currentPage = page;
-  const flexPages = new Set(['aep']);
-  PAGES.forEach(p => {
-    const el = document.getElementById('page-' + p);
-    if (!el) return;
-    el.style.display = p === page ? (flexPages.has(p) ? 'flex' : '') : 'none';
-  });
-  document.getElementById('page-nav').style.display = 'flex';
-  document.querySelectorAll('.pnav-btn[data-page]').forEach(b =>
-    b.classList.toggle('active', b.dataset.page === page));
-  if (page === 'aep') {
-    if (!window._aepInited) { window._aepInited = true; init(); }
-    mapReadyPromise.then(() => setTimeout(() => map.invalidateSize(), 50));
-  }
+  return window.uiControls.switchPage(page, options, getUiControlDeps());
 }
 
-// ── Theme system ───────────────────────────────────────────────────────────
 function applyTheme(t) {
-  document.documentElement.dataset.theme = t;
-  const btn = document.getElementById('theme-toggle');
-  if (!btn) return;
-  if (t === 'dark') {
-    btn.textContent = 'Light';
-    btn.setAttribute('aria-label', 'Switch to light mode');
-  } else {
-    btn.textContent = 'Dark';
-    btn.setAttribute('aria-label', 'Switch to dark mode');
-  }
+  return window.uiTheme.applyTheme(t);
 }
 function toggleTheme() {
-  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-  applyTheme(next);
-  try { localStorage.setItem('sgTheme', next); } catch(e) {}
+  return window.uiTheme.toggleTheme();
+}
+
+function queueAtmosUiStartup() {
+  if (window.uiControls && window.uiTheme) {
+    window.uiControls.wireStartupControls(getUiControlDeps());
+    return;
+  }
+
+  window.addEventListener('atmos-modules-ready', () => window.uiControls.wireStartupControls(getUiControlDeps()), { once: true });
 }
 
 // Load Rainfall tool on startup; sync toggle button label from persisted pref
 document.addEventListener('DOMContentLoaded', () => {
-  switchPage('aep');
-  applyTheme(document.documentElement.dataset.theme || 'light');
+  queueAtmosUiStartup();
 });
 
 
