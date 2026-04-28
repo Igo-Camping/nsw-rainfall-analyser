@@ -3425,21 +3425,229 @@ async function exportPNG() {
 // Uses buildExportModel() as the single source of truth.
 // Styled via xlsx-js-style (XLSXStyle global); falls back to plain XLSX.
 function exportXLSX() {
-  if (typeof XLSX === 'undefined') {
-    alert('Excel export library did not load.');
-    return;
+  if (typeof XLSX === 'undefined') { alert('Excel export library did not load.'); return; }
+  // xlsx-js-style may expose itself either as XLSXStyle or by replacing window.XLSX.
+  // Treat the loaded workbook writer as style-capable and always attach style objects.
+  const XS     = window.XLSXStyle || window.XLSX;
+  const styled = true;
+
+  const m = buildExportModel();
+  if (!m.event && !m.topSiteResults.length) {
+    alert('No results to export. Run an analysis first.'); return;
   }
 
-  const XS = (typeof XLSXStyle !== 'undefined') ? XLSXStyle : XLSX;
-  const styled = typeof XLSXStyle !== 'undefined';
-  const model = buildExportModel();
+  const wb  = XS.utils.book_new();
+  const pad = n => String(n).padStart(2, '0');
+  const fmtTs = ts => ts ? String(ts).replace('T', ' ').slice(0, 16) : '';
 
-  if (!model.event && !model.topSiteResults.length && !model.durationResults.length && !model.dailyTotals.length) {
-    alert('No results to export. Run an analysis first.');
-    return;
+  // ── Stormgauge palette ───────────────────────────────────────────────────
+  const P = {
+    bg1:'050D16', bg2:'0D1826', bg3:'0B1824', bg4:'0C1A28',
+    teal:'00C4BE', text:'DCE8F2', mid:'8AAFC8', dim:'3E5E76', bdr:'1C2E40'
+  };
+  const mk = (fg, fontRgb, bold, sz) => ({
+    fill: { patternType:'solid', fgColor:{ rgb:fg } },
+    font: { sz: sz||10, bold:!!bold, color:{ rgb:fontRgb } }
+  });
+  const S = styled ? {
+    title:  mk(P.bg1, P.teal, true,  16),
+    info:   mk(P.bg1, P.mid,  false, 10),
+    sec:    { fill:{ patternType:'solid', fgColor:{ rgb:P.bg3 } }, font:{ sz:9, bold:true, color:{ rgb:P.dim } }, border:{ top:{ style:'thin', color:{ rgb:P.bdr } } } },
+    colHdr: mk(P.bg3, P.mid,  true,   9),
+    data:   mk(P.bg2, P.text, false, 10),
+    dataAlt:mk(P.bg4, P.text, false, 10),
+    hi:     mk('06251F', P.teal, true,  10),
+    lbl:    mk(P.bg2, P.dim,  false,  9),
+    blank:  mk(P.bg2, P.bg2,  false,  9)
+  } : {};
+
+  // ── Cell setters ─────────────────────────────────────────────────────────
+  const NCOLS = 8;
+  const enc   = (r, c) => XS.utils.encode_cell({ r, c });
+  const setS  = (ws, r, c, v, s) => { ws[enc(r,c)] = { v:String(v??''), t:'s', s: styled ? s : undefined }; };
+  const setN  = (ws, r, c, v, s) => { ws[enc(r,c)] = { v:v==null?0:Number(v), t:'n', s: styled ? s : undefined }; };
+  const setAny = (ws, r, c, v, s) => typeof v === 'number' ? setN(ws,r,c,v,s) : setS(ws,r,c,String(v??''),s);
+  const fill  = (ws, r, fromC, s) => {
+    for (let c = fromC; c < NCOLS; c++) if (!ws[enc(r,c)]) setS(ws, r, c, '', s);
+  };
+
+  // ── 1. Report sheet ───────────────────────────────────────────────────────
+  function buildReportSheet() {
+    const ws = {};
+    let r = 0;
+
+    // Title block
+    setS(ws, r, 0, 'STORMGAUGE RAINFALL ANALYSIS', S.title); fill(ws, r, 1, S.title); r++;
+    const stName = m.station?.name || m.topSiteResults[0]?.stationName || '';
+    setS(ws, r, 0, `Generated: ${m.generatedAt.slice(0,10)} ${m.generatedAt.slice(11,19)} UTC`, S.info);
+    setS(ws, r, 4, `Station: ${stName}`, S.info);
+    setS(ws, r, 6, `Source: ${(m.station?.source||'').toUpperCase()}`, S.info);
+    fill(ws, r, 0, S.info); r++;
+    if (m.station?.lga) { setS(ws,r,0,`LGA: ${m.station.lga}`,S.info); fill(ws,r,1,S.info); r++; }
+    if (m.event) {
+      setS(ws,r,0,`Event: ${fmtTs(m.event.start)} → ${fmtTs(m.event.end)}`,S.info);
+      setS(ws,r,5,`Duration: ${m.event.durationHours?.toFixed(1)} h  |  Readings: ${m.event.readingsCount??''}`,S.info);
+      fill(ws,r,0,S.info); r++;
+    }
+    fill(ws, r, 0, S.blank); r++; // spacer
+
+    // Summary cards
+    setS(ws,r,0,'SUMMARY',S.sec); fill(ws,r,1,S.sec); r++;
+    if (m.summaryCards.length) {
+      m.summaryCards.forEach((c,i) => setS(ws,r,i,`${c.label}${c.unit?' ('+c.unit+')':''}`,S.colHdr));
+      fill(ws,r,m.summaryCards.length,S.colHdr); r++;
+      m.summaryCards.forEach((c,i) => setS(ws,r,i,c.value!=null?String(c.value):'—',S.hi));
+      fill(ws,r,m.summaryCards.length,S.hi); r++;
+      m.summaryCards.forEach((c,i) => setS(ws,r,i,c.subtext||'',S.lbl));
+      fill(ws,r,m.summaryCards.length,S.lbl); r++;
+    }
+    fill(ws, r, 0, S.blank); r++;
+
+    // Peak analysis
+    if (m.peak) {
+      setS(ws,r,0,'PEAK ANALYSIS',S.sec); fill(ws,r,1,S.sec); r++;
+      ['Duration','Peak (mm)','AEP','ARI','ARI (yrs)','Window Start','Window End']
+        .forEach((h,i) => setS(ws,r,i,h,S.colHdr));
+      fill(ws,r,7,S.colHdr); r++;
+      [m.peak.durationLabel,m.peak.depthMm,m.peak.aepPercent,m.peak.ariYears,m.peak.ariText,fmtTs(m.peak.start),fmtTs(m.peak.end)]
+        .forEach((v,i) => setAny(ws,r,i,v,(i===1||i===2)?S.hi:S.data));
+      fill(ws,r,7,S.data); r++;
+      fill(ws,r,0,S.blank); r++;
+    }
+
+    // All Durations
+    if (m.durationResults.length) {
+      setS(ws,r,0,'ALL DURATIONS',S.sec); fill(ws,r,1,S.sec); r++;
+      ['Duration','Min','Peak (mm)','AEP','ARI','Window Start','Window End','Peak?']
+        .forEach((h,i) => setS(ws,r,i,h,S.colHdr));
+      r++;
+      m.durationResults.forEach(d => {
+        const s = d.isPeak ? S.hi : S.data;
+        [d.durationLabel,d.durationMinutes,d.depthMm,d.aepPercent,d.ariText,fmtTs(d.windowStart),fmtTs(d.windowEnd),d.isPeak?'Yes':'']
+          .forEach((v,i) => setAny(ws,r,i,v,s));
+        fill(ws,r,8,s); r++;
+      });
+      fill(ws,r,0,S.blank); r++;
+    }
+
+    // Top Intensity Per Site
+    if (m.topSiteResults.length) {
+      setS(ws,r,0,'TOP INTENSITY PER SITE',S.sec); fill(ws,r,1,S.sec); r++;
+      ['Rank','Station','Duration','Peak (mm)','Total (mm)','AEP','ARI','Window']
+        .forEach((h,i) => setS(ws,r,i,h,S.colHdr));
+      r++;
+      m.topSiteResults.forEach(t => {
+        const s = t.displayOrder===1 ? S.hi : S.data;
+        [t.displayOrder,t.stationName,t.durationLabel,t.depthMm,t.totalDepthMm,t.aepPercent,t.ariText,fmtTs(t.windowStart)]
+          .forEach((v,i) => setAny(ws,r,i,v,s));
+        fill(ws,r,8,s); r++;
+      });
+    }
+
+    ws['!ref']  = XS.utils.encode_range({ s:{ r:0, c:0 }, e:{ r:Math.max(r,1), c:NCOLS-1 } });
+    ws['!cols'] = [{ wch:28 },{ wch:16 },{ wch:12 },{ wch:10 },{ wch:14 },{ wch:20 },{ wch:20 },{ wch:16 }];
+    ws['!rows'] = [{ hpt:28 }];
+    return ws;
   }
+  XS.utils.book_append_sheet(wb, buildReportSheet(), 'Report');
 
-  const wb = XS.utils.book_new();
+  // ── Helper: clean data sheet with frozen header + auto-sized columns ──────
+  const dataSheet = (headers, rows, peakColumnName = null) => {
+    const ws = XS.utils.aoa_to_sheet([headers, ...rows]);
+    const ref = ws['!ref'];
+    if (ref) {
+      const range = XS.utils.decode_range(ref);
+      const peakCol = peakColumnName ? headers.indexOf(peakColumnName) : -1;
+      for (let c = range.s.c; c <= range.e.c; c++) {
+        const cell = ws[XS.utils.encode_cell({ r: 0, c })];
+        if (cell) cell.s = S.colHdr;
+      }
+      for (let rr = 1; rr <= range.e.r; rr++) {
+        const isPeak = peakCol >= 0 && String(ws[XS.utils.encode_cell({ r: rr, c: peakCol })]?.v || '').toLowerCase() === 'yes';
+        const rowStyle = isPeak ? S.hi : (rr % 2 === 0 ? S.dataAlt : S.data);
+        for (let c = range.s.c; c <= range.e.c; c++) {
+          const cell = ws[XS.utils.encode_cell({ r: rr, c })];
+          if (cell) cell.s = rowStyle;
+        }
+      }
+      ws['!autofilter'] = { ref };
+    }
+    ws['!freeze'] = { xSplit:0, ySplit:1 };
+    autoFitSheet(ws);
+    return ws;
+  };
+
+  // ── 2. Summary ────────────────────────────────────────────────────────────
+  XS.utils.book_append_sheet(wb,
+    dataSheet(
+      ['Metric','Value','Unit','Subtext'],
+      m.summaryCards.map(c => [c.label, c.value??'', c.unit??'', c.subtext??''])
+    ), 'Summary');
+
+  // ── 3. Top Intensity Per Site ─────────────────────────────────────────────
+  XS.utils.book_append_sheet(wb,
+    dataSheet(
+      ['Rank','Station','Duration','Duration (min)','Peak (mm)','Total Depth (mm)','AEP','ARI','ARI (years)','Window Start','Window End'],
+      m.topSiteResults.map(t => [
+        t.displayOrder, t.stationName, t.durationLabel, t.durationMinutes,
+        t.depthMm, t.totalDepthMm, t.aepPercent, t.ariText, t.ariYears,
+        fmtTs(t.windowStart), fmtTs(t.windowEnd)
+      ])
+    ), 'Top Intensity Per Site');
+
+  // ── 4. All Durations ──────────────────────────────────────────────────────
+  XS.utils.book_append_sheet(wb,
+    dataSheet(
+      ['Rank','Duration','Duration (min)','Peak (mm)','AEP','ARI','ARI (years)','Window Start','Window End','Is Peak'],
+      m.durationResults.map(d => [
+        d.displayOrder, d.durationLabel, d.durationMinutes, d.depthMm,
+        d.aepPercent, d.ariText, d.ariYears,
+        fmtTs(d.windowStart), fmtTs(d.windowEnd), d.isPeak?'Yes':''
+      ]),
+      'Is Peak'
+    ), 'All Durations');
+
+  // ── 5. Daily Totals ───────────────────────────────────────────────────────
+  XS.utils.book_append_sheet(wb,
+    dataSheet(
+      ['Date','Day','Depth (mm)','Is Peak Day'],
+      m.dailyTotals.map(d => [d.date, d.label, d.depthMm, d.isPeak?'Yes':'']),
+      'Is Peak Day'
+    ), 'Daily Totals');
+
+  // ── 6. Interval Data ──────────────────────────────────────────────────────
+  XS.utils.book_append_sheet(wb,
+    dataSheet(
+      ['Timestamp','Depth (mm)','Cumulative (mm)'],
+      m.intervalReadings.map(rd => [rd.timestamp, rd.depthMm, rd.cumulativeDepthMm])
+    ), 'Interval Data');
+
+  // ── 7. Metadata ───────────────────────────────────────────────────────────
+  XS.utils.book_append_sheet(wb,
+    dataSheet(
+      ['Field','Value'],
+      [
+        ['App',              m.appName],
+        ['Generated',        m.generatedAt],
+        ['Station ID',       m.station?.id        ?? ''],
+        ['Station Name',     m.station?.name      ?? ''],
+        ['Source',           m.station?.source    ?? ''],
+        ['LGA',              m.station?.lga       ?? ''],
+        ['Region',           m.station?.region    ?? ''],
+        ['Latitude',         m.station?.lat       ?? ''],
+        ['Longitude',        m.station?.lon       ?? ''],
+        ['Event Start',      m.event?.start       ?? ''],
+        ['Event End',        m.event?.end         ?? ''],
+        ['Duration (h)',     m.event?.durationHours ?? ''],
+        ['Total Depth (mm)', m.event?.totalDepthMm  ?? ''],
+        ['Readings Count',   m.event?.readingsCount ?? ''],
+        ['Interval (min)',   m.event?.intervalMinutes ?? ''],
+        ['Sort Mode',        m.settings?.sortMode ? JSON.stringify(m.settings.sortMode) : ''],
+        ['Filters',          m.settings?.filters  ? JSON.stringify(m.settings.filters)  : '']
+      ]
+    ), 'Metadata');
+
+  // Workbook metadata and tab colours
   wb.Props = {
     Title: 'Stormgauge Rainfall Analysis Report',
     Subject: 'Rainfall AEP analysis export',
@@ -3447,404 +3655,14 @@ function exportXLSX() {
     Company: 'Pluviometrics',
     CreatedDate: new Date()
   };
+  wb.Workbook = wb.Workbook || {};
+  wb.Workbook.Sheets = (wb.SheetNames || []).map((name, i) => ({ name, Hidden: 0, TabColor: { rgb: i === 0 ? P.teal : P.bg3 } }));
 
-  const pad = n => String(n).padStart(2, '0');
+  // ── Download ──────────────────────────────────────────────────────────────
   const now = new Date();
   const tsFile = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
-  const safeSheetName = name => String(name || 'Sheet').replace(/[\\/?*\[\]:]/g, ' ').slice(0, 31);
-  const fmtDateTime = value => {
-    if (!value) return '';
-    const d = new Date(String(value).replace(' ', 'T'));
-    if (!Number.isNaN(d.getTime())) {
-      return d.toLocaleString('en-AU', {
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit', hour12: false
-      });
-    }
-    return String(value).replace('T', ' ').slice(0, 16);
-  };
-  const asNumber = value => {
-    const n = Number(value);
-    return Number.isFinite(n) ? n : null;
-  };
-  const stationOrArea = model.station?.name || model.settings?.filters?.lga || 'stormgauge';
-
-  // Stormgauge report palette.
-  const C = {
-    page: '050D16',
-    panel: '0A1520',
-    panel2: '0D1826',
-    panel3: '0C1A28',
-    header: '07111D',
-    teal: '00C4BE',
-    tealDark: '007570',
-    border: '1C2E40',
-    text: 'DCE8F2',
-    muted: '8AAFC8',
-    dim: '3E5E76',
-    white: 'FFFFFF',
-    warning: 'E6A822',
-    red: 'E74C3C',
-    purple: '8E44AD',
-    green: '27AE60',
-    alt: '0B1A28'
-  };
-
-  const border = rgb => ({
-    top: { style: 'thin', color: { rgb } },
-    bottom: { style: 'thin', color: { rgb } },
-    left: { style: 'thin', color: { rgb } },
-    right: { style: 'thin', color: { rgb } }
-  });
-  const fill = rgb => ({ patternType: 'solid', fgColor: { rgb } });
-  const font = (rgb, bold = false, sz = 10) => ({ name: 'Segoe UI', color: { rgb }, bold, sz });
-  const style = ({ fg = C.panel, color = C.text, bold = false, sz = 10, align = 'left', valign = 'center', wrap = false, b = C.border, numFmt = undefined } = {}) => ({
-    fill: fill(fg),
-    font: font(color, bold, sz),
-    alignment: { horizontal: align, vertical: valign, wrapText: wrap },
-    border: border(b),
-    ...(numFmt ? { numFmt } : {})
-  });
-
-  const S = styled ? {
-    page: style({ fg: C.page, color: C.page }),
-    title: style({ fg: C.header, color: C.white, bold: true, sz: 18, b: C.teal }),
-    subtitle: style({ fg: C.header, color: C.teal, bold: true, sz: 10, b: C.teal }),
-    meta: style({ fg: C.panel, color: C.muted, sz: 9 }),
-    section: style({ fg: C.panel2, color: C.teal, bold: true, sz: 11, b: C.teal }),
-    cardLabel: style({ fg: C.panel3, color: C.dim, bold: true, sz: 9, align: 'center' }),
-    cardValue: style({ fg: C.panel3, color: C.teal, bold: true, sz: 16, align: 'center' }),
-    cardSub: style({ fg: C.panel3, color: C.muted, sz: 9, align: 'center' }),
-    heroLabel: style({ fg: C.tealDark, color: C.white, bold: true, sz: 10, align: 'center' }),
-    heroValue: style({ fg: C.tealDark, color: C.white, bold: true, sz: 18, align: 'center' }),
-    heroValueRed: style({ fg: C.red, color: C.white, bold: true, sz: 18, align: 'center' }),
-    heroValuePurple: style({ fg: C.purple, color: C.white, bold: true, sz: 18, align: 'center' }),
-    label: style({ fg: C.panel2, color: C.dim, bold: true, sz: 9 }),
-    value: style({ fg: C.panel2, color: C.text, sz: 10, wrap: true }),
-    textBlock: style({ fg: C.panel2, color: C.text, sz: 10, wrap: true, valign: 'top' }),
-    th: style({ fg: C.header, color: C.teal, bold: true, sz: 9, align: 'center' }),
-    td: style({ fg: C.panel, color: C.text, sz: 10 }),
-    tdAlt: style({ fg: C.alt, color: C.text, sz: 10 }),
-    tdNum: style({ fg: C.panel, color: C.text, sz: 10, align: 'right', numFmt: '0.0' }),
-    tdAltNum: style({ fg: C.alt, color: C.text, sz: 10, align: 'right', numFmt: '0.0' }),
-    tdInt: style({ fg: C.panel, color: C.text, sz: 10, align: 'right', numFmt: '0' }),
-    tdAltInt: style({ fg: C.alt, color: C.text, sz: 10, align: 'right', numFmt: '0' }),
-    peak: style({ fg: C.tealDark, color: C.white, bold: true, sz: 10 }),
-    peakNum: style({ fg: C.tealDark, color: C.white, bold: true, sz: 10, align: 'right', numFmt: '0.0' }),
-    foot: style({ fg: C.page, color: C.dim, sz: 9, wrap: true })
-  } : {};
-
-  const set = (ws, r, c, value, st, type = null) => {
-    const addr = XS.utils.encode_cell({ r, c });
-    const numeric = type === 'n' || (type !== 's' && typeof value === 'number' && Number.isFinite(value));
-    ws[addr] = {
-      v: numeric ? Number(value) : String(value ?? ''),
-      t: numeric ? 'n' : 's',
-      ...(styled && st ? { s: st } : {})
-    };
-  };
-  const merge = (ws, sRow, sCol, eRow, eCol) => {
-    ws['!merges'] = ws['!merges'] || [];
-    ws['!merges'].push({ s: { r: sRow, c: sCol }, e: { r: eRow, c: eCol } });
-  };
-  const fillRow = (ws, r, fromC, toC, st) => {
-    for (let c = fromC; c <= toC; c++) {
-      const addr = XS.utils.encode_cell({ r, c });
-      if (!ws[addr]) set(ws, r, c, '', st, 's');
-      else if (styled && st && !ws[addr].s) ws[addr].s = st;
-    }
-  };
-
-  function getInterpretationText() {
-    const peak = model.peak;
-    if (!peak) {
-      if (model.topSiteResults.length) {
-        const first = model.topSiteResults[0];
-        return `Across the visible station set, the highest ranked result is ${first.stationName || 'the leading station'} with a ${first.durationLabel || 'selected-duration'} rolling peak of ${first.depthMm ?? '—'} mm. The ranking follows the current on-screen Top Intensity Per Site order.`;
-      }
-      return 'No single-station peak analysis is available for this export.';
-    }
-    const ari = asNumber(peak.ariYears);
-    const aep = peak.aepPercent || '—';
-    const depth = peak.depthMm ?? '—';
-    const dur = peak.durationLabel || 'selected duration';
-    const window = peak.start ? ` The peak window starts at ${fmtDateTime(peak.start)}${peak.end ? ` and ends at ${fmtDateTime(peak.end)}` : ''}.` : '';
-    let rarity = 'a frequent to moderate';
-    if (ari >= 100) rarity = 'an extreme';
-    else if (ari >= 50) rarity = 'a very rare';
-    else if (ari >= 20) rarity = 'a rare';
-    else if (ari >= 10) rarity = 'a significant';
-    return `This analysis identifies ${rarity} rainfall burst. The controlling result is the ${dur} rolling maximum of ${depth} mm, equivalent to approximately ${aep} AEP (${peak.ariText || 'ARI unavailable'}).${window}`;
-  }
-
-  function getCalculationBasisText() {
-    const interval = model.event?.intervalMinutes ? `${model.event.intervalMinutes}-minute rainfall increments` : 'the available rainfall interval data';
-    const durCount = model.durationResults.length || 'all available';
-    return `Rainfall depths are assessed using ${interval}. Stormgauge calculates rolling-window rainfall totals for each supported duration, identifies the maximum depth for each duration, compares those depths against the available IFD/AEP data, and displays the rarest result as the controlling AEP. This workbook preserves the current on-screen order and does not re-sort the export independently.`;
-  }
-
-  function aepHeroStyle() {
-    const ari = asNumber(model.peak?.ariYears);
-    if (ari >= 100) return S.heroValuePurple;
-    if (ari >= 20) return S.heroValueRed;
-    return S.heroValue;
-  }
-
-  function appendReportSheet() {
-    const ws = {};
-    const lastCol = 9;
-    let r = 0;
-
-    set(ws, r, 0, 'STORMGAUGE RAINFALL ANALYSIS REPORT', S.title, 's');
-    fillRow(ws, r, 0, lastCol, S.title);
-    merge(ws, r, 0, r, lastCol);
-    r += 1;
-
-    set(ws, r, 0, 'PLUVIOMETRICS · Stormwater rainfall analysis', S.subtitle, 's');
-    fillRow(ws, r, 0, lastCol, S.subtitle);
-    merge(ws, r, 0, r, lastCol);
-    r += 2;
-
-    const metaRows = [
-      ['Generated', fmtDateTime(model.generatedAt), 'Report Type', currentTab === 'top-site' ? 'Top Intensity Per Site' : 'Rainfall Analysis'],
-      ['Station / Area', stationOrArea, 'Source', model.station?.source ? String(model.station.source).toUpperCase() : ''],
-      ['LGA / Region', [model.station?.lga, model.station?.region].filter(Boolean).join(' / '), 'Station ID', model.station?.id || ''],
-      ['Event Start', fmtDateTime(model.event?.start), 'Event End', fmtDateTime(model.event?.end)],
-      ['Latitude', model.station?.lat ?? '', 'Longitude', model.station?.lon ?? '']
-    ];
-    metaRows.forEach(row => {
-      set(ws, r, 0, row[0], S.label, 's');
-      set(ws, r, 1, row[1], S.value, 's');
-      merge(ws, r, 1, r, 4);
-      set(ws, r, 5, row[2], S.label, 's');
-      set(ws, r, 6, row[3], S.value, 's');
-      merge(ws, r, 6, r, 9);
-      fillRow(ws, r, 0, lastCol, S.value);
-      r += 1;
-    });
-    r += 1;
-
-    set(ws, r, 0, 'KEY RESULT', S.section, 's');
-    fillRow(ws, r, 0, lastCol, S.section);
-    merge(ws, r, 0, r, lastCol);
-    r += 1;
-
-    const heroLabels = ['AEP', 'ARI', 'Peak Depth', 'Peak Duration', 'Peak Window'];
-    const heroValues = [
-      model.peak?.aepPercent || model.topSiteResults[0]?.aepPercent || '—',
-      model.peak?.ariText || model.topSiteResults[0]?.ariText || '—',
-      model.peak?.depthMm != null ? `${model.peak.depthMm} mm` : (model.topSiteResults[0]?.depthMm != null ? `${model.topSiteResults[0].depthMm} mm` : '—'),
-      model.peak?.durationLabel || model.topSiteResults[0]?.durationLabel || '—',
-      model.peak?.start ? `${fmtDateTime(model.peak.start)} → ${fmtDateTime(model.peak.end)}` : (model.topSiteResults[0]?.windowStart ? fmtDateTime(model.topSiteResults[0].windowStart) : '—')
-    ];
-    for (let i = 0; i < heroLabels.length; i++) {
-      const c0 = i * 2;
-      set(ws, r, c0, heroLabels[i], S.heroLabel, 's');
-      set(ws, r + 1, c0, heroValues[i], i <= 1 ? aepHeroStyle() : S.heroValue, 's');
-      merge(ws, r, c0, r, c0 + 1);
-      merge(ws, r + 1, c0, r + 1, c0 + 1);
-    }
-    r += 3;
-
-    if (model.summaryCards.length) {
-      set(ws, r, 0, 'SUMMARY', S.section, 's');
-      fillRow(ws, r, 0, lastCol, S.section);
-      merge(ws, r, 0, r, lastCol);
-      r += 1;
-      model.summaryCards.slice(0, 4).forEach((card, i) => {
-        const c0 = i * 2;
-        set(ws, r, c0, `${card.label}${card.unit ? ` (${card.unit})` : ''}`, S.cardLabel, 's');
-        set(ws, r + 1, c0, card.value ?? '—', S.cardValue, 's');
-        set(ws, r + 2, c0, card.subtext || '', S.cardSub, 's');
-        merge(ws, r, c0, r, c0 + 1);
-        merge(ws, r + 1, c0, r + 1, c0 + 1);
-        merge(ws, r + 2, c0, r + 2, c0 + 1);
-      });
-      r += 4;
-    }
-
-    set(ws, r, 0, 'ENGINEERING INTERPRETATION', S.section, 's');
-    fillRow(ws, r, 0, lastCol, S.section);
-    merge(ws, r, 0, r, lastCol);
-    r += 1;
-    set(ws, r, 0, getInterpretationText(), S.textBlock, 's');
-    fillRow(ws, r, 0, lastCol, S.textBlock);
-    merge(ws, r, 0, r + 2, lastCol);
-    r += 4;
-
-    set(ws, r, 0, 'CALCULATION BASIS', S.section, 's');
-    fillRow(ws, r, 0, lastCol, S.section);
-    merge(ws, r, 0, r, lastCol);
-    r += 1;
-    set(ws, r, 0, getCalculationBasisText(), S.textBlock, 's');
-    fillRow(ws, r, 0, lastCol, S.textBlock);
-    merge(ws, r, 0, r + 3, lastCol);
-    r += 5;
-
-    if (model.durationResults.length) {
-      set(ws, r, 0, 'TOP DURATION RESULTS', S.section, 's');
-      fillRow(ws, r, 0, lastCol, S.section);
-      merge(ws, r, 0, r, lastCol);
-      r += 1;
-      const headers = ['Rank', 'Duration', 'Peak (mm)', 'AEP', 'ARI', 'Window Start', 'Window End', 'Peak?'];
-      headers.forEach((h, c) => set(ws, r, c, h, S.th, 's'));
-      fillRow(ws, r, 0, lastCol, S.th);
-      r += 1;
-      model.durationResults.slice(0, 10).forEach((d, idx) => {
-        const base = d.isPeak ? S.peak : (idx % 2 ? S.tdAlt : S.td);
-        const numStyle = d.isPeak ? S.peakNum : (idx % 2 ? S.tdAltNum : S.tdNum);
-        [d.displayOrder, d.durationLabel, d.depthMm, d.aepPercent, d.ariText, fmtDateTime(d.windowStart), fmtDateTime(d.windowEnd), d.isPeak ? 'Yes' : ''].forEach((v, c) => {
-          set(ws, r, c, v ?? '', c === 0 || c === 2 ? numStyle : base, c === 0 || c === 2 ? 'n' : 's');
-        });
-        fillRow(ws, r, 0, lastCol, base);
-        r += 1;
-      });
-      r += 1;
-    }
-
-    if (model.topSiteResults.length) {
-      set(ws, r, 0, 'TOP INTENSITY PER SITE', S.section, 's');
-      fillRow(ws, r, 0, lastCol, S.section);
-      merge(ws, r, 0, r, lastCol);
-      r += 1;
-      const headers = ['Rank', 'Station', 'Duration', 'Peak (mm)', 'Total (mm)', 'AEP', 'ARI', 'Peak Time'];
-      headers.forEach((h, c) => set(ws, r, c, h, S.th, 's'));
-      fillRow(ws, r, 0, lastCol, S.th);
-      r += 1;
-      model.topSiteResults.slice(0, 15).forEach((t, idx) => {
-        const base = idx === 0 ? S.peak : (idx % 2 ? S.tdAlt : S.td);
-        const numStyle = idx === 0 ? S.peakNum : (idx % 2 ? S.tdAltNum : S.tdNum);
-        [t.displayOrder, t.stationName, t.durationLabel, t.depthMm, t.totalDepthMm, t.aepPercent, t.ariText, fmtDateTime(t.windowStart)].forEach((v, c) => {
-          set(ws, r, c, v ?? '', [0, 3, 4].includes(c) ? numStyle : base, [0, 3, 4].includes(c) ? 'n' : 's');
-        });
-        fillRow(ws, r, 0, lastCol, base);
-        r += 1;
-      });
-    }
-
-    set(ws, r + 1, 0, 'Generated by Stormgauge. Review source rainfall and IFD inputs before relying on outputs for formal design decisions.', S.foot, 's');
-    fillRow(ws, r + 1, 0, lastCol, S.foot);
-    merge(ws, r + 1, 0, r + 1, lastCol);
-
-    const endRow = Math.max(r + 2, 1);
-    ws['!ref'] = XS.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: endRow, c: lastCol } });
-    ws['!cols'] = [
-      { wch: 14 }, { wch: 18 }, { wch: 14 }, { wch: 18 }, { wch: 14 },
-      { wch: 18 }, { wch: 16 }, { wch: 18 }, { wch: 16 }, { wch: 18 }
-    ];
-    ws['!rows'] = Array.from({ length: endRow + 1 }, (_, i) => ({ hpt: i === 0 ? 28 : (i === 1 ? 18 : 20) }));
-    XS.utils.book_append_sheet(wb, ws, 'Report');
-  }
-
-  function appendStyledDataSheet(name, headers, rows, options = {}) {
-    const ws = {};
-    const lastRow = Math.max(rows.length, 1);
-    const lastCol = Math.max(headers.length - 1, 0);
-
-    headers.forEach((h, c) => set(ws, 0, c, h, S.th, 's'));
-    rows.forEach((row, ri) => {
-      const excelRow = ri + 1;
-      const isPeak = !!row.__peak;
-      headers.forEach((h, c) => {
-        const key = options.keys?.[c] || h;
-        const raw = row[key];
-        const isNumeric = options.numericKeys?.includes(key);
-        const st = isPeak ? (isNumeric ? S.peakNum : S.peak) : (ri % 2 ? (isNumeric ? S.tdAltNum : S.tdAlt) : (isNumeric ? S.tdNum : S.td));
-        set(ws, excelRow, c, raw ?? '', st, isNumeric ? 'n' : 's');
-      });
-    });
-
-    ws['!ref'] = XS.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: lastRow, c: lastCol } });
-    ws['!autofilter'] = { ref: XS.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: lastRow, c: lastCol } }) };
-    ws['!freeze'] = { xSplit: 0, ySplit: 1 };
-    ws['!cols'] = headers.map((h, c) => {
-      const key = options.keys?.[c] || h;
-      const max = rows.reduce((m, row) => Math.max(m, String(row[key] ?? '').length), String(h).length);
-      return { wch: Math.max(10, Math.min(42, max + 2)) };
-    });
-    ws['!rows'] = [{ hpt: 22 }, ...rows.map(() => ({ hpt: 18 }))];
-    XS.utils.book_append_sheet(wb, ws, safeSheetName(name));
-  }
-
-  appendReportSheet();
-
-  appendStyledDataSheet('Summary', ['Metric', 'Value', 'Unit', 'Subtext'],
-    model.summaryCards.map(c => ({ Metric: c.label, Value: c.value ?? '', Unit: c.unit ?? '', Subtext: c.subtext ?? '' })),
-    { keys: ['Metric', 'Value', 'Unit', 'Subtext'] }
-  );
-
-  appendStyledDataSheet('Top Intensity Per Site',
-    ['Rank', 'Station', 'Duration', 'Minutes', 'Peak mm', 'Total mm', 'AEP', 'ARI', 'ARI years', 'Window Start', 'Window End'],
-    model.topSiteResults.map(t => ({
-      Rank: t.displayOrder,
-      Station: t.stationName,
-      Duration: t.durationLabel,
-      Minutes: t.durationMinutes,
-      'Peak mm': t.depthMm,
-      'Total mm': t.totalDepthMm,
-      AEP: t.aepPercent,
-      ARI: t.ariText,
-      'ARI years': t.ariYears,
-      'Window Start': fmtDateTime(t.windowStart),
-      'Window End': fmtDateTime(t.windowEnd),
-      __peak: t.displayOrder === 1
-    })),
-    { keys: ['Rank', 'Station', 'Duration', 'Minutes', 'Peak mm', 'Total mm', 'AEP', 'ARI', 'ARI years', 'Window Start', 'Window End'], numericKeys: ['Rank', 'Minutes', 'Peak mm', 'Total mm', 'ARI years'] }
-  );
-
-  appendStyledDataSheet('All Durations',
-    ['Rank', 'Duration', 'Minutes', 'Peak mm', 'AEP', 'ARI', 'ARI years', 'Window Start', 'Window End', 'Is Peak'],
-    model.durationResults.map(d => ({
-      Rank: d.displayOrder,
-      Duration: d.durationLabel,
-      Minutes: d.durationMinutes,
-      'Peak mm': d.depthMm,
-      AEP: d.aepPercent,
-      ARI: d.ariText,
-      'ARI years': d.ariYears,
-      'Window Start': fmtDateTime(d.windowStart),
-      'Window End': fmtDateTime(d.windowEnd),
-      'Is Peak': d.isPeak ? 'Yes' : '',
-      __peak: d.isPeak
-    })),
-    { keys: ['Rank', 'Duration', 'Minutes', 'Peak mm', 'AEP', 'ARI', 'ARI years', 'Window Start', 'Window End', 'Is Peak'], numericKeys: ['Rank', 'Minutes', 'Peak mm', 'ARI years'] }
-  );
-
-  appendStyledDataSheet('Daily Totals',
-    ['Date', 'Day', 'Depth mm', 'Is Peak Day'],
-    model.dailyTotals.map(d => ({ Date: d.date, Day: d.label, 'Depth mm': d.depthMm, 'Is Peak Day': d.isPeak ? 'Yes' : '', __peak: d.isPeak })),
-    { keys: ['Date', 'Day', 'Depth mm', 'Is Peak Day'], numericKeys: ['Depth mm'] }
-  );
-
-  appendStyledDataSheet('Interval Data',
-    ['Timestamp', 'Depth mm', 'Cumulative mm'],
-    model.intervalReadings.map(rd => ({ Timestamp: fmtDateTime(rd.timestamp), 'Depth mm': rd.depthMm, 'Cumulative mm': rd.cumulativeDepthMm })),
-    { keys: ['Timestamp', 'Depth mm', 'Cumulative mm'], numericKeys: ['Depth mm', 'Cumulative mm'] }
-  );
-
-  appendStyledDataSheet('Metadata', ['Field', 'Value'], [
-    { Field: 'App', Value: model.appName },
-    { Field: 'Generated', Value: fmtDateTime(model.generatedAt) },
-    { Field: 'Station ID', Value: model.station?.id ?? '' },
-    { Field: 'Station Name', Value: model.station?.name ?? '' },
-    { Field: 'Source', Value: model.station?.source ?? '' },
-    { Field: 'LGA', Value: model.station?.lga ?? '' },
-    { Field: 'Region', Value: model.station?.region ?? '' },
-    { Field: 'Latitude', Value: model.station?.lat ?? '' },
-    { Field: 'Longitude', Value: model.station?.lon ?? '' },
-    { Field: 'Event Start', Value: fmtDateTime(model.event?.start) },
-    { Field: 'Event End', Value: fmtDateTime(model.event?.end) },
-    { Field: 'Event Duration Hours', Value: model.event?.durationHours ?? '' },
-    { Field: 'Event Total Depth mm', Value: model.event?.totalDepthMm ?? '' },
-    { Field: 'Readings Count', Value: model.event?.readingsCount ?? '' },
-    { Field: 'Interval Minutes', Value: model.event?.intervalMinutes ?? '' },
-    { Field: 'Sort Mode', Value: model.settings?.sortMode ? JSON.stringify(model.settings.sortMode) : '' },
-    { Field: 'Filters', Value: model.settings?.filters ? JSON.stringify(model.settings.filters) : '' },
-    { Field: 'Calculation Basis', Value: getCalculationBasisText() }
-  ], { keys: ['Field', 'Value'] });
-
-  const slug = csvSlug(stationOrArea);
-  XS.writeFile(wb, `stormgauge_report_${slug}_${tsFile}.xlsx`);
+  const slug = csvSlug(m.station?.name ?? (m.topSiteResults[0]?.stationName ?? ''));
+  XS.writeFile(wb, `stormgauge_report${slug?'_'+slug:''}_${tsFile}.xlsx`);
 }
 
 function getSortedTopSiteResults() {
