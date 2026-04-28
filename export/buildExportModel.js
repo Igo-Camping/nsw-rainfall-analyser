@@ -69,7 +69,11 @@ function buildExportModel() {
     ];
   })() : [];
 
-  // ── durationResults — All Durations tab, AEP-ascending (matches renderTopDurations) ──
+  // ── durationResults — All Durations tab ──────────────────────────────────
+  // Sort: AEP ascending. This mirrors renderTopDurations() exactly.
+  // The All Durations table has no user-sortable columns (plain <th>, no onclick).
+  // AEP-asc is the only order the UI ever shows — this comparator is not a
+  // hardcoded assumption; it IS the current rendered order.
   const durationResults = (() => {
     const raw    = lastTopDurResults?.results || [];
     const sorted = [...raw].sort((a, b) => {
