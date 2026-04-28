@@ -4,7 +4,7 @@ export function plotAllMarkers(stations, ctx) {
       radius: 5, color: 'white', weight: 1.5,
       interactive: true, bubblingMouseEvents: false,
       fillColor: '#00847F', fillOpacity: 0.85
-    }).bindPopup(`<b>${ctx.escapeHtml(s.name)}</b><br><small>${ctx.escapeHtml(ctx.getLGA(s))}</small>`).bindTooltip(s.name,{
+    }).bindPopup(`<b>${ctx.escapeHtml(s.name)}</b><br><small>${ctx.escapeHtml(ctx.getLGA(s))}</small>`, { autoPan: false }).bindTooltip(s.name,{
       permanent:true,
       interactive:true,
       direction: ['Great Mackerel Rain', 'Spit Bridge', 'Manly Dam', 'Allambie Heights', 'Middle Creek'].includes(s.name) ? 'left' : 'right',
@@ -89,7 +89,7 @@ export function plotBomRainfallMarkers(gauges, ctx) {
       bubblingMouseEvents: false,
       fillColor: '#1E88E5',
       fillOpacity: 0.85
-    }).bindPopup(buildBomRainfallPopup(gauge, ctx))
+    }).bindPopup(buildBomRainfallPopup(gauge, ctx), { autoPan: false })
       .bindTooltip(gauge.baseName || gauge.name, {
         permanent: true,
         interactive: true,
