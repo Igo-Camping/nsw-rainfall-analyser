@@ -484,12 +484,15 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx-js-style.browser.min.js"></script>
 <script type="module">
-  import { buildExportModel } from './src/modules/exports/buildExportModel.js';
-  import { exportCSV }        from './src/modules/exports/exportCsv.js';
-  import { exportXLSX }       from './src/modules/exports/exportXlsx.js';
+  import { buildExportModel }        from './src/modules/exports/buildExportModel.js';
+  import { exportCSV }               from './src/modules/exports/exportCsv.js';
+  import { exportXLSX }              from './src/modules/exports/exportXlsx.js';
+  import { csvSlug, autoFitSheet }   from './src/modules/exports/exportHelpers.js';
   window.buildExportModel = buildExportModel;
   window.exportCSV        = exportCSV;
   window.exportXLSX       = exportXLSX;
+  window.csvSlug          = csvSlug;
+  window.autoFitSheet     = autoFitSheet;
 </script>
 <script>
 // â"€â"€ Config â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
@@ -3245,21 +3248,6 @@ function renderIFDTable(aep, observedDepth, dur) {
 }
 
 // â"€â"€ Export CSV â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-function csvEscape(val) {
-  const s = String(val ?? '');
-  return (s.includes(',') || s.includes('"') || s.includes('\n') || s.includes('\r'))
-    ? '"' + s.replace(/"/g, '""') + '"'
-    : s;
-}
-
-function csvRow(...vals) {
-  return vals.map(csvEscape).join(',') + '\n';
-}
-
-function csvSlug(text) {
-  return String(text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'unknown';
-}
-
 // ── Export PNG ─────────────────────────────────────────────────────────────
 async function exportPNG() {
   const el = document.getElementById('results');
@@ -3678,22 +3666,6 @@ function buildMainDisplaySheet() {
   return ws;
 }
 
-function autoFitSheet(ws) {
-  const ref = ws['!ref'];
-  if (!ref || typeof XLSX === 'undefined') return;
-  const range = XLSX.utils.decode_range(ref);
-  const widths = [];
-  for (let c = range.s.c; c <= range.e.c; c++) {
-    let maxLen = 10;
-    for (let r = range.s.r; r <= range.e.r; r++) {
-      const cell = ws[XLSX.utils.encode_cell({ r, c })];
-      const text = cell ? String(cell.v ?? '') : '';
-      maxLen = Math.max(maxLen, Math.min(40, text.length + 2));
-    }
-    widths.push({ wch: maxLen });
-  }
-  ws['!cols'] = widths;
-}
 
 function appendWorkbookSheet(wb, name, rows) {
   if (!rows?.length) return;

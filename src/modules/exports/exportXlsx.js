@@ -1,4 +1,5 @@
 import { buildExportModel } from './buildExportModel.js';
+import { csvSlug, autoFitSheet } from './exportHelpers.js';
 
 export function exportXLSX() {
   if (typeof XLSX === 'undefined') { alert('Excel export library did not load.'); return; }

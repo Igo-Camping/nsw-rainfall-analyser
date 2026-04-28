@@ -1,4 +1,5 @@
 import { buildExportModel } from './buildExportModel.js';
+import { csvRow, csvSlug } from './exportHelpers.js';
 
 export function exportCSV() {
   const model = buildExportModel();
