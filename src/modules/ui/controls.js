@@ -56,13 +56,13 @@ export function closeResults(ctx) {
 
 export function switchPage(page, options = {}, ctx) {
   ctx.setCurrentPage(page);
-  const flexPages = new Set(['aep']);
+  const flexPages = new Set(['home','aep']);
   ctx.pages.forEach(p => {
     const el = ctx.document.getElementById('page-' + p);
     if (!el) return;
     el.style.display = p === page ? (flexPages.has(p) ? 'flex' : '') : 'none';
   });
-  ctx.document.getElementById('page-nav').style.display = 'flex';
+  ctx.document.getElementById('page-nav').style.display = page === 'home' ? 'none' : 'flex';
   ctx.document.querySelectorAll('.pnav-btn[data-page]').forEach(button =>
     button.classList.toggle('active', button.dataset.page === page));
   if (page === 'aep') {
@@ -75,6 +75,6 @@ export function switchPage(page, options = {}, ctx) {
 }
 
 export function wireStartupControls(ctx) {
-  ctx.switchPage('aep');
+  ctx.switchPage('home');
   ctx.syncTheme();
 }
