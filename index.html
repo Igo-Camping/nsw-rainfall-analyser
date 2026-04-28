@@ -228,6 +228,34 @@ html[data-theme="dark"] ::-webkit-scrollbar-track { background: #090F18; }
 html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #1C2E40; border-radius: 2px; }
 html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
 
+/* ── Tab bar export buttons ─────────────────────────────────────────────────
+   Tab bar is dark navy in both themes; buttons use --teal which adapts.     */
+.tab-export-btn {
+  padding: 4px 9px;
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.tab-export-btn:hover { background: var(--teal-l); }
+.tab-exports-sep {
+  width: 1px; height: 14px;
+  background: rgba(255,255,255,.12);
+  flex-shrink: 0; margin: 0 2px;
+}
+.tab-exports-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: rgba(255,255,255,.32);
+  flex-shrink: 0;
+}
+
 </style>
 <!-- ═══════════════════════════════════════════════════════════════ END THEME -->
 
@@ -271,6 +299,11 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
       <option value="">Previous Analyses...</option>
     </select>
     <button id="deleteCacheEntryBtn" class="btn-secondary" style="display:none;font-size:11px;padding:3px 8px" onclick="deleteSelectedCacheEntry()">Delete</button>
+    <div class="tab-exports-sep"></div>
+    <span class="tab-exports-lbl">Export</span>
+    <button class="tab-export-btn" onclick="exportCSV()">CSV</button>
+    <button class="tab-export-btn" onclick="exportXLSX()">XLSX</button>
+    <button class="tab-export-btn" onclick="exportPNG()">PNG</button>
   </div>
 </div>
 
@@ -419,9 +452,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <button class="export-btn" id="recalcBtn" style="display:none" onclick="recalcCurrentTab()">Recalc</button>
           <button class="export-btn" id="saveAnalysisBtn" style="display:none" onclick="saveCurrentAnalysis()">Save Analysis</button>
-          <button class="export-btn" onclick="exportCSV()">Export CSV</button>
-          <button class="export-btn" onclick="exportXLSX()">Export XLSX</button>
-          <button class="export-btn" onclick="exportPNG()">Export PNG</button>
           <button class="close-btn" onclick="closeResults()">Close</button>
         </div>
       </div>
