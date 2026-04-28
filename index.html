@@ -305,6 +305,12 @@ tr.highlight td         { background: rgba(0,196,190,.1); }
   <div class="tab" onclick="switchTab('top-dur')">All Durations</div>
   <div class="tab" onclick="switchTab('daily')">Daily Totals</div>
   <div class="tab" onclick="switchTab('monitors')">Other Monitors</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:0 12px">
+    <select id="previousAnalysisDropdown" style="display:none;font-size:11px;padding:3px 6px;max-width:220px" onchange="loadPreviousAnalysis(this.value)">
+      <option value="">Previous Analyses...</option>
+    </select>
+    <button id="deleteCacheEntryBtn" class="btn-secondary" style="display:none;font-size:11px;padding:3px 8px" onclick="deleteSelectedCacheEntry()">Delete</button>
+  </div>
 </div>
 
 <div class="body">
@@ -452,10 +458,6 @@ tr.highlight td         { background: rgba(0,196,190,.1); }
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <button class="export-btn" id="recalcBtn" style="display:none" onclick="recalcCurrentTab()">Recalc</button>
           <button class="export-btn" id="saveAnalysisBtn" style="display:none" onclick="saveCurrentAnalysis()">Save Analysis</button>
-          <select id="previousAnalysisDropdown" style="display:none" onchange="loadPreviousAnalysis(this.value)">
-            <option value="">Previous Analyses...</option>
-          </select>
-          <button class="export-btn" id="deleteCacheEntryBtn" style="display:none;padding:6px 8px" onclick="deleteSelectedCacheEntry()">Delete</button>
           <button class="export-btn" onclick="exportCSV()">Export CSV</button>
           <button class="close-btn" onclick="closeResults()">Close</button>
         </div>
