@@ -5,7 +5,7 @@
 // Reads from global state at call time. All referenced variables (lastResults,
 // lastTopDurResults, lastDailyData, topSiteResultsCache, topSiteSort, selected,
 // currentTab, DUR_LABELS, aepToARI, getSortedTopSiteResults) are defined in the
-// main index.html script scope.
+// main index.html script scope and remain accessible as globals from this module.
 //
 // Unsourced fields (no current state source): set to null.
 //   - settings.selectedDurations  (no duration-filter UI; ALL_DURATIONS is a constant)
@@ -14,7 +14,7 @@
 // topSiteResults is added beyond the original spec shape to provide coverage for the
 // Top Intensity Per Site mode (spec shape had no field for multi-station results).
 
-function buildExportModel() {
+export function buildExportModel() {
 
   // ── station ────────────────────────────────────────────────────────────────
   const station = selected ? {

@@ -483,7 +483,10 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
 
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx-js-style.browser.min.js"></script>
-<script src="export/buildExportModel.js"></script>
+<script type="module">
+  import { buildExportModel } from './src/modules/exports/buildExportModel.js';
+  window.buildExportModel = buildExportModel;
+</script>
 <script>
 // â"€â"€ Config â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
