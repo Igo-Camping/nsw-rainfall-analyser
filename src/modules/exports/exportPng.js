@@ -25,7 +25,7 @@ export async function exportPNG() {
 
   // res-hdr is position:sticky — set to relative so it doesn't duplicate in capture.
   const hdr    = el.querySelector('.res-hdr');
-  const prevPos = hdr ? window.getComputedStyle(hdr).position : null;
+  const prevPos = hdr ? getComputedStyle(hdr).position : null;
   if (hdr) hdr.style.position = 'relative';
 
   try {
