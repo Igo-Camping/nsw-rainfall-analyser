@@ -3244,53 +3244,119 @@ function renderIFDTable(aep, observedDepth, dur) {
 // â"€â"€ Export CSV â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 function csvEscape(val) {
   const s = String(val ?? '');
-  return s.includes(',') || s.includes('"') || s.includes('\n')
+  return (s.includes(',') || s.includes('"') || s.includes('\n') || s.includes('\r'))
     ? '"' + s.replace(/"/g, '""') + '"'
     : s;
 }
 
+function csvRow(...vals) {
+  return vals.map(csvEscape).join(',') + '\n';
+}
+
+function csvSlug(text) {
+  return String(text ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'unknown';
+}
+
 function exportCSV() {
   const model = buildExportModel();
-  const ts    = new Date().toLocaleString('en-AU');
-  let csv = '';
+  const now   = new Date();
+  const tsDisplay = now.toLocaleString('en-AU');
+  const pad = n => String(n).padStart(2, '0');
+  const tsFile = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
+
+  let csv = '', filename = '';
 
   if (currentTab === 'top-site' && model.topSiteResults.length) {
-    csv  = `Stormgauge Rainfall Analysis — Top Intensity Per Site\nGenerated: ${ts}\n\n`;
-    csv += 'Rank,Station,Best Duration,Peak Depth (mm),Total Depth (mm),AEP,Return Period,Peak Start\n';
+    const lga    = model.settings.filters?.lga  || 'All stations';
+    const search = model.settings.filters?.search || '';
+    const sort   = model.settings.sortMode
+      ? `${model.settings.sortMode.key} ${model.settings.sortMode.dir}` : '';
+
+    csv += csvRow('Export Type',   'Top Intensity Per Site');
+    csv += csvRow('Generated',     tsDisplay);
+    csv += csvRow('Area / LGA',    lga);
+    if (search) csv += csvRow('Search filter', search);
+    if (sort)   csv += csvRow('Sort',          sort);
+    csv += csvRow('Stations',      model.topSiteResults.length);
+    csv += '\n';
+    csv += csvRow('Rank', 'Station', 'Best Duration',
+                  'Peak Depth (mm)', 'Total Depth (mm)',
+                  'AEP', 'Return Period', 'Peak Start');
     model.topSiteResults.forEach(r => {
-      csv += [r.displayOrder, csvEscape(r.stationName), csvEscape(r.durationLabel),
-              r.depthMm ?? '', r.totalDepthMm ?? '', r.aepPercent ?? '',
-              csvEscape(r.ariText), r.windowStart ?? ''].join(',') + '\n';
+      csv += csvRow(r.displayOrder, r.stationName, r.durationLabel,
+                    r.depthMm ?? '', r.totalDepthMm ?? '',
+                    r.aepPercent ?? '', r.ariText, r.windowStart ?? '');
     });
+    filename = `stormgauge_top-intensity_${csvSlug(lga)}_${tsFile}.csv`;
 
   } else if (currentTab === 'top-dur' && model.durationResults.length) {
-    csv  = `Stormgauge Rainfall Analysis — All Durations\nStation: ${csvEscape(model.station?.name ?? '')}\nGenerated: ${ts}\n\n`;
-    csv += 'Rank,Duration,Peak Depth (mm),AEP,Return Period,Window Start,Window End\n';
+    csv += csvRow('Export Type', 'All Durations');
+    csv += csvRow('Generated',   tsDisplay);
+    if (model.station) {
+      csv += csvRow('Station',    model.station.name   ?? '');
+      csv += csvRow('Station ID', model.station.id     ?? '');
+      csv += csvRow('Source',     model.station.source ?? '');
+    }
+    if (model.event) {
+      csv += csvRow('Event Start', model.event.start ?? '');
+      csv += csvRow('Event End',   model.event.end   ?? '');
+    }
+    csv += '\n';
+    csv += csvRow('Rank', 'Duration', 'Peak Depth (mm)',
+                  'AEP', 'Return Period',
+                  'Window Start', 'Window End', 'Is Peak Duration');
     model.durationResults.forEach(r => {
-      csv += [r.displayOrder, csvEscape(r.durationLabel), r.depthMm ?? '',
-              r.aepPercent ?? '', csvEscape(r.ariText),
-              r.windowStart ?? '', r.windowEnd ?? ''].join(',') + '\n';
+      csv += csvRow(r.displayOrder, r.durationLabel, r.depthMm ?? '',
+                    r.aepPercent ?? '', r.ariText,
+                    r.windowStart ?? '', r.windowEnd ?? '',
+                    r.isPeak ? 'Yes' : '');
     });
+    filename = `stormgauge_all-durations_${csvSlug(model.station?.name)}_${tsFile}.csv`;
 
   } else if (currentTab === 'daily' && model.dailyTotals.length) {
-    csv  = `Stormgauge Rainfall Analysis — Daily Totals\nStation: ${csvEscape(model.station?.name ?? '')}\nGenerated: ${ts}\n\n`;
-    csv += 'Date,Day,Total Depth (mm),Peak Day\n';
+    csv += csvRow('Export Type', 'Daily Totals');
+    csv += csvRow('Generated',   tsDisplay);
+    if (model.station) {
+      csv += csvRow('Station',    model.station.name   ?? '');
+      csv += csvRow('Station ID', model.station.id     ?? '');
+      csv += csvRow('Source',     model.station.source ?? '');
+    }
+    if (model.event) {
+      csv += csvRow('Event Start', model.event.start ?? '');
+      csv += csvRow('Event End',   model.event.end   ?? '');
+    }
+    csv += '\n';
+    csv += csvRow('Date', 'Day', 'Total Depth (mm)', 'Peak Day');
     model.dailyTotals.forEach(r => {
-      csv += [r.date, csvEscape(r.label), r.depthMm, r.isPeak ? 'Yes' : ''].join(',') + '\n';
+      csv += csvRow(r.date, r.label, r.depthMm, r.isPeak ? 'Yes' : '');
     });
+    filename = `stormgauge_daily-totals_${csvSlug(model.station?.name)}_${tsFile}.csv`;
 
   } else if (model.intervalReadings.length) {
-    csv = `Stormgauge Rainfall Analysis — ${csvEscape(model.station?.name ?? '')}\nGenerated: ${ts}\n\n`;
-    if (model.peak) {
-      csv += `AEP:,${model.peak.aepPercent ?? ''}\n`;
-      csv += `Return Period:,${csvEscape(model.peak.ariText ?? '')}\n`;
-      csv += `Peak Depth (mm):,${model.peak.depthMm ?? ''}\n`;
-      csv += `Total Depth (mm):,${model.event?.totalDepthMm ?? ''}\n\n`;
+    csv += csvRow('Export Type', 'Rainfall Readings');
+    csv += csvRow('Generated',   tsDisplay);
+    if (model.station) {
+      csv += csvRow('Station',    model.station.name   ?? '');
+      csv += csvRow('Station ID', model.station.id     ?? '');
+      csv += csvRow('Source',     model.station.source ?? '');
     }
-    csv += 'Timestamp,Depth (mm),Cumulative Depth (mm)\n';
+    if (model.peak) {
+      csv += csvRow('AEP',              model.peak.aepPercent   ?? '');
+      csv += csvRow('Return Period',    model.peak.ariText      ?? '');
+      csv += csvRow('Peak Duration',    model.peak.durationLabel ?? '');
+      csv += csvRow('Peak Depth (mm)',  model.peak.depthMm      ?? '');
+      csv += csvRow('Total Depth (mm)', model.event?.totalDepthMm ?? '');
+    }
+    if (model.event) {
+      csv += csvRow('Event Start', model.event.start ?? '');
+      csv += csvRow('Event End',   model.event.end   ?? '');
+    }
+    csv += '\n';
+    csv += csvRow('Timestamp', 'Depth (mm)', 'Cumulative Depth (mm)');
     model.intervalReadings.forEach(r => {
-      csv += `${r.timestamp},${r.depthMm},${r.cumulativeDepthMm}\n`;
+      csv += csvRow(r.timestamp, r.depthMm, r.cumulativeDepthMm);
     });
+    filename = `stormgauge_rainfall-readings_${csvSlug(model.station?.name)}_${tsFile}.csv`;
   }
 
   if (!csv) { alert('No data to export. Run an analysis first.'); return; }
@@ -3298,7 +3364,7 @@ function exportCSV() {
   const blob = new Blob([csv], { type: 'text/csv' });
   const a    = document.createElement('a');
   a.href     = URL.createObjectURL(blob);
-  a.download = `rainfall_analysis_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = filename;
   a.click();
 }
 
