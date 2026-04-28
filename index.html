@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com; connect-src 'self' https://data.pluviometrics.com.au https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com https://radar-tiles.service.bom.gov.au https://tilecache.rainviewer.com; connect-src 'self' https://data.pluviometrics.com.au https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au https://api.rainviewer.com https://dns.google https://radar-tiles.service.bom.gov.au https://tilecache.rainviewer.com; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
+<link rel="icon" href="data:,"/>
 <script>try{var _t=localStorage.getItem('sgTheme');document.documentElement.dataset.theme=(_t==='dark')?'dark':'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
 <title>Stormgauge Rainfall Analysis</title>
 <!-- v3 -->
@@ -498,6 +499,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   window.appendWorkbookSheet = appendWorkbookSheet;
   window.bomRadar            = bomRadar;
   window.rainviewerFallback  = rainviewerFallback;
+  window.dispatchEvent(new Event('atmos-modules-ready'));
 </script>
 <script>
 // â"€â"€ Config â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
@@ -729,7 +731,39 @@ const map = L.map('map').setView([-33.75, 151.25], 11);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
   attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
 }).addTo(map);
+let atmosRadarLayer = null;
+queueAtmosRadarLayer(map);
 const lgaBoundaryLoadPromise = loadAllLgaBoundaries();
+
+function queueAtmosRadarLayer(mapInstance) {
+  if (window.bomRadar && window.rainviewerFallback) {
+    initAtmosRadarLayer(mapInstance);
+    return;
+  }
+
+  window.addEventListener('atmos-modules-ready', () => initAtmosRadarLayer(mapInstance), { once: true });
+}
+
+async function initAtmosRadarLayer(mapInstance) {
+  try {
+    atmosRadarLayer = await window.bomRadar.createAvailableBomRadarLayer();
+    atmosRadarLayer.addTo(mapInstance);
+    console.info('[Atmos radar] BOM radar loaded');
+    return;
+  } catch (error) {
+    console.warn('[Atmos radar] BOM radar unavailable:', error?.message || error);
+  }
+
+  try {
+    atmosRadarLayer = await window.rainviewerFallback.createRainviewerFallbackLayer();
+    atmosRadarLayer.addTo(mapInstance);
+    console.info('[Atmos radar] RainViewer fallback loaded');
+  } catch (error) {
+    atmosRadarLayer = null;
+    console.warn('[Atmos radar] RainViewer fallback unavailable:', error?.message || error);
+    console.info('[Atmos radar] radar unavailable');
+  }
+}
 
 // â"€â"€ Startup â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 async function init() {

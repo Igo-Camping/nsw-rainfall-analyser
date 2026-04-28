@@ -14,9 +14,19 @@ export function createRainviewerTileLayer(apiData, options = {}) {
   const frame = options.frame || frames[frames.length - 1];
   const path = frame?.path || '';
 
+  if (!path) {
+    throw new Error('RainViewer API returned no radar frames');
+  }
+
   return L.tileLayer(`${host}${path}/256/{z}/{x}/{y}/2/1_1.png`, {
     opacity: 0.55,
+    attribution: 'Radar (c) RainViewer',
     zIndex: 450,
     ...options.layerOptions
   });
+}
+
+export async function createRainviewerFallbackLayer(options = {}) {
+  const apiData = await fetchRainviewerApi(options.apiUrl);
+  return createRainviewerTileLayer(apiData, options);
 }
