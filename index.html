@@ -494,6 +494,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   import * as rainviewerFallback  from './src/modules/radar/rainviewerFallback.js';
   import * as stationLoader       from './src/modules/stations/stationLoader.js';
   import * as stationMarkers      from './src/modules/stations/stationMarkers.js';
+  import * as mapInit             from './src/modules/map/mapInit.js';
+  import * as mapLayers           from './src/modules/map/mapLayers.js';
   window.buildExportModel    = buildExportModel;
   window.exportCSV           = exportCSV;
   window.exportXLSX          = exportXLSX;
@@ -503,6 +505,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   window.rainviewerFallback  = rainviewerFallback;
   window.stationLoader       = stationLoader;
   window.stationMarkers      = stationMarkers;
+  window.mapInit             = mapInit;
+  window.mapLayers           = mapLayers;
   window.dispatchEvent(new Event('atmos-modules-ready'));
 </script>
 <script>
@@ -731,13 +735,28 @@ function deleteSelectedCacheEntry() {
 loadAnalysisCache(); // pure localStorage read — no DOM access
 
 // â"€â"€ Map â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-const map = L.map('map').setView([-33.75, 151.25], 11);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
-  attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19
-}).addTo(map);
+let map = null;
+let atmosBaseLayer = null;
 let atmosRadarLayer = null;
-queueAtmosRadarLayer(map);
-const lgaBoundaryLoadPromise = loadAllLgaBoundaries();
+const mapReadyPromise = queueAtmosMapSetup();
+const lgaBoundaryLoadPromise = mapReadyPromise.then(() => loadAllLgaBoundaries());
+
+function queueAtmosMapSetup() {
+  if (window.mapInit && window.mapLayers) {
+    return Promise.resolve(initAtmosMap());
+  }
+
+  return new Promise(resolve => {
+    window.addEventListener('atmos-modules-ready', () => resolve(initAtmosMap()), { once: true });
+  });
+}
+
+function initAtmosMap() {
+  map = window.mapInit.createAtmosMap({ L });
+  atmosBaseLayer = window.mapLayers.addAtmosBaseLayer(map, { L });
+  queueAtmosRadarLayer(map);
+  return map;
+}
 
 function queueAtmosRadarLayer(mapInstance) {
   if (window.bomRadar && window.rainviewerFallback) {
@@ -4320,7 +4339,7 @@ function switchPage(page, options = {}) {
     b.classList.toggle('active', b.dataset.page === page));
   if (page === 'aep') {
     if (!window._aepInited) { window._aepInited = true; init(); }
-    setTimeout(() => map.invalidateSize(), 50);
+    mapReadyPromise.then(() => setTimeout(() => map.invalidateSize(), 50));
   }
 }
 
