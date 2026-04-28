@@ -487,6 +487,7 @@ tr.highlight td         { background: rgba(0,196,190,.1); }
 
 
 <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script src="export/buildExportModel.js"></script>
 <script>
 // â"€â"€ Config â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
 const API = 'https://nsw-rainfall-analyser-api.onrender.com';
@@ -3241,40 +3242,63 @@ function renderIFDTable(aep, observedDepth, dur) {
 }
 
 // â"€â"€ Export CSV â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-function exportCSV() {
-  let csv = '';
-  const ts = new Date().toLocaleString('en-AU');
+function csvEscape(val) {
+  const s = String(val ?? '');
+  return s.includes(',') || s.includes('"') || s.includes('\n')
+    ? '"' + s.replace(/"/g, '""') + '"'
+    : s;
+}
 
-  if (allSiteResults?.length) {
-    // All sites export
-    csv = `NSW Rainfall Analyser â€" All Sites Export\nGenerated: ${ts}\n\n`;
-    csv += 'Rank,Station,Peak Depth (mm),Total Depth (mm),AEP%,Return Period,Peak Start,Peak End\n';
-    const sorted = [...allSiteResults]
-      .filter(r => r.rolling_max)
-      .sort((a,b) => (b.rolling_max?.max_depth_mm||0)-(a.rolling_max?.max_depth_mm||0));
-    sorted.forEach((r, i) => {
-      const rm = r.rolling_max;
-      const aep = r.aep?.aep || '>63.2%';
-      csv += `${i+1},${r.station_name},${rm?.max_depth_mm||0},${rm?.total_depth_mm||0},${aep},${aepToARI(r.aep || aep)},${rm?.peak_start||''},${rm?.peak_end||''}\n`;
+function exportCSV() {
+  const model = buildExportModel();
+  const ts    = new Date().toLocaleString('en-AU');
+  let csv = '';
+
+  if (currentTab === 'top-site' && model.topSiteResults.length) {
+    csv  = `Stormgauge Rainfall Analysis — Top Intensity Per Site\nGenerated: ${ts}\n\n`;
+    csv += 'Rank,Station,Best Duration,Peak Depth (mm),Total Depth (mm),AEP,Return Period,Peak Start\n';
+    model.topSiteResults.forEach(r => {
+      csv += [r.displayOrder, csvEscape(r.stationName), csvEscape(r.durationLabel),
+              r.depthMm ?? '', r.totalDepthMm ?? '', r.aepPercent ?? '',
+              csvEscape(r.ariText), r.windowStart ?? ''].join(',') + '\n';
     });
-  } else if (lastResults?.readings) {
-    // Single station export
-    csv = `NSW Rainfall Analyser â€" ${lastResults.station_name}\nGenerated: ${ts}\n\n`;
-    csv += `AEP:,${lastResults.aep?.aep||''}\nReturn Period:,${aepToARI(lastResults.aep || lastResults.aep?.aep || '')}\n`;
-    csv += `Peak Depth (mm):,${lastResults.rolling_max?.max_depth_mm||''}\n`;
-    csv += `Total Depth (mm):,${lastResults.rolling_max?.total_depth_mm||''}\n\n`;
-    csv += 'Timestamp,Depth (mm)\n';
-    lastResults.readings.forEach(r => {
-      csv += `${r.timestamp},${r.value}\n`;
+
+  } else if (currentTab === 'top-dur' && model.durationResults.length) {
+    csv  = `Stormgauge Rainfall Analysis — All Durations\nStation: ${csvEscape(model.station?.name ?? '')}\nGenerated: ${ts}\n\n`;
+    csv += 'Rank,Duration,Peak Depth (mm),AEP,Return Period,Window Start,Window End\n';
+    model.durationResults.forEach(r => {
+      csv += [r.displayOrder, csvEscape(r.durationLabel), r.depthMm ?? '',
+              r.aepPercent ?? '', csvEscape(r.ariText),
+              r.windowStart ?? '', r.windowEnd ?? ''].join(',') + '\n';
+    });
+
+  } else if (currentTab === 'daily' && model.dailyTotals.length) {
+    csv  = `Stormgauge Rainfall Analysis — Daily Totals\nStation: ${csvEscape(model.station?.name ?? '')}\nGenerated: ${ts}\n\n`;
+    csv += 'Date,Day,Total Depth (mm),Peak Day\n';
+    model.dailyTotals.forEach(r => {
+      csv += [r.date, csvEscape(r.label), r.depthMm, r.isPeak ? 'Yes' : ''].join(',') + '\n';
+    });
+
+  } else if (model.intervalReadings.length) {
+    csv = `Stormgauge Rainfall Analysis — ${csvEscape(model.station?.name ?? '')}\nGenerated: ${ts}\n\n`;
+    if (model.peak) {
+      csv += `AEP:,${model.peak.aepPercent ?? ''}\n`;
+      csv += `Return Period:,${csvEscape(model.peak.ariText ?? '')}\n`;
+      csv += `Peak Depth (mm):,${model.peak.depthMm ?? ''}\n`;
+      csv += `Total Depth (mm):,${model.event?.totalDepthMm ?? ''}\n\n`;
+    }
+    csv += 'Timestamp,Depth (mm),Cumulative Depth (mm)\n';
+    model.intervalReadings.forEach(r => {
+      csv += `${r.timestamp},${r.depthMm},${r.cumulativeDepthMm}\n`;
     });
   }
 
   if (!csv) { alert('No data to export. Run an analysis first.'); return; }
 
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `rainfall_analysis_${new Date().toISOString().slice(0,10)}.csv`;
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `rainfall_analysis_${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
 }
 
