@@ -492,6 +492,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   import { appendWorkbookSheet }  from './src/modules/exports/workbookSheet.js';
   import * as bomRadar            from './src/modules/radar/bomRadar.js';
   import * as rainviewerFallback  from './src/modules/radar/rainviewerFallback.js';
+  import * as stationLoader       from './src/modules/stations/stationLoader.js';
+  import * as stationMarkers      from './src/modules/stations/stationMarkers.js';
   window.buildExportModel    = buildExportModel;
   window.exportCSV           = exportCSV;
   window.exportXLSX          = exportXLSX;
@@ -499,6 +501,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   window.appendWorkbookSheet = appendWorkbookSheet;
   window.bomRadar            = bomRadar;
   window.rainviewerFallback  = rainviewerFallback;
+  window.stationLoader       = stationLoader;
+  window.stationMarkers      = stationMarkers;
   window.dispatchEvent(new Event('atmos-modules-ready'));
 </script>
 <script>
@@ -783,107 +787,51 @@ function setStatus(ok, txt) {
 }
 
 async function loadStations() {
-  setStatus(true, 'Loading stations...');
-  await lgaBoundaryLoadPromise;
-  const stationDataset = await loadPluviometricsRainfallStationDataset();
-  const stations = (stationDataset.stations || []).map(normaliseConsolidatedRainfallStation).filter(Boolean);
-  const mhlStations = stations.filter(station => station.source === 'mhl');
-  const bomStations = stations.filter(station => station.source === 'bom');
-  console.info('[Pluviometrics stations] dataset URL:', PLUVIOMETRICS_RAINFALL_STATION_DATA_URL);
-  console.info('[Pluviometrics stations] consolidated rainfall stations loaded:', stations.length, '| MHL:', mhlStations.length, '| BOM:', bomStations.length, '| generated_at:', stationDataset.generated_at || 'unknown');
-
-  // Debug: trace Oliver St Freshwater through normalisation
-  const _oliverRaw = (stationDataset.stations || []).find(s => (s.station_name || s.name || '').toLowerCase().includes('oliver st freshwater'));
-  const _oliverNorm = stations.find(s => (s.name || '').toLowerCase().includes('oliver st freshwater'));
-  if (_oliverRaw) {
-    console.group('[DEBUG Oliver St] Raw JSON entry:');
-    console.log(JSON.parse(JSON.stringify(_oliverRaw)));
-    console.groupEnd();
-  } else {
-    console.warn('[DEBUG Oliver St] NOT found in raw JSON. Partial matches:', (stationDataset.stations||[]).filter(s=>(s.station_name||s.name||'').toLowerCase().includes('oliver')).map(s=>s.station_name||s.name));
-  }
-  if (_oliverNorm) {
-    console.group('[DEBUG Oliver St] Normalised station:');
-    console.log(JSON.parse(JSON.stringify(_oliverNorm)));
-    console.log('source:', _oliverNorm.source, '| data_identifier:', _oliverNorm.data_identifier, '| ts_id:', _oliverNorm.ts_id, '| bom_id:', _oliverNorm.bom_id);
-    console.log('lga:', _oliverNorm.lga, '| region:', _oliverNorm.region, '| lat/lon:', _oliverNorm.lat, _oliverNorm.lon);
-    console.log('canAnalyse:', canAnalyseStation(_oliverNorm));
-    console.groupEnd();
-  } else {
-    console.warn('[DEBUG Oliver St] NOT found after normalisation. Was filtered out.');
-  }
-  allStations = mhlStations;
-  assignStationsToLgas(allStations);
-  loadBomRainfallReferenceGauges(bomStations);
-  assignStationsToLgas(bomRainfallGauges);
-  // Fetch full IFD data for all stations (needed for browser-side AEP calc)
-  loadIfdData();
-  plotAllMarkers(allStations);
-  plotBomRainfallMarkers();
-  buildLgaDropdown();
-  setStatus(true, `${allStations.length.toLocaleString()} MHL rainfall stations + ${bomRainfallGauges.length.toLocaleString()} BOM rainfall stations`);
+  const result = await window.stationLoader.loadStations(getStationLoaderDeps());
+  allStations = result.allStations;
+  bomRainfallGauges = result.bomRainfallGauges;
 }
 
 async function loadPluviometricsRainfallStationDataset() {
-  const resp = await fetch(`${PLUVIOMETRICS_RAINFALL_STATION_DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
-  if (!resp.ok) throw new Error(`${PLUVIOMETRICS_RAINFALL_STATION_DATA_URL} returned ${resp.status}`);
-  const data = await resp.json();
-  if (!Array.isArray(data?.stations)) throw new Error(`${PLUVIOMETRICS_RAINFALL_STATION_DATA_URL} is missing stations[]`);
-  return data;
+  return window.stationLoader.loadPluviometricsRainfallStationDataset(PLUVIOMETRICS_RAINFALL_STATION_DATA_URL);
 }
 
 function extractDataIdentifierId(station, prefix) {
-  const raw = String(station?.data_identifier || '');
-  return raw.toLowerCase().startsWith(`${prefix}:`) ? raw.slice(prefix.length + 1) : '';
+  return window.stationLoader.extractDataIdentifierId(station, prefix);
 }
 
 function normaliseConsolidatedRainfallStation(station) {
-  if (!station || station.station_type !== 'rainfall') return null;
-  const source = String(station.source || '').toLowerCase();
-  const lat = Number(station.lat);
-  const lon = Number(station.lon);
-  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-  if (source === 'bom') return normaliseConsolidatedBomStation(station, lat, lon);
-  if (source === 'mhl') return normaliseConsolidatedMhlStation(station, lat, lon);
-  return null;
+  return window.stationLoader.normaliseConsolidatedRainfallStation(station, getStationLoaderDeps());
 }
 
 function normaliseConsolidatedMhlStation(station, lat, lon) {
-  const tsId = String(station.ts_id || extractDataIdentifierId(station, 'mhl') || '').trim();
-  return {
-    ...station,
-    source: 'mhl',
-    active: true,
-    station_id: String(station.station_id || tsId || '').trim(),
-    station_no: String(station.station_no || '').trim(),
-    ts_id: tsId || null,
-    name: String(station.station_name || station.name || station.station_id || 'MHL rainfall station').trim(),
-    lat: Number(station.lat),
-    lon: Number(station.lon)
-  };
+  return window.stationLoader.normaliseConsolidatedMhlStation(station, lat, lon);
 }
 
 function normaliseConsolidatedBomStation(station, lat, lon) {
-  const bomId = getBomStationNumber({ bom_id: station.bom_id || extractDataIdentifierId(station, 'bom') || station.station_id });
-  const name = String(station.station_name || station.name || `BoM station ${bomId}`).trim();
+  return window.stationLoader.normaliseConsolidatedBomStation(station, lat, lon, getStationLoaderDeps());
+}
+
+function getStationLoaderDeps() {
   return {
-    ...station,
-    source: 'bom',
-    station_id: String(station.station_id || `bom-${bomId}`).trim(),
-    isBomGauge: true,
-    active: true,
-    ts_id: null,
-    bom_id: bomId,
-    site: bomId,
-    name,
-    baseName: name,
-    element: station.element || 'Rainfall',
-    sourceLayer: station.source_layer || station.rainfall_api_source || '',
-    lga: station.lga || station.region || '',
-    lat,
-    lon,
-    ifdKey: getBomIfdKey(lat, lon),
-    has_ifd: !!window.BOM_IFD_CACHE?.[getBomIfdKey(lat, lon)]
+    stationDataUrl: PLUVIOMETRICS_RAINFALL_STATION_DATA_URL,
+    lgaBoundaryLoadPromise,
+    bomIfdCache: window.BOM_IFD_CACHE,
+    bomNorthernBeachesGauges: window.BOM_NORTHERN_BEACHES_GAUGES,
+    setStatus,
+    setLoadedStations: (loadedAllStations, loadedBomRainfallGauges) => {
+      allStations = loadedAllStations;
+      bomRainfallGauges = loadedBomRainfallGauges;
+    },
+    assignStationsToLgas,
+    loadIfdData,
+    plotAllMarkers,
+    plotBomRainfallMarkers,
+    buildLgaDropdown,
+    getBomStationNumber,
+    getBomIfdKey,
+    canAnalyseStation,
+    formatLgaBoundaryName
   };
 }
 
@@ -1146,22 +1094,7 @@ function getFilteredDisplayStations() {
 }
 
 function syncFilteredStationViews(stations) {
-  const visibleIds = new Set(stations.map(s => s.station_id));
-  renderList(stations);
-  Object.entries(markers).forEach(([id, m]) => {
-    if (visibleIds.has(id)) {
-      if (!map.hasLayer(m)) m.addTo(map);
-    } else if (map.hasLayer(m)) {
-      map.removeLayer(m);
-    }
-  });
-  Object.entries(bomRainfallMarkers).forEach(([id, m]) => {
-    if (visibleIds.has(id)) {
-      if (!map.hasLayer(m)) m.addTo(map);
-    } else if (map.hasLayer(m)) {
-      map.removeLayer(m);
-    }
-  });
+  return window.stationMarkers.syncFilteredStationViews(stations, getStationMarkerDeps());
 }
 
 function filterList() {
@@ -1192,77 +1125,36 @@ function renderList(stations) {
 }
 
 // â"€â"€ Map markers â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+function getStationMarkerDeps() {
+  return {
+    L,
+    map,
+    markers,
+    bomRainfallMarkers,
+    wxCache,
+    bomIfdCache: window.BOM_IFD_CACHE,
+    escapeHtml,
+    getLGA,
+    fetchWeather,
+    fetchRainfallSinceMidnight,
+    tempIcon,
+    degToCompass,
+    selectStation,
+    renderList,
+    findDisplayStationById
+  };
+}
+
 function plotAllMarkers(stations) {
-  stations.forEach(s => {
-    const m = L.circleMarker([s.lat, s.lon], {
-      radius: 5, color: 'white', weight: 1.5,
-      interactive: true, bubblingMouseEvents: false,
-      fillColor: '#00847F', fillOpacity: 0.85
-    }).bindPopup(`<b>${escapeHtml(s.name)}</b><br><small>${escapeHtml(getLGA(s))}</small>`).bindTooltip(s.name,{
-      permanent:true,
-      interactive:true,
-      direction: ['Great Mackerel Rain', 'Spit Bridge', 'Manly Dam', 'Allambie Heights', 'Middle Creek'].includes(s.name) ? 'left' : 'right',
-      className:'station-label',
-      offset:[['Great Mackerel Rain', 'Spit Bridge', 'Manly Dam', 'Allambie Heights', 'Middle Creek'].includes(s.name) ? -4 : 4,0]
-    });
-    async function doHover() {
-      m.openPopup();
-      const cached = wxCache[s.station_id];
-      if (cached && (Date.now() - cached.ts) < 600000) { m.setPopupContent(cached.html); return; }
-      m.setPopupContent(`<b>${s.name}</b><br><small>${getLGA(s)}</small><br><small style="color:#888">Loading…</small>`);
-      try {
-        const [wxRes, rainRes] = await Promise.allSettled([
-          fetchWeather(s.lat, s.lon),
-          fetchRainfallSinceMidnight(s)
-        ]);
-        const wx = wxRes.status==='fulfilled' ? wxRes.value : null;
-        const rain = rainRes.status==='fulfilled' ? rainRes.value : null;
-        const html = `<b>${s.name}</b><br><small>${getLGA(s)}</small>`
-          + (wx ? `<br><small>${tempIcon(wx.weather_code)} ${wx.temperature_c}°C &nbsp;Wind ${wx.wind_speed_kmh} km/h ${degToCompass(wx.wind_dir_deg)}<br>Rain ${rain!=null?rain.toFixed(1)+' mm':'-'} since midnight</small>` : '');
-        wxCache[s.station_id] = { html, ts: Date.now() };
-        m.setPopupContent(html);
-      } catch(e) {}
-    }
-    function doSelect(evt) {
-      if (evt?.originalEvent) L.DomEvent.stop(evt.originalEvent);
-      selectStation(s.station_id);
-    }
-    function wireTooltipInteractions() {
-      const el = m.getTooltip()?.getElement();
-      if (!el || el.dataset.stationBound === '1') return;
-      el.dataset.stationBound = '1';
-      el.addEventListener('click', evt => {
-        evt.preventDefault();
-        evt.stopPropagation();
-        selectStation(s.station_id);
-      });
-      el.addEventListener('mouseenter', doHover);
-      el.addEventListener('mouseleave', () => m.closePopup());
-    }
-    m.on('click', doSelect);
-    m.on('mousedown', doSelect);
-    m.on('mouseover', doHover);
-    m.on('mouseout', () => m.closePopup());
-    m.on('tooltipopen', wireTooltipInteractions);
-    m.on('add', wireTooltipInteractions);
-    markers[s.station_id] = m;
-  });
+  return window.stationMarkers.plotAllMarkers(stations, getStationMarkerDeps());
 }
 
 function isBomRainGauge(gauge) {
-  const element = String(gauge?.element || '').toLowerCase();
-  const layer = String(gauge?.sourceLayer || '').toLowerCase();
-  return element === 'rainfall' || element.includes('rainfall intensity') || layer.includes('rain gauge');
+  return window.stationMarkers.isBomRainGauge(gauge);
 }
 
 function getBomRainfallMarkerColour(gauge) {
-  const element = String(gauge?.element || '').toLowerCase();
-  const layer = String(gauge?.sourceLayer || '').toLowerCase();
-  if (layer.includes('rain gauge')) return '#00847F';
-  if (layer.includes('river') || layer.includes('tide')) return '#2E86C1';
-  if (element.includes('rainfall intensity')) return '#C0392B';
-  if (element === 'rainfall') return '#F39C12';
-  return '#60717D';
+  return window.stationMarkers.getBomRainfallMarkerColour(gauge);
 }
 
 function getBomIfdKey(lat, lon) {
@@ -1270,129 +1162,19 @@ function getBomIfdKey(lat, lon) {
 }
 
 function loadBomRainfallReferenceGauges(verifiedStations = null) {
-  if (Array.isArray(verifiedStations)) {
-    bomRainfallGauges = verifiedStations
-      .filter(station => Number.isFinite(station.lat) && Number.isFinite(station.lon))
-      .sort((a, b) => a.baseName.localeCompare(b.baseName) || a.element.localeCompare(b.element));
-    return;
-  }
-  const data = window.BOM_NORTHERN_BEACHES_GAUGES;
-  const features = data?.features || [];
-  bomRainfallGauges = features
-    .map((feature, index) => {
-      const props = feature.properties || {};
-      const coords = feature.geometry?.coordinates || [];
-      const lon = Number(coords[0]);
-      const lat = Number(coords[1]);
-      const lgaName = formatLgaBoundaryName(props.lga_name || '');
-      if (!lgaName || !Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-      const element = String(props.element || props.source_layer || 'BOM record').trim();
-      const baseName = String(props.name || props.site || `BOM gauge ${index + 1}`).trim();
-      return {
-        station_id: `bom-${props.record_id || index}`,
-        isBomGauge: true,
-        active: true,
-        ts_id: null,
-        site: String(props.site || '').trim(),
-        name: `${baseName}${element && !baseName.toLowerCase().includes(element.toLowerCase()) ? ` - ${element}` : ''}`,
-        baseName,
-        element,
-        source: String(props.source || 'BOM').trim(),
-        sourceLayer: String(props.source_layer || '').trim(),
-        agency: String(props.agency || '').trim(),
-        locationTypes: String(props.location_types || '').trim(),
-        lga: lgaName,
-        lat,
-        lon,
-        ifdKey: getBomIfdKey(lat, lon),
-        has_ifd: !!window.BOM_IFD_CACHE?.[getBomIfdKey(lat, lon)],
-        tail: String(props.tail || '').trim()
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.baseName.localeCompare(b.baseName) || a.element.localeCompare(b.element));
+  bomRainfallGauges = window.stationLoader.loadBomRainfallReferenceGauges(verifiedStations, getStationLoaderDeps());
 }
 
 function buildBomRainfallPopup(gauge) {
-  return `<b>${escapeHtml(gauge.baseName || gauge.name)}</b><br>
-    <small>${escapeHtml(gauge.element || 'BOM record')}</small><br>
-    <small>${escapeHtml(gauge.source || 'BOM')}${gauge.agency ? ` · ${escapeHtml(gauge.agency)}` : ''}</small><br>
-    <small>${escapeHtml(getLGA(gauge))} · ${gauge.lat.toFixed(5)}, ${gauge.lon.toFixed(5)}</small><br>
-    <small style="color:#888">${window.BOM_IFD_CACHE?.[gauge.ifdKey] ? 'IFD table available.' : 'IFD table unavailable.'} Live rainfall analysis remains on official gauges.</small>`;
+  return window.stationMarkers.buildBomRainfallPopup(gauge, getStationMarkerDeps());
 }
 
-function plotBomRainfallMarkers() {
-  bomRainfallGauges.forEach(gauge => {
-    const marker = L.circleMarker([gauge.lat, gauge.lon], {
-      radius: 5,
-      color: 'white',
-      weight: 1.5,
-      interactive: true,
-      bubblingMouseEvents: false,
-      fillColor: '#1E88E5',
-      fillOpacity: 0.85
-    }).bindPopup(buildBomRainfallPopup(gauge))
-      .bindTooltip(gauge.baseName || gauge.name, {
-        permanent: true,
-        interactive: true,
-        direction: 'right',
-        className: 'bom-label',
-        offset: [4, 0]
-      });
-    async function doBomHover() {
-      marker.openPopup();
-      const cached = wxCache[gauge.station_id];
-      if (cached && (Date.now() - cached.ts) < 600000) { marker.setPopupContent(cached.html); return; }
-      marker.setPopupContent(buildBomRainfallPopup(gauge) + '<br><small style="color:#aaa">Loading conditions…</small>');
-      try {
-        const [wxRes, rainRes] = await Promise.allSettled([
-          fetchWeather(gauge.lat, gauge.lon),
-          fetchRainfallSinceMidnight(gauge)
-        ]);
-        const wx = wxRes.status === 'fulfilled' ? wxRes.value : null;
-        const rain = rainRes.status === 'fulfilled' ? rainRes.value : null;
-        const condHtml = wx
-          ? `<br><small>${tempIcon(wx.weather_code)} ${wx.temperature_c}°C  Wind ${wx.wind_speed_kmh} km/h ${degToCompass(wx.wind_dir_deg)}${rain != null ? `<br>Rain ${rain.toFixed(1)} mm since midnight` : ''}</small>`
-          : '<br><small style="color:#aaa">Current conditions unavailable</small>';
-        const html = buildBomRainfallPopup(gauge) + condHtml;
-        wxCache[gauge.station_id] = { html, ts: Date.now() };
-        marker.setPopupContent(html);
-      } catch(e) {}
-    }
-    function wireBomTooltip() {
-      const el = marker.getTooltip()?.getElement();
-      if (!el || el.dataset.stationBound === '1') return;
-      el.dataset.stationBound = '1';
-      el.addEventListener('click', evt => {
-        evt.preventDefault(); evt.stopPropagation();
-        selectStation(gauge.station_id);
-      });
-      el.addEventListener('mouseenter', doBomHover);
-      el.addEventListener('mouseleave', () => marker.closePopup());
-    }
-    marker.on('click', evt => {
-      if (evt?.originalEvent) L.DomEvent.stop(evt.originalEvent);
-      selectStation(gauge.station_id);
-    });
-    marker.on('mouseover', doBomHover);
-    marker.on('mouseout', () => marker.closePopup());
-    marker.on('tooltipopen', wireBomTooltip);
-    marker.on('add', wireBomTooltip);
-    bomRainfallMarkers[gauge.station_id] = marker;
-  });
+function plotBomRainfallMarkers(gauges = bomRainfallGauges) {
+  return window.stationMarkers.plotBomRainfallMarkers(gauges, getStationMarkerDeps());
 }
 
 function setMarkerStyle(id, style) {
-  const m = markers[id] || bomRainfallMarkers[id];
-  if (!m) return;
-  const station = findDisplayStationById(id);
-  if (station?.isBomGauge && style === 'default') {
-    m.setStyle({fillColor:'#1E88E5', radius:5, color:'white', weight:1.5, fillOpacity:0.85});
-    return;
-  }
-  if (style === 'selected') m.setStyle({fillColor:'#1A2B3C', radius:8, weight:2, fillOpacity:0.9});
-  else if (style === 'result') m.setStyle({fillColor:'#E74C3C', radius:7, weight:2});
-  else m.setStyle({fillColor:'#00847F', radius:5, weight:1.5});
+  return window.stationMarkers.setMarkerStyle(id, style, getStationMarkerDeps());
 }
 
 function findDisplayStationById(id) {
