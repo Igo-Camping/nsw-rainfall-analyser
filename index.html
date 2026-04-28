@@ -489,11 +489,15 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   import { exportXLSX }           from './src/modules/exports/exportXlsx.js';
   import { exportPNG }            from './src/modules/exports/exportPng.js';
   import { appendWorkbookSheet }  from './src/modules/exports/workbookSheet.js';
+  import * as bomRadar            from './src/modules/radar/bomRadar.js';
+  import * as rainviewerFallback  from './src/modules/radar/rainviewerFallback.js';
   window.buildExportModel    = buildExportModel;
   window.exportCSV           = exportCSV;
   window.exportXLSX          = exportXLSX;
   window.exportPNG           = exportPNG;
   window.appendWorkbookSheet = appendWorkbookSheet;
+  window.bomRadar            = bomRadar;
+  window.rainviewerFallback  = rainviewerFallback;
 </script>
 <script>
 // â"€â"€ Config â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
