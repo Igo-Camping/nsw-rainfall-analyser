@@ -742,6 +742,7 @@ loadAnalysisCache(); // pure localStorage read — no DOM access
 let map = null;
 let atmosBaseLayer = null;
 let atmosRadarLayer = null;
+let atmosRadarPaneName = null;
 const mapReadyPromise = queueAtmosMapSetup();
 const lgaBoundaryLoadPromise = mapReadyPromise.then(() => loadAllLgaBoundaries());
 
@@ -758,6 +759,7 @@ function queueAtmosMapSetup() {
 function initAtmosMap() {
   map = window.mapInit.createAtmosMap({ L });
   atmosBaseLayer = window.mapLayers.addAtmosBaseLayer(map, { L });
+  atmosRadarPaneName = window.mapLayers.ensureAtmosRadarPane(map);
   queueAtmosRadarLayer(map);
   return map;
 }
@@ -773,18 +775,27 @@ function queueAtmosRadarLayer(mapInstance) {
 
 async function initAtmosRadarLayer(mapInstance) {
   try {
-    atmosRadarLayer = await window.bomRadar.createAvailableBomRadarLayer();
+    atmosRadarLayer = await window.bomRadar.createAvailableBomRadarLayer({
+      map: mapInstance,
+      pane: atmosRadarPaneName
+    });
     atmosRadarLayer.addTo(mapInstance);
-    console.info('[Atmos radar] BOM radar loaded');
+    console.info('[Atmos radar] provider selected: BOM');
     return;
   } catch (error) {
     console.warn('[Atmos radar] BOM radar unavailable:', error?.message || error);
   }
 
   try {
-    atmosRadarLayer = await window.rainviewerFallback.createRainviewerFallbackLayer();
+    atmosRadarLayer = await window.rainviewerFallback.createRainviewerFallbackLayer({
+      map: mapInstance,
+      pane: atmosRadarPaneName,
+      maxNativeZoom: 10,
+      minZoom: 0,
+      maxZoom: 19
+    });
     atmosRadarLayer.addTo(mapInstance);
-    console.info('[Atmos radar] RainViewer fallback loaded');
+    console.info('[Atmos radar] provider selected: RainViewer fallback');
   } catch (error) {
     atmosRadarLayer = null;
     console.warn('[Atmos radar] RainViewer fallback unavailable:', error?.message || error);

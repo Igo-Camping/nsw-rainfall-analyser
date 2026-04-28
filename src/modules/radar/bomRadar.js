@@ -1,6 +1,7 @@
 const DEFAULT_BOM_TILE_TEMPLATE = 'https://radar-tiles.service.bom.gov.au/tiles/{time}/{z}/{x}/{y}.png';
 const DEFAULT_SAMPLE_TILE = { z: 5, x: 29, y: 19 };
 const DEFAULT_BOM_HOST = 'radar-tiles.service.bom.gov.au';
+const DEFAULT_BOM_PANE = 'atmos-radar-pane';
 
 export async function fetchBomRadarFrames(framesUrl, fetchOptions = {}) {
   const response = await fetch(framesUrl, {
@@ -34,10 +35,14 @@ export function getBomRadarFrameCandidates(now = Date.now(), intervalMinutes = 1
 
 export function createBomRadarTileLayer(frame, options = {}) {
   const tileTemplate = options.tileTemplate || DEFAULT_BOM_TILE_TEMPLATE;
+  const layerTemplate = tileTemplate.replace('{time}', encodeURIComponent(frame));
 
-  return L.tileLayer(tileTemplate.replace('{time}', encodeURIComponent(frame)), {
+  console.info('[Atmos radar] BOM tile URL template:', layerTemplate);
+  console.info('[Atmos radar] BOM map zoom:', options.map?.getZoom?.());
+
+  return L.tileLayer(layerTemplate, {
     opacity: 0.55,
-    zIndex: 450,
+    pane: options.pane || DEFAULT_BOM_PANE,
     attribution: 'Radar (c) Australian Bureau of Meteorology',
     ...options.layerOptions
   });

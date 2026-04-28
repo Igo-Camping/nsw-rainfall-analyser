@@ -4,6 +4,8 @@ const DEFAULT_BASE_TILE_OPTIONS = {
   subdomains: 'abcd',
   maxZoom: 19
 };
+const RADAR_PANE_NAME = 'atmos-radar-pane';
+const RADAR_PANE_Z_INDEX = 450;
 
 export function addAtmosBaseLayer(map, {
   L,
@@ -14,4 +16,14 @@ export function addAtmosBaseLayer(map, {
     ...DEFAULT_BASE_TILE_OPTIONS,
     ...tileOptions
   }).addTo(map);
+}
+
+export function ensureAtmosRadarPane(map, {
+  paneName = RADAR_PANE_NAME,
+  zIndex = RADAR_PANE_Z_INDEX
+} = {}) {
+  const pane = map.getPane(paneName) || map.createPane(paneName);
+  pane.style.zIndex = String(zIndex);
+  pane.style.pointerEvents = 'none';
+  return paneName;
 }
