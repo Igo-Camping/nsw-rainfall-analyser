@@ -282,6 +282,36 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
 <!-- Page Nav (hidden on home) -->
 <div id="page-nav" style="display:none">
   <button class="pnav-btn active" data-page="aep" onclick="switchPage('aep')">Rainfall Calculator</button>
+  <button class="pnav-btn pnav-home" data-page="home" onclick="switchPage('home')">Home</button>
+</div>
+
+<!-- Home Screen -->
+<div id="page-home" style="display:none">
+  <section class="home-hero">
+    <img class="home-logo" src="Assets/Logos/STORMGAUGE.png" alt="Stormgauge">
+    <div class="home-kicker">Pluviometrics</div>
+    <h1>Stormgauge</h1>
+    <p>Northern Beaches rainfall intelligence for live gauge review, event totals, intensity ranking, and AEP checks.</p>
+    <button class="home-primary" onclick="switchPage('aep')">Open Rainfall Calculator</button>
+  </section>
+
+  <section class="home-cards" aria-label="Stormgauge capabilities">
+    <button class="home-card" onclick="switchPage('aep')">
+      <div class="hc-title">Live Rainfall</div>
+      <div class="hc-desc">Track 5-minute gauge data and recent storm totals across the network.</div>
+      <div><span class="hc-badge live">Live</span></div>
+    </button>
+    <button class="home-card" onclick="switchPage('aep')">
+      <div class="hc-title">AEP Analysis</div>
+      <div class="hc-desc">Compare observed bursts against BoM IFD estimates with export-ready tables.</div>
+      <div><span class="hc-badge live">Ready</span></div>
+    </button>
+    <button class="home-card" onclick="switchPage('aep')">
+      <div class="hc-title">Station Map</div>
+      <div class="hc-desc">Review official and LGA gauge sets from a focused map workspace.</div>
+      <div><span class="hc-badge live">Mapped</span></div>
+    </button>
+  </section>
 </div>
 
 <!-- AEP Tool (display:flex so Leaflet map inits with correct dimensions) -->
@@ -804,6 +834,7 @@ function queueAtmosRadarLayer(mapInstance) {
 
 async function initAtmosRadarLayer(mapInstance) {
   try {
+    console.info('Attempting BOM radar');
     atmosRadarLayer = await window.bomRadar.createAvailableBomRadarLayer({
       map: mapInstance,
       pane: atmosRadarPaneName
@@ -813,6 +844,7 @@ async function initAtmosRadarLayer(mapInstance) {
     return;
   } catch (error) {
     console.warn('[Atmos radar] BOM radar unavailable:', error?.message || error);
+    console.info('BOM radar unavailable, falling back to RainViewer');
   }
 
   try {
@@ -821,9 +853,10 @@ async function initAtmosRadarLayer(mapInstance) {
       pane: atmosRadarPaneName,
       maxNativeZoom: 10,
       minZoom: 0,
-      maxZoom: 19
+      maxZoom: 18
     });
     atmosRadarLayer.addTo(mapInstance);
+    console.info('RainViewer radar loaded');
     console.info('[Atmos radar] provider selected: RainViewer fallback');
   } catch (error) {
     atmosRadarLayer = null;
@@ -4359,10 +4392,14 @@ let criticalInspectionSourceName = '';
 
 
 // â"€â"€ Page navigation â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-const PAGES = ['aep'];
-let currentPage = 'aep';
+const PAGES = ['home', 'aep'];
+let currentPage = 'home';
 
 function switchPage(page, options = {}) {
+  if (page === 'home') {
+    showStormgaugePageShell('home');
+    return;
+  }
   if (page === 'aep') {
     showStormgaugePageShell('aep');
     ensureAtmosMapSetup().then(() => {
@@ -4384,7 +4421,7 @@ function showStormgaugePageShell(page) {
     if (!el) return;
     el.style.display = p === page ? 'flex' : 'none';
   });
-  document.getElementById('page-nav').style.display = 'flex';
+  document.getElementById('page-nav').style.display = page === 'home' ? 'none' : 'flex';
   document.querySelectorAll('.pnav-btn[data-page]').forEach(button =>
     button.classList.toggle('active', button.dataset.page === page));
 }
