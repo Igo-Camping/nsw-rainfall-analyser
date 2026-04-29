@@ -75,6 +75,6 @@ export function switchPage(page, options = {}, ctx) {
 }
 
 export function wireStartupControls(ctx) {
-  ctx.switchPage('home');
+  ctx.switchPage('aep');
   ctx.syncTheme();
 }
