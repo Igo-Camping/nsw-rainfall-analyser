@@ -1,7 +1,8 @@
 const DEFAULT_RAINVIEWER_MAX_NATIVE_ZOOM = 10;
-const DEFAULT_RAINVIEWER_MIN_ZOOM = 0;
+const DEFAULT_RAINVIEWER_MIN_ZOOM = 2;
 const DEFAULT_RAINVIEWER_MAX_ZOOM = 18;
 const DEFAULT_RAINVIEWER_PANE = 'atmos-radar-pane';
+const DEFAULT_RAINVIEWER_OPACITY = 0.6;
 
 export async function fetchRainviewerApi(apiUrl = 'https://api.rainviewer.com/public/weather-maps.json') {
   const response = await fetch(apiUrl, { cache: 'no-store' });
@@ -21,6 +22,9 @@ export function createRainviewerTileLayer(apiData, options = {}) {
   const maxNativeZoom = options.maxNativeZoom ?? DEFAULT_RAINVIEWER_MAX_NATIVE_ZOOM;
   const minZoom = options.minZoom ?? DEFAULT_RAINVIEWER_MIN_ZOOM;
   const maxZoom = options.maxZoom ?? DEFAULT_RAINVIEWER_MAX_ZOOM;
+  const tileSize = options.tileSize ?? 256;
+  const opacity = options.opacity ?? DEFAULT_RAINVIEWER_OPACITY;
+  const errorTileUrl = options.errorTileUrl ?? '';
   const tileTemplate = `${host}${path}/256/{z}/{x}/{y}/2/1_1.png`;
 
   if (!path) {
@@ -29,18 +33,19 @@ export function createRainviewerTileLayer(apiData, options = {}) {
 
   console.info('[Atmos radar] RainViewer tile URL template:', tileTemplate);
   console.info('[Atmos radar] RainViewer map zoom:', options.map?.getZoom?.());
-  console.info('[Atmos radar] RainViewer zoom config:', { minZoom, maxNativeZoom, maxZoom });
+  console.info('[Atmos radar] RainViewer zoom config:', { minZoom, maxNativeZoom, maxZoom, tileSize });
 
   return L.tileLayer(tileTemplate, {
     attribution: 'Radar (c) RainViewer',
     ...options.layerOptions,
-    opacity: 0.65,
+    opacity,
     pane: options.pane || DEFAULT_RAINVIEWER_PANE,
     zIndex: 450,
     minZoom,
     maxNativeZoom,
     maxZoom,
-    tileSize: 256,
+    tileSize,
+    errorTileUrl,
     updateWhenZooming: false,
     updateWhenIdle: true,
     keepBuffer: 2

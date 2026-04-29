@@ -834,29 +834,35 @@ function queueAtmosRadarLayer(mapInstance) {
 
 async function initAtmosRadarLayer(mapInstance) {
   try {
-    console.info('Attempting BOM radar');
+    console.info('[Atmos radar] Attempting BOM radar');
     atmosRadarLayer = await window.bomRadar.createAvailableBomRadarLayer({
       map: mapInstance,
       pane: atmosRadarPaneName
     });
     atmosRadarLayer.addTo(mapInstance);
+    console.info('[Atmos radar] layer added at map zoom:', mapInstance?.getZoom?.());
     console.info('[Atmos radar] provider selected: BOM');
     return;
   } catch (error) {
     console.warn('[Atmos radar] BOM radar unavailable:', error?.message || error);
-    console.info('BOM radar unavailable, falling back to RainViewer');
+    console.info('[Atmos radar] BOM radar failed; falling back to RainViewer');
   }
 
   try {
+    console.info('[Atmos radar] RainViewer fallback enabled');
     atmosRadarLayer = await window.rainviewerFallback.createRainviewerFallbackLayer({
       map: mapInstance,
       pane: atmosRadarPaneName,
       maxNativeZoom: 10,
-      minZoom: 0,
-      maxZoom: 18
+      minZoom: 2,
+      maxZoom: 18,
+      tileSize: 256,
+      opacity: 0.6,
+      errorTileUrl: ''
     });
     atmosRadarLayer.addTo(mapInstance);
-    console.info('RainViewer radar loaded');
+    console.info('[Atmos radar] layer added at map zoom:', mapInstance?.getZoom?.());
+    console.info('[Atmos radar] RainViewer radar loaded');
     console.info('[Atmos radar] provider selected: RainViewer fallback');
   } catch (error) {
     atmosRadarLayer = null;
