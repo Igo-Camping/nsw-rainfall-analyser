@@ -282,23 +282,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
 <!-- Page Nav (hidden on home) -->
 <div id="page-nav" style="display:none">
   <button class="pnav-btn active" data-page="aep" onclick="switchPage('aep')">Rainfall Calculator</button>
-  <button class="pnav-btn pnav-home" data-page="home" onclick="switchPage('home')">Home</button>
-</div>
-
-<!-- Home Screen -->
-<div id="page-home" style="display:flex">
-  <div class="home-hero">
-    <h1>NBC Stormwater Tools</h1>
-    <p>Northern Beaches Council - Stormwater Engineering</p>
-  </div>
-  <div class="home-cards">
-    <div class="home-card" onclick="switchPage('aep')">
-      <div class="hc-icon">Rainfall</div>
-      <div class="hc-title">Rainfall Calculator</div>
-      <div class="hc-desc">Live rainfall gauge data with BoM IFD AEP analysis across available stations.</div>
-      <div><span class="hc-badge live">Live</span></div>
-    </div>
-  </div>
 </div>
 
 <!-- AEP Tool (display:flex so Leaflet map inits with correct dimensions) -->
@@ -4376,8 +4359,8 @@ let criticalInspectionSourceName = '';
 
 
 // â"€â"€ Page navigation â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-const PAGES = ['home','aep'];
-let currentPage = 'home';
+const PAGES = ['aep'];
+let currentPage = 'aep';
 
 function switchPage(page, options = {}) {
   if (page === 'aep') {
@@ -4396,13 +4379,12 @@ function switchPage(page, options = {}) {
 
 function showStormgaugePageShell(page) {
   currentPage = page;
-  const flexPages = new Set(['home','aep']);
   PAGES.forEach(p => {
     const el = document.getElementById('page-' + p);
     if (!el) return;
-    el.style.display = p === page ? (flexPages.has(p) ? 'flex' : '') : 'none';
+    el.style.display = p === page ? 'flex' : 'none';
   });
-  document.getElementById('page-nav').style.display = page === 'home' ? 'none' : 'flex';
+  document.getElementById('page-nav').style.display = 'flex';
   document.querySelectorAll('.pnav-btn[data-page]').forEach(button =>
     button.classList.toggle('active', button.dataset.page === page));
 }
