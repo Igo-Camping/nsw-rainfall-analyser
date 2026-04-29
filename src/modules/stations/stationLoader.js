@@ -39,6 +39,7 @@ export async function loadStations(ctx) {
   ctx.plotAllMarkers(mhlStations);
   ctx.plotBomRainfallMarkers(bomRainfallGauges);
   ctx.buildLgaDropdown();
+  ctx.invalidateMap?.('station layers loaded');
   ctx.setStatus(true, `${mhlStations.length.toLocaleString()} MHL rainfall stations + ${bomRainfallGauges.length.toLocaleString()} BOM rainfall stations`);
 
   return { allStations: mhlStations, bomRainfallGauges };

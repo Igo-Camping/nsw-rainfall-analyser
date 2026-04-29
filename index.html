@@ -758,25 +758,56 @@ let map = null;
 let atmosBaseLayer = null;
 let atmosRadarLayer = null;
 let atmosRadarPaneName = null;
-const mapReadyPromise = queueAtmosMapSetup();
-const lgaBoundaryLoadPromise = mapReadyPromise.then(() => loadAllLgaBoundaries());
+let mapSetupPromise = null;
+let lgaBoundaryLoadPromise = null;
+const mapReadyPromise = {
+  then: (onFulfilled, onRejected) => ensureAtmosMapSetup().then(onFulfilled, onRejected),
+  catch: onRejected => ensureAtmosMapSetup().catch(onRejected),
+  finally: onFinally => ensureAtmosMapSetup().finally(onFinally)
+};
 
-function queueAtmosMapSetup() {
+function ensureAtmosMapSetup() {
+  if (map) return Promise.resolve(map);
+  if (mapSetupPromise) return mapSetupPromise;
+
   if (window.mapInit && window.mapLayers) {
-    return Promise.resolve(initAtmosMap());
+    mapSetupPromise = Promise.resolve(initAtmosMap());
+  } else {
+    mapSetupPromise = new Promise(resolve => {
+      window.addEventListener('atmos-modules-ready', () => resolve(initAtmosMap()), { once: true });
+    });
   }
 
-  return new Promise(resolve => {
-    window.addEventListener('atmos-modules-ready', () => resolve(initAtmosMap()), { once: true });
+  return mapSetupPromise.then(mapInstance => {
+    invalidateAtmosMap('map setup');
+    return mapInstance;
   });
 }
 
 function initAtmosMap() {
+  if (map) return map;
   map = window.mapInit.createAtmosMap({ L });
   atmosBaseLayer = window.mapLayers.addAtmosBaseLayer(map, { L });
   atmosRadarPaneName = window.mapLayers.ensureAtmosRadarPane(map);
   queueAtmosRadarLayer(map);
   return map;
+}
+
+function ensureLgaBoundaryLoad() {
+  if (!lgaBoundaryLoadPromise) {
+    lgaBoundaryLoadPromise = ensureAtmosMapSetup().then(() => loadAllLgaBoundaries());
+  }
+  return lgaBoundaryLoadPromise;
+}
+
+function invalidateAtmosMap(reason = '') {
+  if (!map) return;
+  requestAnimationFrame(() => {
+    map.invalidateSize();
+    setTimeout(() => map.invalidateSize(), 50);
+    setTimeout(() => map.invalidateSize(), 250);
+    if (reason) console.info('[Stormgauge map] invalidateSize:', reason);
+  });
 }
 
 function queueAtmosRadarLayer(mapInstance) {
@@ -864,7 +895,7 @@ function normaliseConsolidatedBomStation(station, lat, lon) {
 function getStationLoaderDeps() {
   return {
     stationDataUrl: PLUVIOMETRICS_RAINFALL_STATION_DATA_URL,
-    lgaBoundaryLoadPromise,
+    lgaBoundaryLoadPromise: ensureLgaBoundaryLoad(),
     bomIfdCache: window.BOM_IFD_CACHE,
     bomNorthernBeachesGauges: window.BOM_NORTHERN_BEACHES_GAUGES,
     setStatus,
@@ -877,6 +908,7 @@ function getStationLoaderDeps() {
     plotAllMarkers,
     plotBomRainfallMarkers,
     buildLgaDropdown,
+    invalidateMap: invalidateAtmosMap,
     getBomStationNumber,
     getBomIfdKey,
     canAnalyseStation,
@@ -4348,7 +4380,31 @@ const PAGES = ['home','aep'];
 let currentPage = 'home';
 
 function switchPage(page, options = {}) {
-  return window.uiControls.switchPage(page, options, getUiControlDeps());
+  if (page === 'aep') {
+    showStormgaugePageShell('aep');
+    ensureAtmosMapSetup().then(() => {
+      invalidateAtmosMap('page activation');
+      if (!window._aepInited) {
+        window._aepInited = true;
+        init();
+      }
+    });
+    return;
+  }
+  showStormgaugePageShell(page);
+}
+
+function showStormgaugePageShell(page) {
+  currentPage = page;
+  const flexPages = new Set(['home','aep']);
+  PAGES.forEach(p => {
+    const el = document.getElementById('page-' + p);
+    if (!el) return;
+    el.style.display = p === page ? (flexPages.has(p) ? 'flex' : '') : 'none';
+  });
+  document.getElementById('page-nav').style.display = page === 'home' ? 'none' : 'flex';
+  document.querySelectorAll('.pnav-btn[data-page]').forEach(button =>
+    button.classList.toggle('active', button.dataset.page === page));
 }
 
 function applyTheme(t) {
