@@ -74,11 +74,6 @@ export function switchPage(page, options = {}, ctx) {
 }
 
 export function wireStartupControls(ctx) {
-  let initialPage = 'home';
-  try {
-    const params = new URLSearchParams(ctx.document.location.search);
-    if (params.get('view') === 'calculator') initialPage = 'aep';
-  } catch (e) {}
-  ctx.switchPage(initialPage);
+  ctx.switchPage('aep');
   ctx.syncTheme();
 }
