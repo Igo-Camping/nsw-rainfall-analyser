@@ -252,31 +252,70 @@ def validate_month(
     }
 
 
-def is_pass(v: Dict[str, Any]) -> bool:
+def classify(v: Dict[str, Any]) -> Tuple[bool, str]:
+    """
+    Return (passed, label).
+
+    Distinguishes a legitimate raster coverage gap (e.g. early life of the
+    BOM grid, late Nov / Dec 2017) from a regression of the time= bug.
+
+    A "coverage gap" month is one where the API returns the same all-nodata
+    payload for every timestep:
+      - distinct sha256 == 1
+      - every spot decodes to "all nodata"
+      - request_url uses start=&stop= (param fix intact)
+      - counts/orphans/missing all green
+    These are accepted as PASS (gap) — the data simply doesn't exist at
+    the source and skipping them would leave gaps that can never be filled.
+
+    The original time= bug had distinct sha256 == 1 paired with spots that
+    decoded to real-rainfall values (because the API was returning the
+    same default-time payload, not all-nodata). We still FAIL on that.
+    """
     if not v["counts_ok"]:
-        return False
+        return False, "FAIL (count mismatch)"
     if not v["no_orphans"]:
-        return False
+        return False, "FAIL (orphans)"
     if v["missing_count"] != 0:
-        return False
-    if v["suspicious_constant"]:
-        return False
-    # Tolerate up to (n_spots - 1) all-nodata spots: BOM rainfall grids have
-    # legitimate early-life / sparse-coverage timesteps where the AOI returns
-    # all-fill. We require at least one spot to decode with valid pixels so
-    # we still catch a fully-broken response.
+        return False, "FAIL (missing timesteps)"
+    if v["metadata_uses_start_stop"] is False:
+        return False, "FAIL (metadata uses time=)"
+    if v["spot_max_too_high"]:
+        return False, "FAIL (pixel max > sanity bound)"
+    if v["spot_max_negative"]:
+        return False, "FAIL (pixel max < 0)"
+
     n_spots = len(v["spots"])
     if n_spots == 0:
-        return False
-    if v["spot_errors"] >= n_spots:
-        return False
-    if v["spot_max_too_high"]:
-        return False
-    if v["spot_max_negative"]:
-        return False
-    if v["metadata_uses_start_stop"] is False:
-        return False
-    return True
+        return False, "FAIL (no spots to validate)"
+
+    fatal_errs = sum(
+        1 for s in v["spots"]
+        if "error" in s and s["error"] != "all nodata"
+    )
+    if fatal_errs > 0:
+        return False, "FAIL (decode/missing errors)"
+
+    nodata_spots = sum(
+        1 for s in v["spots"] if s.get("error") == "all nodata"
+    )
+    valid_spots = n_spots - fatal_errs - nodata_spots
+
+    # Regression check: if the entire month has 1 distinct payload AND
+    # any spot has real (non-nodata) values, that's the time= bug or a
+    # close cousin -- a single repeating real-data response.
+    if v["suspicious_constant"] and valid_spots > 0:
+        return False, "FAIL (1 distinct sha + real pixels = regression)"
+
+    # Coverage gap: 1 hash + all spots all-nodata + start/stop verified.
+    if nodata_spots == n_spots:
+        return True, "PASS (coverage gap, all-nodata)"
+
+    return True, "PASS"
+
+
+def is_pass(v: Dict[str, Any]) -> bool:
+    return classify(v)[0]
 
 
 # --- Reports --------------------------------------------------------------
@@ -429,15 +468,16 @@ def main(argv: Optional[List[str]] = None) -> int:
 
         # Pre-validate: skip if already complete + valid
         v_pre = validate_month(m_start, m_end, expected)
-        if is_pass(v_pre):
-            append_progress("- already complete and valid -> **SKIP** (no fetch)")
+        ok_pre, label_pre = classify(v_pre)
+        if ok_pre:
+            cached_label = label_pre.replace("PASS", "PASS (cached)")
+            append_progress(f"- already complete -> **SKIP** ({label_pre})")
             summary["months"].append(
-                {"key": key, "v": v_pre, "outcome": "PASS (cached)"}
+                {"key": key, "v": v_pre, "outcome": cached_label}
             )
             summary["attempted"] += 1
             summary["passed"] += 1
-            print(f"[{key}] cached PASS, skipped fetch", flush=True)
-            # Persist incremental final report so a kill mid-run leaves state.
+            print(f"[{key}] {cached_label}, skipped fetch", flush=True)
             write_final_report(summary)
             continue
 
@@ -452,8 +492,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
         # Validate post-fetch
         v = validate_month(m_start, m_end, expected)
-        ok = is_pass(v)
-        outcome = "PASS" if ok else "FAIL"
+        ok, outcome = classify(v)
 
         append_progress(
             f"- raw={v['raw_count']} meta={v['meta_count']} "
