@@ -6,17 +6,36 @@
 //
 // Filename convention: YYYYMMDDTHHMMSSZ_lizard_precipitation_australia.{json,tif}
 //
-// Some timesteps in the archive are "all-nodata" sentinel responses written
-// during periods when the upstream Lizard raster source returned an empty
-// raster for the AOI (e.g., the confirmed 2024-09 / 2024-10 radar outage).
-// Every such file shares an identical sha256 (recorded in the metadata).
-// Those timesteps must be treated as MISSING for accumulation purposes —
-// not as zero rainfall.
+// =====================================================================
+// Sentinel / no-data classification
+// =====================================================================
+//
+// Some timesteps in the archive are no-data sentinel responses written
+// when the upstream Lizard raster source returned an empty raster for the
+// AOI (for example, throughout the historical pre-2022 source-coverage
+// gap and the 2024-09 / 2024-10 confirmed radar outage). These must be
+// treated as MISSING, never as zero rainfall.
+//
+// Classification is purely deterministic — exact SHA256 (and byte-size)
+// match against an audited registry of known-empty GeoTIFF signatures.
+// No file-size heuristics, no fuzzy matching, no pixel decoding.
+//
+// The registry below was proved by full-archive audit (24,744 frames;
+// 7,679 distinct sha256). The single recurring sha that:
+//   * never appears in any data-rich month, and
+//   * accounts for all 2024-09 / 2024-10 outage frames, and
+//   * accounts for the entire 2017-12 .. 2022-04 source-coverage gap,
+// was promoted to a sentinel. Other recurring sha256 values appear
+// across normal operational months and are NOT promoted — without an
+// authoritative metadata flag we conservatively treat them as data-bearing.
+//
+// To add a new sentinel, prove it via the same audit and append a frozen
+// entry to NODATA_SENTINELS below.
 //
 // This module is fully isolated. It depends only on Node built-ins and on
 // radarAvailability.js (read-only).
 
-import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -33,8 +52,36 @@ const DEFAULT_ARCHIVE_ROOT = path.resolve(
 );
 
 const FILENAME_RE = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z_lizard_precipitation_australia\.(json|tif)$/;
-const NODATA_SENTINEL_SHA256 = 'f6e3d73671ad6b6827c502d269be2ff86e62e857dfa0f755378f0bb29b8a0ef1';
 const HOUR_MS = 3600 * 1000;
+
+// Audited sentinel registry. Each entry MUST specify both sha256 AND the
+// exact byte size of the matching GeoTIFF — a sha256 match with an
+// unexpected byte size is treated as a signature mismatch (validation
+// failure), not as a sentinel.
+export const SENTINEL_LIZARD_NB_AOI_EMPTY_V1 = Object.freeze({
+  id: 'lizard_nb_aoi_empty_v1',
+  sha256: 'f6e3d73671ad6b6827c502d269be2ff86e62e857dfa0f755378f0bb29b8a0ef1',
+  bytes: 1774,
+  raster_uuid: '1b6c03df-2ad1-4f17-89f6-319ea797b357',
+  bbox: [151.15, -33.85, 151.4, -33.55],
+  description:
+    'Empty / all-nodata GeoTIFF returned by the Lizard Northern-Beaches AOI ' +
+    'precipitation rastersource. Observed across the 2017-12..2022-04 source ' +
+    'coverage gap and the 2024-09..2024-10 confirmed radar outage. Bit-identical ' +
+    'across 14,298 occurrences in the validated archive.'
+});
+
+export const NODATA_SENTINELS = Object.freeze([
+  SENTINEL_LIZARD_NB_AOI_EMPTY_V1
+]);
+
+const SENTINEL_BY_SHA = new Map(NODATA_SENTINELS.map((s) => [s.sha256, s]));
+
+export const CLASSIFICATION = Object.freeze({
+  DATA_BEARING:    'data_bearing',         // sha256 present, not in sentinel registry
+  SENTINEL_SHA256: 'sentinel_sha256',      // exact sha256 + bytes match in registry
+  UNCLASSIFIABLE:  'unclassifiable'        // metadata missing/corrupt/contradictory
+});
 
 let cachedIndex = null;
 let cachedRoot = null;
@@ -62,25 +109,91 @@ function inferTimestepHours(sortedIsoTimestamps) {
   return bestDelta == null ? null : bestDelta / HOUR_MS;
 }
 
+// Pure classifier: given a parsed metadata blob (or null), return the
+// classification + reason. No I/O.
+export function classifyMetadata(meta) {
+  if (!meta || typeof meta !== 'object') {
+    return { classification: CLASSIFICATION.UNCLASSIFIABLE, reason: 'metadata missing or not an object' };
+  }
+  const sha = meta.sha256;
+  const bytes = meta.response_bytes;
+  if (typeof sha !== 'string' || sha.length !== 64 || !/^[0-9a-f]{64}$/.test(sha)) {
+    return { classification: CLASSIFICATION.UNCLASSIFIABLE, reason: 'sha256 missing or malformed' };
+  }
+  if (!Number.isFinite(bytes)) {
+    return { classification: CLASSIFICATION.UNCLASSIFIABLE, reason: 'response_bytes missing or not a number' };
+  }
+  const sentinel = SENTINEL_BY_SHA.get(sha);
+  if (sentinel) {
+    if (bytes !== sentinel.bytes) {
+      return {
+        classification: CLASSIFICATION.UNCLASSIFIABLE,
+        reason: `sentinel sha256 ${sha.slice(0, 12)}… matched but byte size ${bytes} != registry ${sentinel.bytes}`
+      };
+    }
+    return { classification: CLASSIFICATION.SENTINEL_SHA256, sentinelId: sentinel.id };
+  }
+  return { classification: CLASSIFICATION.DATA_BEARING };
+}
+
 function readEntries(metadataDir) {
   const files = readdirSync(metadataDir).filter((f) => f.endsWith('.json'));
   const entries = [];
   for (const f of files) {
     const iso = filenameToIso(f);
-    if (!iso) continue;
-    let sha256 = null;
-    try {
-      const meta = JSON.parse(readFileSync(path.join(metadataDir, f), 'utf8'));
-      sha256 = typeof meta.sha256 === 'string' ? meta.sha256 : null;
-    } catch {
-      // Malformed metadata: still index the timestamp, but mark sha unknown
-      // so it is conservatively excluded from data-bearing.
-      sha256 = null;
+    if (!iso) {
+      entries.push({
+        filename: f,
+        iso: null,
+        sha256: null,
+        bytes: null,
+        classification: CLASSIFICATION.UNCLASSIFIABLE,
+        reason: 'filename does not match expected pattern'
+      });
+      continue;
     }
-    entries.push({ filename: f, iso, sha256 });
+    let meta = null;
+    let parseError = null;
+    try {
+      meta = JSON.parse(readFileSync(path.join(metadataDir, f), 'utf8'));
+    } catch (err) {
+      parseError = err.message;
+    }
+    let result;
+    if (parseError) {
+      result = { classification: CLASSIFICATION.UNCLASSIFIABLE, reason: `JSON parse error: ${parseError}` };
+    } else {
+      result = classifyMetadata(meta);
+    }
+    entries.push({
+      filename: f,
+      iso,
+      sha256: meta?.sha256 ?? null,
+      bytes: Number.isFinite(meta?.response_bytes) ? meta.response_bytes : null,
+      classification: result.classification,
+      sentinelId: result.sentinelId,
+      reason: result.reason
+    });
   }
-  entries.sort((a, b) => (a.iso < b.iso ? -1 : a.iso > b.iso ? 1 : 0));
+  entries.sort((a, b) => {
+    const ai = a.iso || '';
+    const bi = b.iso || '';
+    if (ai < bi) return -1;
+    if (ai > bi) return 1;
+    return 0;
+  });
   return entries;
+}
+
+function tallyClassificationCounts(entries) {
+  const counts = {
+    [CLASSIFICATION.DATA_BEARING]: 0,
+    [CLASSIFICATION.SENTINEL_SHA256]: 0,
+    [CLASSIFICATION.UNCLASSIFIABLE]: 0,
+    total: entries.length
+  };
+  for (const e of entries) counts[e.classification]++;
+  return counts;
 }
 
 export function buildRadarArchiveIndex(options = {}) {
@@ -98,24 +211,26 @@ export function buildRadarArchiveIndex(options = {}) {
   }
 
   const entries = readEntries(metadataDir);
-  const timestamps = entries.map((e) => e.iso);
+  const timestamps = entries.filter((e) => e.iso).map((e) => e.iso);
   const dataBearingTimestamps = entries
-    .filter((e) => e.sha256 && e.sha256 !== NODATA_SENTINEL_SHA256)
+    .filter((e) => e.classification === CLASSIFICATION.DATA_BEARING && e.iso)
     .map((e) => e.iso);
-
+  const classificationCounts = tallyClassificationCounts(entries);
   const timestepHours = inferTimestepHours(timestamps);
 
   const publicIndex = {
     timestamps,
     firstTimestamp: timestamps[0] ?? null,
     lastTimestamp:  timestamps[timestamps.length - 1] ?? null,
-    timestepHours
+    timestepHours,
+    classificationCounts: { ...classificationCounts }
   };
 
   cachedIndex = {
     public: publicIndex,
     entries,
     dataBearingTimestamps,
+    classificationCounts,
     archiveRoot,
     metadataDir,
     rasterDir
@@ -133,6 +248,10 @@ function ensureCache(options) {
 
 export function getDataBearingTimestamps(options) {
   return ensureCache(options).dataBearingTimestamps.slice();
+}
+
+export function getClassificationMethodCounts(options) {
+  return { ...ensureCache(options).classificationCounts };
 }
 
 export function clearRadarArchiveIndexCache() {
@@ -165,11 +284,6 @@ export function detectRadarGaps(timestamps, expectedTimestepHours) {
     }
   }
   return gaps;
-}
-
-function expectedStepsBetween(startMs, endMs, stepMs) {
-  if (!(stepMs > 0) || endMs <= startMs) return 0;
-  return Math.floor((endMs - startMs) / stepMs) + 1;
 }
 
 export function getArchiveCoverageForRange(startIso, endIso, options) {
@@ -256,35 +370,49 @@ export function validateArchiveIntegrity(options) {
   if (!existsSync(rasterDir))   issues.push(`Missing raster dir: ${rasterDir}`);
   if (issues.length) return { valid: false, issues };
 
+  // Build (or reuse) the index so we can audit classifications too.
+  let cache;
+  if (cachedIndex && cachedRoot === archiveRoot) {
+    cache = cachedIndex;
+  } else {
+    buildRadarArchiveIndex({ archiveRoot, force: true });
+    cache = cachedIndex;
+  }
+
   const jsonFiles = readdirSync(metadataDir).filter((f) => f.endsWith('.json'));
   const tifFiles  = readdirSync(rasterDir).filter((f) => f.endsWith('.tif'));
 
-  const jsonStems = new Set();
-  const malformed = [];
-  const seenIso = new Map();
-  for (const f of jsonFiles) {
-    const stem = f.replace(/\.json$/, '');
-    jsonStems.add(stem);
-    const iso = filenameToIso(f);
-    if (!iso) {
-      malformed.push(f);
-      continue;
-    }
-    const prev = seenIso.get(iso);
-    if (prev) issues.push(`Duplicate timestamp ${iso}: ${prev}, ${f}`);
-    else seenIso.set(iso, f);
-  }
-  if (malformed.length) issues.push(`Malformed metadata filenames: ${malformed.length}`);
-
-  const tifStems = new Set(tifFiles.map((f) => f.replace(/\.tif$/, '')));
+  const jsonStems = new Set(jsonFiles.map((f) => f.replace(/\.json$/, '')));
+  const tifStems  = new Set(tifFiles.map((f) => f.replace(/\.tif$/, '')));
   const jsonOnly = [...jsonStems].filter((s) => !tifStems.has(s));
   const tifOnly  = [...tifStems].filter((s) => !jsonStems.has(s));
   if (jsonOnly.length) issues.push(`Metadata without raster: ${jsonOnly.length}`);
   if (tifOnly.length)  issues.push(`Raster without metadata: ${tifOnly.length}`);
 
-  // Timestep consistency among ALL indexed timestamps. The archive is
-  // expected to be evenly cadenced; deviations from the inferred timestep
-  // are reported as integrity issues.
+  // Duplicate / malformed timestamp checks.
+  const seenIso = new Map();
+  let malformedFilenames = 0;
+  const unclassifiable = [];
+  for (const e of cache.entries) {
+    if (!e.iso) {
+      malformedFilenames++;
+    } else {
+      const prev = seenIso.get(e.iso);
+      if (prev) issues.push(`Duplicate timestamp ${e.iso}: ${prev}, ${e.filename}`);
+      else seenIso.set(e.iso, e.filename);
+    }
+    if (e.classification === CLASSIFICATION.UNCLASSIFIABLE) {
+      unclassifiable.push({ file: e.filename, reason: e.reason });
+    }
+  }
+  if (malformedFilenames > 0) issues.push(`Malformed metadata filenames: ${malformedFilenames}`);
+
+  if (unclassifiable.length > 0) {
+    const sample = unclassifiable.slice(0, 5).map((u) => `${u.file} (${u.reason})`).join('; ');
+    issues.push(`Unclassifiable frames: ${unclassifiable.length}${unclassifiable.length > 5 ? ` (e.g. ${sample})` : ` (${sample})`}`);
+  }
+
+  // Timestep consistency among ALL parseable timestamps.
   const sortedIso = [...seenIso.keys()].sort();
   const stepHours = inferTimestepHours(sortedIso);
   if (!Number.isFinite(stepHours) || stepHours <= 0) {
@@ -301,11 +429,14 @@ export function validateArchiveIntegrity(options) {
     }
   }
 
-  return { valid: issues.length === 0, issues };
+  return {
+    valid: issues.length === 0,
+    issues,
+    classificationCounts: { ...cache.classificationCounts }
+  };
 }
 
 export const __internal = Object.freeze({
-  NODATA_SENTINEL_SHA256,
   DEFAULT_ARCHIVE_ROOT,
   filenameToIso,
   inferTimestepHours
