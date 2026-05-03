@@ -46,3 +46,11 @@ scripts/consolidate_rainfall_stations.py
 scripts/refresh-bom-active-stations.mjs
 scripts/verify_bom_rainfall_stations.py
 scripts/verify_stations.py
+
+# Local/generated Stormgauge working files
+.claude/
+.tmp_*
+_staging_rebuild/
+data/_backup/
+data/radar_archive/
+Superseeded/snapshot-*/
