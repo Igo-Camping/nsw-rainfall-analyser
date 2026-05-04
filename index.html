@@ -63,6 +63,7 @@ html[data-theme="dark"] {
   --teal:       #00C4BE;
   --teal-l:     #00DDD7;
   --teal-d:     #009E99;
+  --action:        #007570;
   --navy:       #0D1E30;
   --navy-l:     #0E1D2D;
   --bg:            #090F18;
@@ -71,6 +72,9 @@ html[data-theme="dark"] {
   --surface-inset: #08111C;
   --panel:      #0D1826;
   --border:     #1C2E40;
+  --header-rim:    #0B1824;
+  --divider-rim:   #162233;
+  --divider-soft:  #172638;
   --text:       #DCE8F2;
   --text-step:  #8AAFC8;
   --text-l:     #5E8099;
@@ -100,13 +104,13 @@ html[data-theme="dark"] .h-status { color: var(--text-haze); }
 html[data-theme="dark"] .dot { box-shadow: 0 0 6px #27AE60; }
 
 /* ── 4. Tab bar ───────────────────────────────────────────────────────────── */
-html[data-theme="dark"] .tab-bar { background: #0B1722; border-bottom: 1px solid #172638; }
+html[data-theme="dark"] .tab-bar { background: #0B1722; border-bottom: 1px solid var(--divider-soft); }
 html[data-theme="dark"] .tab { padding: 11px 20px; font-size: 11px; letter-spacing: .04em; color: var(--text-haze); border-bottom-width: 2px; }
 html[data-theme="dark"] .tab.active { color: #00DDD7; border-bottom-color: #00C4BE; background: rgba(0,196,190,.05); }
 html[data-theme="dark"] .tab:hover:not(.active) { color: var(--text-step); }
 
 /* ── 5. Sidebar ───────────────────────────────────────────────────────────── */
-html[data-theme="dark"] .sidebar { width: 296px; background: var(--surface); border-right: 1px solid #162233; }
+html[data-theme="dark"] .sidebar { width: 296px; background: var(--surface); border-right: 1px solid var(--divider-rim); }
 html[data-theme="dark"] .sb-section        { border-bottom: 1px solid #142030; padding: 13px 14px; }
 html[data-theme="dark"] .sb-station-header { border-bottom: 1px solid #142030; padding: 10px 14px 8px; }
 html[data-theme="dark"] .sb-analysis-section { background: var(--surface-inset); border-top: 1px solid #1C2E40; }
@@ -136,10 +140,10 @@ html[data-theme="dark"] .mode-tog button.active             { background: #00706
 html[data-theme="dark"] .mode-tog button:hover:not(.active) { background: #0E1D2D; color: var(--text-step); }
 
 /* ── 8. Buttons ───────────────────────────────────────────────────────────── */
-html[data-theme="dark"] .run-btn { background: #007570; font-size: 12px; letter-spacing: .04em; margin-top: 8px; border-radius: var(--r); }
+html[data-theme="dark"] .run-btn { background: var(--action); font-size: 12px; letter-spacing: .04em; margin-top: 8px; border-radius: var(--r); }
 html[data-theme="dark"] .run-btn:hover:not(:disabled) { background: #00A89D; box-shadow: 0 0 18px rgba(0,196,190,.22); }
-html[data-theme="dark"] .run-btn:disabled { background: #172638; color: #2E4A60; cursor: not-allowed; }
-html[data-theme="dark"] .export-btn       { background: #007570; }
+html[data-theme="dark"] .run-btn:disabled { background: var(--divider-soft); color: #2E4A60; cursor: not-allowed; }
+html[data-theme="dark"] .export-btn       { background: var(--action); }
 html[data-theme="dark"] .export-btn:hover { background: #00A89D; }
 html[data-theme="dark"] .btn-secondary       { background: #0E1D2D; border-color: #1C2E40; color: var(--text-step); }
 html[data-theme="dark"] .btn-secondary:hover { background: #142232; color: #DCE8F2; }
@@ -167,13 +171,13 @@ html[data-theme="dark"] .main { background: #07101A; }
 html[data-theme="dark"] #tab-rainfall { background: var(--bg); }
 
 /* ── 12. Results panel ────────────────────────────────────────────────────── */
-html[data-theme="dark"] .results { background: var(--surface); border-top: 2px solid #007570; max-height: min(46vh, 420px); }
-html[data-theme="dark"] .res-hdr { background: #0B1824; border-bottom: 1px solid #162233; padding: 10px 18px; }
+html[data-theme="dark"] .results { background: var(--surface); border-top: 2px solid var(--action); max-height: min(46vh, 420px); }
+html[data-theme="dark"] .res-hdr { background: var(--header-rim); border-bottom: 1px solid var(--divider-rim); padding: 10px 18px; }
 html[data-theme="dark"] .res-title { color: #DCE8F2; font-size: 13px; }
 html[data-theme="dark"] .res-sub   { color: var(--text-haze); }
 
 /* ── 13. Result inner tabs ────────────────────────────────────────────────── */
-html[data-theme="dark"] .rtabs  { background: #0B1824; border-bottom: 1px solid #162233; padding: 0 14px; }
+html[data-theme="dark"] .rtabs  { background: var(--header-rim); border-bottom: 1px solid var(--divider-rim); padding: 0 14px; }
 html[data-theme="dark"] .rtab   { color: var(--text-haze); font-size: 11px; padding: 8px 14px; }
 html[data-theme="dark"] .rtab.active { color: #00C4BE; border-bottom-color: #00C4BE; }
 html[data-theme="dark"] .rpanel { background: var(--surface); padding: 14px 18px; }
@@ -182,7 +186,7 @@ html[data-theme="dark"] .d-subtab  { color: var(--text-haze); }
 html[data-theme="dark"] .d-subtab.active { color: #00C4BE; border-bottom-color: #00C4BE; }
 
 /* ── 14. Tables ───────────────────────────────────────────────────────────── */
-html[data-theme="dark"] th { background: #0B1824; color: var(--text-step); border-bottom: 1px solid #1C2E40; font-size: 11px; }
+html[data-theme="dark"] th { background: var(--header-rim); color: var(--text-step); border-bottom: 1px solid #1C2E40; font-size: 11px; }
 html[data-theme="dark"] td { border-bottom: 1px solid #0F1E2C; color: #C8DCEA; }
 html[data-theme="dark"] tr:nth-child(even) td { background: var(--surface-up); }
 html[data-theme="dark"] tr.highlight td       { background: rgba(0,196,190,.1); }
@@ -210,11 +214,11 @@ html[data-theme="dark"] .load-txt { color: #DCE8F2; }
 html[data-theme="dark"] .spinner  { border-color: rgba(0,196,190,.1); border-top-color: #00C4BE; }
 
 /* ── 18. Progress bar ─────────────────────────────────────────────────────── */
-html[data-theme="dark"] .bar-wrap { background: #172638; }
-html[data-theme="dark"] .bar      { background: #007570; }
+html[data-theme="dark"] .bar-wrap { background: var(--divider-soft); }
+html[data-theme="dark"] .bar      { background: var(--action); }
 
 /* ── 19. Page nav ─────────────────────────────────────────────────────────── */
-html[data-theme="dark"] #page-nav        { background: #0B1722; border-bottom-color: #007570; }
+html[data-theme="dark"] #page-nav        { background: #0B1722; border-bottom-color: var(--action); }
 html[data-theme="dark"] .pnav-btn        { color: rgba(200,220,234,.4); }
 html[data-theme="dark"] .pnav-btn.active { color: #DCE8F2; border-bottom-color: #00C4BE; }
 html[data-theme="dark"] .pnav-btn:hover  { color: #DCE8F2; }
