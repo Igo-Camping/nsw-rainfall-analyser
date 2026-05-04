@@ -249,6 +249,122 @@ th {
   color: var(--gold);
 }
 
+.aerial-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  padding: 6px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  border: 1px solid rgba(18, 74, 44, 0.18);
+}
+
+.aerial-link:hover {
+  background: rgba(29, 107, 67, 0.18);
+}
+
+tr.package-row {
+  cursor: pointer;
+  transition: background-color 80ms ease;
+}
+
+tr.package-row:hover {
+  background: rgba(29, 107, 67, 0.06);
+}
+
+.row-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.row-link {
+  appearance: none;
+  border: 1px solid rgba(18, 74, 44, 0.18);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--accent-strong);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.row-link:hover {
+  background: var(--accent-soft);
+}
+
+.row-link.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pipe-list {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(18, 74, 44, 0.1);
+  border-radius: 14px;
+}
+
+.pipe-list-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pipe-list-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--accent-strong);
+}
+
+.pipe-list-hint {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.pipe-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.pipe-table th,
+.pipe-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(18, 74, 44, 0.08);
+  text-align: left;
+}
+
+.pipe-table th {
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pipe-table tbody tr {
+  cursor: pointer;
+}
+
+.pipe-table tbody tr:hover {
+  background: rgba(29, 107, 67, 0.06);
+}
+
+.pipe-table tbody tr.selected {
+  background: rgba(255, 215, 0, 0.22);
+}
+
 #map {
   width: 100%;
   height: 620px;

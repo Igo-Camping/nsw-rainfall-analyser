@@ -35,6 +35,8 @@ X_MID_COL = "XMid"
 Y_MID_COL = "YMid"
 US_NODE_COL = "SW_Upstream_Node"
 DS_NODE_COL = "SW_Downstream_Node"
+LON_COL = "Longitude"
+LAT_COL = "Latitude"
 
 
 def _data_dir() -> Path:
@@ -310,6 +312,8 @@ def _map_assets_payload(df: pd.DataFrame, suburb_col: str | None) -> list[dict[s
             "y_end": _coord_or_none(row[Y_END_COL]) if Y_END_COL in cols else None,
             "x_mid": _coord_or_none(row[X_MID_COL]) if X_MID_COL in cols else None,
             "y_mid": _coord_or_none(row[Y_MID_COL]) if Y_MID_COL in cols else None,
+            "lat": _coord_or_none(row[LAT_COL]) if LAT_COL in cols else None,
+            "lon": _coord_or_none(row[LON_COL]) if LON_COL in cols else None,
             "pipe_cost": _coord_or_none(row["pipe_cost"]) if "pipe_cost" in cols else None,
         }
         rows.append(item)

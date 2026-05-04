@@ -2,8 +2,12 @@ const state = {
   config: null,
   mapView: null,
   graphicsLayer: null,
+  selectionLayer: null,
   lastAssets: [],
   lastMode: "preview",
+  graphicByAssetId: new Map(),
+  selectedAssetId: null,
+  Graphic: null,
 };
 
 const MGA_Z56_WKID = 28356;
@@ -103,16 +107,31 @@ function renderTable(packages) {
     return;
   }
 
-  const rows = packages.map((pkg) => `
-    <tr>
-      <td>${pkg.package_id ?? ""}</td>
-      <td>${pkg.suburb ?? ""}</td>
-      <td>${pkg.pipe_count ?? ""}</td>
-      <td>${pkg.total_length_m ?? ""}</td>
-      <td>${pkg.total_cost ?? ""}</td>
-      <td>${Array.isArray(pkg.diameters_mm) ? pkg.diameters_mm.join(", ") : ""}</td>
-    </tr>
-  `).join("");
+  const rows = packages
+    .map((pkg) => {
+      const id = pkg.package_id ?? "";
+      const pipesForPkg = state.lastAssets.filter(
+        (a) => String(a.package_id ?? "") === String(id)
+      );
+      const aerialUrl = id ? googleMapsUrlForAssets(pipesForPkg) : null;
+      const aerialBtn = aerialUrl
+        ? `<a class="row-link" href="${aerialUrl}" target="_blank" rel="noopener" data-stop="1" title="Open in Google Maps (satellite)">🛰</a>`
+        : `<span class="row-link disabled" title="No coordinates available">🛰</span>`;
+      return `
+        <tr class="package-row" data-package-id="${cssEscape(id)}">
+          <td>${id}</td>
+          <td>${pkg.suburb ?? ""}</td>
+          <td>${pkg.pipe_count ?? ""}</td>
+          <td>${pkg.total_length_m ?? ""}</td>
+          <td>${pkg.total_cost ?? ""}</td>
+          <td>${Array.isArray(pkg.diameters_mm) ? pkg.diameters_mm.join(", ") : ""}</td>
+          <td class="row-actions">
+            <button class="row-link" data-action="show-on-map" type="button" title="Filter map to this package">View</button>
+            ${aerialBtn}
+          </td>
+        </tr>`;
+    })
+    .join("");
 
   target.className = "table-wrap";
   target.innerHTML = `
@@ -125,11 +144,38 @@ function renderTable(packages) {
           <th>Length (m)</th>
           <th>Total Cost ($)</th>
           <th>Diameters (mm)</th>
+          <th>Map</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
     </table>
   `;
+
+  target.querySelectorAll("tr.package-row").forEach((tr) => {
+    tr.addEventListener("click", (event) => {
+      const target = event.target;
+      if (target instanceof HTMLElement && target.dataset.stop === "1") return;
+      if (target instanceof HTMLAnchorElement) return;
+      const id = tr.getAttribute("data-package-id");
+      if (id) showPackageOnMap(id);
+    });
+  });
+}
+
+function showPackageOnMap(packageId) {
+  const filter = document.getElementById("package-filter");
+  if (!filter) return;
+  const optionExists = Array.from(filter.options).some((o) => o.value === packageId);
+  if (!optionExists) return;
+  if (filter.value !== packageId) {
+    filter.value = packageId;
+    filter.dispatchEvent(new Event("change"));
+  } else {
+    drawAssets(state.lastAssets, state.lastMode).catch((err) =>
+      setStatus(err.message, true)
+    );
+  }
+  document.getElementById("map")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function colorForPackageId(packageId) {
@@ -150,16 +196,19 @@ async function ensureMap() {
     return;
   }
 
-  const [Map, MapView, GraphicsLayer] = await Promise.all([
+  const [Map, MapView, GraphicsLayer, Graphic] = await Promise.all([
     window.requireAsync("esri/Map"),
     window.requireAsync("esri/views/MapView"),
     window.requireAsync("esri/layers/GraphicsLayer"),
+    window.requireAsync("esri/Graphic"),
   ]);
 
+  state.Graphic = Graphic;
   state.graphicsLayer = new GraphicsLayer();
+  state.selectionLayer = new GraphicsLayer();
   const map = new Map({
     basemap: "streets-navigation-vector",
-    layers: [state.graphicsLayer],
+    layers: [state.graphicsLayer, state.selectionLayer],
   });
 
   state.mapView = new MapView({
@@ -168,13 +217,28 @@ async function ensureMap() {
     center: [151.22, -33.75],
     zoom: 11,
   });
+
+  state.mapView.on("click", async (event) => {
+    try {
+      const response = await state.mapView.hitTest(event, {
+        include: state.graphicsLayer,
+      });
+      const hit = response.results.find(
+        (r) => r.graphic && r.graphic.attributes && r.graphic.attributes.asset_id != null
+      );
+      if (hit) {
+        const id = String(hit.graphic.attributes.asset_id);
+        selectPipe(id, { source: "map", zoom: false });
+      }
+    } catch (error) {
+      console.warn("hitTest failed:", error);
+    }
+  });
 }
 
 async function drawAssets(assets, mode) {
   await ensureMap();
-  const [Graphic] = await Promise.all([
-    window.requireAsync("esri/Graphic"),
-  ]);
+  const Graphic = state.Graphic;
 
   state.lastAssets = Array.isArray(assets) ? assets : [];
   state.lastMode = mode;
@@ -182,8 +246,12 @@ async function drawAssets(assets, mode) {
   setFallbackNote("");
 
   state.graphicsLayer.removeAll();
+  state.selectionLayer.removeAll();
+  state.graphicByAssetId = new Map();
 
   if (!assets || assets.length === 0) {
+    refreshPipeList();
+    refreshAerialLink();
     return;
   }
 
@@ -207,53 +275,57 @@ async function drawAssets(assets, mode) {
       content: popupContent(asset),
     };
 
+    let graphic = null;
     if (hasPipeEndpoints(asset)) {
       const weight = getPipeWeight(Number(asset.diameter_mm));
-      graphics.push(
-        new Graphic({
-          geometry: {
-            type: "polyline",
-            paths: [[
-              [Number(asset.x_start), Number(asset.y_start)],
-              [Number(asset.x_end), Number(asset.y_end)],
-            ]],
-            spatialReference: { wkid: MGA_Z56_WKID },
-          },
-          attributes: asset,
-          popupTemplate,
-          symbol: {
-            type: "simple-line",
-            color,
-            width: weight,
-            cap: "round",
-            join: "round",
-          },
-        })
-      );
+      graphic = new Graphic({
+        geometry: {
+          type: "polyline",
+          paths: [[
+            [Number(asset.x_start), Number(asset.y_start)],
+            [Number(asset.x_end), Number(asset.y_end)],
+          ]],
+          spatialReference: { wkid: MGA_Z56_WKID },
+        },
+        attributes: asset,
+        popupTemplate,
+        symbol: {
+          type: "simple-line",
+          color,
+          width: weight,
+          cap: "round",
+          join: "round",
+        },
+      });
       lineCount += 1;
     } else if (hasPipeMidpoint(asset)) {
-      graphics.push(
-        new Graphic({
-          geometry: {
-            type: "point",
-            x: Number(asset.x_mid),
-            y: Number(asset.y_mid),
-            spatialReference: { wkid: MGA_Z56_WKID },
-          },
-          attributes: asset,
-          popupTemplate,
-          symbol: {
-            type: "simple-marker",
-            style: mode === "package" ? "circle" : "diamond",
-            color,
-            size: mode === "package" ? 10 : 9,
-            outline: { color: "#ffffff", width: 1.2 },
-          },
-        })
-      );
+      graphic = new Graphic({
+        geometry: {
+          type: "point",
+          x: Number(asset.x_mid),
+          y: Number(asset.y_mid),
+          spatialReference: { wkid: MGA_Z56_WKID },
+        },
+        attributes: asset,
+        popupTemplate,
+        symbol: {
+          type: "simple-marker",
+          style: mode === "package" ? "circle" : "diamond",
+          color,
+          size: mode === "package" ? 10 : 9,
+          outline: { color: "#ffffff", width: 1.2 },
+        },
+      });
       fallbackCount += 1;
     } else {
       fallbackCount += 1;
+    }
+
+    if (graphic) {
+      graphics.push(graphic);
+      if (asset.asset_id != null) {
+        state.graphicByAssetId.set(String(asset.asset_id), graphic);
+      }
     }
   });
 
@@ -267,11 +339,240 @@ async function drawAssets(assets, mode) {
     await state.mapView.goTo(graphics);
   } else if (visible.length > 0) {
     setFallbackNote(
-      `No valid pipe geometry to draw — ${visible.length} pipe(s) had missing or out-of-range coordinates.`
+      `No valid pipe geometry to draw — ${visible.length} pipe(s) had missing or invalid coordinates.`
     );
   }
 
+  refreshPipeList();
+  refreshAerialLink();
+
+  if (state.selectedAssetId && state.graphicByAssetId.has(state.selectedAssetId)) {
+    applySelectionHighlight(state.selectedAssetId);
+  } else {
+    state.selectedAssetId = null;
+  }
+
   console.info(`drawAssets: drew ${lineCount} line(s), ${fallbackCount} fallback(s)`);
+}
+
+function getCurrentPackageId() {
+  const filter = document.getElementById("package-filter");
+  if (!filter || state.lastMode !== "package") return null;
+  const v = filter.value;
+  return v && v !== "__all__" ? v : null;
+}
+
+function getVisibleAssets() {
+  const pkgId = getCurrentPackageId();
+  if (!pkgId) return state.lastAssets;
+  return state.lastAssets.filter((a) => String(a.package_id ?? "") === pkgId);
+}
+
+function applySelectionHighlight(assetId) {
+  if (!state.selectionLayer || !state.Graphic) return;
+  state.selectionLayer.removeAll();
+  const graphic = state.graphicByAssetId.get(String(assetId));
+  if (!graphic) return;
+  const baseWidth = graphic.symbol?.width ?? 6;
+  const symbol =
+    graphic.geometry.type === "polyline"
+      ? {
+          type: "simple-line",
+          color: [255, 215, 0, 0.95],
+          width: Math.max(baseWidth + 4, 6),
+          cap: "round",
+          join: "round",
+        }
+      : {
+          type: "simple-marker",
+          style: "circle",
+          color: [255, 215, 0, 0.6],
+          size: (graphic.symbol?.size ?? 10) + 6,
+          outline: { color: [255, 215, 0, 0.95], width: 2 },
+        };
+  state.selectionLayer.add(
+    new state.Graphic({
+      geometry: graphic.geometry,
+      symbol,
+    })
+  );
+}
+
+function selectPipe(assetId, opts = {}) {
+  const id = assetId == null ? null : String(assetId);
+  state.selectedAssetId = id;
+
+  if (!id) {
+    state.selectionLayer?.removeAll();
+    syncPipeListSelection(null);
+    return;
+  }
+
+  applySelectionHighlight(id);
+  syncPipeListSelection(id);
+
+  if (opts.source !== "table") {
+    scrollPipeRowIntoView(id);
+  }
+
+  if (opts.zoom !== false) {
+    const graphic = state.graphicByAssetId.get(id);
+    if (graphic && state.mapView) {
+      const target =
+        graphic.geometry.type === "polyline"
+          ? { target: graphic.geometry, zoom: Math.max(state.mapView.zoom, 17) }
+          : { target: graphic.geometry, zoom: 18 };
+      state.mapView.goTo(target, { duration: 350 }).catch(() => {});
+    }
+  }
+}
+
+function syncPipeListSelection(assetId) {
+  document.querySelectorAll("#pipe-list tbody tr.selected").forEach((tr) => {
+    tr.classList.remove("selected");
+  });
+  if (!assetId) return;
+  const row = document.querySelector(
+    `#pipe-list tbody tr[data-asset-id="${cssEscape(assetId)}"]`
+  );
+  if (row) row.classList.add("selected");
+}
+
+function scrollPipeRowIntoView(assetId) {
+  const row = document.querySelector(
+    `#pipe-list tbody tr[data-asset-id="${cssEscape(assetId)}"]`
+  );
+  if (row) row.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function cssEscape(s) {
+  return String(s).replace(/(["\\])/g, "\\$1");
+}
+
+function refreshPipeList() {
+  const row = document.getElementById("pipe-list-row");
+  const target = document.getElementById("pipe-list");
+  const title = document.getElementById("pipe-list-title");
+  if (!row || !target) return;
+
+  const pkgId = getCurrentPackageId();
+  if (!pkgId) {
+    row.classList.add("hidden");
+    target.innerHTML = "";
+    return;
+  }
+
+  const pipes = getVisibleAssets();
+  if (!pipes.length) {
+    row.classList.add("hidden");
+    target.innerHTML = "";
+    return;
+  }
+
+  if (title) title.textContent = `Pipes in package ${pkgId}`;
+  const rows = pipes
+    .map((p) => {
+      const dia = isFiniteNumber(p.diameter_mm) ? Number(p.diameter_mm).toFixed(0) : "—";
+      const len = isFiniteNumber(p.length_m) ? Number(p.length_m).toFixed(1) : "—";
+      const cost = isFiniteNumber(p.pipe_cost) ? `$${Number(p.pipe_cost).toLocaleString()}` : "—";
+      const id = p.asset_id == null ? "" : String(p.asset_id);
+      return `<tr data-asset-id="${cssEscape(id)}">
+        <td>${id || "—"}</td>
+        <td>${p.suburb ?? "—"}</td>
+        <td>${dia}</td>
+        <td>${len}</td>
+        <td>${cost}</td>
+        <td>${p.us_node ?? "—"} → ${p.ds_node ?? "—"}</td>
+      </tr>`;
+    })
+    .join("");
+
+  target.innerHTML = `
+    <table class="pipe-table">
+      <thead>
+        <tr>
+          <th>Asset</th><th>Suburb</th><th>Dia (mm)</th><th>Len (m)</th><th>Cost</th><th>US → DS pit</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+
+  target.querySelectorAll("tbody tr").forEach((tr) => {
+    tr.addEventListener("click", () => {
+      const id = tr.getAttribute("data-asset-id");
+      if (id) selectPipe(id, { source: "table", zoom: true });
+    });
+  });
+
+  row.classList.remove("hidden");
+  syncPipeListSelection(state.selectedAssetId);
+}
+
+function wgsBoundsForAssets(assets) {
+  let minLat = Infinity, maxLat = -Infinity;
+  let minLon = Infinity, maxLon = -Infinity;
+  let count = 0;
+  (assets || []).forEach((a) => {
+    if (isFiniteNumber(a.lat) && isFiniteNumber(a.lon)) {
+      const lat = Number(a.lat);
+      const lon = Number(a.lon);
+      if (lat < minLat) minLat = lat;
+      if (lat > maxLat) maxLat = lat;
+      if (lon < minLon) minLon = lon;
+      if (lon > maxLon) maxLon = lon;
+      count += 1;
+    }
+  });
+  if (count === 0) return null;
+  return {
+    minLat, maxLat, minLon, maxLon,
+    centerLat: (minLat + maxLat) / 2,
+    centerLon: (minLon + maxLon) / 2,
+    count,
+  };
+}
+
+function zoomLevelForBounds(bounds) {
+  const latSpan = Math.max(bounds.maxLat - bounds.minLat, 1e-5);
+  const lonSpan = Math.max(bounds.maxLon - bounds.minLon, 1e-5);
+  const span = Math.max(latSpan, lonSpan);
+  const zoom = Math.round(Math.log2(360 / span));
+  return Math.max(10, Math.min(20, zoom));
+}
+
+function googleMapsUrlForAssets(assets) {
+  const bounds = wgsBoundsForAssets(assets);
+  if (!bounds) return null;
+  const zoom = zoomLevelForBounds(bounds);
+  const params = new URLSearchParams({
+    api: "1",
+    map_action: "map",
+    center: `${bounds.centerLat.toFixed(6)},${bounds.centerLon.toFixed(6)}`,
+    zoom: String(zoom),
+    basemap: "satellite",
+  });
+  return `https://www.google.com/maps/?${params.toString()}`;
+}
+
+function refreshAerialLink() {
+  const link = document.getElementById("aerial-link");
+  if (!link) return;
+  const pkgId = getCurrentPackageId();
+  if (!pkgId) {
+    link.classList.add("hidden");
+    link.removeAttribute("href");
+    return;
+  }
+  const url = googleMapsUrlForAssets(getVisibleAssets());
+  if (!url) {
+    link.classList.add("hidden");
+    link.removeAttribute("href");
+    return;
+  }
+  link.href = url;
+  link.textContent = `Open ${pkgId} in Google Maps (aerial)`;
+  link.classList.remove("hidden");
 }
 
 function refreshPackageFilter(assets, mode) {
@@ -375,8 +676,9 @@ async function handlePreview() {
     `Reconstruction pipes: ${data.streams?.[2]?.pipe_count ?? 0}`,
     `Amplification pipes: ${data.streams?.[3]?.pipe_count ?? 0}`,
   ]);
-  renderTable([]);
+  state.selectedAssetId = null;
   await drawAssets(data.map_assets?.relining || [], "preview");
+  renderTable([]);
   setStatus("Preview loaded on the map.");
 }
 
@@ -389,8 +691,9 @@ async function handleGenerate() {
     `Total length: ${data.total_length_m ?? 0} m`,
     `Total cost: $${Number(data.total_cost ?? 0).toLocaleString()}`,
   ]);
-  renderTable(data.packages || []);
+  state.selectedAssetId = null;
   await drawAssets(data.map_assets || [], "package");
+  renderTable(data.packages || []);
   setStatus("Relining packages generated and drawn on the map.");
 }
 

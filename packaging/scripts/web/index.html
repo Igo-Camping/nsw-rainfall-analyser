@@ -102,9 +102,17 @@
             <option value="__all__">All packages</option>
           </select>
         </label>
+        <a id="aerial-link" class="aerial-link hidden" target="_blank" rel="noopener">Open in Google Maps (aerial)</a>
         <span class="map-fallback-note" id="fallback-note"></span>
       </div>
       <div id="map"></div>
+      <div class="pipe-list hidden" id="pipe-list-row">
+        <div class="pipe-list-header">
+          <h3 id="pipe-list-title">Pipes in package</h3>
+          <span class="pipe-list-hint">Click a row to zoom to the pipe.</span>
+        </div>
+        <div id="pipe-list" class="table-wrap"></div>
+      </div>
     </section>
   </div>
 
