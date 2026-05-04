@@ -74,7 +74,7 @@ export function switchPage(page, options = {}, ctx) {
 }
 
 export function wireStartupControls(ctx) {
-  let initialPage = 'home';
+  let initialPage = 'aep';
   try {
     const params = new URLSearchParams(ctx.document.location.search);
     if (params.get('view') === 'calculator') initialPage = 'aep';
