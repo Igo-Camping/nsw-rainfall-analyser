@@ -6401,7 +6401,8 @@ function buildReliningPackageReportHtml(packages, packagedAssets, options, summa
   var summary = data.summary || {};
   var PALETTE = ['#007C89','#C44536','#6A994E','#F18F01','#5B5F97','#2D9CDB','#8E5572','#3A7D44','#D95D39','#7B2CBF','#2A9D8F','#E76F51','#4D908E','#B56576','#577590','#BC6C25'];
   var pkgIndex = {};
-  packages.forEach(function(p, i) { pkgIndex[p.id] = i; });
+  var packagesById = {};
+  packages.forEach(function(p, i) { pkgIndex[p.id] = i; packagesById[p.id] = p; });
 
   function colorFor(id) { var i = pkgIndex[id]; if (i == null) i = 0; return PALETTE[i % PALETTE.length]; }
   function fmtNum(n, dp) { if (n == null || !isFinite(n)) return ''; return Number(n).toLocaleString('en-AU', { minimumFractionDigits: dp || 0, maximumFractionDigits: dp || 0 }); }
@@ -6664,11 +6665,17 @@ function buildReliningPackageReportHtml(packages, packagedAssets, options, summa
     });
     document.getElementById('pipeCount').textContent = filtered.length;
     var tbl = document.getElementById('pipesTable');
-    if (!filtered.length) { tbl.innerHTML = '<tbody><tr><td class="pkg-empty-cell" colspan="10">No pipes match the current filters.</td></tr></tbody>'; return; }
+    if (!filtered.length) { tbl.innerHTML = '<tbody><tr><td class="pkg-empty-cell" colspan="11">No pipes match the current filters.</td></tr></tbody>'; return; }
     tbl.innerHTML = '<thead><tr><th>Asset</th><th>Package</th><th>Suburb</th><th class="r">Diameter</th>' +
       '<th>Material</th><th>Condition</th><th class="r">Length (m)</th><th class="r">Cost</th>' +
-      '<th>Upstream</th><th>Downstream</th></tr></thead><tbody>' +
+      '<th>Upstream</th><th>Downstream</th><th>Map</th></tr></thead><tbody>' +
       filtered.map(function(p) {
+        var pkgRecord = packagesById[p.package_id];
+        var mapBase = pkgRecord && pkgRecord.dedicated_map_url ? pkgRecord.dedicated_map_url : '';
+        var mapLinkStyle = 'display:inline-block;padding:3px 8px;background:var(--panel);color:var(--teal-d);text-decoration:none;font-size:11px;font-weight:700;border:1px solid var(--border);border-radius:4px;white-space:nowrap';
+        var mapCell = mapBase
+          ? '<a href="' + esc(mapBase) + '#asset=' + encodeURIComponent(p.asset_id) + '" target="_blank" rel="noopener" data-asset="' + esc(p.asset_id) + '" data-package-id="' + esc(p.package_id) + '" style="' + mapLinkStyle + '">Map ↗</a>'
+          : '<span style="' + mapLinkStyle + ';opacity:.4;cursor:not-allowed">—</span>';
         return '<tr data-asset="' + esc(p.asset_id) + '" data-package-id="' + esc(p.package_id) + '">' +
           '<td>' + esc(p.asset_id) + '</td>' +
           '<td><span class="pipe-color" style="background:' + colorFor(p.package_id) + '"></span>' + esc(p.package_id) + '</td>' +
@@ -6679,7 +6686,8 @@ function buildReliningPackageReportHtml(packages, packagedAssets, options, summa
           '<td class="r">' + fmtNum(p.length_m, 1) + '</td>' +
           '<td class="r">' + esc(fmtCurrency(p.pipe_cost)) + '</td>' +
           '<td>' + esc(p.upstream || '') + '</td>' +
-          '<td>' + esc(p.downstream || '') + '</td></tr>';
+          '<td>' + esc(p.downstream || '') + '</td>' +
+          '<td>' + mapCell + '</td></tr>';
       }).join('') + '</tbody>';
   }
   ['filterPackage','filterSuburb','filterDiameter','filterCondition','filterSearch'].forEach(function(id) {
@@ -7105,8 +7113,11 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
   const assets = pkg.assets || [];
   const reportPipes = assets.map(item => {
     const raw = item.raw || {};
+    const startPair = resolveLineCoordinatePair(raw, true);
+    const endPair = resolveLineCoordinatePair(raw, false);
     return {
       asset_id: item.assetId || '',
+      package_id: pkg.package_id || '',
       suburb: String(item.suburb || pkg.suburb || '').toUpperCase(),
       diameter_mm: Math.round(Number(item.diameterMm) || 0) || null,
       material: raw['SW_Material'] || raw['Material'] || raw['Pipe Material'] || '',
@@ -7117,7 +7128,11 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
       upstream: raw['SW_Upstream Node'] || raw['SW_Upstream_Node'] || raw['Upstream Node'] || '',
       downstream: raw['SW_Downstream Node'] || raw['SW_Downstream_Node'] || raw['Downstream Node'] || '',
       lat: Number.isFinite(item.lat) ? item.lat : null,
-      lon: Number.isFinite(item.lon) ? item.lon : null
+      lon: Number.isFinite(item.lon) ? item.lon : null,
+      start_lat: startPair && Number.isFinite(startPair.lat) ? startPair.lat : null,
+      start_lon: startPair && Number.isFinite(startPair.lon) ? startPair.lon : null,
+      end_lat: endPair && Number.isFinite(endPair.lat) ? endPair.lat : null,
+      end_lon: endPair && Number.isFinite(endPair.lon) ? endPair.lon : null
     };
   });
   const coordPipes = reportPipes.filter(p => p.lat != null && p.lon != null);
@@ -7224,28 +7239,8 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
   var map = null;
   var bounds = null;
   var assetMarkers = {};
+  var pipeFeatures = {};
   var selectedAsset = null;
-
-  function highlightAsset(asset) {
-    Object.keys(assetMarkers).forEach(function(a) {
-      var m = assetMarkers[a];
-      if (a === asset) {
-        m.setStyle({ radius: 11, color: '#111827', weight: 3, fillColor: '#FFD166', fillOpacity: 1 });
-        if (m.bringToFront) m.bringToFront();
-      } else {
-        m.setStyle({ radius: 6, color: '#fff', weight: 1.5, fillColor: color, fillOpacity: 0.85 });
-      }
-    });
-    selectedAsset = asset;
-  }
-
-  function focusAsset(asset) {
-    var m = assetMarkers[asset];
-    if (!m || !map) return;
-    highlightAsset(asset);
-    map.flyTo(m.getLatLng(), Math.max(map.getZoom(), 17), { duration: 0.5 });
-    setTimeout(function(){ m.openPopup(); }, 350);
-  }
 
   function initMap() {
     var mapEl = document.getElementById('map');
@@ -7270,47 +7265,80 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
     });
     tile.addTo(map);
 
+    function getPipeWeight(dia) {
+      var d = Number(dia);
+      if (!d || isNaN(d) || d <= 0) return 2;
+      var w = d / 50;
+      return Math.max(2, Math.min(12, w));
+    }
+
     var pts = [];
-    var coordPipes = pipes.filter(function(p){ return p.lat != null && p.lon != null; });
-    coordPipes.forEach(function(p){ pts.push([p.lat, p.lon]); });
-    if (coordPipes.length > 1) {
-      L.polyline(coordPipes.map(function(p){ return [p.lat, p.lon]; }), {
-        color: color, weight: 3, opacity: 0.7, dashArray: '6 6'
-      }).addTo(map);
+    var lineCount = 0;
+    var fallbackCount = 0;
+    var hasEndpoints = function(p) {
+      return p.start_lat != null && p.start_lon != null && p.end_lat != null && p.end_lon != null
+        && Number.isFinite(p.start_lat) && Number.isFinite(p.start_lon)
+        && Number.isFinite(p.end_lat) && Number.isFinite(p.end_lon)
+        && !(p.start_lat === p.end_lat && p.start_lon === p.end_lon);
+    };
+
+    function popupHtml(p) {
+      return ''
+        + '<strong>' + esc(p.asset_id) + '</strong>'
+        + (p.package_id ? ' <span style="color:#5A6B7A;font-weight:500">· ' + esc(p.package_id) + '</span>' : '')
+        + '<br>Suburb: ' + esc(p.suburb || '—')
+        + '<br>Diameter: ' + (p.diameter_mm ? esc(p.diameter_mm + 'mm') : '—')
+        + (p.material ? '<br>Material: ' + esc(p.material) : '')
+        + '<br>Condition: ' + esc(p.condition || '—')
+        + '<br>Length: ' + fmtNum(p.length_m, 1) + ' m'
+        + (p.pipe_cost ? '<br>Cost: ' + esc(fmtCurrency(p.pipe_cost)) : '')
+        + (p.upstream ? '<br>Upstream: ' + esc(p.upstream) : '')
+        + (p.downstream ? '<br>Downstream: ' + esc(p.downstream) : '')
+        + (p.address ? '<br>Address: ' + esc(p.address) : '');
     }
-    var centroid = pkg.centroid && pkg.centroid.length === 2 ? [pkg.centroid[0], pkg.centroid[1]] : null;
-    if (centroid && coordPipes.length) {
-      coordPipes.forEach(function(p){
-        L.polyline([centroid, [p.lat, p.lon]], {
-          color: color, weight: 1, opacity: 0.3, dashArray: '2 4', interactive: false
-        }).addTo(map);
-      });
-    }
-    coordPipes.forEach(function(p){
-      var marker = L.circleMarker([p.lat, p.lon], { radius: 6, color: '#fff', weight: 1.5, fillColor: color, fillOpacity: 0.85 });
-      marker.bindPopup(
-        '<strong>' + esc(p.asset_id) + '</strong><br>' +
-        'Suburb: ' + esc(p.suburb) + '<br>' +
-        'Diameter: ' + (p.diameter_mm ? esc(p.diameter_mm + 'mm') : '&mdash;') + '<br>' +
-        (p.material ? 'Material: ' + esc(p.material) + '<br>' : '') +
-        'Condition: ' + esc(p.condition || '—') + '<br>' +
-        'Length: ' + fmtNum(p.length_m, 1) + ' m' +
-        (p.pipe_cost ? '<br>Cost: ' + esc(fmtCurrency(p.pipe_cost)) : '') +
-        (p.address ? '<br>Address: ' + esc(p.address) : '') +
-        (p.upstream ? '<br>Upstream: ' + esc(p.upstream) : '') +
-        (p.downstream ? '<br>Downstream: ' + esc(p.downstream) : '')
-      );
-      if (p.asset_id) assetMarkers[p.asset_id] = marker;
-      marker.addTo(map);
+
+    pipes.forEach(function(p) {
+      if (hasEndpoints(p)) {
+        var weight = getPipeWeight(p.diameter_mm);
+        var line = L.polyline([[p.start_lat, p.start_lon], [p.end_lat, p.end_lon]], {
+          color: color,
+          weight: weight,
+          opacity: 0.92
+        });
+        line.bindPopup(popupHtml(p));
+        line.addTo(map);
+        pts.push([p.start_lat, p.start_lon]);
+        pts.push([p.end_lat, p.end_lon]);
+        if (p.asset_id) {
+          pipeFeatures[p.asset_id] = { type: 'line', feature: line, baseWeight: weight, latlng: [(p.start_lat + p.end_lat) / 2, (p.start_lon + p.end_lon) / 2] };
+          assetMarkers[p.asset_id] = line;
+        }
+        lineCount += 1;
+      } else if (p.lat != null && p.lon != null && Number.isFinite(p.lat) && Number.isFinite(p.lon)) {
+        var marker = L.circleMarker([p.lat, p.lon], { radius: 6, color: '#fff', weight: 1.5, fillColor: color, fillOpacity: 0.85 });
+        marker.bindPopup(popupHtml(p));
+        marker.addTo(map);
+        pts.push([p.lat, p.lon]);
+        if (p.asset_id) {
+          pipeFeatures[p.asset_id] = { type: 'point', feature: marker, latlng: [p.lat, p.lon] };
+          assetMarkers[p.asset_id] = marker;
+        }
+        fallbackCount += 1;
+      } else {
+        fallbackCount += 1;
+      }
     });
-    if (centroid) {
-      L.circleMarker(centroid, { radius: 11, color: color, weight: 3, fillColor: color, fillOpacity: 0.6 })
-        .bindTooltip(pkg.id + ' (centroid)', { direction: 'top' })
-        .addTo(map);
-      pts.push(centroid);
+
+    if (lineCount + fallbackCount > 0) {
+      console.info('[package-map] drew ' + lineCount + ' line(s), ' + fallbackCount + ' fallback marker(s)');
     }
+    if (fallbackCount > 0) {
+      var sub = document.querySelector('.cctv-map-sub');
+      if (sub) sub.textContent += ' · ' + fallbackCount + ' pipe(s) drawn as fallback markers (missing endpoints).';
+    }
+
     if (pts.length) {
-      bounds = L.latLngBounds(pts).pad(0.2);
+      bounds = L.latLngBounds(pts).pad(0.15);
       map.fitBounds(bounds);
     } else {
       map.setView([-33.75, 151.27], 11);
@@ -7321,6 +7349,70 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
     }
   }
   initMap();
+
+  function highlightAsset(asset) {
+    Object.keys(pipeFeatures).forEach(function(a) {
+      var entry = pipeFeatures[a];
+      if (!entry) return;
+      if (entry.type === 'line') {
+        entry.feature.setStyle({ color: a === asset ? '#FFD166' : color, weight: a === asset ? Math.max(entry.baseWeight + 4, 6) : entry.baseWeight, opacity: a === asset ? 1 : 0.92 });
+        if (a === asset && entry.feature.bringToFront) entry.feature.bringToFront();
+      } else if (entry.type === 'point') {
+        entry.feature.setStyle({ radius: a === asset ? 11 : 6, color: a === asset ? '#111827' : '#fff', weight: a === asset ? 3 : 1.5, fillColor: a === asset ? '#FFD166' : color, fillOpacity: 1 });
+        if (a === asset && entry.feature.bringToFront) entry.feature.bringToFront();
+      }
+    });
+    selectedAsset = asset;
+  }
+
+  function focusAsset(asset, opts) {
+    opts = opts || {};
+    var entry = pipeFeatures[asset];
+    if (!entry || !map) return;
+    highlightAsset(asset);
+    var target = entry.latlng;
+    if (target) map.flyTo(target, Math.max(map.getZoom(), 17), { duration: 0.4 });
+    setTimeout(function(){ if (entry.feature && entry.feature.openPopup) entry.feature.openPopup(); }, 320);
+    if (opts.updateHash !== false) {
+      var newHash = '#asset=' + encodeURIComponent(asset);
+      if (window.location.hash !== newHash) {
+        try { history.replaceState(null, '', window.location.pathname + window.location.search + newHash); }
+        catch (_e) { window.location.hash = newHash; }
+      }
+    }
+    var tr = document.querySelector('#pipesTable tr[data-asset="' + String(asset).replace(/"/g, '\\"') + '"]');
+    if (tr) {
+      Array.prototype.forEach.call(document.querySelectorAll('#pipesTable tr.selected'), function(el) { el.classList.remove('selected'); });
+      tr.classList.add('selected');
+      if (tr.scrollIntoView) tr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function readAssetFromUrl() {
+    if (window.location.hash) {
+      var m = window.location.hash.replace(/^#/, '');
+      var params = new URLSearchParams(m);
+      var a = params.get('asset') || params.get('pipe');
+      if (a) return a;
+    }
+    var qs = new URLSearchParams(window.location.search);
+    return qs.get('pipe') || qs.get('asset') || null;
+  }
+
+  var initialAsset = readAssetFromUrl();
+  if (initialAsset && pipeFeatures[initialAsset]) {
+    setTimeout(function(){ focusAsset(initialAsset, { updateHash: false }); }, 200);
+  } else if (initialAsset) {
+    var w = document.createElement('div');
+    w.className = 'map-warning';
+    w.textContent = 'Pipe ' + initialAsset + ' was not found in this package map.';
+    document.getElementById('map').parentNode.appendChild(w);
+  }
+
+  window.addEventListener('hashchange', function() {
+    var a = readAssetFromUrl();
+    if (a && pipeFeatures[a]) focusAsset(a, { updateHash: false });
+  });
 
   document.getElementById('fitBtn').addEventListener('click', function(){
     if (map && bounds) map.fitBounds(bounds);
@@ -7975,6 +8067,13 @@ function renderReliningPackagesMap(options = {}) {
       : '';
   }
   let drawn = 0;
+  let lineDrawn = 0;
+  let pointFallback = 0;
+  const reliningPipeWeight = (dia) => {
+    const d = Number(dia);
+    if (!d || isNaN(d) || d <= 0) return 2;
+    return Math.max(2, Math.min(12, d / 50));
+  };
   const mapPackages = selectedReliningPackageId
     ? packages.filter(pkg => pkg.package_id !== selectedReliningPackageId).concat(packages.filter(pkg => pkg.package_id === selectedReliningPackageId))
     : packages;
@@ -7984,37 +8083,45 @@ function renderReliningPackagesMap(options = {}) {
     if (!assets.length) return;
     const style = getReliningPackageMapStyle(pkg, packageIndex);
     const color = style.color;
-    const points = assets.map(item => [item.lat, item.lon]);
-    if (points.length > 1) {
-      L.polyline(points, {
-        color,
-        weight: style.isSelected ? 8 : 3,
-        opacity: style.isSelected ? 1 : (style.isDimmed ? 0.16 : 0.75),
-        dashArray: style.isSelected ? '' : '6 6'
-      }).on('click', () => focusReliningPackageOnMap(pkg.package_id, { scroll: false })).addTo(reliningPackagesLayer);
-    }
     assets.forEach(item => {
-      if (style.isSelected) {
-        L.circleMarker([item.lat, item.lon], {
-          radius: 18,
-          color: '#111827',
-          weight: 4,
-          fillColor: '#FFD166',
-          fillOpacity: 0.42
-        }).addTo(reliningPackagesLayer);
+      const raw = item.raw || {};
+      const startPair = resolveLineCoordinatePair(raw, true);
+      const endPair = resolveLineCoordinatePair(raw, false);
+      const hasLine = startPair && endPair
+        && Number.isFinite(startPair.lat) && Number.isFinite(startPair.lon)
+        && Number.isFinite(endPair.lat) && Number.isFinite(endPair.lon)
+        && !(startPair.lat === endPair.lat && startPair.lon === endPair.lon);
+      const baseWeight = reliningPipeWeight(item.diameterMm);
+      if (hasLine) {
+        L.polyline([[startPair.lat, startPair.lon], [endPair.lat, endPair.lon]], {
+          color,
+          weight: style.isSelected ? Math.max(baseWeight + 4, 6) : baseWeight,
+          opacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : 0.92)
+        }).on('click', () => focusReliningPackageOnMap(pkg.package_id, { scroll: false }))
+          .bindPopup(buildReliningPackagePopup(pkg))
+          .addTo(reliningPackagesLayer);
+        lineDrawn += 1;
+        drawn += 1;
+      } else {
+        if (style.isSelected) {
+          L.circleMarker([item.lat, item.lon], {
+            radius: 18, color: '#111827', weight: 4, fillColor: '#FFD166', fillOpacity: 0.42
+          }).addTo(reliningPackagesLayer);
+        }
+        const marker = L.circleMarker([item.lat, item.lon], {
+          radius: style.isSelected ? 11 : 5,
+          color: style.isSelected ? '#111827' : '#fff',
+          weight: style.isSelected ? 3 : 1.5,
+          fillColor: color,
+          fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : 0.78),
+          opacity: style.isDimmed ? 0.2 : 1
+        }).on('click', () => focusReliningPackageOnMap(pkg.package_id, { scroll: false }))
+          .bindPopup(buildReliningPackagePopup(pkg))
+          .addTo(reliningPackagesLayer);
+        if (!reliningPackageFocusLayers.has(pkg.package_id)) reliningPackageFocusLayers.set(pkg.package_id, marker);
+        pointFallback += 1;
+        drawn += 1;
       }
-      const marker = L.circleMarker([item.lat, item.lon], {
-        radius: style.isSelected ? 11 : 5,
-        color: style.isSelected ? '#111827' : '#fff',
-        weight: style.isSelected ? 3 : 1.5,
-        fillColor: color,
-        fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : 0.78),
-        opacity: style.isDimmed ? 0.2 : 1
-      }).on('click', () => focusReliningPackageOnMap(pkg.package_id, { scroll: false }))
-        .bindPopup(buildReliningPackagePopup(pkg))
-        .addTo(reliningPackagesLayer);
-      if (!reliningPackageFocusLayers.has(pkg.package_id)) reliningPackageFocusLayers.set(pkg.package_id, marker);
-      drawn += 1;
     });
     if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) {
       const focusMarker = L.circleMarker([pkg.lat, pkg.lon], {
@@ -8033,8 +8140,10 @@ function renderReliningPackagesMap(options = {}) {
     }
   });
   if (subtitle) {
-    subtitle.textContent = `${packages.length.toLocaleString()} package${packages.length === 1 ? '' : 's'} mapped with ${drawn.toLocaleString()} pipe point${drawn === 1 ? '' : 's'}.${selectedReliningPackageId ? ` ${selectedReliningPackageId} is highlighted.` : ''}`;
+    const fallbackNote = pointFallback ? ` (${pointFallback.toLocaleString()} drawn as fallback markers — missing endpoints).` : '';
+    subtitle.textContent = `${packages.length.toLocaleString()} package${packages.length === 1 ? '' : 's'} mapped with ${lineDrawn.toLocaleString()} pipe line${lineDrawn === 1 ? '' : 's'}${fallbackNote}${selectedReliningPackageId ? ` ${selectedReliningPackageId} is highlighted.` : ''}`;
   }
+  if (pointFallback > 0) console.info('[relining-map] drew ' + lineDrawn + ' line(s), ' + pointFallback + ' fallback marker(s)');
   renderReliningSelectedMapOverlay();
   if (!selectedPackage && options.fit !== false) fitReliningPackagesMap();
 }
