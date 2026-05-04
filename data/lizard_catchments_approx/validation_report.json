@@ -1,0 +1,24 @@
+{
+  "validated_at": "2026-05-03T23:58:20.909543+00:00",
+  "files": {
+    "raw": {
+      "path": "data\\lizard_catchments_approx\\catchments_approx_raw.geojson",
+      "exists": true,
+      "feature_total": 0,
+      "feature_passed": 0,
+      "feature_failed": 0,
+      "collection_issues": [],
+      "feature_results": []
+    },
+    "clean": {
+      "path": "data\\lizard_catchments_approx\\catchments_approx_clean.geojson",
+      "exists": true,
+      "feature_total": 0,
+      "feature_passed": 0,
+      "feature_failed": 0,
+      "collection_issues": [],
+      "feature_results": []
+    }
+  },
+  "overall_pass": true
+}

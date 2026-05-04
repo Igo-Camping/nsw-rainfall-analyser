@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-05-03T23:58:11.628761+00:00",
+  "status": "FAILED_NO_SOURCE_AVAILABLE",
+  "is_authoritative": false,
+  "auth_mode": "anonymous",
+  "auth_token_present": false,
+  "optional_dependencies": {
+    "numpy": "2.4.2",
+    "Pillow": "12.1.1",
+    "mapbox_vector_tile": null,
+    "scikit-image": null,
+    "rasterio": null
+  },
+  "methods": [
+    {
+      "method": "mvt_decode",
+      "status": "UNAVAILABLE",
+      "feature_count": 0,
+      "diagnostics": [
+        "mapbox-vector-tile not installed. Install: pip install mapbox-vector-tile",
+        "probe https://northernbeaches.lizard.net/labeltiles/ -> HTTP 404",
+        "probe https://northernbeaches.lizard.net/vectortiles/ -> HTTP 404",
+        "probe https://northernbeaches.lizard.net/mvt/ -> HTTP 404",
+        "probe https://northernbeaches.lizard.net/tiles/ -> HTTP 404",
+        "No MVT/vector tile URL template found in clientconfigs/clientconfigurations and no Lizard tile path responded usefully. To enable Method 1, supply a tile URL template (e.g. https://.../{z}/{x}/{y}.mvt) for the catchment layer in data/lizard_catchments_approx/inputs/config/method1_tiles.json as {\"template\": \"...\", \"min_z\": int, \"max_z\": int, \"layer_name_in_tile\": \"...\"} and re-run."
+      ],
+      "candidate_tile_templates": []
+    },
+    {
+      "method": "wms_getfeatureinfo",
+      "status": "FAILED_NO_INPUT",
+      "feature_count": 0,
+      "diagnostics": [
+        "GetFeatureInfo requires an explicit (queryable) WMS layer URL for the catchment polygon layer plus a probe AOI. Supply data/lizard_catchments_approx/inputs/config/method2_gfi.json = {\"wms_url\": \"...\", \"layer_name\": \"...\", \"version\": \"1.3.0\", \"crs\": \"EPSG:4326\", \"bbox\": [minLon, minLat, maxLon, maxLat], \"width\": 256, \"height\": 256, \"info_format\": \"application/json\", \"sample_points\": [[lon, lat], ...] }} and re-run.",
+        "Note: even a queryable WMS layer typically returns per-pixel attribute scalars from GetFeatureInfo, NOT polygon geometry. This method can only produce real polygons if the server is configured to return geometry (rare). The WMS endpoints inspected in Phase 2 returned only elevation scalars for the working layer (raster_eae92c48-... global DEM)."
+      ]
+    },
+    {
+      "method": "rendered_tile_classification",
+      "status": "FAILED_NO_INPUT",
+      "feature_count": 0,
+      "diagnostics": [
+        "data/lizard_catchments_approx/inputs/config/method3_config.json not present. To enable, supply: {\"tile_url_template\": \"https://.../{z}/{x}/{y}.png\", \"min_z\": int, \"max_z\": int, \"bbox_lonlat\": [minLon, minLat, maxLon, maxLat], \"target_rgb\": [r, g, b], \"rgb_tolerance\": int, \"simplify_tolerance_deg\": float}."
+      ]
+    },
+    {
+      "method": "georeferenced_screenshot",
+      "status": "FAILED_NO_INPUT",
+      "feature_count": 0,
+      "diagnostics": [
+        "No georeferenced screenshots in data/lizard_catchments_approx/inputs/screenshots. To enable: drop a PNG with sidecar .pgw worldfile + a *_meta.json describing {\"epsg\": int, \"target_rgb\": [r,g,b], \"rgb_tolerance\": int, \"simplify_tolerance_deg\": float, \"source_url\": str, \"capture_timestamp_utc\": str}, OR a self-describing GeoTIFF (requires rasterio: pip install rasterio)."
+      ]
+    }
+  ],
+  "outputs": {
+    "raw_geojson": "data\\lizard_catchments_approx\\catchments_approx_raw.geojson",
+    "clean_geojson": "data\\lizard_catchments_approx\\catchments_approx_clean.geojson",
+    "index_csv": "data\\lizard_catchments_approx\\catchments_approx_index.csv"
+  },
+  "feature_counts": {
+    "raw": 0,
+    "clean": 0,
+    "rejected_invalid_geometry": 0
+  },
+  "fitness_for_use": {
+    "visual_overlay_only": true,
+    "suitable_for_catchment_rainfall_calculations": false,
+    "reason": "Approximated geometry has unbounded boundary error relative to the authoritative Council/Lizard polygon. Catchment rainfall depths are highly sensitive to boundary placement, so any approximation is unsuitable for hydrologic calculation."
+  }
+}

@@ -1,0 +1,20 @@
+2026-05-03T23:47:15.909068+00:00 start xml_parser=xml.etree (stdlib) auth=anonymous targets=4
+2026-05-03T23:47:15.909068+00:00 probe https://northernbeaches.lizard.net/wms/raster_eae92c48-cd68-4820-9d82-f86f763b4186/
+2026-05-03T23:47:15.909068+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities', 'VERSION': '1.3.0'}
+2026-05-03T23:47:17.147653+00:00     parsed OK version=1.3.0 layers=2
+2026-05-03T23:47:17.147653+00:00   classification=RASTER_ONLY
+2026-05-03T23:47:17.147653+00:00 probe https://northernbeaches.lizard.net/wms/raster_428e5a51-78af-4927-b4b0-c5a20ad25462/
+2026-05-03T23:47:17.147653+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities', 'VERSION': '1.3.0'}
+2026-05-03T23:47:17.422734+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities', 'VERSION': '1.1.1'}
+2026-05-03T23:47:17.718074+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities'}
+2026-05-03T23:47:18.021734+00:00   classification=INACCESSIBLE
+2026-05-03T23:47:18.021734+00:00 probe https://northernbeaches.lizard.net/wms/raster_0b3f3d8c-2461-4015-a457-c82e18b07135/
+2026-05-03T23:47:18.021734+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities', 'VERSION': '1.3.0'}
+2026-05-03T23:47:18.310056+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities', 'VERSION': '1.1.1'}
+2026-05-03T23:47:18.584790+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities'}
+2026-05-03T23:47:18.881551+00:00   classification=INACCESSIBLE
+2026-05-03T23:47:18.881551+00:00 probe https://northernbeaches.lizard.net/wms/raster_8a34446f-793b-4060-ad40-3f7e4c4e7809/
+2026-05-03T23:47:18.881551+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities', 'VERSION': '1.3.0'}
+2026-05-03T23:47:19.164263+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities', 'VERSION': '1.1.1'}
+2026-05-03T23:47:19.466132+00:00   variant={'SERVICE': 'WMS', 'REQUEST': 'GetCapabilities'}
+2026-05-03T23:47:19.754569+00:00   classification=INACCESSIBLE

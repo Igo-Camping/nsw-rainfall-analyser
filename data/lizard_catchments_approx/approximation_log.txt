@@ -1,0 +1,9 @@
+2026-05-03T23:58:05.954198+00:00 start auth=anonymous optional_deps={'numpy': '2.4.2', 'Pillow': '12.1.1', 'mapbox_vector_tile': None, 'scikit-image': None, 'rasterio': None}
+2026-05-03T23:58:05.954198+00:00 running mvt_decode
+2026-05-03T23:58:11.607577+00:00   mvt_decode -> status=UNAVAILABLE features=0
+2026-05-03T23:58:11.607577+00:00 running wms_getfeatureinfo
+2026-05-03T23:58:11.607577+00:00   wms_getfeatureinfo -> status=FAILED_NO_INPUT features=0
+2026-05-03T23:58:11.607577+00:00 running rendered_tile_classification
+2026-05-03T23:58:11.607577+00:00   rendered_tile_classification -> status=FAILED_NO_INPUT features=0
+2026-05-03T23:58:11.607577+00:00 running georeferenced_screenshot
+2026-05-03T23:58:11.607577+00:00   georeferenced_screenshot -> status=FAILED_NO_INPUT features=0

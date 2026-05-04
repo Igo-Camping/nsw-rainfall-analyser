@@ -1,0 +1,370 @@
+{
+  "generated_at": "2026-05-03T23:47:19.754569+00:00",
+  "xml_parser": "xml.etree (stdlib)",
+  "auth_mode": "anonymous",
+  "auth_token_present": false,
+  "variants_tried": [
+    {
+      "SERVICE": "WMS",
+      "REQUEST": "GetCapabilities",
+      "VERSION": "1.3.0"
+    },
+    {
+      "SERVICE": "WMS",
+      "REQUEST": "GetCapabilities",
+      "VERSION": "1.1.1"
+    },
+    {
+      "SERVICE": "WMS",
+      "REQUEST": "GetCapabilities"
+    }
+  ],
+  "endpoints": [
+    {
+      "input_url": "https://northernbeaches.lizard.net/wms/raster_eae92c48-cd68-4820-9d82-f86f763b4186/?request=GetCapabilities",
+      "base_url": "https://northernbeaches.lizard.net/wms/raster_eae92c48-cd68-4820-9d82-f86f763b4186/",
+      "attempts": [
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities",
+            "VERSION": "1.3.0"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_eae92c48-cd68-4820-9d82-f86f763b4186/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities",
+              "VERSION": "1.3.0"
+            },
+            "status_code": 200,
+            "content_type": "application/xml",
+            "bytes": 3613,
+            "elapsed_s": 1.219,
+            "error": null
+          },
+          "capabilities": {
+            "parsed": true,
+            "version": "1.3.0",
+            "root_tag": "WMS_Capabilities",
+            "service_name": "Lizard",
+            "service_title": "Lizard Web Map Service",
+            "service_abstract": "WMS server for raster visualization",
+            "contact_organisation": null,
+            "request_operations": [
+              "GetCapabilities",
+              "GetMap",
+              "GetFeatureInfo"
+            ],
+            "getmap_formats": [
+              "image/png"
+            ],
+            "getmap_url": "https://northernbeaches.lizard.net/wms/raster_eae92c48-cd68-4820-9d82-f86f763b4186/",
+            "has_getfeatureinfo": true,
+            "getfeatureinfo_formats": [
+              "application/json",
+              "application/geo+json",
+              "text/plain"
+            ],
+            "getfeatureinfo_url": "https://northernbeaches.lizard.net/wms/raster_eae92c48-cd68-4820-9d82-f86f763b4186/",
+            "layers": [
+              {
+                "name": null,
+                "title": "Lizard",
+                "queryable": false,
+                "crs": [],
+                "bbox_crs84": null,
+                "bbox_native": null,
+                "metadata_urls": [],
+                "data_urls": [],
+                "feature_list_urls": []
+              },
+              {
+                "name": "world:dem",
+                "title": "Elevation",
+                "queryable": true,
+                "crs": [
+                  "EPSG:4326"
+                ],
+                "bbox_crs84": {
+                  "westBoundLongitude": "-180.00208333333333",
+                  "eastBoundLongitude": "180.00000000014398",
+                  "southBoundLatitude": "-85.05208333333334",
+                  "northBoundLatitude": "85.05208333333333"
+                },
+                "bbox_native": {
+                  "crs": "EPSG:4326",
+                  "minx": "-85.05208333333334",
+                  "miny": "-180.00208333333333",
+                  "maxx": "85.05208333333333",
+                  "maxy": "180.00000000014398"
+                },
+                "metadata_urls": [],
+                "data_urls": [],
+                "feature_list_urls": []
+              }
+            ],
+            "metadata_urls": [],
+            "data_urls": [],
+            "feature_list_urls": [],
+            "exception_text": null,
+            "parse_error": null
+          },
+          "body_preview": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<WMS_Capabilities version=\"1.3.0\" updateSequence=\"2333\" xmlns=\"http://www.opengis.net/wms\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"https://schemas.opengis.net/wms/ https://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd\">\n  <Service>\n    <Name>Lizard</Name>\n    <Title>Lizard Web Map Service</Title>\n    <Abstract>WMS server for raster visualization</Abstract>\n    <OnlineResource xlink:type=\"simple\" xlink:href=\"http://www.lizard.net\"/>\n    <MaxWidth>2048</MaxWidth>\n    <MaxHei"
+        }
+      ],
+      "selected_attempt_variant": {
+        "SERVICE": "WMS",
+        "REQUEST": "GetCapabilities",
+        "VERSION": "1.3.0"
+      },
+      "classification": "RASTER_ONLY",
+      "classification_reasons": [
+        "No FeatureListURL or vector-format DataURL on any layer.",
+        "GetMap formats: image/png",
+        "GetFeatureInfo present (formats: application/json, application/geo+json, text/plain) -- per-pixel attribute query only; NOT authoritative polygon geometry."
+      ]
+    },
+    {
+      "input_url": "https://northernbeaches.lizard.net/wms/raster_428e5a51-78af-4927-b4b0-c5a20ad25462/?request=GetCapabilities",
+      "base_url": "https://northernbeaches.lizard.net/wms/raster_428e5a51-78af-4927-b4b0-c5a20ad25462/",
+      "attempts": [
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities",
+            "VERSION": "1.3.0"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_428e5a51-78af-4927-b4b0-c5a20ad25462/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities",
+              "VERSION": "1.3.0"
+            },
+            "status_code": 404,
+            "content_type": "text/xml; charset=utf-8",
+            "bytes": 408,
+            "elapsed_s": 0.281,
+            "error": "http 404",
+            "error_body_preview": "<?xml version='1.0' encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n\n<ServiceException>\ndetail: The requested layer collection does not exist or is empty\n</ServiceException>\n\n</ServiceExceptionReport>\n"
+          },
+          "capabilities": null
+        },
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities",
+            "VERSION": "1.1.1"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_428e5a51-78af-4927-b4b0-c5a20ad25462/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities",
+              "VERSION": "1.1.1"
+            },
+            "status_code": 404,
+            "content_type": "text/xml; charset=utf-8",
+            "bytes": 408,
+            "elapsed_s": 0.297,
+            "error": "http 404",
+            "error_body_preview": "<?xml version='1.0' encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n\n<ServiceException>\ndetail: The requested layer collection does not exist or is empty\n</ServiceException>\n\n</ServiceExceptionReport>\n"
+          },
+          "capabilities": null
+        },
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_428e5a51-78af-4927-b4b0-c5a20ad25462/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities"
+            },
+            "status_code": 404,
+            "content_type": "text/xml; charset=utf-8",
+            "bytes": 408,
+            "elapsed_s": 0.297,
+            "error": "http 404",
+            "error_body_preview": "<?xml version='1.0' encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n\n<ServiceException>\ndetail: The requested layer collection does not exist or is empty\n</ServiceException>\n\n</ServiceExceptionReport>\n"
+          },
+          "capabilities": null
+        }
+      ],
+      "selected_attempt_variant": {
+        "SERVICE": "WMS",
+        "REQUEST": "GetCapabilities"
+      },
+      "classification": "INACCESSIBLE",
+      "classification_reasons": [
+        "All variants failed; HTTP statuses observed: [404]",
+        "ServiceException: detail: The requested layer collection does not exist or is empty",
+        "Lizard returns HTTP 404 both for genuinely non-existent rasters AND for tenant-private rasters viewed anonymously (existence is hidden by design). To disambiguate, retry with LIZARD_API_TOKEN."
+      ]
+    },
+    {
+      "input_url": "https://northernbeaches.lizard.net/wms/raster_0b3f3d8c-2461-4015-a457-c82e18b07135/?request=GetCapabilities",
+      "base_url": "https://northernbeaches.lizard.net/wms/raster_0b3f3d8c-2461-4015-a457-c82e18b07135/",
+      "attempts": [
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities",
+            "VERSION": "1.3.0"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_0b3f3d8c-2461-4015-a457-c82e18b07135/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities",
+              "VERSION": "1.3.0"
+            },
+            "status_code": 404,
+            "content_type": "text/xml; charset=utf-8",
+            "bytes": 408,
+            "elapsed_s": 0.297,
+            "error": "http 404",
+            "error_body_preview": "<?xml version='1.0' encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n\n<ServiceException>\ndetail: The requested layer collection does not exist or is empty\n</ServiceException>\n\n</ServiceExceptionReport>\n"
+          },
+          "capabilities": null
+        },
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities",
+            "VERSION": "1.1.1"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_0b3f3d8c-2461-4015-a457-c82e18b07135/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities",
+              "VERSION": "1.1.1"
+            },
+            "status_code": 404,
+            "content_type": "text/xml; charset=utf-8",
+            "bytes": 408,
+            "elapsed_s": 0.266,
+            "error": "http 404",
+            "error_body_preview": "<?xml version='1.0' encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n\n<ServiceException>\ndetail: The requested layer collection does not exist or is empty\n</ServiceException>\n\n</ServiceExceptionReport>\n"
+          },
+          "capabilities": null
+        },
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_0b3f3d8c-2461-4015-a457-c82e18b07135/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities"
+            },
+            "status_code": 404,
+            "content_type": "text/xml; charset=utf-8",
+            "bytes": 408,
+            "elapsed_s": 0.297,
+            "error": "http 404",
+            "error_body_preview": "<?xml version='1.0' encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n\n<ServiceException>\ndetail: The requested layer collection does not exist or is empty\n</ServiceException>\n\n</ServiceExceptionReport>\n"
+          },
+          "capabilities": null
+        }
+      ],
+      "selected_attempt_variant": {
+        "SERVICE": "WMS",
+        "REQUEST": "GetCapabilities"
+      },
+      "classification": "INACCESSIBLE",
+      "classification_reasons": [
+        "All variants failed; HTTP statuses observed: [404]",
+        "ServiceException: detail: The requested layer collection does not exist or is empty",
+        "Lizard returns HTTP 404 both for genuinely non-existent rasters AND for tenant-private rasters viewed anonymously (existence is hidden by design). To disambiguate, retry with LIZARD_API_TOKEN."
+      ]
+    },
+    {
+      "input_url": "https://northernbeaches.lizard.net/wms/raster_8a34446f-793b-4060-ad40-3f7e4c4e7809/?request=GetCapabilities",
+      "base_url": "https://northernbeaches.lizard.net/wms/raster_8a34446f-793b-4060-ad40-3f7e4c4e7809/",
+      "attempts": [
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities",
+            "VERSION": "1.3.0"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_8a34446f-793b-4060-ad40-3f7e4c4e7809/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities",
+              "VERSION": "1.3.0"
+            },
+            "status_code": 404,
+            "content_type": "text/xml; charset=utf-8",
+            "bytes": 408,
+            "elapsed_s": 0.281,
+            "error": "http 404",
+            "error_body_preview": "<?xml version='1.0' encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n\n<ServiceException>\ndetail: The requested layer collection does not exist or is empty\n</ServiceException>\n\n</ServiceExceptionReport>\n"
+          },
+          "capabilities": null
+        },
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities",
+            "VERSION": "1.1.1"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_8a34446f-793b-4060-ad40-3f7e4c4e7809/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities",
+              "VERSION": "1.1.1"
+            },
+            "status_code": 404,
+            "content_type": "text/xml; charset=utf-8",
+            "bytes": 408,
+            "elapsed_s": 0.312,
+            "error": "http 404",
+            "error_body_preview": "<?xml version='1.0' encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n\n<ServiceException>\ndetail: The requested layer collection does not exist or is empty\n</ServiceException>\n\n</ServiceExceptionReport>\n"
+          },
+          "capabilities": null
+        },
+        {
+          "variant": {
+            "SERVICE": "WMS",
+            "REQUEST": "GetCapabilities"
+          },
+          "http": {
+            "url": "https://northernbeaches.lizard.net/wms/raster_8a34446f-793b-4060-ad40-3f7e4c4e7809/",
+            "params": {
+              "SERVICE": "WMS",
+              "REQUEST": "GetCapabilities"
+            },
+            "status_code": 404,
+            "content_type": "text/xml; charset=utf-8",
+            "bytes": 408,
+            "elapsed_s": 0.282,
+            "error": "http 404",
+            "error_body_preview": "<?xml version='1.0' encoding=\"UTF-8\"?>\n<ServiceExceptionReport version=\"1.3.0\" xmlns=\"http://www.opengis.net/ogc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.opengis.net/ogc http://schemas.opengis.net/wms/1.3.0/exceptions_1_3_0.xsd\">\n\n<ServiceException>\ndetail: The requested layer collection does not exist or is empty\n</ServiceException>\n\n</ServiceExceptionReport>\n"
+          },
+          "capabilities": null
+        }
+      ],
+      "selected_attempt_variant": {
+        "SERVICE": "WMS",
+        "REQUEST": "GetCapabilities"
+      },
+      "classification": "INACCESSIBLE",
+      "classification_reasons": [
+        "All variants failed; HTTP statuses observed: [404]",
+        "ServiceException: detail: The requested layer collection does not exist or is empty",
+        "Lizard returns HTTP 404 both for genuinely non-existent rasters AND for tenant-private rasters viewed anonymously (existence is hidden by design). To disambiguate, retry with LIZARD_API_TOKEN."
+      ]
+    }
+  ],
+  "verdict": "MIXED CLASSIFICATIONS: {'INACCESSIBLE': 3, 'RASTER_ONLY': 1}. Inspect per-endpoint reasons."
+}

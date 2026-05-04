@@ -1,0 +1,42 @@
+2026-05-03T23:31:29.112584+00:00 start base_url=https://northernbeaches.lizard.net/api/v4 auth=anonymous
+2026-05-03T23:31:29.112584+00:00 probing endpoint roots...
+2026-05-03T23:31:30.282249+00:00   labeltypes: count=1 results_shape=list sample_keys=['access_modifier', 'created', 'description', 'last_modified', 'name', 'object_type', 'organisation', 'source']
+2026-05-03T23:31:30.587629+00:00   boundaries: count=247703 results_shape=dict sample_keys=[]
+2026-05-03T23:31:30.879211+00:00   fixeddrainagelevelareas: count=0 results_shape=list sample_keys=[]
+2026-05-03T23:31:31.167775+00:00   pumpeddrainageareas: count=0 results_shape=list sample_keys=[]
+2026-05-03T23:31:31.462910+00:00   polders: count=0 results_shape=list sample_keys=[]
+2026-05-03T23:31:31.767866+00:00   scenarios: count=56 results_shape=list sample_keys=['access_modifier', 'created', 'description', 'extra_metadata', 'has_raw_results', 'last_modified', 'model_identifier', 'model_name']
+2026-05-03T23:31:32.082888+00:00   locations: count=58 results_shape=list sample_keys=['access_modifier', 'code', 'created', 'extra_metadata', 'geometry', 'last_modified', 'last_modified_by', 'name']
+2026-05-03T23:31:32.082888+00:00 running targeted searches...
+2026-05-03T23:31:32.369682+00:00   labeltypes?search=catchment: 1 matches
+2026-05-03T23:31:32.670750+00:00   labeltypes?search=subcatchment: 1 matches
+2026-05-03T23:31:32.969404+00:00   labeltypes?search=sub-catchment: 1 matches
+2026-05-03T23:31:33.261078+00:00   labeltypes?search=drainage: 1 matches
+2026-05-03T23:31:33.562871+00:00   labeltypes?search=stormwater: 1 matches
+2026-05-03T23:31:33.856759+00:00   labeltypes?search=watershed: 1 matches
+2026-05-03T23:31:34.157062+00:00   labeltypes?search=basin: 1 matches
+2026-05-03T23:31:34.448450+00:00   labeltypes?search=3di: 1 matches
+2026-05-03T23:31:34.746836+00:00   labeltypes?search=scenario: 1 matches
+2026-05-03T23:31:35.049029+00:00   labeltypes?search=northern beaches: 1 matches
+2026-05-03T23:31:36.929352+00:00   boundaries?search=catchment: 247703 matches
+2026-05-03T23:31:37.728082+00:00   boundaries?search=subcatchment: 247703 matches
+2026-05-03T23:31:38.639099+00:00   boundaries?search=sub-catchment: 247703 matches
+2026-05-03T23:31:39.509747+00:00   boundaries?search=drainage: 247703 matches
+2026-05-03T23:31:40.723179+00:00   boundaries?search=stormwater: 247703 matches
+2026-05-03T23:31:41.528679+00:00   boundaries?search=watershed: 247703 matches
+2026-05-03T23:31:42.343345+00:00   boundaries?search=basin: 247703 matches
+2026-05-03T23:31:43.180406+00:00   boundaries?search=3di: 247703 matches
+2026-05-03T23:31:44.015095+00:00   boundaries?search=scenario: 247703 matches
+2026-05-03T23:31:44.602493+00:00   boundaries?search=northern beaches: 247703 matches
+2026-05-03T23:31:57.456800+00:00   locations?search=catchment: 58 matches
+2026-05-03T23:31:57.790033+00:00   locations?search=subcatchment: 58 matches
+2026-05-03T23:31:58.121528+00:00   locations?search=sub-catchment: 58 matches
+2026-05-03T23:31:58.459289+00:00   locations?search=drainage: 58 matches
+2026-05-03T23:31:58.785013+00:00   locations?search=stormwater: 58 matches
+2026-05-03T23:31:59.119915+00:00   locations?search=watershed: 58 matches
+2026-05-03T23:31:59.439918+00:00   locations?search=basin: 58 matches
+2026-05-03T23:31:59.757357+00:00   locations?search=3di: 58 matches
+2026-05-03T23:32:00.091363+00:00   locations?search=scenario: 58 matches
+2026-05-03T23:32:00.427534+00:00   locations?search=northern beaches: 58 matches
+2026-05-03T23:32:00.427534+00:00 deep-probing labeltypes (detail + labels enumeration)...
+2026-05-03T23:32:01.944255+00:00 probing global /search/ for catchment terms...

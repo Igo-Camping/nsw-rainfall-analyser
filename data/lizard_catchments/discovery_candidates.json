@@ -1,0 +1,3923 @@
+{
+  "generated_at": "2026-05-03T23:32:03.603848+00:00",
+  "base_url": "https://northernbeaches.lizard.net/api/v4",
+  "auth_mode": "anonymous",
+  "auth_token_present": false,
+  "endpoints_probed": [
+    "labeltypes",
+    "boundaries",
+    "fixeddrainagelevelareas",
+    "pumpeddrainageareas",
+    "polders",
+    "scenarios",
+    "locations"
+  ],
+  "endpoint_summaries": {
+    "labeltypes": {
+      "endpoint": "labeltypes",
+      "url": "https://northernbeaches.lizard.net/api/v4/labeltypes/",
+      "error": null,
+      "count": 1,
+      "sample_keys": [
+        "access_modifier",
+        "created",
+        "description",
+        "last_modified",
+        "name",
+        "object_type",
+        "organisation",
+        "source",
+        "url",
+        "uuid"
+      ],
+      "sample_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/labeltypes/e23c58ea-ae39-41bf-9867-021a996034b8/",
+        "uuid": "e23c58ea-ae39-41bf-9867-021a996034b8",
+        "name": "floodlabel_uu",
+        "description": "floodlabel uu",
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object_type": "building",
+        "source": {
+          "name": "SetSeriesBlock",
+          "graph": {
+            "Add_1": [
+              "dask_geomodeling.geometry.field_operations.Add",
+              "Add_2",
+              "Classify_7"
+            ],
+            "Add_2": [
+              "dask_geomodeling.geometry.field_operations.Add",
+              "Add_3",
+              10
+            ],
+            "Add_3": [
+              "dask_geomodeling.geometry.field_operations.Add",
+              "Classify_4",
+              "Classify_6"
+            ],
+            "IsData_1": [
+              "dask_geomodeling.raster.elemwise.IsData",
+              "LizardRasterSource_2"
+            ],
+            "IsData_2": [
+              "dask_geomodeling.raster.elemwise.IsData",
+              "LizardRasterSource_3"
+            ],
+            "Classify_1": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Classify_4",
+              [
+                5,
+                10,
+                15,
+                20
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_2": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Add_1",
+              [
+                16,
+                32,
+                48,
+                64
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_3": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Classify_6",
+              [
+                5,
+                10,
+                15,
+                20
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_4": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "GetSeriesBlock_2",
+              [
+                0.2,
+                0.5,
+                2,
+                5
+              ],
+              [
+                0,
+                5,
+                10,
+                15,
+                20
+              ],
+              false
+            ],
+            "Classify_5": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Classify_7",
+              [
+                5,
+                10,
+                15,
+                20
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_6": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "GetSeriesBlock_3",
+              [
+                0.05,
+                0.1,
+                0.15,
+                0.2
+              ],
+              [
+                0,
+                5,
+                10,
+                15,
+                20
+              ],
+              false
+            ],
+            "Classify_7": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "GetSeriesBlock_1",
+              [
+                0.2,
+                0.4,
+                0.6,
+                0.8
+              ],
+              [
+                20,
+                15,
+                10,
+                5,
+                0
+              ],
+              false
+            ],
+            "FillNoData_1": [
+              "dask_geomodeling.raster.elemwise.FillNoData",
+              "IsData_1",
+              "LizardRasterSource_2"
+            ],
+            "FillNoData_2": [
+              "dask_geomodeling.raster.elemwise.FillNoData",
+              "IsData_2",
+              "LizardRasterSource_3"
+            ],
+            "GetSeriesBlock_1": [
+              "dask_geomodeling.geometry.base.GetSeriesBlock",
+              "AggregateRaster_1",
+              "groundwater_max_value"
+            ],
+            "GetSeriesBlock_2": [
+              "dask_geomodeling.geometry.base.GetSeriesBlock",
+              "AggregateRaster_2",
+              "fluvial_max_value"
+            ],
+            "GetSeriesBlock_3": [
+              "dask_geomodeling.geometry.base.GetSeriesBlock",
+              "AggregateRaster_3",
+              "pluvial_max_value"
+            ],
+            "SetSeriesBlock": [
+              "dask_geomodeling.geometry.base.SetSeriesBlock",
+              "GeoDjangoSource",
+              "label",
+              "Classify_2",
+              "label_value",
+              "Classify_2",
+              "label_score",
+              "Add_1",
+              "fluvial_value",
+              "GetSeriesBlock_2",
+              "fluvial_score",
+              "Classify_4",
+              "fluvial_label",
+              "Classify_1",
+              "pluvial_value",
+              "GetSeriesBlock_3",
+              "pluvial_score",
+              "Classify_6",
+              "pluvial_label",
+              "Classify_3",
+              "groundwater_value",
+              "GetSeriesBlock_1",
+              "groundwater_score",
+              "Classify_7",
+              "groundwater_label",
+              "Classify_5",
+              "sewage_score",
+              10,
+              "sewage_label",
+              "C"
+            ],
+            "AggregateRaster_1": [
+              "dask_geomodeling.geometry.aggregate.AggregateRaster",
+              "GeoDjangoSource",
+              "LizardRasterSource_1",
+              "max",
+              "epsg:28992",
+              1.0,
+              null,
+              "groundwater_max_value",
+              false
+            ],
+            "AggregateRaster_2": [
+              "dask_geomodeling.geometry.aggregate.AggregateRaster",
+              "GeoDjangoSource",
+              "FillNoData_2",
+              "max",
+              "epsg:28992",
+              1.0,
+              null,
+              "fluvial_max_value",
+              false
+            ],
+            "AggregateRaster_3": [
+              "dask_geomodeling.geometry.aggregate.AggregateRaster",
+              "GeoDjangoSource",
+              "FillNoData_1",
+              "max",
+              "epsg:28992",
+              1.0,
+              null,
+              "pluvial_max_value",
+              false
+            ],
+            "GeoDjangoSource": [
+              "django_geoblocks.blocks.sources.GeoDjangoSource",
+              "hydra_core",
+              "building",
+              {
+                "id": "object_id",
+                "code": "building_BAG_code"
+              },
+              "geometry",
+              "start",
+              "end",
+              {
+                "organisation__in": [
+                  387,
+                  388,
+                  10,
+                  280,
+                  426,
+                  434,
+                  51,
+                  439,
+                  440,
+                  314,
+                  444,
+                  446,
+                  64,
+                  449,
+                  456,
+                  77,
+                  464,
+                  81,
+                  339,
+                  469,
+                  341,
+                  474,
+                  477,
+                  356,
+                  357,
+                  359,
+                  369,
+                  118,
+                  124
+                ]
+              }
+            ],
+            "RasterStoreSource": [
+              "lizard_nxt.blocks.LizardRasterSource",
+              "3ed224ef-649e-4c64-aceb-1f910d38d192"
+            ],
+            "LizardRasterSource_1": [
+              "lizard_nxt.blocks.LizardRasterSource",
+              "7c22757b-9039-44ae-987d-b2da7d9f335a"
+            ],
+            "LizardRasterSource_2": [
+              "dask_geomodeling.raster.misc.Reclassify",
+              "RasterStoreSource",
+              [
+                [
+                  1,
+                  0.075
+                ],
+                [
+                  2,
+                  0.125
+                ],
+                [
+                  3,
+                  0.175
+                ],
+                [
+                  4,
+                  0.15
+                ],
+                [
+                  5,
+                  0.3
+                ]
+              ],
+              true
+            ],
+            "LizardRasterSource_3": [
+              "lizard_nxt.blocks.LizardRasterSource",
+              "cbbb5c26-0720-48e4-a58d-d56bfbc4eb71"
+            ]
+          }
+        },
+        "access_modifier": "Public",
+        "last_modified": "2019-12-10T11:07:06.871752Z",
+        "created": "2019-07-19T09:53:12.150550Z"
+      },
+      "results_shape": "list"
+    },
+    "boundaries": {
+      "endpoint": "boundaries",
+      "url": "https://northernbeaches.lizard.net/api/v4/boundaries/",
+      "error": null,
+      "count": 247703,
+      "sample_keys": [],
+      "sample_record": null,
+      "results_shape": "dict"
+    },
+    "fixeddrainagelevelareas": {
+      "endpoint": "fixeddrainagelevelareas",
+      "url": "https://northernbeaches.lizard.net/api/v4/fixeddrainagelevelareas/",
+      "error": null,
+      "count": 0,
+      "sample_keys": [],
+      "sample_record": null,
+      "results_shape": "list"
+    },
+    "pumpeddrainageareas": {
+      "endpoint": "pumpeddrainageareas",
+      "url": "https://northernbeaches.lizard.net/api/v4/pumpeddrainageareas/",
+      "error": null,
+      "count": 0,
+      "sample_keys": [],
+      "sample_record": null,
+      "results_shape": "list"
+    },
+    "polders": {
+      "endpoint": "polders",
+      "url": "https://northernbeaches.lizard.net/api/v4/polders/",
+      "error": null,
+      "count": 0,
+      "sample_keys": [],
+      "sample_record": null,
+      "results_shape": "list"
+    },
+    "scenarios": {
+      "endpoint": "scenarios",
+      "url": "https://northernbeaches.lizard.net/api/v4/scenarios/",
+      "error": null,
+      "count": 56,
+      "sample_keys": [
+        "access_modifier",
+        "created",
+        "description",
+        "extra_metadata",
+        "has_raw_results",
+        "last_modified",
+        "model_identifier",
+        "model_name",
+        "model_revision",
+        "name",
+        "organisation",
+        "origin_x",
+        "origin_y",
+        "pixelsize_x",
+        "pixelsize_y",
+        "project",
+        "projection",
+        "simulation_end",
+        "simulation_identifier",
+        "simulation_start",
+        "source",
+        "spatial_bounds",
+        "supplier",
+        "total_size",
+        "upper_bound_x",
+        "upper_bound_y",
+        "url",
+        "uuid"
+      ],
+      "sample_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/scenarios/ddc84e0d-7595-4eaa-99b9-70be4bbab04b/",
+        "uuid": "ddc84e0d-7595-4eaa-99b9-70be4bbab04b",
+        "name": "Stresstest Haarlemmermeer Composietbui T10 2085",
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "project": "https://northernbeaches.lizard.net/api/v4/projects/56bd2dc9-7fe4-4b8d-9aaa-9d81a0fe70c9/",
+        "description": "",
+        "extra_metadata": {},
+        "access_modifier": "Public",
+        "created": "2025-09-03T08:02:55.901804Z",
+        "last_modified": "2025-09-17T12:17:51.187033Z",
+        "simulation_identifier": "328580",
+        "simulation_start": "2000-01-01T12:00:00Z",
+        "simulation_end": "2000-01-02T02:00:00Z",
+        "supplier": "ruben.vanderzaag",
+        "source": "3Di",
+        "model_identifier": "73770",
+        "model_revision": "66894",
+        "model_name": "stresstest-haarlemmermeer-20250068-67",
+        "has_raw_results": true,
+        "total_size": 2647587241,
+        "spatial_bounds": {
+          "west": 4.5391290472698484,
+          "east": 4.827917630387849,
+          "north": 52.43836294982044,
+          "south": 52.20946522687958
+        },
+        "projection": "EPSG:28992",
+        "origin_x": 97330.0,
+        "origin_y": 469376.0,
+        "pixelsize_x": 0.5,
+        "pixelsize_y": 0.5,
+        "upper_bound_x": 116774.0,
+        "upper_bound_y": 494657.0
+      },
+      "results_shape": "list"
+    },
+    "locations": {
+      "endpoint": "locations",
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/",
+      "error": null,
+      "count": 58,
+      "sample_keys": [
+        "access_modifier",
+        "code",
+        "created",
+        "extra_metadata",
+        "geometry",
+        "last_modified",
+        "last_modified_by",
+        "name",
+        "object",
+        "organisation",
+        "url",
+        "uuid"
+      ],
+      "sample_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/ce40f59c-29da-4e74-8d70-c6b6557f631d/",
+        "uuid": "ce40f59c-29da-4e74-8d70-c6b6557f631d",
+        "name": "Stichtsch Ankeveensche Polder",
+        "code": "3201",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2015-08-28T14:41:28.086064Z",
+        "last_modified": "2023-06-27T09:30:39.168918Z",
+        "last_modified_by": "karl.schutt"
+      },
+      "results_shape": "list"
+    }
+  },
+  "labeltype_deep_probes": [
+    {
+      "uuid": "e23c58ea-ae39-41bf-9867-021a996034b8",
+      "name": "floodlabel_uu",
+      "url": "https://northernbeaches.lizard.net/api/v4/labeltypes/e23c58ea-ae39-41bf-9867-021a996034b8/",
+      "source": {
+        "name": "SetSeriesBlock",
+        "graph": {
+          "Add_1": [
+            "dask_geomodeling.geometry.field_operations.Add",
+            "Add_2",
+            "Classify_7"
+          ],
+          "Add_2": [
+            "dask_geomodeling.geometry.field_operations.Add",
+            "Add_3",
+            10
+          ],
+          "Add_3": [
+            "dask_geomodeling.geometry.field_operations.Add",
+            "Classify_4",
+            "Classify_6"
+          ],
+          "IsData_1": [
+            "dask_geomodeling.raster.elemwise.IsData",
+            "LizardRasterSource_2"
+          ],
+          "IsData_2": [
+            "dask_geomodeling.raster.elemwise.IsData",
+            "LizardRasterSource_3"
+          ],
+          "Classify_1": [
+            "dask_geomodeling.geometry.field_operations.Classify",
+            "Classify_4",
+            [
+              5,
+              10,
+              15,
+              20
+            ],
+            [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            false
+          ],
+          "Classify_2": [
+            "dask_geomodeling.geometry.field_operations.Classify",
+            "Add_1",
+            [
+              16,
+              32,
+              48,
+              64
+            ],
+            [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            false
+          ],
+          "Classify_3": [
+            "dask_geomodeling.geometry.field_operations.Classify",
+            "Classify_6",
+            [
+              5,
+              10,
+              15,
+              20
+            ],
+            [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            false
+          ],
+          "Classify_4": [
+            "dask_geomodeling.geometry.field_operations.Classify",
+            "GetSeriesBlock_2",
+            [
+              0.2,
+              0.5,
+              2,
+              5
+            ],
+            [
+              0,
+              5,
+              10,
+              15,
+              20
+            ],
+            false
+          ],
+          "Classify_5": [
+            "dask_geomodeling.geometry.field_operations.Classify",
+            "Classify_7",
+            [
+              5,
+              10,
+              15,
+              20
+            ],
+            [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ],
+            false
+          ],
+          "Classify_6": [
+            "dask_geomodeling.geometry.field_operations.Classify",
+            "GetSeriesBlock_3",
+            [
+              0.05,
+              0.1,
+              0.15,
+              0.2
+            ],
+            [
+              0,
+              5,
+              10,
+              15,
+              20
+            ],
+            false
+          ],
+          "Classify_7": [
+            "dask_geomodeling.geometry.field_operations.Classify",
+            "GetSeriesBlock_1",
+            [
+              0.2,
+              0.4,
+              0.6,
+              0.8
+            ],
+            [
+              20,
+              15,
+              10,
+              5,
+              0
+            ],
+            false
+          ],
+          "FillNoData_1": [
+            "dask_geomodeling.raster.elemwise.FillNoData",
+            "IsData_1",
+            "LizardRasterSource_2"
+          ],
+          "FillNoData_2": [
+            "dask_geomodeling.raster.elemwise.FillNoData",
+            "IsData_2",
+            "LizardRasterSource_3"
+          ],
+          "GetSeriesBlock_1": [
+            "dask_geomodeling.geometry.base.GetSeriesBlock",
+            "AggregateRaster_1",
+            "groundwater_max_value"
+          ],
+          "GetSeriesBlock_2": [
+            "dask_geomodeling.geometry.base.GetSeriesBlock",
+            "AggregateRaster_2",
+            "fluvial_max_value"
+          ],
+          "GetSeriesBlock_3": [
+            "dask_geomodeling.geometry.base.GetSeriesBlock",
+            "AggregateRaster_3",
+            "pluvial_max_value"
+          ],
+          "SetSeriesBlock": [
+            "dask_geomodeling.geometry.base.SetSeriesBlock",
+            "GeoDjangoSource",
+            "label",
+            "Classify_2",
+            "label_value",
+            "Classify_2",
+            "label_score",
+            "Add_1",
+            "fluvial_value",
+            "GetSeriesBlock_2",
+            "fluvial_score",
+            "Classify_4",
+            "fluvial_label",
+            "Classify_1",
+            "pluvial_value",
+            "GetSeriesBlock_3",
+            "pluvial_score",
+            "Classify_6",
+            "pluvial_label",
+            "Classify_3",
+            "groundwater_value",
+            "GetSeriesBlock_1",
+            "groundwater_score",
+            "Classify_7",
+            "groundwater_label",
+            "Classify_5",
+            "sewage_score",
+            10,
+            "sewage_label",
+            "C"
+          ],
+          "AggregateRaster_1": [
+            "dask_geomodeling.geometry.aggregate.AggregateRaster",
+            "GeoDjangoSource",
+            "LizardRasterSource_1",
+            "max",
+            "epsg:28992",
+            1.0,
+            null,
+            "groundwater_max_value",
+            false
+          ],
+          "AggregateRaster_2": [
+            "dask_geomodeling.geometry.aggregate.AggregateRaster",
+            "GeoDjangoSource",
+            "FillNoData_2",
+            "max",
+            "epsg:28992",
+            1.0,
+            null,
+            "fluvial_max_value",
+            false
+          ],
+          "AggregateRaster_3": [
+            "dask_geomodeling.geometry.aggregate.AggregateRaster",
+            "GeoDjangoSource",
+            "FillNoData_1",
+            "max",
+            "epsg:28992",
+            1.0,
+            null,
+            "pluvial_max_value",
+            false
+          ],
+          "GeoDjangoSource": [
+            "django_geoblocks.blocks.sources.GeoDjangoSource",
+            "hydra_core",
+            "building",
+            {
+              "id": "object_id",
+              "code": "building_BAG_code"
+            },
+            "geometry",
+            "start",
+            "end",
+            {
+              "organisation__in": [
+                387,
+                388,
+                10,
+                280,
+                426,
+                434,
+                51,
+                439,
+                440,
+                314,
+                444,
+                446,
+                64,
+                449,
+                456,
+                77,
+                464,
+                81,
+                339,
+                469,
+                341,
+                474,
+                477,
+                356,
+                357,
+                359,
+                369,
+                118,
+                124
+              ]
+            }
+          ],
+          "RasterStoreSource": [
+            "lizard_nxt.blocks.LizardRasterSource",
+            "3ed224ef-649e-4c64-aceb-1f910d38d192"
+          ],
+          "LizardRasterSource_1": [
+            "lizard_nxt.blocks.LizardRasterSource",
+            "7c22757b-9039-44ae-987d-b2da7d9f335a"
+          ],
+          "LizardRasterSource_2": [
+            "dask_geomodeling.raster.misc.Reclassify",
+            "RasterStoreSource",
+            [
+              [
+                1,
+                0.075
+              ],
+              [
+                2,
+                0.125
+              ],
+              [
+                3,
+                0.175
+              ],
+              [
+                4,
+                0.15
+              ],
+              [
+                5,
+                0.3
+              ]
+            ],
+            true
+          ],
+          "LizardRasterSource_3": [
+            "lizard_nxt.blocks.LizardRasterSource",
+            "cbbb5c26-0720-48e4-a58d-d56bfbc4eb71"
+          ]
+        }
+      },
+      "object_type": "building",
+      "description": "floodlabel uu",
+      "raw": {
+        "url": "https://northernbeaches.lizard.net/api/v4/labeltypes/e23c58ea-ae39-41bf-9867-021a996034b8/",
+        "uuid": "e23c58ea-ae39-41bf-9867-021a996034b8",
+        "name": "floodlabel_uu",
+        "description": "floodlabel uu",
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object_type": "building",
+        "source": {
+          "name": "SetSeriesBlock",
+          "graph": {
+            "Add_1": [
+              "dask_geomodeling.geometry.field_operations.Add",
+              "Add_2",
+              "Classify_7"
+            ],
+            "Add_2": [
+              "dask_geomodeling.geometry.field_operations.Add",
+              "Add_3",
+              10
+            ],
+            "Add_3": [
+              "dask_geomodeling.geometry.field_operations.Add",
+              "Classify_4",
+              "Classify_6"
+            ],
+            "IsData_1": [
+              "dask_geomodeling.raster.elemwise.IsData",
+              "LizardRasterSource_2"
+            ],
+            "IsData_2": [
+              "dask_geomodeling.raster.elemwise.IsData",
+              "LizardRasterSource_3"
+            ],
+            "Classify_1": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Classify_4",
+              [
+                5,
+                10,
+                15,
+                20
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_2": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Add_1",
+              [
+                16,
+                32,
+                48,
+                64
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_3": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Classify_6",
+              [
+                5,
+                10,
+                15,
+                20
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_4": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "GetSeriesBlock_2",
+              [
+                0.2,
+                0.5,
+                2,
+                5
+              ],
+              [
+                0,
+                5,
+                10,
+                15,
+                20
+              ],
+              false
+            ],
+            "Classify_5": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Classify_7",
+              [
+                5,
+                10,
+                15,
+                20
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_6": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "GetSeriesBlock_3",
+              [
+                0.05,
+                0.1,
+                0.15,
+                0.2
+              ],
+              [
+                0,
+                5,
+                10,
+                15,
+                20
+              ],
+              false
+            ],
+            "Classify_7": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "GetSeriesBlock_1",
+              [
+                0.2,
+                0.4,
+                0.6,
+                0.8
+              ],
+              [
+                20,
+                15,
+                10,
+                5,
+                0
+              ],
+              false
+            ],
+            "FillNoData_1": [
+              "dask_geomodeling.raster.elemwise.FillNoData",
+              "IsData_1",
+              "LizardRasterSource_2"
+            ],
+            "FillNoData_2": [
+              "dask_geomodeling.raster.elemwise.FillNoData",
+              "IsData_2",
+              "LizardRasterSource_3"
+            ],
+            "GetSeriesBlock_1": [
+              "dask_geomodeling.geometry.base.GetSeriesBlock",
+              "AggregateRaster_1",
+              "groundwater_max_value"
+            ],
+            "GetSeriesBlock_2": [
+              "dask_geomodeling.geometry.base.GetSeriesBlock",
+              "AggregateRaster_2",
+              "fluvial_max_value"
+            ],
+            "GetSeriesBlock_3": [
+              "dask_geomodeling.geometry.base.GetSeriesBlock",
+              "AggregateRaster_3",
+              "pluvial_max_value"
+            ],
+            "SetSeriesBlock": [
+              "dask_geomodeling.geometry.base.SetSeriesBlock",
+              "GeoDjangoSource",
+              "label",
+              "Classify_2",
+              "label_value",
+              "Classify_2",
+              "label_score",
+              "Add_1",
+              "fluvial_value",
+              "GetSeriesBlock_2",
+              "fluvial_score",
+              "Classify_4",
+              "fluvial_label",
+              "Classify_1",
+              "pluvial_value",
+              "GetSeriesBlock_3",
+              "pluvial_score",
+              "Classify_6",
+              "pluvial_label",
+              "Classify_3",
+              "groundwater_value",
+              "GetSeriesBlock_1",
+              "groundwater_score",
+              "Classify_7",
+              "groundwater_label",
+              "Classify_5",
+              "sewage_score",
+              10,
+              "sewage_label",
+              "C"
+            ],
+            "AggregateRaster_1": [
+              "dask_geomodeling.geometry.aggregate.AggregateRaster",
+              "GeoDjangoSource",
+              "LizardRasterSource_1",
+              "max",
+              "epsg:28992",
+              1.0,
+              null,
+              "groundwater_max_value",
+              false
+            ],
+            "AggregateRaster_2": [
+              "dask_geomodeling.geometry.aggregate.AggregateRaster",
+              "GeoDjangoSource",
+              "FillNoData_2",
+              "max",
+              "epsg:28992",
+              1.0,
+              null,
+              "fluvial_max_value",
+              false
+            ],
+            "AggregateRaster_3": [
+              "dask_geomodeling.geometry.aggregate.AggregateRaster",
+              "GeoDjangoSource",
+              "FillNoData_1",
+              "max",
+              "epsg:28992",
+              1.0,
+              null,
+              "pluvial_max_value",
+              false
+            ],
+            "GeoDjangoSource": [
+              "django_geoblocks.blocks.sources.GeoDjangoSource",
+              "hydra_core",
+              "building",
+              {
+                "id": "object_id",
+                "code": "building_BAG_code"
+              },
+              "geometry",
+              "start",
+              "end",
+              {
+                "organisation__in": [
+                  387,
+                  388,
+                  10,
+                  280,
+                  426,
+                  434,
+                  51,
+                  439,
+                  440,
+                  314,
+                  444,
+                  446,
+                  64,
+                  449,
+                  456,
+                  77,
+                  464,
+                  81,
+                  339,
+                  469,
+                  341,
+                  474,
+                  477,
+                  356,
+                  357,
+                  359,
+                  369,
+                  118,
+                  124
+                ]
+              }
+            ],
+            "RasterStoreSource": [
+              "lizard_nxt.blocks.LizardRasterSource",
+              "3ed224ef-649e-4c64-aceb-1f910d38d192"
+            ],
+            "LizardRasterSource_1": [
+              "lizard_nxt.blocks.LizardRasterSource",
+              "7c22757b-9039-44ae-987d-b2da7d9f335a"
+            ],
+            "LizardRasterSource_2": [
+              "dask_geomodeling.raster.misc.Reclassify",
+              "RasterStoreSource",
+              [
+                [
+                  1,
+                  0.075
+                ],
+                [
+                  2,
+                  0.125
+                ],
+                [
+                  3,
+                  0.175
+                ],
+                [
+                  4,
+                  0.15
+                ],
+                [
+                  5,
+                  0.3
+                ]
+              ],
+              true
+            ],
+            "LizardRasterSource_3": [
+              "lizard_nxt.blocks.LizardRasterSource",
+              "cbbb5c26-0720-48e4-a58d-d56bfbc4eb71"
+            ]
+          }
+        },
+        "access_modifier": "Public",
+        "last_modified": "2019-12-10T11:07:06.871752Z",
+        "created": "2019-07-19T09:53:12.150550Z"
+      },
+      "label_probes": [
+        {
+          "url": "https://northernbeaches.lizard.net/api/v4/labels/",
+          "params": {
+            "label_type": "e23c58ea-ae39-41bf-9867-021a996034b8",
+            "page_size": 1
+          },
+          "error": "http 404: \n<html ng-app=\"lizard-nxt\">\n  <head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0",
+          "count": null,
+          "sample_keys": [],
+          "sample_record": null
+        },
+        {
+          "url": "https://northernbeaches.lizard.net/api/v4/labels/",
+          "params": {
+            "labeltype": "e23c58ea-ae39-41bf-9867-021a996034b8",
+            "page_size": 1
+          },
+          "error": "http 404: \n<html ng-app=\"lizard-nxt\">\n  <head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0",
+          "count": null,
+          "sample_keys": [],
+          "sample_record": null
+        },
+        {
+          "url": "https://northernbeaches.lizard.net/api/v4/labeltypes/e23c58ea-ae39-41bf-9867-021a996034b8/labels/",
+          "params": {
+            "page_size": 1
+          },
+          "error": null,
+          "count": 324,
+          "sample_keys": [
+            "created",
+            "end",
+            "extra",
+            "label_value",
+            "object_id",
+            "object_type",
+            "start"
+          ],
+          "sample_record": {
+            "label_value": "A",
+            "object_type": "building",
+            "object_id": 11424133,
+            "created": "2019-07-30T08:39:12.848152Z",
+            "start": "2019-07-30T00:00:00Z",
+            "end": null,
+            "extra": {
+              "label_score": -9223372036854775798,
+              "fluvial_label_value": null,
+              "label_fluvial_label": "A",
+              "label_fluvial_score": -9223372036854775808,
+              "label_pluvial_label": "A",
+              "label_pluvial_score": 0,
+              "label_pluvial_value": 0.0,
+              "label_groundwater_label": "C",
+              "label_groundwater_score": 10,
+              "label_groundwater_value": 0.5750000476837158
+            }
+          }
+        },
+        {
+          "url": "https://northernbeaches.lizard.net/api/v4/regions/",
+          "params": {
+            "label_type": "e23c58ea-ae39-41bf-9867-021a996034b8",
+            "page_size": 1
+          },
+          "error": "http 404: \n<html ng-app=\"lizard-nxt\">\n  <head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0",
+          "count": null,
+          "sample_keys": [],
+          "sample_record": null
+        }
+      ]
+    }
+  ],
+  "search_terms": [
+    "catchment",
+    "subcatchment",
+    "sub-catchment",
+    "drainage",
+    "stormwater",
+    "watershed",
+    "basin",
+    "3di",
+    "scenario",
+    "northern beaches"
+  ],
+  "blocked_endpoints": [],
+  "global_search": [
+    {
+      "term": "catchment",
+      "error": null,
+      "result_count": 0
+    },
+    {
+      "term": "subcatchment",
+      "error": null,
+      "result_count": 0
+    },
+    {
+      "term": "sub-catchment",
+      "error": null,
+      "result_count": 0
+    },
+    {
+      "term": "drainage",
+      "error": null,
+      "result_count": 0
+    },
+    {
+      "term": "stormwater",
+      "error": null,
+      "result_count": 0
+    }
+  ],
+  "candidate_count": 51,
+  "nbc_relevant_candidate_count": 0,
+  "dutch_only_candidate_count": 51,
+  "candidates": [
+    {
+      "endpoint": "locations",
+      "uuid": "7a259d0b-f8ef-4cc4-b8bc-f8e5a534d02e",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/7a259d0b-f8ef-4cc4-b8bc-f8e5a534d02e/",
+      "name": "3Di rain events",
+      "description": "",
+      "type": null,
+      "matched_terms": [
+        "3di"
+      ],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 40,
+      "confidence_breakdown": {
+        "name_catchment_token": 35,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/7a259d0b-f8ef-4cc4-b8bc-f8e5a534d02e/",
+        "uuid": "7a259d0b-f8ef-4cc4-b8bc-f8e5a534d02e",
+        "name": "3Di rain events",
+        "code": "3di_rainevents",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2018-02-27T16:35:50.862934Z",
+        "last_modified": "2020-03-12T15:36:11.159292Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "c4e5eff1-2895-45a6-97de-bbca55c49d51",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/c4e5eff1-2895-45a6-97de-bbca55c49d51/",
+      "name": "BWN testbui",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/c4e5eff1-2895-45a6-97de-bbca55c49d51/",
+        "uuid": "c4e5eff1-2895-45a6-97de-bbca55c49d51",
+        "name": "BWN testbui",
+        "code": "c4e5eff1289545a697debbca55c49d51",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.8225,
+            52.6676,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 204460,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2017-09-29T13:29:00.829886Z",
+        "last_modified": "2020-03-12T15:36:11.357937Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "98a90c20-7930-41b4-a21d-83d5229c3def",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/98a90c20-7930-41b4-a21d-83d5229c3def/",
+      "name": "Bui10 met uitloop",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/98a90c20-7930-41b4-a21d-83d5229c3def/",
+        "uuid": "98a90c20-7930-41b4-a21d-83d5229c3def",
+        "name": "Bui10 met uitloop",
+        "code": "98a90c20793041b4a21d83d5229c3def",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.8225,
+            52.6676,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 204460,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2017-09-29T13:29:29.291008Z",
+        "last_modified": "2020-03-12T15:36:11.367555Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "0883e099-4752-4020-b0c4-5382ff1ec623",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/0883e099-4752-4020-b0c4-5382ff1ec623/",
+      "name": "Bui Blok T10",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/0883e099-4752-4020-b0c4-5382ff1ec623/",
+        "uuid": "0883e099-4752-4020-b0c4-5382ff1ec623",
+        "name": "Bui Blok T10",
+        "code": "0883e09947524020b0c45382ff1ec623",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.8225,
+            52.6676,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 204460,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2017-09-29T13:29:59.921402Z",
+        "last_modified": "2020-03-12T15:36:11.376069Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "ad44b253-57c0-4207-a3db-813ac9399812",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/ad44b253-57c0-4207-a3db-813ac9399812/",
+      "name": "Bui Blok T100",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/ad44b253-57c0-4207-a3db-813ac9399812/",
+        "uuid": "ad44b253-57c0-4207-a3db-813ac9399812",
+        "name": "Bui Blok T100",
+        "code": "ad44b25357c04207a3db813ac9399812",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.8225,
+            52.6676,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 204460,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2017-09-29T13:30:28.690549Z",
+        "last_modified": "2020-03-12T15:36:11.385259Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "f613ae15-459d-4c39-92ce-e9a67b713536",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/f613ae15-459d-4c39-92ce-e9a67b713536/",
+      "name": "Bui Blok T1000",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/f613ae15-459d-4c39-92ce-e9a67b713536/",
+        "uuid": "f613ae15-459d-4c39-92ce-e9a67b713536",
+        "name": "Bui Blok T1000",
+        "code": "f613ae15459d4c3992cee9a67b713536",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.8225,
+            52.6676,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 204460,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2017-09-29T13:30:52.399582Z",
+        "last_modified": "2020-03-12T15:36:11.397172Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "050c1467-222f-4386-be1f-09e88b5a54f2",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/050c1467-222f-4386-be1f-09e88b5a54f2/",
+      "name": "Bui Piek T10",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/050c1467-222f-4386-be1f-09e88b5a54f2/",
+        "uuid": "050c1467-222f-4386-be1f-09e88b5a54f2",
+        "name": "Bui Piek T10",
+        "code": "050c1467222f4386be1f09e88b5a54f2",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.8225,
+            52.6676,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 204460,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2017-09-29T13:31:16.858617Z",
+        "last_modified": "2020-03-12T15:36:11.410688Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "70f3062a-0dc1-4bcd-a930-17a7cc0906ed",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/70f3062a-0dc1-4bcd-a930-17a7cc0906ed/",
+      "name": "Bui Piek T100",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/70f3062a-0dc1-4bcd-a930-17a7cc0906ed/",
+        "uuid": "70f3062a-0dc1-4bcd-a930-17a7cc0906ed",
+        "name": "Bui Piek T100",
+        "code": "70f3062a0dc14bcda93017a7cc0906ed",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.8225,
+            52.6676,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 204460,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2017-09-29T13:31:37.161767Z",
+        "last_modified": "2020-03-12T15:36:11.419846Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "479cdafd-fc6d-4401-bda4-f8a1142b4eb3",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/479cdafd-fc6d-4401-bda4-f8a1142b4eb3/",
+      "name": "Bui Piek T1000",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/479cdafd-fc6d-4401-bda4-f8a1142b4eb3/",
+        "uuid": "479cdafd-fc6d-4401-bda4-f8a1142b4eb3",
+        "name": "Bui Piek T1000",
+        "code": "479cdafdfc6d4401bda4f8a1142b4eb3",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.8225,
+            52.6676,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 204460,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2017-09-29T13:31:58.180134Z",
+        "last_modified": "2020-03-12T15:36:11.429835Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "a1e3391e-b998-4b1b-a748-6bfe2d2233b2",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/a1e3391e-b998-4b1b-a748-6bfe2d2233b2/",
+      "name": "Bui 3 dagen 100 mm/dag",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/a1e3391e-b998-4b1b-a748-6bfe2d2233b2/",
+        "uuid": "a1e3391e-b998-4b1b-a748-6bfe2d2233b2",
+        "name": "Bui 3 dagen 100 mm/dag",
+        "code": "Bui_constant_300mm_3dagen",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.8225,
+            52.6676,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 204460,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2017-10-06T07:34:44.475440Z",
+        "last_modified": "2020-03-12T15:36:11.438733Z",
+        "last_modified_by": ""
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "c7658fb6-3d34-48a2-be3a-ab06d51d4bb3",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/c7658fb6-3d34-48a2-be3a-ab06d51d4bb3/",
+      "name": "Test release Lizard",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/c7658fb6-3d34-48a2-be3a-ab06d51d4bb3/",
+        "uuid": "c7658fb6-3d34-48a2-be3a-ab06d51d4bb3",
+        "name": "Test release Lizard",
+        "code": "ZRG-test",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2020-07-09T13:46:13.963736Z",
+        "last_modified": "2020-07-09T13:46:13.963704Z",
+        "last_modified_by": "valerie.demetriades"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "f8e9abb1-5d9a-4fcb-bf29-786fdca9418d",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/f8e9abb1-5d9a-4fcb-bf29-786fdca9418d/",
+      "name": "Test release Lizard",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/f8e9abb1-5d9a-4fcb-bf29-786fdca9418d/",
+        "uuid": "f8e9abb1-5d9a-4fcb-bf29-786fdca9418d",
+        "name": "Test release Lizard",
+        "code": "ZRG-test1",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2020-07-10T07:41:43.490799Z",
+        "last_modified": "2020-07-10T07:41:43.490752Z",
+        "last_modified_by": "valerie.demetriades"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "d49c1fe1-19d1-4ba2-b95f-ba65a3df4be2",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/d49c1fe1-19d1-4ba2-b95f-ba65a3df4be2/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/d49c1fe1-19d1-4ba2-b95f-ba65a3df4be2/",
+        "uuid": "d49c1fe1-19d1-4ba2-b95f-ba65a3df4be2",
+        "name": "Groundwater station 1",
+        "code": "ZRG-test1Christian",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2021-06-25T08:26:59.302587Z",
+        "last_modified": "2021-06-25T08:26:59.302563Z",
+        "last_modified_by": "christian.bouman@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "992859ff-118f-460f-b35d-234c2248a29d",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/992859ff-118f-460f-b35d-234c2248a29d/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/992859ff-118f-460f-b35d-234c2248a29d/",
+        "uuid": "992859ff-118f-460f-b35d-234c2248a29d",
+        "name": "Groundwater station 1",
+        "code": "ZRG-test1CB",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2021-06-25T08:49:47.501730Z",
+        "last_modified": "2021-06-25T08:49:47.501705Z",
+        "last_modified_by": "christian.bouman@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "083913bd-8c9f-44c1-94a0-57f669d4ef46",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/083913bd-8c9f-44c1-94a0-57f669d4ef46/",
+      "name": "Chamera I dam",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/083913bd-8c9f-44c1-94a0-57f669d4ef46/",
+        "uuid": "083913bd-8c9f-44c1-94a0-57f669d4ef46",
+        "name": "Chamera I dam",
+        "code": "chamI",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            75.9860442404807,
+            32.5972085327847,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 239621,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2021-10-15T12:01:58.079846Z",
+        "last_modified": "2021-10-25T12:43:47.880816Z",
+        "last_modified_by": "lisanne.wapstra"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "e1e17a6a-c9b9-44ab-847b-775dcab2d7d7",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/e1e17a6a-c9b9-44ab-847b-775dcab2d7d7/",
+      "name": "Chamera II dam",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/e1e17a6a-c9b9-44ab-847b-775dcab2d7d7/",
+        "uuid": "e1e17a6a-c9b9-44ab-847b-775dcab2d7d7",
+        "name": "Chamera II dam",
+        "code": "chamII",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            76.2534741183907,
+            32.4731947263004,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 239622,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2021-10-15T12:03:42.522167Z",
+        "last_modified": "2021-10-25T12:43:23.956841Z",
+        "last_modified_by": "lisanne.wapstra"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "8721f8ce-7bf3-417f-b6ea-b9f0c3dffaca",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/8721f8ce-7bf3-417f-b6ea-b9f0c3dffaca/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/8721f8ce-7bf3-417f-b6ea-b9f0c3dffaca/",
+        "uuid": "8721f8ce-7bf3-417f-b6ea-b9f0c3dffaca",
+        "name": "Groundwater station 1",
+        "code": "ZRG-test-Noortje",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2022-03-01T13:08:48.546331Z",
+        "last_modified": "2022-03-01T13:08:48.546300Z",
+        "last_modified_by": "noortje.oosterhoff"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "4cf4cf9f-0d23-4c0c-b414-db2f772184dc",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/4cf4cf9f-0d23-4c0c-b414-db2f772184dc/",
+      "name": "test_chris",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/4cf4cf9f-0d23-4c0c-b414-db2f772184dc/",
+        "uuid": "4cf4cf9f-0d23-4c0c-b414-db2f772184dc",
+        "name": "test_chris",
+        "code": "test_chris-delete7",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 243368,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2022-03-08T14:27:25.533401Z",
+        "last_modified": "2022-03-08T14:34:21.478636Z",
+        "last_modified_by": "chris.kerklaan"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "96a86fc3-d229-4376-9455-da8d36f3f2f4",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/96a86fc3-d229-4376-9455-da8d36f3f2f4/",
+      "name": "test_chris",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/96a86fc3-d229-4376-9455-da8d36f3f2f4/",
+        "uuid": "96a86fc3-d229-4376-9455-da8d36f3f2f4",
+        "name": "test_chris",
+        "code": "test_chris-delete8",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 243371,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2022-03-08T14:36:11.302306Z",
+        "last_modified": "2022-03-08T14:38:07.479125Z",
+        "last_modified_by": "chris.kerklaan"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "ac6cf179-9733-4174-8eae-9c9ca406d51f",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/ac6cf179-9733-4174-8eae-9c9ca406d51f/",
+      "name": "test_chris",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/ac6cf179-9733-4174-8eae-9c9ca406d51f/",
+        "uuid": "ac6cf179-9733-4174-8eae-9c9ca406d51f",
+        "name": "test_chris",
+        "code": "test_chris-delete9",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 243373,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2022-03-08T14:41:43.342859Z",
+        "last_modified": "2022-03-08T14:50:05.060657Z",
+        "last_modified_by": "chris.kerklaan"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "7340d964-fb11-4ce7-9987-0cb3be3933b6",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/7340d964-fb11-4ce7-9987-0cb3be3933b6/",
+      "name": "test-chris",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/7340d964-fb11-4ce7-9987-0cb3be3933b6/",
+        "uuid": "7340d964-fb11-4ce7-9987-0cb3be3933b6",
+        "name": "test-chris",
+        "code": "test-chris",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 243470,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2022-03-15T16:31:04.149654Z",
+        "last_modified": "2022-03-15T16:31:04.149618Z",
+        "last_modified_by": "chris.kerklaan"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "687c9b6f-c1ff-4083-8352-ea127a3be72c",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/687c9b6f-c1ff-4083-8352-ea127a3be72c/",
+      "name": "test_chris",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/687c9b6f-c1ff-4083-8352-ea127a3be72c/",
+        "uuid": "687c9b6f-c1ff-4083-8352-ea127a3be72c",
+        "name": "test_chris",
+        "code": "test_chris",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 243471,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2022-03-15T17:19:22.133000Z",
+        "last_modified": "2022-03-15T17:19:22.132947Z",
+        "last_modified_by": "chris.kerklaan"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "507f658c-1d7e-4a1f-ad2c-34c06df30f18",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/507f658c-1d7e-4a1f-ad2c-34c06df30f18/",
+      "name": "lc2-test-1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/507f658c-1d7e-4a1f-ad2c-34c06df30f18/",
+        "uuid": "507f658c-1d7e-4a1f-ad2c-34c06df30f18",
+        "name": "lc2-test-1",
+        "code": "lc2-test-1",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            1.0,
+            1.0,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": {
+          "id": 243584,
+          "type": "measuringstation"
+        },
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2022-03-24T18:13:22.381633Z",
+        "last_modified": "2022-03-24T18:13:22.381588Z",
+        "last_modified_by": "chris.kerklaan"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "01c5aa50-0512-452a-9406-9dd8b6a092b9",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/01c5aa50-0512-452a-9406-9dd8b6a092b9/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/01c5aa50-0512-452a-9406-9dd8b6a092b9/",
+        "uuid": "01c5aa50-0512-452a-9406-9dd8b6a092b9",
+        "name": "Groundwater station 1",
+        "code": "ZRG-test15",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.783839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-09-05T13:48:54.664984Z",
+        "last_modified": "2023-09-05T13:48:54.664967Z",
+        "last_modified_by": "taj.devries@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "fadc899b-8684-4895-8ad8-a529e23506be",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/fadc899b-8684-4895-8ad8-a529e23506be/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/fadc899b-8684-4895-8ad8-a529e23506be/",
+        "uuid": "fadc899b-8684-4895-8ad8-a529e23506be",
+        "name": "Groundwater station 1",
+        "code": "Test2023",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-09-08T14:30:37.433062Z",
+        "last_modified": "2023-09-08T14:30:37.433049Z",
+        "last_modified_by": "steven.hosper@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "0c711f38-f53d-41f0-9393-d75a18099dd7",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/0c711f38-f53d-41f0-9393-d75a18099dd7/",
+      "name": "Tutorial API Steven",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/0c711f38-f53d-41f0-9393-d75a18099dd7/",
+        "uuid": "0c711f38-f53d-41f0-9393-d75a18099dd7",
+        "name": "Tutorial API Steven",
+        "code": "Sv4_API",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-09-11T14:37:46.151519Z",
+        "last_modified": "2023-09-11T14:37:46.151504Z",
+        "last_modified_by": "steven.hosper@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "297d3978-e02e-4c42-abb4-eb5a342c2ba6",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/297d3978-e02e-4c42-abb4-eb5a342c2ba6/",
+      "name": "Tutorial API Steven",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/297d3978-e02e-4c42-abb4-eb5a342c2ba6/",
+        "uuid": "297d3978-e02e-4c42-abb4-eb5a342c2ba6",
+        "name": "Tutorial API Steven",
+        "code": "Sv5_API",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-09-18T14:49:31.762659Z",
+        "last_modified": "2023-09-18T14:49:31.762644Z",
+        "last_modified_by": "steven.hosper@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "d1218fa6-416d-4f4a-856d-6084bf59a8d6",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/d1218fa6-416d-4f4a-856d-6084bf59a8d6/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/d1218fa6-416d-4f4a-856d-6084bf59a8d6/",
+        "uuid": "d1218fa6-416d-4f4a-856d-6084bf59a8d6",
+        "name": "Groundwater station 1",
+        "code": "GWS1",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-03T15:11:26.636447Z",
+        "last_modified": "2023-10-03T15:11:26.636433Z",
+        "last_modified_by": "philip.vanlaar@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "116c3b5d-0e08-4139-ba76-e0d78a636845",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/116c3b5d-0e08-4139-ba76-e0d78a636845/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/116c3b5d-0e08-4139-ba76-e0d78a636845/",
+        "uuid": "116c3b5d-0e08-4139-ba76-e0d78a636845",
+        "name": "Groundwater station 1",
+        "code": "GWS1v2",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-03T15:17:28.480184Z",
+        "last_modified": "2023-10-03T15:17:28.480162Z",
+        "last_modified_by": "philip.vanlaar@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "394a9572-7549-4308-96e6-d0aa058b30e7",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/394a9572-7549-4308-96e6-d0aa058b30e7/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/394a9572-7549-4308-96e6-d0aa058b30e7/",
+        "uuid": "394a9572-7549-4308-96e6-d0aa058b30e7",
+        "name": "Groundwater station 1",
+        "code": "GWS1v3",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-04T12:07:59.614076Z",
+        "last_modified": "2023-10-04T12:07:59.614062Z",
+        "last_modified_by": "philip.vanlaar@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "466ffce8-786d-4050-b24a-942c0c2d0d28",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/466ffce8-786d-4050-b24a-942c0c2d0d28/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/466ffce8-786d-4050-b24a-942c0c2d0d28/",
+        "uuid": "466ffce8-786d-4050-b24a-942c0c2d0d28",
+        "name": "Groundwater station 1",
+        "code": "GWS1v4",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-04T12:49:58.421714Z",
+        "last_modified": "2023-10-04T12:49:58.421700Z",
+        "last_modified_by": "philip.vanlaar@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "a5c4ebf3-a15f-4e2f-84c7-92df1a0552f2",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/a5c4ebf3-a15f-4e2f-84c7-92df1a0552f2/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/a5c4ebf3-a15f-4e2f-84c7-92df1a0552f2/",
+        "uuid": "a5c4ebf3-a15f-4e2f-84c7-92df1a0552f2",
+        "name": "Groundwater station 1",
+        "code": "GWS1v5",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-04T13:27:21.078246Z",
+        "last_modified": "2023-10-04T13:27:21.078231Z",
+        "last_modified_by": "philip.vanlaar@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "5b29d009-b1c6-4bc1-99ad-bac4c94f6654",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/5b29d009-b1c6-4bc1-99ad-bac4c94f6654/",
+      "name": "testforphilip",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/5b29d009-b1c6-4bc1-99ad-bac4c94f6654/",
+        "uuid": "5b29d009-b1c6-4bc1-99ad-bac4c94f6654",
+        "name": "testforphilip",
+        "code": "testtesttest111",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-04T13:33:23.256812Z",
+        "last_modified": "2023-10-04T13:33:23.256794Z",
+        "last_modified_by": "steven.hosper@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "9e786f59-cec2-4540-881a-c1f4d2aed0d3",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/9e786f59-cec2-4540-881a-c1f4d2aed0d3/",
+      "name": "GW1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/9e786f59-cec2-4540-881a-c1f4d2aed0d3/",
+        "uuid": "9e786f59-cec2-4540-881a-c1f4d2aed0d3",
+        "name": "GW1",
+        "code": "AA01",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-09T12:04:29.377585Z",
+        "last_modified": "2023-10-09T12:04:29.377567Z",
+        "last_modified_by": "thomas.gerardu@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "75aaf236-6a3b-4265-9915-af2f477ee438",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/75aaf236-6a3b-4265-9915-af2f477ee438/",
+      "name": "Punt1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/75aaf236-6a3b-4265-9915-af2f477ee438/",
+        "uuid": "75aaf236-6a3b-4265-9915-af2f477ee438",
+        "name": "Punt1",
+        "code": "123hallo1234",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-11T14:02:08.944878Z",
+        "last_modified": "2023-10-11T14:02:08.944860Z",
+        "last_modified_by": "esther.vanderlaan@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "07bc651b-3fd9-4643-adb1-09c4077eb412",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/07bc651b-3fd9-4643-adb1-09c4077eb412/",
+      "name": "Punt1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/07bc651b-3fd9-4643-adb1-09c4077eb412/",
+        "uuid": "07bc651b-3fd9-4643-adb1-09c4077eb412",
+        "name": "Punt1",
+        "code": "123hallo12345",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-16T08:06:46.757543Z",
+        "last_modified": "2023-10-16T08:06:46.757522Z",
+        "last_modified_by": "esther.vanderlaan@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "4ae8e078-3133-4c63-9a55-fc09804df228",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/4ae8e078-3133-4c63-9a55-fc09804df228/",
+      "name": "Punt1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/4ae8e078-3133-4c63-9a55-fc09804df228/",
+        "uuid": "4ae8e078-3133-4c63-9a55-fc09804df228",
+        "name": "Punt1",
+        "code": "123hallo123456",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2023-10-16T08:12:19.773669Z",
+        "last_modified": "2023-10-16T08:12:19.773639Z",
+        "last_modified_by": "esther.vanderlaan@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "d5641da4-3d24-46e7-b866-5053130eaacc",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/d5641da4-3d24-46e7-b866-5053130eaacc/",
+      "name": "Groundwater station 1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/d5641da4-3d24-46e7-b866-5053130eaacc/",
+        "uuid": "d5641da4-3d24-46e7-b866-5053130eaacc",
+        "name": "Groundwater station 1",
+        "code": "BR99",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2025-02-06T11:05:51.439063Z",
+        "last_modified": "2025-02-06T11:05:51.439044Z",
+        "last_modified_by": "zina.janssen"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "50e9af16-26bb-4e6a-8776-1f9694bc14b5",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/50e9af16-26bb-4e6a-8776-1f9694bc14b5/",
+      "name": "test_location",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": true,
+      "geometry_fields_present": [
+        "geometry"
+      ],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 30,
+      "confidence_breakdown": {
+        "geometry_inline": 25,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/50e9af16-26bb-4e6a-8776-1f9694bc14b5/",
+        "uuid": "50e9af16-26bb-4e6a-8776-1f9694bc14b5",
+        "name": "test_location",
+        "code": "abc123abc123",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            4.683839188453384,
+            52.49446759721568,
+            0.0
+          ]
+        },
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2025-03-03T11:30:39.315035Z",
+        "last_modified": "2025-03-03T11:30:39.315021Z",
+        "last_modified_by": "christiaan.wewer@nelen-schuurmans.nl"
+      }
+    },
+    {
+      "endpoint": "labeltypes",
+      "uuid": "e23c58ea-ae39-41bf-9867-021a996034b8",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/labeltypes/e23c58ea-ae39-41bf-9867-021a996034b8/",
+      "name": "floodlabel_uu",
+      "description": "floodlabel uu",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 1,
+      "confidence_score": 15,
+      "confidence_breakdown": {
+        "endpoint_polygon_native": 10,
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/labeltypes/e23c58ea-ae39-41bf-9867-021a996034b8/",
+        "uuid": "e23c58ea-ae39-41bf-9867-021a996034b8",
+        "name": "floodlabel_uu",
+        "description": "floodlabel uu",
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object_type": "building",
+        "source": {
+          "name": "SetSeriesBlock",
+          "graph": {
+            "Add_1": [
+              "dask_geomodeling.geometry.field_operations.Add",
+              "Add_2",
+              "Classify_7"
+            ],
+            "Add_2": [
+              "dask_geomodeling.geometry.field_operations.Add",
+              "Add_3",
+              10
+            ],
+            "Add_3": [
+              "dask_geomodeling.geometry.field_operations.Add",
+              "Classify_4",
+              "Classify_6"
+            ],
+            "IsData_1": [
+              "dask_geomodeling.raster.elemwise.IsData",
+              "LizardRasterSource_2"
+            ],
+            "IsData_2": [
+              "dask_geomodeling.raster.elemwise.IsData",
+              "LizardRasterSource_3"
+            ],
+            "Classify_1": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Classify_4",
+              [
+                5,
+                10,
+                15,
+                20
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_2": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Add_1",
+              [
+                16,
+                32,
+                48,
+                64
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_3": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Classify_6",
+              [
+                5,
+                10,
+                15,
+                20
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_4": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "GetSeriesBlock_2",
+              [
+                0.2,
+                0.5,
+                2,
+                5
+              ],
+              [
+                0,
+                5,
+                10,
+                15,
+                20
+              ],
+              false
+            ],
+            "Classify_5": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "Classify_7",
+              [
+                5,
+                10,
+                15,
+                20
+              ],
+              [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E"
+              ],
+              false
+            ],
+            "Classify_6": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "GetSeriesBlock_3",
+              [
+                0.05,
+                0.1,
+                0.15,
+                0.2
+              ],
+              [
+                0,
+                5,
+                10,
+                15,
+                20
+              ],
+              false
+            ],
+            "Classify_7": [
+              "dask_geomodeling.geometry.field_operations.Classify",
+              "GetSeriesBlock_1",
+              [
+                0.2,
+                0.4,
+                0.6,
+                0.8
+              ],
+              [
+                20,
+                15,
+                10,
+                5,
+                0
+              ],
+              false
+            ],
+            "FillNoData_1": [
+              "dask_geomodeling.raster.elemwise.FillNoData",
+              "IsData_1",
+              "LizardRasterSource_2"
+            ],
+            "FillNoData_2": [
+              "dask_geomodeling.raster.elemwise.FillNoData",
+              "IsData_2",
+              "LizardRasterSource_3"
+            ],
+            "GetSeriesBlock_1": [
+              "dask_geomodeling.geometry.base.GetSeriesBlock",
+              "AggregateRaster_1",
+              "groundwater_max_value"
+            ],
+            "GetSeriesBlock_2": [
+              "dask_geomodeling.geometry.base.GetSeriesBlock",
+              "AggregateRaster_2",
+              "fluvial_max_value"
+            ],
+            "GetSeriesBlock_3": [
+              "dask_geomodeling.geometry.base.GetSeriesBlock",
+              "AggregateRaster_3",
+              "pluvial_max_value"
+            ],
+            "SetSeriesBlock": [
+              "dask_geomodeling.geometry.base.SetSeriesBlock",
+              "GeoDjangoSource",
+              "label",
+              "Classify_2",
+              "label_value",
+              "Classify_2",
+              "label_score",
+              "Add_1",
+              "fluvial_value",
+              "GetSeriesBlock_2",
+              "fluvial_score",
+              "Classify_4",
+              "fluvial_label",
+              "Classify_1",
+              "pluvial_value",
+              "GetSeriesBlock_3",
+              "pluvial_score",
+              "Classify_6",
+              "pluvial_label",
+              "Classify_3",
+              "groundwater_value",
+              "GetSeriesBlock_1",
+              "groundwater_score",
+              "Classify_7",
+              "groundwater_label",
+              "Classify_5",
+              "sewage_score",
+              10,
+              "sewage_label",
+              "C"
+            ],
+            "AggregateRaster_1": [
+              "dask_geomodeling.geometry.aggregate.AggregateRaster",
+              "GeoDjangoSource",
+              "LizardRasterSource_1",
+              "max",
+              "epsg:28992",
+              1.0,
+              null,
+              "groundwater_max_value",
+              false
+            ],
+            "AggregateRaster_2": [
+              "dask_geomodeling.geometry.aggregate.AggregateRaster",
+              "GeoDjangoSource",
+              "FillNoData_2",
+              "max",
+              "epsg:28992",
+              1.0,
+              null,
+              "fluvial_max_value",
+              false
+            ],
+            "AggregateRaster_3": [
+              "dask_geomodeling.geometry.aggregate.AggregateRaster",
+              "GeoDjangoSource",
+              "FillNoData_1",
+              "max",
+              "epsg:28992",
+              1.0,
+              null,
+              "pluvial_max_value",
+              false
+            ],
+            "GeoDjangoSource": [
+              "django_geoblocks.blocks.sources.GeoDjangoSource",
+              "hydra_core",
+              "building",
+              {
+                "id": "object_id",
+                "code": "building_BAG_code"
+              },
+              "geometry",
+              "start",
+              "end",
+              {
+                "organisation__in": [
+                  387,
+                  388,
+                  10,
+                  280,
+                  426,
+                  434,
+                  51,
+                  439,
+                  440,
+                  314,
+                  444,
+                  446,
+                  64,
+                  449,
+                  456,
+                  77,
+                  464,
+                  81,
+                  339,
+                  469,
+                  341,
+                  474,
+                  477,
+                  356,
+                  357,
+                  359,
+                  369,
+                  118,
+                  124
+                ]
+              }
+            ],
+            "RasterStoreSource": [
+              "lizard_nxt.blocks.LizardRasterSource",
+              "3ed224ef-649e-4c64-aceb-1f910d38d192"
+            ],
+            "LizardRasterSource_1": [
+              "lizard_nxt.blocks.LizardRasterSource",
+              "7c22757b-9039-44ae-987d-b2da7d9f335a"
+            ],
+            "LizardRasterSource_2": [
+              "dask_geomodeling.raster.misc.Reclassify",
+              "RasterStoreSource",
+              [
+                [
+                  1,
+                  0.075
+                ],
+                [
+                  2,
+                  0.125
+                ],
+                [
+                  3,
+                  0.175
+                ],
+                [
+                  4,
+                  0.15
+                ],
+                [
+                  5,
+                  0.3
+                ]
+              ],
+              true
+            ],
+            "LizardRasterSource_3": [
+              "lizard_nxt.blocks.LizardRasterSource",
+              "cbbb5c26-0720-48e4-a58d-d56bfbc4eb71"
+            ]
+          }
+        },
+        "access_modifier": "Public",
+        "last_modified": "2019-12-10T11:07:06.871752Z",
+        "created": "2019-07-19T09:53:12.150550Z"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "ce40f59c-29da-4e74-8d70-c6b6557f631d",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/ce40f59c-29da-4e74-8d70-c6b6557f631d/",
+      "name": "Stichtsch Ankeveensche Polder",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/ce40f59c-29da-4e74-8d70-c6b6557f631d/",
+        "uuid": "ce40f59c-29da-4e74-8d70-c6b6557f631d",
+        "name": "Stichtsch Ankeveensche Polder",
+        "code": "3201",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2015-08-28T14:41:28.086064Z",
+        "last_modified": "2023-06-27T09:30:39.168918Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "efb54a7c-3479-46fc-8b0f-ab4072c0a5a0",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/efb54a7c-3479-46fc-8b0f-ab4072c0a5a0/",
+      "name": "SAP verhard",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/efb54a7c-3479-46fc-8b0f-ab4072c0a5a0/",
+        "uuid": "efb54a7c-3479-46fc-8b0f-ab4072c0a5a0",
+        "name": "SAP verhard",
+        "code": "3201_gw1",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2015-08-28T14:41:29.989701Z",
+        "last_modified": "2023-06-27T09:30:39.254000Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "6cee3868-db0e-4776-b446-41e80f52ef29",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/6cee3868-db0e-4776-b446-41e80f52ef29/",
+      "name": "SAP West",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/6cee3868-db0e-4776-b446-41e80f52ef29/",
+        "uuid": "6cee3868-db0e-4776-b446-41e80f52ef29",
+        "name": "SAP West",
+        "code": "3201_gw2",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2015-08-28T14:41:30.166500Z",
+        "last_modified": "2023-06-27T09:30:39.335195Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "29ef47b8-2cf0-4bfd-a9f2-abb8d5fba68f",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/29ef47b8-2cf0-4bfd-a9f2-abb8d5fba68f/",
+      "name": "SAP Oost",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/29ef47b8-2cf0-4bfd-a9f2-abb8d5fba68f/",
+        "uuid": "29ef47b8-2cf0-4bfd-a9f2-abb8d5fba68f",
+        "name": "SAP Oost",
+        "code": "3201_gw3",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2015-08-28T14:41:30.329756Z",
+        "last_modified": "2023-06-27T09:30:39.413619Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "d47b1d46-9226-4414-a3f1-886d2fbe935c",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/d47b1d46-9226-4414-a3f1-886d2fbe935c/",
+      "name": "Inlaat sGravelandseVaart",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/d47b1d46-9226-4414-a3f1-886d2fbe935c/",
+        "uuid": "d47b1d46-9226-4414-a3f1-886d2fbe935c",
+        "name": "Inlaat sGravelandseVaart",
+        "code": "3201_PS1",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2015-08-28T14:41:31.925995Z",
+        "last_modified": "2023-06-27T09:30:39.493448Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "653b6a8e-5e76-4de8-b6e9-00b57fc24e36",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/653b6a8e-5e76-4de8-b6e9-00b57fc24e36/",
+      "name": "inlaat peilbeheer",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/653b6a8e-5e76-4de8-b6e9-00b57fc24e36/",
+        "uuid": "653b6a8e-5e76-4de8-b6e9-00b57fc24e36",
+        "name": "inlaat peilbeheer",
+        "code": "3201_PS2",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2015-08-28T14:41:32.085885Z",
+        "last_modified": "2023-06-27T09:30:39.573044Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "a27ebbc1-c753-4e8d-a6d4-14f062d9a0a1",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/a27ebbc1-c753-4e8d-a6d4-14f062d9a0a1/",
+      "name": "uitlaat peilbeheer",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/a27ebbc1-c753-4e8d-a6d4-14f062d9a0a1/",
+        "uuid": "a27ebbc1-c753-4e8d-a6d4-14f062d9a0a1",
+        "name": "uitlaat peilbeheer",
+        "code": "3201_PS3",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2015-08-28T14:41:32.292892Z",
+        "last_modified": "2023-06-27T09:30:39.653956Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "2b936d1b-62cc-4dce-a376-6e5abbfacf79",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/2b936d1b-62cc-4dce-a376-6e5abbfacf79/",
+      "name": "Your_own_unique_code_1",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/2b936d1b-62cc-4dce-a376-6e5abbfacf79/",
+        "uuid": "2b936d1b-62cc-4dce-a376-6e5abbfacf79",
+        "name": "Your_own_unique_code_1",
+        "code": "Your_own_unique_code_1",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2016-08-09T07:32:01.994400Z",
+        "last_modified": "2023-06-27T09:30:59.454170Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "86c269ae-13d0-4034-ad39-58a4f7404081",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/86c269ae-13d0-4034-ad39-58a4f7404081/",
+      "name": "Your_own_unique_code_2",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/86c269ae-13d0-4034-ad39-58a4f7404081/",
+        "uuid": "86c269ae-13d0-4034-ad39-58a4f7404081",
+        "name": "Your_own_unique_code_2",
+        "code": "Your_own_unique_code_2",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2016-08-09T07:32:02.058562Z",
+        "last_modified": "2023-06-27T09:30:59.538947Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "77cd99a0-0b7b-4d17-a860-eb49665a0fec",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/77cd99a0-0b7b-4d17-a860-eb49665a0fec/",
+      "name": "your own code",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/77cd99a0-0b7b-4d17-a860-eb49665a0fec/",
+        "uuid": "77cd99a0-0b7b-4d17-a860-eb49665a0fec",
+        "name": "your own code",
+        "code": "your own code",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2016-08-09T07:34:42.115062Z",
+        "last_modified": "2023-06-27T09:30:59.623295Z",
+        "last_modified_by": "karl.schutt"
+      }
+    },
+    {
+      "endpoint": "locations",
+      "uuid": "3cbb6d65-26c1-4376-a3d7-a9f4c0313ec3",
+      "id": null,
+      "url": "https://northernbeaches.lizard.net/api/v4/locations/3cbb6d65-26c1-4376-a3d7-a9f4c0313ec3/",
+      "name": "3118DA00272",
+      "description": "",
+      "type": null,
+      "matched_terms": [],
+      "geometry_inline": false,
+      "geometry_fields_present": [],
+      "geometry_links": [],
+      "endpoint_feature_count": 58,
+      "confidence_score": 5,
+      "confidence_breakdown": {
+        "feature_count_plausible": 5
+      },
+      "raw_record": {
+        "url": "https://northernbeaches.lizard.net/api/v4/locations/3cbb6d65-26c1-4376-a3d7-a9f4c0313ec3/",
+        "uuid": "3cbb6d65-26c1-4376-a3d7-a9f4c0313ec3",
+        "name": "3118DA00272",
+        "code": "3118DA00272",
+        "geometry": null,
+        "organisation": {
+          "url": "https://northernbeaches.lizard.net/api/v4/organisations/61f5a464-c350-44c1-9bc7-d4b42d7f58cb/",
+          "uuid": "61f5a464-c350-44c1-9bc7-d4b42d7f58cb",
+          "name": "Nelen & Schuurmans Consultancy"
+        },
+        "object": null,
+        "access_modifier": "Public",
+        "extra_metadata": {},
+        "created": "2016-08-09T07:36:35.838403Z",
+        "last_modified": "2023-06-27T09:30:59.755506Z",
+        "last_modified_by": "karl.schutt"
+      }
+    }
+  ]
+}
