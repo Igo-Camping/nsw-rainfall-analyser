@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stormwater Packaging for ArcGIS Experience Builder</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css">
+  <link rel="stylesheet" href="./static/exb.css">
+</head>
+<body>
+  <div class="loading-overlay hidden" id="loading-overlay" aria-live="polite" aria-busy="true" style="position:fixed;inset:0;z-index:9999;display:none;place-items:center;background:rgba(238,243,234,0.72);backdrop-filter:blur(6px);">
+    <div class="loading-card" style="width:min(380px, calc(100% - 32px));padding:26px 24px;border-radius:22px;background:rgba(255,255,255,0.96);border:1px solid rgba(18,74,44,0.12);box-shadow:0 24px 60px rgba(15,53,33,0.16);text-align:center;">
+      <div class="loading-spinner" aria-hidden="true" style="width:58px;height:58px;margin:0 auto 14px;border-radius:50%;border:5px solid rgba(31,108,69,0.14);border-top-color:#1f6c45;animation:packaging-spin 0.9s linear infinite;"></div>
+      <h2 id="loading-title">Working...</h2>
+      <p id="loading-message">Preparing package data.</p>
+    </div>
+  </div>
+  <div class="page-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Stormwater Packaging Tool</p>
+        <h1>ArcGIS Experience Builder client</h1>
+        <p class="hero-copy">This page is designed to be embedded in ArcGIS Experience Builder while the packaging logic stays in Python on the server.</p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel controls-panel">
+        <div class="panel-header">
+          <h2>Relining Controls</h2>
+          <p>These controls call the Python packaging engine through the API.</p>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Include conditions</span>
+            <select id="relining-mode"></select>
+          </label>
+          <label class="field">
+            <span>Cost mode</span>
+            <select id="cost-mode"></select>
+          </label>
+          <label class="field hidden" id="contractor-field">
+            <span>Contractor</span>
+            <select id="contractor"></select>
+          </label>
+          <label class="field">
+            <span>Packaging mode</span>
+            <select id="packaging-mode"></select>
+          </label>
+          <label class="field">
+            <span>Grouping method</span>
+            <select id="grouping-method"></select>
+          </label>
+          <label class="field" id="max-package-value-field">
+            <span>Max package value ($)</span>
+            <input id="max-package-value" type="number" min="1000" step="1000" value="50000">
+          </label>
+          <label class="field hidden" id="pipes-per-package-field">
+            <span>Pipes per package</span>
+            <input id="pipes-per-package" type="number" min="1" step="1" value="10">
+          </label>
+        </div>
+
+        <div class="fieldset">
+          <div class="fieldset-head">
+            <h3>Size Groups</h3>
+            <p>Diameters in the same group can share packages. Earlier groups win if they overlap.</p>
+          </div>
+          <div class="group-grid">
+            <div class="size-group-card">
+              <span class="size-group-label">Size group 1</span>
+              <div class="size-group-picker">
+                <select id="size-group-1-select"></select>
+                <button class="button ghost size-add" data-group="0" type="button">Add</button>
+              </div>
+              <div class="size-pill-row" id="size-group-1-pills"></div>
+            </div>
+            <div class="size-group-card">
+              <span class="size-group-label">Size group 2</span>
+              <div class="size-group-picker">
+                <select id="size-group-2-select"></select>
+                <button class="button ghost size-add" data-group="1" type="button">Add</button>
+              </div>
+              <div class="size-pill-row" id="size-group-2-pills"></div>
+            </div>
+            <div class="size-group-card">
+              <span class="size-group-label">Size group 3</span>
+              <div class="size-group-picker">
+                <select id="size-group-3-select"></select>
+                <button class="button ghost size-add" data-group="2" type="button">Add</button>
+              </div>
+              <div class="size-pill-row" id="size-group-3-pills"></div>
+            </div>
+            <div class="size-group-card">
+              <span class="size-group-label">Size group 4</span>
+              <div class="size-group-picker">
+                <select id="size-group-4-select"></select>
+                <button class="button ghost size-add" data-group="3" type="button">Add</button>
+              </div>
+              <div class="size-pill-row" id="size-group-4-pills"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fieldset">
+          <div class="fieldset-head">
+            <h3>Cost Adjustments</h3>
+          </div>
+          <div class="checkbox-grid">
+            <label class="checkbox">
+              <input id="traffic-control" type="checkbox" checked>
+              <span>Add provisional traffic control ($2,000/pipe)</span>
+            </label>
+            <label class="checkbox">
+              <input id="project-initiation" type="checkbox" checked>
+              <span>Apply project initiation multiplier (x1.15)</span>
+            </label>
+          </div>
+        </div>
+
+        <label class="field" id="topup-field">
+          <span>Top up underfilled packages</span>
+          <select id="topup-mode"></select>
+        </label>
+
+        <div class="button-row">
+          <button id="preview-button" class="button secondary" type="button">Preview Streams</button>
+          <button id="generate-button" class="button primary" type="button">Generate Relining Packages</button>
+        </div>
+
+        <p class="status" id="status">Loading configuration...</p>
+      </section>
+
+      <section class="panel summary-panel">
+        <div class="panel-header">
+          <h2>Package Summary</h2>
+          <p>Preview results and generated packages without leaving Experience Builder.</p>
+        </div>
+
+        <div class="chip-row" id="summary-chips"></div>
+
+        <div class="table-card">
+          <div class="table-toolbar">
+            <h3>Packages</h3>
+            <button id="download-zip" class="button ghost" type="button">Download Package ZIP</button>
+          </div>
+          <div class="table-wrap" id="results-table">No package results yet.</div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-toolbar">
+            <h3>Preview streams</h3>
+          </div>
+          <div class="table-wrap" id="stream-table">No stream preview loaded yet.</div>
+        </div>
+      </section>
+    </main>
+
+    <section class="panel map-panel">
+      <div class="panel-header">
+        <h2>Map preview</h2>
+        <p>Map symbols are driven by the API response and can be embedded inside Experience Builder with an Embed widget.</p>
+      </div>
+      <div id="map"></div>
+    </section>
+  </div>
+
+  <script src="https://js.arcgis.com/4.33/"></script>
+  <script src="./static/exb.js"></script>
+</body>
+</html>

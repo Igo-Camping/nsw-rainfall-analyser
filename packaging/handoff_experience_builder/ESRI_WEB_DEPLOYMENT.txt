@@ -1,0 +1,163 @@
+# ArcGIS Experience Builder Deployment
+
+This project is now set up around the right Experience Builder pattern:
+
+- The packaging logic stays in Python on the server.
+- ArcGIS Experience Builder hosts a normal web page client.
+- The client calls the Python API for previews and package generation.
+
+## What runs where
+
+### Server-side Python
+
+The Python logic remains in:
+
+- `scripts\cost_engine.py`
+- `scripts\api.py`
+- `scripts\deployment_config.py`
+- `scripts\packaging_config.json`
+
+The key API endpoints are:
+
+- `GET /health`
+- `GET /packaging/config`
+- `GET /packaging/contractors`
+- `POST /packaging/split-streams`
+- `POST /packaging/generate-relining-packages`
+
+### Experience Builder-facing web client
+
+The browser client is in:
+
+- `scripts\web\exb.html`
+- `scripts\web\exb.css`
+- `scripts\web\exb.js`
+
+This is the page you embed in ArcGIS Experience Builder.
+
+## Local run
+
+Start the API:
+
+```powershell
+cd <deployment folder>\scripts
+py -m uvicorn api:app --host 0.0.0.0 --port 8001
+```
+
+Or run:
+
+```text
+start_packaging_api.bat
+```
+
+Open:
+
+- Main Experience Builder-ready page: `http://localhost:8001/`
+- Legacy lightweight preview: `http://localhost:8001/lite`
+- Optional old wrapper page: `http://localhost:8001/shell`
+
+## How to use in ArcGIS Experience Builder
+
+### Recommended approach
+
+Use an **Embed** widget in Experience Builder and point it at the deployed URL for:
+
+`/`
+
+That gives you:
+
+- a normal web page inside Experience Builder
+- ArcGIS JavaScript API map rendering
+- Python package generation on the backend
+- no Streamlit dependency in the Experience Builder page itself
+
+### Alternative approach
+
+If your Experience Builder environment requires a stricter integration, use this page as the base for a custom widget, but the current setup is intentionally simpler and faster to deploy through Embed.
+
+## Environment settings
+
+### Required data location
+
+Set the deployment paths in `scripts\packaging_config.json`.
+
+At minimum, the app needs a folder path that contains:
+
+- `Data` or `data`
+- `Outputs` or `outputs`
+
+For the Council OneDrive sync setup, the intended folder is:
+
+`%OneDriveCommercial%\Stormwater Engineering - General\Stormwater Tool`
+
+Example on one machine:
+
+`C:\Users\mark.ocallaghan\OneDrive - Northern Beaches Council\Stormwater Engineering - General\Stormwater Tool`
+
+Do not hardcode `user.name` as a requirement for all users. The important thing is that the Windows account running the API has the Council OneDrive library synced under its own profile, or that `PACKAGING_SHARED_ROOT` is pointed to a shared filesystem location.
+
+### Cross-origin settings
+
+If Experience Builder loads this page from a different hostname, set:
+
+- `PACKAGING_ALLOWED_ORIGINS`
+
+Example:
+
+```powershell
+$env:PACKAGING_ALLOWED_ORIGINS="https://your-portal.example.com,https://experience.arcgis.com"
+```
+
+## Important constraint
+
+Experience Builder does **not** run Python in the browser.
+
+So the correct design is:
+
+1. Experience Builder runs JavaScript and HTML.
+2. Your Python code runs on the server.
+3. Experience Builder calls the Python API.
+
+That is what this implementation now does.
+
+## Multi-user note
+
+To make this work for every user opening the Experience Builder app:
+
+- the API must be running on a reachable Council-hosted server
+- the server-side account running the API must have access to the synced OneDrive/SharePoint folder or another shared filesystem path
+
+The end users opening Experience Builder do not need their own direct access to the underlying SharePoint files, because their browser only talks to the hosted API.
+
+## Updating
+
+Once the initial deployment is working, future updates should usually be handled by replacing the application files and restarting the API.
+
+The deployment-specific settings should stay in:
+
+- `scripts\packaging_config.json`
+
+That means most updates should not require editing server paths again unless the server location or access model has changed.
+
+## Current scope
+
+The new Experience Builder page currently exposes the richer **relining** workflow, including:
+
+- condition filtering
+- cost mode
+- contractor selection
+- packaging mode
+- grouping method
+- size groups
+- traffic control adjustment
+- project initiation multiplier
+- top-up mode
+- map preview
+
+If you want, the next step is to extend the same API/client pattern to:
+
+- reconstruction
+- amplification
+- package costing drill-down
+- edited package moves
+- ZIP export compatible with the existing downstream workflow

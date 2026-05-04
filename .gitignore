@@ -55,3 +55,14 @@ _staging_rebuild/
 data/_backup/
 data/radar_archive/
 Superseeded/snapshot-*/
+
+# NBC packaging tool (consolidated 2026-05-04 from D:\Packaging)
+packaging/scripts/__pycache__/
+packaging/scripts/build/
+packaging/scripts/dist/
+packaging/scripts/web/streamlit_url.txt
+packaging/scripts/.streamlit/secrets.toml
+packaging/data/forward_works*.xlsx
+packaging/data/pipe_renewal_backlog.xlsx
+packaging/data/relining_packages.zip
+packaging/handoff_experience_builder.zip
