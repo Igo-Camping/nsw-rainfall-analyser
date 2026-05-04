@@ -38,7 +38,20 @@ data/station-verification/
 docs/
 excel_vba/
 extracted_vba/
-nbc/
+# NBC tool source folder — track sources, keep junk ignored
+nbc/.git/
+nbc/.git.local-backup-2026-05-05
+nbc/Superseded/
+nbc/Superseeded/
+nbc/_staging_rebuild/
+nbc/__pycache__/
+nbc/**/__pycache__/
+nbc/**/*.pyc
+nbc/**/dist/
+nbc/**/build/
+nbc/**/base_library.zip
+nbc/bom_ifd_cache.js
+nbc/bom_station_activity_cache.json
 nbc-rainfall-tool-standalone/
 packaging_config.example.json
 requirements-arcgis.txt
