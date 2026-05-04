@@ -7135,6 +7135,10 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
       end_lon: endPair && Number.isFinite(endPair.lon) ? endPair.lon : null
     };
   });
+  if (reportPipes.length > 0 && reportPipes.every(p => p.start_lat == null && p.end_lat == null)) {
+    const sampleRaw = (assets[0] && assets[0].raw) || {};
+    console.warn('[package-map] No endpoint geometry resolved for ' + (pkg.package_id || 'package') + '. Tried aliases [XStart/FromX/StartX, YStart/FromY/StartY, XEnd/ToX/EndX, YEnd/ToY/EndY, Start/End Latitude, US/DS Latitude]. Actual raw column keys on first pipe:', Object.keys(sampleRaw));
+  }
   const coordPipes = reportPipes.filter(p => p.lat != null && p.lon != null);
   let centroid = null;
   if (Number.isFinite(pkg.lat) && Number.isFinite(pkg.lon)) {
@@ -8138,6 +8142,11 @@ function renderReliningPackagesMap(options = {}) {
     subtitle.textContent = `${packages.length.toLocaleString()} package${packages.length === 1 ? '' : 's'} mapped with ${lineDrawn.toLocaleString()} pipe line${lineDrawn === 1 ? '' : 's'}${fallbackNote}${selectedReliningPackageId ? ` ${selectedReliningPackageId} is highlighted.` : ''}`;
   }
   if (lineDrawn + pointFallback > 0) console.info('[relining-map] drew ' + lineDrawn + ' line(s), ' + pointFallback + ' fallback marker(s)');
+  if (lineDrawn === 0 && pointFallback > 0) {
+    const sampleAsset = packages.find(pkg => (pkg.assets || []).length)?.assets?.[0];
+    const sampleRaw = (sampleAsset && sampleAsset.raw) || {};
+    console.warn('[relining-map] No endpoint geometry resolved for any pipe. resolveLineCoordinatePair tried aliases [XStart/FromX/StartX, YStart/FromY/StartY, XEnd/ToX/EndX, YEnd/ToY/EndY, Start/End Latitude, US/DS Latitude]. Actual raw column keys on first pipe:', Object.keys(sampleRaw));
+  }
   renderReliningSelectedMapOverlay();
   if (!selectedPackage && options.fit !== false) fitReliningPackagesMap();
 }
