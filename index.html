@@ -73,7 +73,6 @@ html[data-theme="dark"] {
   --sh:         0 4px 24px rgba(0,0,0,.55);
   --brand-bg:        #060E18;
   --brand-tagline:   #00C4BE;
-  --r:          6px;
 }
 
 /* ── 2. Page base ─────────────────────────────────────────────────────────── */
@@ -81,30 +80,26 @@ html[data-theme="dark"] body { background: #090F18; }
 
 /* ── 3. Header ────────────────────────────────────────────────────────────── */
 html[data-theme="dark"] header {
-  height: 56px;
-  padding: 0 20px;
   background: linear-gradient(90deg, #050D16 0%, #08131F 100%);
   border-bottom: 2px solid #00706C;
   box-shadow: 0 2px 20px rgba(0,0,0,.55);
 }
-html[data-theme="dark"] .logo { width: 38px; height: 38px; filter: drop-shadow(0 0 10px rgba(0,196,190,.4)); }
-html[data-theme="dark"] .h-title { font-size: 15px; letter-spacing: .22em; color: #FFFFFF; }
-html[data-theme="dark"] .h-sub   { font-size: 10px; color: #00C4BE; letter-spacing: .16em; }
+html[data-theme="dark"] .logo { filter: drop-shadow(0 0 10px rgba(0,196,190,.4)); }
 html[data-theme="dark"] .h-status { color: #3E5E76; }
 html[data-theme="dark"] .dot { box-shadow: 0 0 6px #27AE60; }
 
 /* ── 4. Tab bar ───────────────────────────────────────────────────────────── */
 html[data-theme="dark"] .tab-bar { background: #0B1722; border-bottom: 1px solid #172638; }
-html[data-theme="dark"] .tab { padding: 11px 20px; font-size: 11px; letter-spacing: .04em; color: #3E5E76; border-bottom-width: 2px; }
+html[data-theme="dark"] .tab { color: #3E5E76; }
 html[data-theme="dark"] .tab.active { color: #00DDD7; border-bottom-color: #00C4BE; background: rgba(0,196,190,.05); }
 html[data-theme="dark"] .tab:hover:not(.active) { color: #8AAFC8; }
 
 /* ── 5. Sidebar ───────────────────────────────────────────────────────────── */
-html[data-theme="dark"] .sidebar { width: 296px; background: #0A1520; border-right: 1px solid #162233; }
-html[data-theme="dark"] .sb-section        { border-bottom: 1px solid #142030; padding: 13px 14px; }
-html[data-theme="dark"] .sb-station-header { border-bottom: 1px solid #142030; padding: 10px 14px 8px; }
+html[data-theme="dark"] .sidebar { background: #0A1520; border-right: 1px solid #162233; }
+html[data-theme="dark"] .sb-section        { border-bottom: 1px solid #142030; }
+html[data-theme="dark"] .sb-station-header { border-bottom: 1px solid #142030; }
 html[data-theme="dark"] .sb-analysis-section { background: #08111C; border-top: 1px solid #1C2E40; }
-html[data-theme="dark"] .lbl { color: #3E5E76; letter-spacing: .12em; }
+html[data-theme="dark"] .lbl { color: #3E5E76; }
 
 /* ── 6. Form controls ─────────────────────────────────────────────────────── */
 html[data-theme="dark"] select,
@@ -113,7 +108,6 @@ html[data-theme="dark"] input[type=datetime-local] {
   background: #08111C;
   border-color: #1C2E40;
   color: #DCE8F2;
-  border-radius: var(--r);
 }
 html[data-theme="dark"] select option { background: #0D1826; color: #DCE8F2; }
 html[data-theme="dark"] select:focus,
@@ -130,7 +124,7 @@ html[data-theme="dark"] .mode-tog button.active             { background: #00706
 html[data-theme="dark"] .mode-tog button:hover:not(.active) { background: #0E1D2D; color: #8AAFC8; }
 
 /* ── 8. Buttons ───────────────────────────────────────────────────────────── */
-html[data-theme="dark"] .run-btn { background: #007570; font-size: 12px; letter-spacing: .04em; margin-top: 8px; border-radius: var(--r); }
+html[data-theme="dark"] .run-btn { background: #007570; }
 html[data-theme="dark"] .run-btn:hover:not(:disabled) { background: #00A89D; box-shadow: 0 0 18px rgba(0,196,190,.22); }
 html[data-theme="dark"] .run-btn:disabled { background: #172638; color: #2E4A60; cursor: not-allowed; }
 html[data-theme="dark"] .export-btn       { background: #007570; }
@@ -142,10 +136,10 @@ html[data-theme="dark"] .close-btn:hover { background: #0E1D2D; color: #8AAFC8; 
 
 /* ── 9. Station list ──────────────────────────────────────────────────────── */
 html[data-theme="dark"] .slist { background: #0A1520; }
-html[data-theme="dark"] .sitem { border-bottom: 1px solid #0F1E2C; padding: 9px 14px; }
+html[data-theme="dark"] .sitem { border-bottom: 1px solid #0F1E2C; }
 html[data-theme="dark"] .sitem:hover  { background: #0D1F2E; }
-html[data-theme="dark"] .sitem.active { background: #082420; border-left: 3px solid #00C4BE; padding-left: 11px; }
-html[data-theme="dark"] .sname { color: #C8DCEA; font-size: 12px; }
+html[data-theme="dark"] .sitem.active { background: #082420; border-left: 3px solid #00C4BE; }
+html[data-theme="dark"] .sname { color: #C8DCEA; }
 html[data-theme="dark"] .smeta { color: #3E5E76; }
 html[data-theme="dark"] .s-lga { background: #08111C; border-color: #1C2E40; color: #3E5E76; }
 
@@ -161,22 +155,22 @@ html[data-theme="dark"] .main { background: #07101A; }
 html[data-theme="dark"] #tab-rainfall { background: #090F18; }
 
 /* ── 12. Results panel ────────────────────────────────────────────────────── */
-html[data-theme="dark"] .results { background: #0A1520; border-top: 2px solid #007570; max-height: min(46vh, 420px); }
-html[data-theme="dark"] .res-hdr { background: #0B1824; border-bottom: 1px solid #162233; padding: 10px 18px; }
-html[data-theme="dark"] .res-title { color: #DCE8F2; font-size: 13px; }
+html[data-theme="dark"] .results { background: #0A1520; border-top: 2px solid #007570; }
+html[data-theme="dark"] .res-hdr { background: #0B1824; border-bottom: 1px solid #162233; }
+html[data-theme="dark"] .res-title { color: #DCE8F2; }
 html[data-theme="dark"] .res-sub   { color: #3E5E76; }
 
 /* ── 13. Result inner tabs ────────────────────────────────────────────────── */
-html[data-theme="dark"] .rtabs  { background: #0B1824; border-bottom: 1px solid #162233; padding: 0 14px; }
-html[data-theme="dark"] .rtab   { color: #3E5E76; font-size: 11px; padding: 8px 14px; }
+html[data-theme="dark"] .rtabs  { background: #0B1824; border-bottom: 1px solid #162233; }
+html[data-theme="dark"] .rtab   { color: #3E5E76; }
 html[data-theme="dark"] .rtab.active { color: #00C4BE; border-bottom-color: #00C4BE; }
-html[data-theme="dark"] .rpanel { background: #0A1520; padding: 14px 18px; }
+html[data-theme="dark"] .rpanel { background: #0A1520; }
 html[data-theme="dark"] .d-subtabs { border-bottom-color: #1C2E40; }
 html[data-theme="dark"] .d-subtab  { color: #3E5E76; }
 html[data-theme="dark"] .d-subtab.active { color: #00C4BE; border-bottom-color: #00C4BE; }
 
 /* ── 14. Tables ───────────────────────────────────────────────────────────── */
-html[data-theme="dark"] th { background: #0B1824; color: #8AAFC8; border-bottom: 1px solid #1C2E40; font-size: 11px; }
+html[data-theme="dark"] th { background: #0B1824; color: #8AAFC8; border-bottom: 1px solid #1C2E40; }
 html[data-theme="dark"] td { border-bottom: 1px solid #0F1E2C; color: #C8DCEA; }
 html[data-theme="dark"] tr:nth-child(even) td { background: #0C1A28; }
 html[data-theme="dark"] tr.highlight td       { background: rgba(0,196,190,.1); }
