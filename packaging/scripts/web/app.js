@@ -8,7 +8,41 @@ const state = {
   graphicByAssetId: new Map(),
   selectedAssetId: null,
   Graphic: null,
+  pendingRoute: null,
+  syncingHash: false,
 };
+
+const SELECT_ALL = "__all__";
+const HASH_PARAM_PACKAGE = "package";
+const HASH_PARAM_ASSET = "asset";
+
+function parseLocationHash() {
+  const hash = window.location.hash || "";
+  if (hash.length < 2) return null;
+  const params = new URLSearchParams(hash.slice(1));
+  const pkg = params.get(HASH_PARAM_PACKAGE);
+  const asset = params.get(HASH_PARAM_ASSET);
+  if (!pkg && !asset) return null;
+  return { packageId: pkg || null, assetId: asset || null };
+}
+
+function buildPipePermalinkHash(packageId, assetId) {
+  const params = new URLSearchParams();
+  if (packageId) params.set(HASH_PARAM_PACKAGE, packageId);
+  if (assetId) params.set(HASH_PARAM_ASSET, assetId);
+  const s = params.toString();
+  return s ? `#${s}` : "";
+}
+
+function updateLocationHash(packageId, assetId) {
+  const newHash = buildPipePermalinkHash(packageId, assetId);
+  const targetUrl =
+    window.location.pathname + window.location.search + (newHash || "");
+  if (window.location.hash === newHash) return;
+  state.syncingHash = true;
+  history.replaceState(null, "", targetUrl);
+  state.syncingHash = false;
+}
 
 const MGA_Z56_WKID = 28356;
 const MGA56_X_RANGE = [140000, 800000];
@@ -162,20 +196,25 @@ function renderTable(packages) {
   });
 }
 
-function showPackageOnMap(packageId) {
-  const filter = document.getElementById("package-filter");
-  if (!filter) return;
-  const optionExists = Array.from(filter.options).some((o) => o.value === packageId);
-  if (!optionExists) return;
-  if (filter.value !== packageId) {
-    filter.value = packageId;
-    filter.dispatchEvent(new Event("change"));
-  } else {
-    drawAssets(state.lastAssets, state.lastMode).catch((err) =>
-      setStatus(err.message, true)
-    );
-  }
+async function showPackageOnMap(packageId) {
+  await applyPackageFilterValue(packageId);
   document.getElementById("map")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function applyPackageFilterValue(packageId, opts = {}) {
+  const filter = document.getElementById("package-filter");
+  if (!filter) return false;
+  const value = packageId || SELECT_ALL;
+  const optionExists = Array.from(filter.options).some((o) => o.value === value);
+  if (!optionExists) return false;
+  if (filter.value !== value) filter.value = value;
+  state.selectedAssetId = null;
+  await drawAssets(state.lastAssets, state.lastMode);
+  if (opts.updateHash !== false) {
+    const pkg = value === SELECT_ALL ? null : value;
+    updateLocationHash(pkg, null);
+  }
+  return true;
 }
 
 function colorForPackageId(packageId) {
@@ -405,6 +444,9 @@ function selectPipe(assetId, opts = {}) {
   if (!id) {
     state.selectionLayer?.removeAll();
     syncPipeListSelection(null);
+    if (opts.updateHash !== false) {
+      updateLocationHash(getCurrentPackageId(), null);
+    }
     return;
   }
 
@@ -415,8 +457,8 @@ function selectPipe(assetId, opts = {}) {
     scrollPipeRowIntoView(id);
   }
 
+  const graphic = state.graphicByAssetId.get(id);
   if (opts.zoom !== false) {
-    const graphic = state.graphicByAssetId.get(id);
     if (graphic && state.mapView) {
       const target =
         graphic.geometry.type === "polyline"
@@ -424,6 +466,17 @@ function selectPipe(assetId, opts = {}) {
           : { target: graphic.geometry, zoom: 18 };
       state.mapView.goTo(target, { duration: 350 }).catch(() => {});
     }
+  }
+
+  if (opts.updateHash !== false) {
+    updateLocationHash(getCurrentPackageId(), id);
+  }
+
+  if (!graphic && opts.notifyMissing) {
+    setStatus(
+      `Pipe ${id} has no valid map geometry — selection cannot be highlighted.`,
+      true
+    );
   }
 }
 
@@ -476,6 +529,10 @@ function refreshPipeList() {
       const len = isFiniteNumber(p.length_m) ? Number(p.length_m).toFixed(1) : "—";
       const cost = isFiniteNumber(p.pipe_cost) ? `$${Number(p.pipe_cost).toLocaleString()}` : "—";
       const id = p.asset_id == null ? "" : String(p.asset_id);
+      const permalink = id ? buildPipePermalinkHash(pkgId, id) : "";
+      const mapCell = id
+        ? `<a class="row-link pipe-permalink" href="${permalink}" data-asset-id="${cssEscape(id)}" title="Open this pipe in the map (copyable permalink)">Map</a>`
+        : "—";
       return `<tr data-asset-id="${cssEscape(id)}">
         <td>${id || "—"}</td>
         <td>${p.suburb ?? "—"}</td>
@@ -483,6 +540,7 @@ function refreshPipeList() {
         <td>${len}</td>
         <td>${cost}</td>
         <td>${p.us_node ?? "—"} → ${p.ds_node ?? "—"}</td>
+        <td class="row-actions">${mapCell}</td>
       </tr>`;
     })
     .join("");
@@ -491,7 +549,7 @@ function refreshPipeList() {
     <table class="pipe-table">
       <thead>
         <tr>
-          <th>Asset</th><th>Suburb</th><th>Dia (mm)</th><th>Len (m)</th><th>Cost</th><th>US → DS pit</th>
+          <th>Asset</th><th>Suburb</th><th>Dia (mm)</th><th>Len (m)</th><th>Cost</th><th>US → DS pit</th><th>Map</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -499,9 +557,25 @@ function refreshPipeList() {
   `;
 
   target.querySelectorAll("tbody tr").forEach((tr) => {
-    tr.addEventListener("click", () => {
+    tr.addEventListener("click", (event) => {
+      if (event.target instanceof HTMLAnchorElement) return;
       const id = tr.getAttribute("data-asset-id");
       if (id) selectPipe(id, { source: "table", zoom: true });
+    });
+  });
+
+  target.querySelectorAll("a.pipe-permalink").forEach((a) => {
+    a.addEventListener("click", (event) => {
+      event.preventDefault();
+      const assetId = a.getAttribute("data-asset-id");
+      if (!assetId) return;
+      updateLocationHash(pkgId, assetId);
+      selectPipe(assetId, {
+        source: "permalink",
+        zoom: true,
+        notifyMissing: true,
+        updateHash: false,
+      });
     });
   });
 
@@ -616,6 +690,61 @@ function setFallbackNote(text) {
   if (note) note.textContent = text || "";
 }
 
+async function applyHashRoute(route) {
+  if (!route) return;
+  if (state.lastMode !== "package" || state.lastAssets.length === 0) {
+    state.pendingRoute = route;
+    return;
+  }
+
+  if (route.packageId) {
+    const packageExists = state.lastAssets.some(
+      (a) => String(a.package_id ?? "") === route.packageId
+    );
+    if (!packageExists) {
+      setStatus(
+        `Package ${route.packageId} from permalink was not found in the current generation.`,
+        true
+      );
+      return;
+    }
+    const ok = await applyPackageFilterValue(route.packageId, { updateHash: false });
+    if (!ok) return;
+  }
+
+  if (route.assetId) {
+    const inPackage = state.lastAssets.some(
+      (a) =>
+        (!route.packageId || String(a.package_id ?? "") === route.packageId) &&
+        String(a.asset_id ?? "") === route.assetId
+    );
+    if (!inPackage) {
+      setStatus(
+        `Pipe ${route.assetId} from permalink was not found${
+          route.packageId ? ` in package ${route.packageId}` : ""
+        }.`,
+        true
+      );
+      return;
+    }
+    selectPipe(route.assetId, {
+      source: "permalink",
+      zoom: true,
+      notifyMissing: true,
+      updateHash: false,
+    });
+  }
+
+  updateLocationHash(route.packageId || null, route.assetId || null);
+}
+
+async function consumePendingRoute() {
+  const route = state.pendingRoute;
+  if (!route) return;
+  state.pendingRoute = null;
+  await applyHashRoute(route);
+}
+
 async function apiRequest(path, payload) {
   const response = await fetch(path, {
     method: "POST",
@@ -695,6 +824,9 @@ async function handleGenerate() {
   await drawAssets(data.map_assets || [], "package");
   renderTable(data.packages || []);
   setStatus("Relining packages generated and drawn on the map.");
+  if (state.pendingRoute) {
+    await consumePendingRoute();
+  }
 }
 
 function bootstrapEsriLoader() {
@@ -713,15 +845,35 @@ async function init() {
   const packageFilter = document.getElementById("package-filter");
   if (packageFilter) {
     packageFilter.addEventListener("change", () => {
-      drawAssets(state.lastAssets, state.lastMode).catch((error) =>
+      const value = packageFilter.value;
+      const pkg = value === SELECT_ALL ? null : value;
+      applyPackageFilterValue(pkg).catch((error) =>
         setStatus(error.message, true)
       );
     });
   }
 
+  window.addEventListener("hashchange", () => {
+    if (state.syncingHash) return;
+    const route = parseLocationHash();
+    if (!route) return;
+    applyHashRoute(route).catch((error) => setStatus(error.message, true));
+  });
+
+  state.pendingRoute = parseLocationHash();
+
   try {
     await Promise.all([loadHealth(), loadConfig(), ensureMap()]);
-    setStatus("Configuration loaded. Preview the streams or generate packages.");
+    if (state.pendingRoute) {
+      setStatus(
+        `Permalink detected — generating packages with default settings to resolve ${
+          state.pendingRoute.packageId || "(no package)"
+        }${state.pendingRoute.assetId ? `/${state.pendingRoute.assetId}` : ""}…`
+      );
+      await handleGenerate();
+    } else {
+      setStatus("Configuration loaded. Preview the streams or generate packages.");
+    }
   } catch (error) {
     setStatus(error.message, true);
   }
