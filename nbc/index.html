@@ -7268,8 +7268,8 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
     function getPipeWeight(dia) {
       var d = Number(dia);
       if (!d || isNaN(d) || d <= 0) return 2;
-      var w = d / 50;
-      return Math.max(2, Math.min(12, w));
+      var w = d / 60;
+      return Math.max(2, Math.min(9, w));
     }
 
     var pts = [];
@@ -7303,7 +7303,7 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
         var line = L.polyline([[p.start_lat, p.start_lon], [p.end_lat, p.end_lon]], {
           color: color,
           weight: weight,
-          opacity: 0.92
+          opacity: 0.96
         });
         line.bindPopup(popupHtml(p));
         line.addTo(map);
@@ -7355,7 +7355,7 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
       var entry = pipeFeatures[a];
       if (!entry) return;
       if (entry.type === 'line') {
-        entry.feature.setStyle({ color: a === asset ? '#FFD166' : color, weight: a === asset ? Math.max(entry.baseWeight + 4, 6) : entry.baseWeight, opacity: a === asset ? 1 : 0.92 });
+        entry.feature.setStyle({ color: a === asset ? '#FFD166' : color, weight: a === asset ? Math.max(entry.baseWeight + 4, 6) : entry.baseWeight, opacity: a === asset ? 1 : 0.96 });
         if (a === asset && entry.feature.bringToFront) entry.feature.bringToFront();
       } else if (entry.type === 'point') {
         entry.feature.setStyle({ radius: a === asset ? 11 : 6, color: a === asset ? '#111827' : '#fff', weight: a === asset ? 3 : 1.5, fillColor: a === asset ? '#FFD166' : color, fillOpacity: 1 });
