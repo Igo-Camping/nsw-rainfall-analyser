@@ -8,16 +8,20 @@ existing addresses.
 Usage:
     py restore_addresses.py
 
-Place this script in D:\Packaging\scripts\
-Place extracted_addresses.csv in D:\Packaging\data\
+Run from packaging/scripts/.
+Place extracted_addresses.csv in packaging/data/.
 """
 
 import pandas as pd
 import os
+from pathlib import Path
 
-ASSETS_FILE   = r"D:\Packaging\data\assets_with_coords.csv"
-ADDR_FILE     = r"D:\Packaging\data\extracted_addresses.csv"
-OUTPUT_FILE   = r"D:\Packaging\data\assets_with_coords.csv"
+PACKAGING_ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = PACKAGING_ROOT / "data"
+
+ASSETS_FILE   = str(DATA_DIR / "assets_with_coords.csv")
+ADDR_FILE     = str(DATA_DIR / "extracted_addresses.csv")
+OUTPUT_FILE   = str(DATA_DIR / "assets_with_coords.csv")
 
 print(f"Loading assets from: {ASSETS_FILE}")
 print(f"Loading addresses from: {ADDR_FILE}")

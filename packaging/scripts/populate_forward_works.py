@@ -11,20 +11,24 @@ to cover the full cost of all packages by end of 2031-2032.
 Usage:
     py populate_forward_works.py
 
-Files needed in D:\Packaging\data\:
+Files needed in packaging/data/:
     relining_packages.zip   — zip of package CSVs from the packaging tool
 
 Output:
-    D:\Packaging\data\pipe_renewal_backlog.xlsx
+    packaging/data/pipe_renewal_backlog.xlsx
 """
 
 import pandas as pd
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment
 import zipfile, re
+from pathlib import Path
 
-ZIP_FILE    = r"D:\Packaging\data\relining_packages.zip"
-OUTPUT_FILE = r"D:\Packaging\data\pipe_renewal_backlog.xlsx"
+PACKAGING_ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = PACKAGING_ROOT / "data"
+
+ZIP_FILE    = str(DATA_DIR / "relining_packages.zip")
+OUTPUT_FILE = str(DATA_DIR / "pipe_renewal_backlog.xlsx")
 
 YEARS = ["2027-2028", "2028-2029", "2029-2030", "2030-2031", "2031-2032"]
 BASE_BUDGET = 3_000_000

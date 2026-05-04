@@ -10,14 +10,18 @@ Usage:
 
 import pandas as pd
 import os
+from pathlib import Path
 
 # ---------------------------------------------------------
 # CONFIGURE PATHS
 # ---------------------------------------------------------
 
-ASSETS_FILE  = r"D:\Packaging\data\assets.csv"
-COORDS_FILE  = r"D:\Packaging\data\coordinates.csv"
-OUTPUT_FILE  = r"D:\Packaging\data\assets_with_coords.csv"
+PACKAGING_ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = PACKAGING_ROOT / "data"
+
+ASSETS_FILE  = str(DATA_DIR / "assets.csv")
+COORDS_FILE  = str(DATA_DIR / "coordinates.csv")
+OUTPUT_FILE  = str(DATA_DIR / "assets_with_coords.csv")
 
 ASSETS_ID_COL = "Asset"
 COORDS_ID_COL = "Asset"
