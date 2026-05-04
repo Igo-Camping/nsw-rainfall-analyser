@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -245,22 +246,64 @@ def _coord_or_none(value: Any) -> float | None:
     return f
 
 
+_DIAMETER_LEADING_NUMBER = re.compile(r"-?\d+(?:\.\d+)?")
+
+
+def _diameter_mm_or_none(value: Any) -> float | None:
+    """Parse diameter values that may carry a unit suffix (e.g. ``"1050mm"``)."""
+    val = _value_or_none(value)
+    if val is None:
+        return None
+    if isinstance(val, (int, float)):
+        f = float(val)
+        if f != f or f in (float("inf"), float("-inf")):
+            return None
+        return f
+    s = str(val).strip()
+    if not s:
+        return None
+    match = _DIAMETER_LEADING_NUMBER.match(s)
+    if not match:
+        return None
+    try:
+        f = float(match.group(0))
+    except (TypeError, ValueError):
+        return None
+    if f != f or f in (float("inf"), float("-inf")):
+        return None
+    return f
+
+
+def _first_present(cols, *candidates: str) -> str | None:
+    for c in candidates:
+        if c and c in cols:
+            return c
+    return None
+
+
 def _map_assets_payload(df: pd.DataFrame, suburb_col: str | None) -> list[dict[str, Any]]:
     if df is None or df.empty:
         return []
 
     cols = df.columns
+    diam_col = _first_present(cols, ASSET_DIAM_COL, "SWP_Pipe_Diameter_mm")
+    len_col = _first_present(cols, ASSET_LEN_COL, "Spatial_Length_m")
+    asset_col = _first_present(cols, ASSET_ID_COL)
+    cond_col = _first_present(cols, CONDITION_COL)
+    us_col = _first_present(cols, US_NODE_COL, "SW_Upstream Node")
+    ds_col = _first_present(cols, DS_NODE_COL, "SW_Downstream Node")
+
     rows: list[dict[str, Any]] = []
     for _, row in df.iterrows():
         item: dict[str, Any] = {
-            "asset_id": _value_or_none(row[ASSET_ID_COL]) if ASSET_ID_COL in cols else None,
+            "asset_id": _value_or_none(row[asset_col]) if asset_col else None,
             "package_id": _value_or_none(row["package_id"]) if "package_id" in cols else None,
             "suburb": _value_or_none(row[suburb_col]) if suburb_col and suburb_col in cols else None,
-            "diameter_mm": _coord_or_none(row[ASSET_DIAM_COL]) if ASSET_DIAM_COL in cols else None,
-            "length_m": _coord_or_none(row[ASSET_LEN_COL]) if ASSET_LEN_COL in cols else None,
-            "condition": _value_or_none(row[CONDITION_COL]) if CONDITION_COL in cols else None,
-            "us_node": _value_or_none(row[US_NODE_COL]) if US_NODE_COL in cols else None,
-            "ds_node": _value_or_none(row[DS_NODE_COL]) if DS_NODE_COL in cols else None,
+            "diameter_mm": _diameter_mm_or_none(row[diam_col]) if diam_col else None,
+            "length_m": _coord_or_none(row[len_col]) if len_col else None,
+            "condition": _value_or_none(row[cond_col]) if cond_col else None,
+            "us_node": _value_or_none(row[us_col]) if us_col else None,
+            "ds_node": _value_or_none(row[ds_col]) if ds_col else None,
             "x_start": _coord_or_none(row[X_START_COL]) if X_START_COL in cols else None,
             "y_start": _coord_or_none(row[Y_START_COL]) if Y_START_COL in cols else None,
             "x_end": _coord_or_none(row[X_END_COL]) if X_END_COL in cols else None,

@@ -7,6 +7,8 @@ const state = {
 };
 
 const MGA_Z56_WKID = 28356;
+const MGA56_X_RANGE = [140000, 800000];
+const MGA56_Y_RANGE = [5800000, 6800000];
 
 function getPipeWeight(dia) {
   const MIN_W = 2;
@@ -21,33 +23,51 @@ function isFiniteNumber(v) {
   return Number.isFinite(typeof v === "number" ? v : Number(v));
 }
 
-function hasPipeEndpoints(asset) {
+function inRange(v, range) {
+  return v >= range[0] && v <= range[1];
+}
+
+function isPlausibleMga56(x, y) {
   return (
-    isFiniteNumber(asset?.x_start) &&
-    isFiniteNumber(asset?.y_start) &&
-    isFiniteNumber(asset?.x_end) &&
-    isFiniteNumber(asset?.y_end)
+    Number.isFinite(x) &&
+    Number.isFinite(y) &&
+    inRange(x, MGA56_X_RANGE) &&
+    inRange(y, MGA56_Y_RANGE)
   );
 }
 
+function hasPipeEndpoints(asset) {
+  const xs = Number(asset?.x_start);
+  const ys = Number(asset?.y_start);
+  const xe = Number(asset?.x_end);
+  const ye = Number(asset?.y_end);
+  if (!isPlausibleMga56(xs, ys) || !isPlausibleMga56(xe, ye)) return false;
+  if (xs === xe && ys === ye) return false;
+  return true;
+}
+
 function hasPipeMidpoint(asset) {
-  return isFiniteNumber(asset?.x_mid) && isFiniteNumber(asset?.y_mid);
+  const xm = Number(asset?.x_mid);
+  const ym = Number(asset?.y_mid);
+  return isPlausibleMga56(xm, ym);
 }
 
 function popupContent(asset) {
-  const fmtNum = (v, digits = 0) =>
-    isFiniteNumber(v) ? Number(v).toFixed(digits) : "";
+  const dash = "—";
+  const fmtUnit = (v, unit, digits = 0) =>
+    isFiniteNumber(v) ? `${Number(v).toFixed(digits)} ${unit}` : dash;
   const fmtMoney = (v) =>
-    isFiniteNumber(v) ? `$${Number(v).toLocaleString()}` : "";
+    isFiniteNumber(v) ? `$${Number(v).toLocaleString()}` : dash;
+  const fmtText = (v) => (v == null || v === "" ? dash : v);
   return `
-    <b>Asset ID:</b> ${asset.asset_id ?? ""}<br>
-    <b>Package:</b> ${asset.package_id ?? ""}<br>
-    <b>Suburb:</b> ${asset.suburb ?? ""}<br>
-    <b>Diameter:</b> ${fmtNum(asset.diameter_mm, 0)} mm<br>
-    <b>Length:</b> ${fmtNum(asset.length_m, 1)} m<br>
-    <b>Condition:</b> ${asset.condition ?? ""}<br>
-    <b>Upstream pit:</b> ${asset.us_node ?? ""}<br>
-    <b>Downstream pit:</b> ${asset.ds_node ?? ""}<br>
+    <b>Asset ID:</b> ${fmtText(asset.asset_id)}<br>
+    <b>Package:</b> ${fmtText(asset.package_id)}<br>
+    <b>Suburb:</b> ${fmtText(asset.suburb)}<br>
+    <b>Diameter:</b> ${fmtUnit(asset.diameter_mm, "mm", 0)}<br>
+    <b>Length:</b> ${fmtUnit(asset.length_m, "m", 1)}<br>
+    <b>Condition:</b> ${fmtText(asset.condition)}<br>
+    <b>Upstream pit:</b> ${fmtText(asset.us_node)}<br>
+    <b>Downstream pit:</b> ${fmtText(asset.ds_node)}<br>
     <b>Pipe cost:</b> ${fmtMoney(asset.pipe_cost)}
   `;
 }
@@ -245,6 +265,10 @@ async function drawAssets(assets, mode) {
   state.graphicsLayer.addMany(graphics);
   if (graphics.length > 0) {
     await state.mapView.goTo(graphics);
+  } else if (visible.length > 0) {
+    setFallbackNote(
+      `No valid pipe geometry to draw — ${visible.length} pipe(s) had missing or out-of-range coordinates.`
+    );
   }
 
   console.info(`drawAssets: drew ${lineCount} line(s), ${fallbackCount} fallback(s)`);
