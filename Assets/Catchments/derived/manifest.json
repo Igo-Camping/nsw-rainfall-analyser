@@ -1,0 +1,106 @@
+{
+  "generated_at": "2026-05-04T00:14:39.301150+00:00",
+  "status": "OK",
+  "is_authoritative": false,
+  "source": "lizard_raster_export",
+  "input_geotiff": "C:\\Users\\fonzi\\Weather App Folder\\Assets\\Catchments\\northern-beaches-subcatchmentsZ_2026-05-04T00_05_35Z.tiff",
+  "raster": {
+    "width": 3960,
+    "height": 5361,
+    "band_count": 1,
+    "projection_original": "EPSG:4283",
+    "transform": [
+      4.7489526900754336e-05,
+      0.0,
+      151.156884627737,
+      0.0,
+      -4.7489526900727664e-05,
+      -33.5698241813311
+    ],
+    "pixel_size_m": [
+      4.398301305674826,
+      5.286534134589004
+    ],
+    "nodata": [
+      0.0
+    ]
+  },
+  "parameters": {
+    "min_area_m2": 100.0,
+    "simplify_frac_pixel": 0.0,
+    "simplify_tolerance_deg": 0.0
+  },
+  "feature_counts": {
+    "unique_colour_values": 35,
+    "raw_polygons": 53,
+    "clean_polygons": 38,
+    "rejected_below_min_area": 15,
+    "rejected_invalid_geometry": 0
+  },
+  "rgb_to_polygon_count": {
+    "label_33": 2,
+    "label_35": 4,
+    "label_9": 1,
+    "label_36": 1,
+    "label_42": 1,
+    "label_11": 1,
+    "label_45": 3,
+    "label_47": 1,
+    "label_3": 1,
+    "label_12": 2,
+    "label_13": 2,
+    "label_14": 1,
+    "label_58": 1,
+    "label_59": 1,
+    "label_15": 1,
+    "label_61": 1,
+    "label_62": 3,
+    "label_1": 2,
+    "label_4": 1,
+    "label_16": 1,
+    "label_65": 1,
+    "label_67": 1,
+    "label_17": 1,
+    "label_19": 2,
+    "label_5": 1,
+    "label_20": 1,
+    "label_21": 1,
+    "label_22": 1,
+    "label_23": 1,
+    "label_6": 2,
+    "label_27": 2,
+    "label_111": 1,
+    "label_28": 2,
+    "label_29": 1,
+    "label_31": 4
+  },
+  "validation": {
+    "pairwise_overlap_issues": [],
+    "pairwise_overlap_total": 0,
+    "coverage_audit": {
+      "raster_data_pixel_count": 11113118,
+      "raster_data_area_m2": 258399663.57058156,
+      "polygon_total_area_m2": 258414902.24816743,
+      "ratio_polygon_to_raster": 1.0001,
+      "within_5pct": true
+    }
+  },
+  "spatial_accuracy": {
+    "pixel_resolution_m_x": 4.398301305674826,
+    "pixel_resolution_m_y": 5.286534134589004,
+    "boundary_uncertainty_m": 6.877,
+    "note": "Boundary positional uncertainty is bounded below by ONE pixel diagonal of the source raster. Sub-pixel features cannot be recovered. Treat as raster-resolution-limited."
+  },
+  "fitness_for_use": {
+    "visual_overlay": true,
+    "indicative_area_attribution": true,
+    "design_or_regulatory_use": false,
+    "rationale": "Raster-derived polygons inherit pixel-grid stairstep edges. They are reproducible from the source raster, but are NOT a substitute for an authoritative vector dataset published by Council/Lizard."
+  },
+  "dependency_status": {
+    "numpy": "2.4.2",
+    "rasterio": "1.4.4",
+    "shapely": "2.1.2",
+    "scikit-image": null
+  }
+}

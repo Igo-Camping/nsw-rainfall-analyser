@@ -1,0 +1,7 @@
+2026-05-04T00:14:37.799007+00:00 start dependency_status={'numpy': '2.4.2', 'rasterio': '1.4.4', 'shapely': '2.1.2', 'scikit-image': None}
+2026-05-04T00:14:37.799007+00:00 input geotiff: C:\Users\fonzi\Weather App Folder\Assets\Catchments\northern-beaches-subcatchmentsZ_2026-05-04T00_05_35Z.tiff
+2026-05-04T00:14:37.943412+00:00 raster: 3960x5361 bands=1 crs=EPSG:4283 pixel=(4.398m, 5.287m) simplify_deg=0.000000
+2026-05-04T00:14:39.301150+00:00 unique pixel values (catchment candidates): 35
+2026-05-04T00:14:49.222208+00:00 raw polygons: 53
+2026-05-04T00:14:49.458126+00:00 cleaned: 38 (dropped small=15, invalid=0)
+2026-05-04T00:14:50.442565+00:00 overlap issues: 0 | coverage_audit: {'raster_data_pixel_count': 11113118, 'raster_data_area_m2': 258399663.57058156, 'polygon_total_area_m2': 258414902.24816743, 'ratio_polygon_to_raster': 1.0001, 'within_5pct': True}

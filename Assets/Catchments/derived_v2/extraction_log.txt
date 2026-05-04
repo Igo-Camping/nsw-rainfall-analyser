@@ -1,0 +1,6 @@
+2026-05-04T00:23:25.596037+00:00 start input=C:\Users\fonzi\Weather App Folder\Assets\Catchments\northern-beaches-subcatchmentsZ_2026-05-04T00_05_35Z.tiff out_dir=C:\Users\fonzi\Weather App Folder\Assets\Catchments\derived_v2
+2026-05-04T00:23:25.732964+00:00 raster: 3960x5361 band1 dtype=float32 nodata=0.0 crs=EPSG:4283 pixel=(4.398m,5.287m) palette=no
+2026-05-04T00:23:26.225755+00:00 unique labels (excluding nodata): 35
+2026-05-04T00:24:05.898203+00:00 raw parts (post min-area filter): 38 (dropped 15)
+2026-05-04T00:24:06.061175+00:00 dissolved features: 35
+2026-05-04T00:24:08.936092+00:00 overlap_issues=0 coverage_ratio=1.0001
