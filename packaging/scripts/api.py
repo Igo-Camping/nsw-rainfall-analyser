@@ -26,6 +26,16 @@ from cost_engine import (
 )
 
 
+X_START_COL = "XStart"
+Y_START_COL = "YStart"
+X_END_COL = "XEnd"
+Y_END_COL = "YEnd"
+X_MID_COL = "XMid"
+Y_MID_COL = "YMid"
+US_NODE_COL = "SW_Upstream_Node"
+DS_NODE_COL = "SW_Downstream_Node"
+
+
 def _data_dir() -> Path:
     return Path(__file__).resolve().parents[1] / "data"
 
@@ -222,6 +232,47 @@ def _package_summary_rows(df: pd.DataFrame, suburb_col: str | None) -> list[dict
     return rows
 
 
+def _coord_or_none(value: Any) -> float | None:
+    val = _value_or_none(value)
+    if val is None:
+        return None
+    try:
+        f = float(val)
+    except (TypeError, ValueError):
+        return None
+    if f != f or f in (float("inf"), float("-inf")):
+        return None
+    return f
+
+
+def _map_assets_payload(df: pd.DataFrame, suburb_col: str | None) -> list[dict[str, Any]]:
+    if df is None or df.empty:
+        return []
+
+    cols = df.columns
+    rows: list[dict[str, Any]] = []
+    for _, row in df.iterrows():
+        item: dict[str, Any] = {
+            "asset_id": _value_or_none(row[ASSET_ID_COL]) if ASSET_ID_COL in cols else None,
+            "package_id": _value_or_none(row["package_id"]) if "package_id" in cols else None,
+            "suburb": _value_or_none(row[suburb_col]) if suburb_col and suburb_col in cols else None,
+            "diameter_mm": _coord_or_none(row[ASSET_DIAM_COL]) if ASSET_DIAM_COL in cols else None,
+            "length_m": _coord_or_none(row[ASSET_LEN_COL]) if ASSET_LEN_COL in cols else None,
+            "condition": _value_or_none(row[CONDITION_COL]) if CONDITION_COL in cols else None,
+            "us_node": _value_or_none(row[US_NODE_COL]) if US_NODE_COL in cols else None,
+            "ds_node": _value_or_none(row[DS_NODE_COL]) if DS_NODE_COL in cols else None,
+            "x_start": _coord_or_none(row[X_START_COL]) if X_START_COL in cols else None,
+            "y_start": _coord_or_none(row[Y_START_COL]) if Y_START_COL in cols else None,
+            "x_end": _coord_or_none(row[X_END_COL]) if X_END_COL in cols else None,
+            "y_end": _coord_or_none(row[Y_END_COL]) if Y_END_COL in cols else None,
+            "x_mid": _coord_or_none(row[X_MID_COL]) if X_MID_COL in cols else None,
+            "y_mid": _coord_or_none(row[Y_MID_COL]) if Y_MID_COL in cols else None,
+            "pipe_cost": _coord_or_none(row["pipe_cost"]) if "pipe_cost" in cols else None,
+        }
+        rows.append(item)
+    return rows
+
+
 def _sample_package_assets(df: pd.DataFrame, suburb_col: str | None) -> list[dict[str, Any]]:
     if df.empty or "package_id" not in df.columns:
         return []
@@ -318,6 +369,9 @@ def packaging_split_streams(payload: SplitPreviewRequest) -> dict[str, Any]:
             _stream_summary("Reconstruction", split["reconstruction"], suburb_col),
             _stream_summary("Amplification", split["amplification"], suburb_col),
         ],
+        "map_assets": {
+            "relining": _map_assets_payload(split["relining"], suburb_col),
+        },
     }
 
 
@@ -378,4 +432,5 @@ def packaging_generate_relining_packages(
         "total_cost": total_cost,
         "packages": _package_summary_rows(packaged, suburb_col),
         "sample_assets": _sample_package_assets(packaged, suburb_col),
+        "map_assets": _map_assets_payload(packaged, suburb_col),
     }

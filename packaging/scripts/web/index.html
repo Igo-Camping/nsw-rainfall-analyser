@@ -88,12 +88,21 @@
       <div class="results-header">
         <div>
           <h2>ArcGIS Map Preview</h2>
-          <p>Features are drawn from the packaging API and styled for quick browser review.</p>
+          <p>Pipes are drawn as real linework with thickness scaled to diameter.</p>
         </div>
         <div class="legend">
           <span class="legend-item"><i class="dot dot-preview"></i>Preview</span>
           <span class="legend-item"><i class="dot dot-package"></i>Generated package</span>
         </div>
+      </div>
+      <div class="map-filter hidden" id="map-filter-row">
+        <label class="map-filter-field">
+          <span>Show package</span>
+          <select id="package-filter">
+            <option value="__all__">All packages</option>
+          </select>
+        </label>
+        <span class="map-fallback-note" id="fallback-note"></span>
       </div>
       <div id="map"></div>
     </section>

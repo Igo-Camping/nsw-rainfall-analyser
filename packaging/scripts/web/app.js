@@ -2,7 +2,55 @@ const state = {
   config: null,
   mapView: null,
   graphicsLayer: null,
+  lastAssets: [],
+  lastMode: "preview",
 };
+
+const MGA_Z56_WKID = 28356;
+
+function getPipeWeight(dia) {
+  const MIN_W = 2;
+  const MAX_W = 12;
+  const SCALE = 0.25;
+  if (!dia || isNaN(dia)) return MIN_W;
+  const w = SCALE * Math.sqrt(dia);
+  return Math.max(MIN_W, Math.min(MAX_W, w));
+}
+
+function isFiniteNumber(v) {
+  return Number.isFinite(typeof v === "number" ? v : Number(v));
+}
+
+function hasPipeEndpoints(asset) {
+  return (
+    isFiniteNumber(asset?.x_start) &&
+    isFiniteNumber(asset?.y_start) &&
+    isFiniteNumber(asset?.x_end) &&
+    isFiniteNumber(asset?.y_end)
+  );
+}
+
+function hasPipeMidpoint(asset) {
+  return isFiniteNumber(asset?.x_mid) && isFiniteNumber(asset?.y_mid);
+}
+
+function popupContent(asset) {
+  const fmtNum = (v, digits = 0) =>
+    isFiniteNumber(v) ? Number(v).toFixed(digits) : "";
+  const fmtMoney = (v) =>
+    isFiniteNumber(v) ? `$${Number(v).toLocaleString()}` : "";
+  return `
+    <b>Asset ID:</b> ${asset.asset_id ?? ""}<br>
+    <b>Package:</b> ${asset.package_id ?? ""}<br>
+    <b>Suburb:</b> ${asset.suburb ?? ""}<br>
+    <b>Diameter:</b> ${fmtNum(asset.diameter_mm, 0)} mm<br>
+    <b>Length:</b> ${fmtNum(asset.length_m, 1)} m<br>
+    <b>Condition:</b> ${asset.condition ?? ""}<br>
+    <b>Upstream pit:</b> ${asset.us_node ?? ""}<br>
+    <b>Downstream pit:</b> ${asset.ds_node ?? ""}<br>
+    <b>Pipe cost:</b> ${fmtMoney(asset.pipe_cost)}
+  `;
+}
 
 function setStatus(message, isError = false) {
   const status = document.getElementById("status");
@@ -108,49 +156,139 @@ async function drawAssets(assets, mode) {
     window.requireAsync("esri/Graphic"),
   ]);
 
+  state.lastAssets = Array.isArray(assets) ? assets : [];
+  state.lastMode = mode;
+  refreshPackageFilter(state.lastAssets, mode);
+  setFallbackNote("");
+
   state.graphicsLayer.removeAll();
 
   if (!assets || assets.length === 0) {
     return;
   }
 
-  const graphics = assets
-    .filter((asset) => Number.isFinite(Number(asset.XMid)) && Number.isFinite(Number(asset.YMid)))
-    .map((asset) => {
-      const color = mode === "package" ? colorForPackageId(asset.package_id) : "#bf8d2c";
-      return new Graphic({
-        geometry: {
-          type: "point",
-          x: Number(asset.XMid),
-          y: Number(asset.YMid),
-          spatialReference: { wkid: 28356 },
-        },
-        attributes: asset,
-        popupTemplate: {
-          title: asset.package_id ? `${asset.package_id} - ${asset.Asset ?? "Pipe"}` : `${asset.Asset ?? "Pipe"}`,
-          content: `
-            <b>Suburb:</b> ${asset["Asset Suburb"] ?? asset.suburb ?? ""}<br>
-            <b>Diameter:</b> ${asset["SWP_Pipe Diameter_mm"] ?? ""}<br>
-            <b>Length:</b> ${asset["Spatial Length_m"] ?? ""}<br>
-            <b>Condition:</b> ${asset["SW_Condition"] ?? ""}<br>
-            <b>Pipe cost:</b> ${asset.pipe_cost ?? ""}
-          `,
-        },
-        symbol: {
-          type: "simple-marker",
-          style: mode === "package" ? "circle" : "diamond",
-          color,
-          size: mode === "package" ? 10 : 9,
-          outline: {
-            color: "#ffffff",
-            width: 1.2,
+  const filterValue = document.getElementById("package-filter")?.value || "__all__";
+  const visible =
+    mode === "package" && filterValue !== "__all__"
+      ? assets.filter((a) => String(a.package_id ?? "") === filterValue)
+      : assets;
+
+  let lineCount = 0;
+  let fallbackCount = 0;
+  const graphics = [];
+
+  visible.forEach((asset) => {
+    const color =
+      mode === "package" ? colorForPackageId(asset.package_id) : "#bf8d2c";
+    const popupTemplate = {
+      title: asset.package_id
+        ? `${asset.package_id} - ${asset.asset_id ?? "Pipe"}`
+        : `${asset.asset_id ?? "Pipe"}`,
+      content: popupContent(asset),
+    };
+
+    if (hasPipeEndpoints(asset)) {
+      const weight = getPipeWeight(Number(asset.diameter_mm));
+      graphics.push(
+        new Graphic({
+          geometry: {
+            type: "polyline",
+            paths: [[
+              [Number(asset.x_start), Number(asset.y_start)],
+              [Number(asset.x_end), Number(asset.y_end)],
+            ]],
+            spatialReference: { wkid: MGA_Z56_WKID },
           },
-        },
-      });
-    });
+          attributes: asset,
+          popupTemplate,
+          symbol: {
+            type: "simple-line",
+            color,
+            width: weight,
+            cap: "round",
+            join: "round",
+          },
+        })
+      );
+      lineCount += 1;
+    } else if (hasPipeMidpoint(asset)) {
+      graphics.push(
+        new Graphic({
+          geometry: {
+            type: "point",
+            x: Number(asset.x_mid),
+            y: Number(asset.y_mid),
+            spatialReference: { wkid: MGA_Z56_WKID },
+          },
+          attributes: asset,
+          popupTemplate,
+          symbol: {
+            type: "simple-marker",
+            style: mode === "package" ? "circle" : "diamond",
+            color,
+            size: mode === "package" ? 10 : 9,
+            outline: { color: "#ffffff", width: 1.2 },
+          },
+        })
+      );
+      fallbackCount += 1;
+    } else {
+      fallbackCount += 1;
+    }
+  });
+
+  if (fallbackCount > 0) {
+    console.warn(`drawAssets: ${fallbackCount} pipe(s) lacked endpoints — fell back to point or were skipped`);
+    setFallbackNote(`${fallbackCount} pipe(s) drawn as fallback markers (missing endpoints).`);
+  }
 
   state.graphicsLayer.addMany(graphics);
-  await state.mapView.goTo(graphics);
+  if (graphics.length > 0) {
+    await state.mapView.goTo(graphics);
+  }
+
+  console.info(`drawAssets: drew ${lineCount} line(s), ${fallbackCount} fallback(s)`);
+}
+
+function refreshPackageFilter(assets, mode) {
+  const row = document.getElementById("map-filter-row");
+  const select = document.getElementById("package-filter");
+  if (!row || !select) return;
+
+  if (mode !== "package") {
+    row.classList.add("hidden");
+    select.innerHTML = "";
+    return;
+  }
+
+  const ids = Array.from(
+    new Set(
+      (assets || [])
+        .map((a) => (a.package_id == null ? "" : String(a.package_id)))
+        .filter((s) => s)
+    )
+  ).sort();
+
+  if (ids.length === 0) {
+    row.classList.add("hidden");
+    select.innerHTML = "";
+    return;
+  }
+
+  const previous = select.value;
+  const opts = ['<option value="__all__">All packages</option>']
+    .concat(ids.map((id) => `<option value="${id}">${id}</option>`))
+    .join("");
+  select.innerHTML = opts;
+  if (previous && (previous === "__all__" || ids.includes(previous))) {
+    select.value = previous;
+  }
+  row.classList.remove("hidden");
+}
+
+function setFallbackNote(text) {
+  const note = document.getElementById("fallback-note");
+  if (note) note.textContent = text || "";
 }
 
 async function apiRequest(path, payload) {
@@ -244,6 +382,15 @@ async function init() {
   document.getElementById("package-method").addEventListener("change", updateMethodFields);
   document.getElementById("preview-button").addEventListener("click", () => handlePreview().catch((error) => setStatus(error.message, true)));
   document.getElementById("generate-button").addEventListener("click", () => handleGenerate().catch((error) => setStatus(error.message, true)));
+
+  const packageFilter = document.getElementById("package-filter");
+  if (packageFilter) {
+    packageFilter.addEventListener("change", () => {
+      drawAssets(state.lastAssets, state.lastMode).catch((error) =>
+        setStatus(error.message, true)
+      );
+    });
+  }
 
   try {
     await Promise.all([loadHealth(), loadConfig(), ensureMap()]);
