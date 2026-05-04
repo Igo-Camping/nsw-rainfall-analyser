@@ -8143,7 +8143,7 @@ function renderReliningPackagesMap(options = {}) {
     const fallbackNote = pointFallback ? ` (${pointFallback.toLocaleString()} drawn as fallback markers — missing endpoints).` : '';
     subtitle.textContent = `${packages.length.toLocaleString()} package${packages.length === 1 ? '' : 's'} mapped with ${lineDrawn.toLocaleString()} pipe line${lineDrawn === 1 ? '' : 's'}${fallbackNote}${selectedReliningPackageId ? ` ${selectedReliningPackageId} is highlighted.` : ''}`;
   }
-  if (pointFallback > 0) console.info('[relining-map] drew ' + lineDrawn + ' line(s), ' + pointFallback + ' fallback marker(s)');
+  if (lineDrawn + pointFallback > 0) console.info('[relining-map] drew ' + lineDrawn + ' line(s), ' + pointFallback + ' fallback marker(s)');
   renderReliningSelectedMapOverlay();
   if (!selectedPackage && options.fit !== false) fitReliningPackagesMap();
 }
