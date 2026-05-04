@@ -7434,13 +7434,7 @@ function buildSinglePackageMapHtml(pkg, options, generatedAt, packageColor) {
   // Marker click → also highlight matching row
   Object.keys(assetMarkers).forEach(function(asset) {
     assetMarkers[asset].on('click', function() {
-      Array.prototype.forEach.call(document.querySelectorAll('#pipesTable tr.selected'), function(el) { el.classList.remove('selected'); });
-      var tr = document.querySelector('#pipesTable tr[data-asset="' + asset.replace(/"/g, '\\"') + '"]');
-      if (tr) {
-        tr.classList.add('selected');
-        if (tr.scrollIntoView) tr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-      highlightAsset(asset);
+      focusAsset(asset);
     });
   });
 })();
