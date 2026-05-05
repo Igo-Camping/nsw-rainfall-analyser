@@ -287,126 +287,8 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
 <!-- Page Nav (hidden on home) -->
 <div id="page-nav" style="display:none">
   <button class="pnav-btn active" data-page="aep" onclick="switchPage('aep')">Rainfall Calculator</button>
-  <button class="pnav-btn" data-page="stormgrid" onclick="switchPage('stormgrid')">Stormgrid</button>
   <button class="pnav-btn pnav-home" data-page="home" onclick="switchPage('home')">Home</button>
 </div>
-
-<!-- Stormgrid v0 styles (scoped to .stormgrid-* — does not affect Stormgauge) -->
-<style id="stormgrid-styles">
-  #page-stormgrid { background: var(--bg, #FAFBFC); }
-  .stormgrid-banner {
-    padding: 14px 18px;
-    background: #FFC83D;
-    color: #3A1F00;
-    border-bottom: 3px solid #B26200;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.35;
-    letter-spacing: 0.02em;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    box-shadow: 0 2px 6px rgba(178, 98, 0, 0.18);
-    text-transform: uppercase;
-  }
-  .stormgrid-banner::before {
-    content: "⚠";
-    font-size: 22px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-  .stormgrid-banner::after {
-    content: "⚠";
-    font-size: 22px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-  html[data-theme="dark"] .stormgrid-banner {
-    background: #6B4A0A;
-    color: #FFE08A;
-    border-bottom-color: #8B5A14;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  }
-  .stormgrid-body {
-    display: flex;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-  }
-  .stormgrid-map {
-    flex: 1;
-    min-height: 0;
-    background: #EEF2F5;
-  }
-  html[data-theme="dark"] .stormgrid-map { background: #090F18; }
-  .stormgrid-panel {
-    width: 320px;
-    flex-shrink: 0;
-    border-left: 1px solid var(--border, #DDE3E8);
-    background: var(--surface, #FFFFFF);
-    color: var(--text, #1A2B3C);
-    padding: 14px 16px;
-    overflow-y: auto;
-    font-size: 13px;
-  }
-  .stormgrid-panel-empty,
-  .stormgrid-panel-error {
-    padding: 12px 8px;
-    color: var(--text-l, #6B7785);
-    font-size: 13px;
-    text-align: center;
-  }
-  .stormgrid-panel-error { color: #B0392E; }
-  .stormgrid-panel-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 12px;
-  }
-  .stormgrid-panel-swatch {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border-radius: 3px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-  }
-  .stormgrid-panel-title {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1.2;
-  }
-  .stormgrid-panel-grid {
-    display: grid;
-    grid-template-columns: 130px 1fr;
-    gap: 6px 12px;
-    margin: 0;
-    padding: 0;
-  }
-  .stormgrid-panel-grid dt {
-    color: var(--text-l, #6B7785);
-    font-weight: 500;
-  }
-  .stormgrid-panel-grid dd {
-    margin: 0;
-    color: var(--text, #1A2B3C);
-    font-variant-numeric: tabular-nums;
-  }
-  html[data-theme="dark"] .stormgrid-panel-grid dd { color: #E1E8F0; }
-  .leaflet-tooltip.stormgrid-tooltip {
-    font-size: 11px;
-    font-weight: 600;
-    background: rgba(26, 43, 60, 0.92);
-    color: #FFFFFF;
-    border: none;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-    padding: 3px 7px;
-  }
-  .leaflet-tooltip.stormgrid-tooltip::before { display: none; }
-</style>
 
 <!-- Home Screen -->
 <div id="page-home" style="display:none">
@@ -624,17 +506,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   </div><!-- /main -->
 </div><!-- /body -->
 </div><!-- /page-aep -->
-
-<!-- Page: Stormgrid v0 -->
-<div id="page-stormgrid" style="display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden">
-  <div class="stormgrid-banner" role="status">
-    Stormgrid results are derived from raster-based spatial rainfall and are non-authoritative.
-  </div>
-  <div class="stormgrid-body">
-    <div id="stormgrid-map" class="stormgrid-map"></div>
-    <aside id="stormgrid-panel" class="stormgrid-panel" aria-label="Catchment detail panel"></aside>
-  </div>
-</div>
 
 <div id="page-costing" style="display:none;flex:1;min-height:0;overflow:hidden;background:var(--panel);padding:20px">
   <div class="cost-shell">
@@ -998,7 +869,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   import * as mapLayers           from './src/modules/map/mapLayers.js';
   import * as uiTheme             from './src/modules/ui/theme.js';
   import * as uiControls          from './src/modules/ui/controls.js';
-  import * as stormgrid           from './src/modules/stormgrid/stormgridInit.js';
   window.buildExportModel    = buildExportModel;
   window.exportCSV           = exportCSV;
   window.exportXLSX          = exportXLSX;
@@ -1012,7 +882,6 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
   window.mapLayers           = mapLayers;
   window.uiTheme             = uiTheme;
   window.uiControls          = uiControls;
-  window.stormgrid           = stormgrid;
   window.dispatchEvent(new Event('atmos-modules-ready'));
 
 // ═══ RELINING PACKAGING FUNCTIONS (restored from commit 14e7277) ═══
@@ -5332,22 +5201,16 @@ let criticalInspectionSourceName = '';
 
 
 // â"€â"€ Page navigation â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-const PAGES = ['home', 'aep', 'stormgrid'];
+const PAGES = ['home', 'aep'];
 let currentPage = 'home';
 
 function switchPage(page, options = {}) {
   if (page === 'home') {
     showStormgaugePageShell('home');
-    if (window.stormgrid && typeof window.stormgrid.hide === 'function') {
-      try { window.stormgrid.hide(); } catch (err) { console.warn('[Stormgrid] hide failed:', err); }
-    }
     return;
   }
   if (page === 'aep') {
     showStormgaugePageShell('aep');
-    if (window.stormgrid && typeof window.stormgrid.hide === 'function') {
-      try { window.stormgrid.hide(); } catch (err) { console.warn('[Stormgrid] hide failed:', err); }
-    }
     ensureAtmosMapSetup().then(() => {
       invalidateAtmosMap('page activation');
       if (!window._aepInited) {
@@ -5355,22 +5218,6 @@ function switchPage(page, options = {}) {
         init();
       }
     });
-    return;
-  }
-  if (page === 'stormgrid') {
-    showStormgaugePageShell('stormgrid');
-    const launch = () => {
-      if (window.stormgrid && typeof window.stormgrid.show === 'function') {
-        Promise.resolve()
-          .then(() => window.stormgrid.show())
-          .catch((err) => console.error('[Stormgrid] show failed:', err));
-      }
-    };
-    if (window.stormgrid && typeof window.stormgrid.show === 'function') {
-      launch();
-    } else {
-      window.addEventListener('atmos-modules-ready', launch, { once: true });
-    }
     return;
   }
   showStormgaugePageShell(page);
