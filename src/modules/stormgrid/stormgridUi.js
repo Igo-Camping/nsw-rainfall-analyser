@@ -1,0 +1,112 @@
+/* Stormgrid v0 — UI shell.
+   Pure DOM render. No fetches, no analysis, no rainfall data.
+   Mounts a card grid and a disabled Run button into a host element. */
+
+import { createStormgridState, markManuallyChanged, STATUS } from './stormgridState.js';
+import { buildDefaults }     from './stormgridDefaults.js';
+import { buildReviewModel }  from './stormgridReviewModel.js';
+import { validateRunReadiness } from './stormgridValidation.js';
+
+const NS = 'stormgrid';
+
+export function mountStormgridShell(host) {
+  if (!host || !(host instanceof HTMLElement)) {
+    throw new Error('Stormgrid: mount host element is required.');
+  }
+
+  const state = createStormgridState();
+  const defaults = buildDefaults();
+
+  host.classList.add(`${NS}-root`);
+  host.innerHTML = '';
+
+  const header = document.createElement('header');
+  header.className = `${NS}-header`;
+  header.innerHTML = `
+    <h2 class="${NS}-title">Stormgrid <span class="${NS}-version">v0 shell</span></h2>
+    <p class="${NS}-sub">Smart-default workflow. Editable assumption cards. No analysis yet.</p>
+  `;
+  host.appendChild(header);
+
+  const grid = document.createElement('section');
+  grid.className = `${NS}-grid`;
+  grid.setAttribute('role', 'list');
+  host.appendChild(grid);
+
+  const runBar = document.createElement('div');
+  runBar.className = `${NS}-runbar`;
+  const runBtn = document.createElement('button');
+  runBtn.type = 'button';
+  runBtn.className = `${NS}-run`;
+  runBtn.textContent = 'Run analysis';
+  runBtn.disabled = true;
+  const runReason = document.createElement('span');
+  runReason.className = `${NS}-runreason`;
+  runBar.appendChild(runBtn);
+  runBar.appendChild(runReason);
+  host.appendChild(runBar);
+
+  function render() {
+    const cards = buildReviewModel(state, defaults);
+    grid.innerHTML = '';
+    cards.forEach((card) => grid.appendChild(renderCard(card, onEdit)));
+    const readiness = validateRunReadiness(state);
+    runBtn.disabled = !readiness.ready;
+    runReason.textContent = readiness.ready
+      ? ''
+      : `Disabled — ${readiness.reasons.join(' ')}`;
+  }
+
+  function onEdit(cardKey) {
+    const current = state.cards[cardKey];
+    const next = window.prompt(`Edit ${current.label}`, current.value ?? '');
+    if (next === null) return;
+    markManuallyChanged(state, cardKey, next.trim() === '' ? null : next);
+    render();
+  }
+
+  render();
+
+  return {
+    state,
+    rerender: render,
+    destroy() { host.innerHTML = ''; host.classList.remove(`${NS}-root`); },
+  };
+}
+
+function renderCard(card, onEdit) {
+  const el = document.createElement('article');
+  el.className = `${NS}-card ${NS}-card--${card.status}`;
+  el.setAttribute('role', 'listitem');
+  el.dataset.cardKey = card.key;
+
+  const valueText = card.value === null || card.value === undefined || card.value === ''
+    ? '—'
+    : String(card.value);
+
+  const statusLabel = card.status === STATUS.MANUAL ? 'Manually changed' : 'Default';
+
+  el.innerHTML = `
+    <header class="${NS}-card__head">
+      <h3 class="${NS}-card__label">${escapeHtml(card.label)}</h3>
+      <span class="${NS}-card__status" data-status="${card.status}">${statusLabel}</span>
+    </header>
+    <div class="${NS}-card__value">${escapeHtml(valueText)}</div>
+    <p class="${NS}-card__reason">${escapeHtml(card.reason)}</p>
+    <footer class="${NS}-card__foot">
+      <span class="${NS}-card__confidence">Confidence: ${escapeHtml(String(card.confidence))}</span>
+      <button type="button" class="${NS}-card__edit">Edit</button>
+    </footer>
+  `;
+  el.querySelector(`.${NS}-card__edit`).addEventListener('click', () => onEdit(card.key));
+  return el;
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
