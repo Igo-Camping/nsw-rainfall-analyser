@@ -6,16 +6,21 @@ import { createStormgridState, markManuallyChanged, STATUS } from './stormgridSt
 import { buildDefaults }     from './stormgridDefaults.js';
 import { buildReviewModel }  from './stormgridReviewModel.js';
 import { validateRunReadiness } from './stormgridValidation.js';
+import { registerStormgridMap, getMapContext } from './stormgridMapBridge.js';
 
 const NS = 'stormgrid';
 
-export function mountStormgridShell(host) {
+export function mountStormgridShell(host, options = {}) {
   if (!host || !(host instanceof HTMLElement)) {
     throw new Error('Stormgrid: mount host element is required.');
   }
 
+  if (options && options.map) {
+    registerStormgridMap(options.map);
+  }
+
   const state = createStormgridState();
-  const defaults = buildDefaults();
+  let defaults = buildDefaults({ map: getMapContext() });
 
   host.classList.add(`${NS}-root`);
   host.innerHTML = '';
@@ -47,6 +52,7 @@ export function mountStormgridShell(host) {
   host.appendChild(runBar);
 
   function render() {
+    defaults = buildDefaults({ map: getMapContext() });
     const cards = buildReviewModel(state, defaults);
     grid.innerHTML = '';
     cards.forEach((card) => grid.appendChild(renderCard(card, onEdit)));

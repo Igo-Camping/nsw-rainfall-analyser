@@ -14,10 +14,11 @@ Isolated smart-default workflow scaffold. **No real analysis. No fake rainfall d
 | File | Purpose |
 |---|---|
 | `stormgridState.js`        | State container, card keys, status/confidence enums |
-| `stormgridDefaults.js`     | Smart-default factory — returns null values, never invents data |
+| `stormgridDefaults.js`     | Smart-default factory — deterministic, map-context-aware |
 | `stormgridReviewModel.js`  | Pure transform: state + defaults → card view-models |
 | `stormgridValidation.js`   | Run-readiness gate — always returns `ready: false` in v0 |
-| `stormgridUi.js`           | DOM mount with `mountStormgridShell(hostEl)` |
+| `stormgridMapBridge.js`    | Read-only Leaflet map accessor — null-safe, no imports |
+| `stormgridUi.js`           | DOM mount with `mountStormgridShell(hostEl, options?)` |
 | `stormgridReadme.md`       | This file |
 
 ## Mount
@@ -28,8 +29,27 @@ const handle = mountStormgridShell(document.getElementById('stormgrid-host'));
 // handle.state, handle.rerender(), handle.destroy()
 ```
 
-The shell is **not** mounted in `index.html`. Wire-up will land in a follow-up branch
-once a staging route is agreed.
+The shell lives at `/stormgrid/index.html` (staging route). It is not wired into the
+production root `index.html`.
+
+## Map context (optional)
+
+Stormgrid will adapt the Area card and the Rainfall event reasoning when a
+Leaflet map instance is registered. There are two ways to register one,
+both read-only:
+
+```js
+// 1. Pass at mount time
+mountStormgridShell(host, { map: leafletMapInstance });
+
+// 2. Or register on the global handshake namespace before mounting
+window.__stormgrid = window.__stormgrid || {};
+window.__stormgrid.map = leafletMapInstance;
+```
+
+The bridge probes `getBounds()` / `getCenter()` defensively. Anything
+that throws is treated as "no map available" and the static defaults
+are used. Stormgrid never mutates the registered map.
 
 ## Hands-off list (do NOT touch from this module)
 

@@ -1,25 +1,47 @@
 /* Stormgrid v0 — smart defaults.
    Deterministic, logic-based assumptions for each card.
    No external APIs, no rainfall data, no randomness.
-   Manual overrides via the UI flip status to manually-changed. */
+   Manual overrides via the UI flip status to manually-changed.
+
+   When a map context is supplied (from stormgridMapBridge), the Area
+   card and the Rainfall event reason adapt to the current viewport.
+   Otherwise the static fallbacks are used. */
 
 import { CARD_LABELS, CONFIDENCE, STATUS } from './stormgridState.js';
 
-export function buildDefaults({ now = new Date() } = {}) {
+export function buildDefaults({ now = new Date(), map = null } = {}) {
+  const bounds = map && map.bounds ? map.bounds : null;
+  const center = map && map.center ? map.center : null;
+
+  const area = bounds
+    ? {
+        key: 'area',
+        label: CARD_LABELS.area,
+        value: formatViewport(bounds),
+        reason: 'Derived from current map view extent.',
+        confidence: CONFIDENCE.MEDIUM,
+        status: STATUS.DEFAULT,
+      }
+    : {
+        key: 'area',
+        label: CARD_LABELS.area,
+        value: 'Map view (not yet selected)',
+        reason: 'No polygon provided. Defaulting to current map viewport.',
+        confidence: CONFIDENCE.LOW,
+        status: STATUS.DEFAULT,
+      };
+
+  const rainfallEventReason = center
+    ? 'Defaulting to most recent event near current map view.'
+    : 'Defaulting to most recent analysis window for rapid assessment.';
+
   return {
-    area: {
-      key: 'area',
-      label: CARD_LABELS.area,
-      value: 'Map view (not yet selected)',
-      reason: 'No polygon provided. Defaulting to current map viewport.',
-      confidence: CONFIDENCE.LOW,
-      status: STATUS.DEFAULT,
-    },
+    area,
     rainfallEvent: {
       key: 'rainfallEvent',
       label: CARD_LABELS.rainfallEvent,
       value: 'Last 24 hours (rolling)',
-      reason: 'Defaulting to most recent analysis window for rapid assessment.',
+      reason: rainfallEventReason,
       confidence: CONFIDENCE.MEDIUM,
       status: STATUS.DEFAULT,
     },
@@ -65,4 +87,13 @@ export function buildDefaults({ now = new Date() } = {}) {
     },
     _generatedAt: now.toISOString(),
   };
+}
+
+function formatViewport({ north, south, east, west }) {
+  const latLo = Math.min(south, north);
+  const latHi = Math.max(south, north);
+  const lonLo = Math.min(west, east);
+  const lonHi = Math.max(west, east);
+  const f = (n) => n.toFixed(4);
+  return `Viewport (lat ${f(latLo)}–${f(latHi)}, lon ${f(lonLo)}–${f(lonHi)})`;
 }
