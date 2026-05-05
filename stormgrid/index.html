@@ -3,24 +3,27 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https://*.basemaps.cartocdn.com; connect-src 'self'; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <meta name="robots" content="noindex,nofollow"/>
 <link rel="icon" href="data:,"/>
-<title>Stormgrid v0 — Smart Defaults Preview (Staging)</title>
+<title>Stormgrid v0 — Catchment Rainfall Preview (Staging)</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link rel="stylesheet" href="./stormgrid.css"/>
 </head>
 <body>
 <div class="sg-staging-banner" role="status" aria-live="polite">
-  Staging shell only. Analysis is disabled until real data integration is implemented.
+  Staging only · uncalibrated rainfall product · not engineering rainfall · Run remains gated.
 </div>
 
 <main class="sg-page">
   <header class="sg-page__head">
-    <h1 class="sg-page__title">Stormgrid v0 — Smart Defaults Preview</h1>
+    <h1 class="sg-page__title">Stormgrid v0 — Catchment Rainfall Preview</h1>
     <p class="sg-page__lede">
-      Editable assumption cards for the smart-default workflow. No live data,
-      no analysis, no exports. The Run button stays disabled by design.
+      Click a catchment on the map. Rainfall stats are computed locally from the
+      Lizard precipitation archive and shipped as a small static JSON. The
+      Stormgauge AEP/IFD/station/radar/export logic is untouched.
     </p>
   </header>
 
@@ -28,7 +31,9 @@
 
   <footer class="sg-page__foot">
     <p>
-      Stormgauge AEP, IFD, station, radar, and export logic are untouched.
+      The catchment polygons are derived from a raster export and are flagged
+      <code>is_authoritative: false</code>. Rainfall is from
+      <code>lizard_precipitation_australia</code>, uncalibrated, mm per 3 h.
       This page is reachable from staging only.
     </p>
   </footer>

@@ -1,6 +1,6 @@
 /* Stormgrid v0 — state container.
-   Isolated from Stormgauge. Holds smart-default review state only.
-   No rainfall data, no analysis results, no exports. */
+   Isolated from Stormgauge. Holds smart-default review state plus
+   the catchment selection + static-rainfall integration flags. */
 
 export const STORMGRID_VERSION = 'v0-shell';
 
@@ -40,6 +40,12 @@ export function createStormgridState() {
   return {
     version: STORMGRID_VERSION,
     integrationReady: false,
+    selectedCatchmentId: null,
+    selectedCatchmentFeature: null,
+    rainfallData: null,
+    rainfallError: null,
+    analysisRun: false,
+    lastRunAt: null,
     cards: CARD_KEYS.reduce((acc, key) => {
       acc[key] = {
         key,
@@ -52,6 +58,36 @@ export function createStormgridState() {
       return acc;
     }, {}),
   };
+}
+
+export function recordAnalysisRun(state, when = new Date()) {
+  state.analysisRun = true;
+  state.lastRunAt = (when instanceof Date) ? when.toISOString() : String(when);
+  return state;
+}
+
+export function clearAnalysisRun(state) {
+  state.analysisRun = false;
+  state.lastRunAt = null;
+  return state;
+}
+
+export function setSelectedCatchment(state, id, feature) {
+  const changed = state.selectedCatchmentId !== (id || null);
+  state.selectedCatchmentId = id || null;
+  state.selectedCatchmentFeature = feature || null;
+  if (changed) {
+    state.analysisRun = false;
+    state.lastRunAt = null;
+  }
+  return state;
+}
+
+export function setRainfallData(state, data, error) {
+  state.rainfallData = data || null;
+  state.rainfallError = error || null;
+  state.integrationReady = !!data;
+  return state;
 }
 
 export function markManuallyChanged(state, cardKey, nextValue) {

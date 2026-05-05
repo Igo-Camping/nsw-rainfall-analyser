@@ -1,21 +1,32 @@
 /* Stormgrid v0 — validation.
-   The Run button must stay disabled until a real data integration
-   is wired in. v0 always reports notReady with a clear reason. */
+   Run is enabled only when all of the following are true:
+     1. Static rainfall JSON loaded
+     2. A catchment is selected
+     3. data.catchments[selectedId] exists with a numeric total_mm */
 
 export function validateRunReadiness(state) {
   if (!state) {
     return { ready: false, reasons: ['Stormgrid state not initialised.'] };
   }
-  if (!state.integrationReady) {
-    return {
-      ready: false,
-      reasons: [
-        'Live data integration is not connected (v0 shell).',
-        'Stormgauge AEP/IFD/station/radar/export logic remains untouched.',
-      ],
-    };
+  const reasons = [];
+  if (!state.rainfallData) {
+    reasons.push(state.rainfallError
+      ? `Rainfall data not available (${state.rainfallError}). Run local generator.`
+      : 'Rainfall data not available. Run local generator.');
   }
-  return { ready: false, reasons: ['Run gating not yet implemented.'] };
+  if (!state.selectedCatchmentId) {
+    reasons.push('No catchment selected — click a catchment on the map.');
+  }
+  if (state.rainfallData && state.selectedCatchmentId) {
+    const row = state.rainfallData.catchments && state.rainfallData.catchments[state.selectedCatchmentId];
+    if (!row || typeof row.total_mm !== 'number') {
+      reasons.push(`No precomputed data for catchment ${state.selectedCatchmentId}.`);
+    }
+  }
+  if (reasons.length === 0) {
+    return { ready: true, reasons: [] };
+  }
+  return { ready: false, reasons };
 }
 
 export function isRunEnabled(state) {
