@@ -1,19 +1,39 @@
 #!/usr/bin/env python3
-"""Build Stormgrid static catchment-rainfall JSON from local Lizard archive.
+"""Build Stormgrid catchment rainfall JSON from local Lizard archive.
 
-Reads:
+Local-only. Reads:
     Assets/Catchments/derived_v2/catchments_dissolved.geojson
     data/radar_archive/processed/lizard_precipitation_australia/raw_payloads/*.tif
-    data/radar_archive/processed/lizard_precipitation_australia/metadata/*.json
 
-Writes (compact JSON, separators=',:'):
+Writes (matching the agreed schema, compact JSON):
     data/stormgrid/catchment_rainfall_latest.json
-    stormgrid/data/catchment_rainfall_latest.json
+    stormgrid/data/catchment_rainfall_latest.json   (Pages-servable copy)
+
+Window default: trailing 24 h ending at the latest frame in the archive.
+
+Schema:
+{
+  "generated_at": "<ISO UTC>",
+  "source": "lizard_precipitation_australia",
+  "window": {"start": "<ISO>", "end": "<ISO>", "frame_count": <n>},
+  "catchments": {
+    "<catchment_id>": {
+      "total_mm":     <sum of per-frame catchment means>,
+      "mean_mm":      <average per-frame catchment mean>,
+      "min_mm":       <min pixel-frame value>,
+      "max_mm":       <max pixel-frame value>,
+      "sample_count": <pixel-frame count>
+    }
+  }
+}
+
+Rules:
+- No placeholder values. Catchments with zero valid samples are skipped.
+- Missing / unreadable frames are logged and skipped (script does not abort).
+- Does not import or modify Stormgauge AEP/IFD/station/radar/export modules.
 
 Usage:
-    python scripts/build_stormgrid_static_rainfall.py [--days N] [--end ISO] [--limit-mb 25]
-
-Does NOT import or modify Stormgauge AEP/IFD/station/radar/export modules.
+    python scripts/build_stormgrid_static_rainfall.py [--hours N] [--end ISO]
 """
 import argparse
 import glob
@@ -33,21 +53,18 @@ from pyproj import Transformer
 REPO            = Path(__file__).resolve().parent.parent
 CATCHMENT_PATH  = REPO / 'Assets/Catchments/derived_v2/catchments_dissolved.geojson'
 TIF_GLOB        = str(REPO / 'data/radar_archive/processed/lizard_precipitation_australia/raw_payloads/*.tif')
-META_DIR        = REPO / 'data/radar_archive/processed/lizard_precipitation_australia/metadata'
 OUT_PRIMARY     = REPO / 'data/stormgrid/catchment_rainfall_latest.json'
 OUT_PAGE        = REPO / 'stormgrid/data/catchment_rainfall_latest.json'
 
-SCHEMA_VERSION  = '1.0'
+SOURCE_NAME     = 'lizard_precipitation_australia'
 
 
 def parse_args():
     ap = argparse.ArgumentParser(description=__doc__.split('\n', 1)[0])
-    ap.add_argument('--days', type=int, default=30,
-                    help='How many days of history to include from --end backwards (default 30)')
+    ap.add_argument('--hours', type=int, default=24,
+                    help='Trailing window in hours (default 24)')
     ap.add_argument('--end', type=str, default=None,
-                    help='ISO UTC end of window (default: timestamp of latest frame in archive)')
-    ap.add_argument('--limit-mb', type=float, default=25.0,
-                    help='Abort if output exceeds this size in MB (default 25)')
+                    help='ISO UTC end of window (default: timestamp of latest frame)')
     return ap.parse_args()
 
 
@@ -59,8 +76,7 @@ def parse_frame_ts(filename):
 def load_catchments_in_4326(path):
     with open(path, 'r', encoding='utf-8') as f:
         gj = json.load(f)
-    src_crs = gj.get('metadata', {}).get('projection_original') \
-              or gj.get('features', [{}])[0].get('properties', {}).get('projection_original') \
+    src_crs = (gj.get('metadata', {}) or {}).get('projection_original') \
               or 'EPSG:4326'
     transformer = Transformer.from_crs(src_crs, 'EPSG:4326', always_xy=True)
 
@@ -74,22 +90,18 @@ def load_catchments_in_4326(path):
         geom_4326 = shp_transform(_xform, geom_src) if str(src_crs) != 'EPSG:4326' else geom_src
         out.append({
             'id': props['catchment_id'],
-            'area_ha': props.get('area_ha'),
-            'centroid': [props.get('centroid_lon'), props.get('centroid_lat')],
-            'bbox': [props.get('bbox_min_lon'), props.get('bbox_min_lat'),
-                     props.get('bbox_max_lon'), props.get('bbox_max_lat')],
-            'geom_4326': geom_4326,
+            'geom_4326_mapping': shp_mapping(geom_4326),
         })
     return out, str(src_crs)
 
 
-def collect_frames(end_dt, days):
+def collect_frames(end_dt, hours):
     paths = sorted(glob.glob(TIF_GLOB))
     if not paths:
         return [], None, None
     if end_dt is None:
         end_dt = parse_frame_ts(paths[-1])
-    start_dt = end_dt - timedelta(days=days)
+    start_dt = end_dt - timedelta(hours=hours)
     out = []
     for p in paths:
         try:
@@ -101,31 +113,17 @@ def collect_frames(end_dt, days):
     return out, start_dt, end_dt
 
 
-def stats_for_polygon(src, geom_4326_mapping, nodata):
-    try:
-        masked, _ = rio_mask(src, [geom_4326_mapping], crop=True, nodata=nodata, filled=False)
-    except ValueError:
-        return {'mean': None, 'min': None, 'max': None, 'median': None, 'coverage': 0.0}
-
-    arr = masked[0]
+def valid_pixels(arr, nodata):
+    """Return 1D ndarray of valid float pixel values."""
     if hasattr(arr, 'mask'):
-        valid = arr.compressed()
+        flat = arr.compressed()
     else:
-        valid = arr.flatten()
+        flat = arr.flatten()
         if nodata is not None:
-            valid = valid[valid != nodata]
-    valid = valid[np.isfinite(valid)]
-    valid = valid[valid > -1000.0]
-    total = arr.size
-    if valid.size == 0 or total == 0:
-        return {'mean': None, 'min': None, 'max': None, 'median': None, 'coverage': 0.0}
-    return {
-        'mean':     round(float(np.mean(valid)),   4),
-        'min':      round(float(np.min(valid)),    4),
-        'max':      round(float(np.max(valid)),    4),
-        'median':   round(float(np.median(valid)), 4),
-        'coverage': round(valid.size / total, 4),
-    }
+            flat = flat[flat != nodata]
+    flat = flat[np.isfinite(flat)]
+    flat = flat[flat > -1000.0]   # drop sentinel large negatives
+    return flat
 
 
 def main():
@@ -136,86 +134,94 @@ def main():
         if end_dt.tzinfo is None:
             end_dt = end_dt.replace(tzinfo=timezone.utc)
 
-    print(f'[stormgrid] catchments: {CATCHMENT_PATH}', file=sys.stderr)
+    if not CATCHMENT_PATH.exists():
+        print(f'[stormgrid] catchment file missing: {CATCHMENT_PATH}', file=sys.stderr)
+        sys.exit(2)
+
+    print(f'[stormgrid] catchments: {CATCHMENT_PATH.relative_to(REPO)}', file=sys.stderr)
     catchments, catchment_src_crs = load_catchments_in_4326(CATCHMENT_PATH)
     print(f'[stormgrid] loaded {len(catchments)} catchments (src CRS: {catchment_src_crs})', file=sys.stderr)
 
-    frames, start_dt, end_dt = collect_frames(end_dt, args.days)
+    frames, start_dt, end_dt = collect_frames(end_dt, args.hours)
     if not frames:
-        print('[stormgrid] no frames in window — aborting', file=sys.stderr)
+        print('[stormgrid] no frames in window — nothing to write', file=sys.stderr)
         sys.exit(2)
     print(f'[stormgrid] window: {start_dt.isoformat()} -> {end_dt.isoformat()} '
           f'({len(frames)} frames)', file=sys.stderr)
 
-    first_meta_path = META_DIR / (Path(frames[0][1]).stem + '.json')
-    meta_first = {}
-    if first_meta_path.exists():
-        with open(first_meta_path, 'r', encoding='utf-8') as f:
-            meta_first = json.load(f)
+    # Per-catchment accumulators
+    per_catch_pool       = {c['id']: []  for c in catchments}   # all pixel-frame values
+    per_catch_frame_means = {c['id']: [] for c in catchments}   # one mean per frame with data
 
-    geom_mappings = [shp_mapping(c['geom_4326']) for c in catchments]
+    frames_used = 0
+    frames_skipped = 0
+    for ts, path in frames:
+        if not os.path.exists(path):
+            print(f'[stormgrid]   missing: {path}', file=sys.stderr)
+            frames_skipped += 1
+            continue
+        try:
+            with rasterio.open(path) as src:
+                nodata = src.nodata
+                for c in catchments:
+                    try:
+                        masked, _ = rio_mask(src, [c['geom_4326_mapping']],
+                                             crop=True, nodata=nodata, filled=False)
+                        flat = valid_pixels(masked[0], nodata)
+                    except (ValueError, Exception):
+                        continue
+                    if flat.size == 0:
+                        continue
+                    per_catch_pool[c['id']].append(flat)
+                    per_catch_frame_means[c['id']].append(float(np.mean(flat)))
+        except Exception as exc:
+            print(f'[stormgrid]   error reading {os.path.basename(path)}: {exc}', file=sys.stderr)
+            frames_skipped += 1
+            continue
+        frames_used += 1
 
-    out_catchments = {
-        c['id']: {
-            'label': c['id'],
-            'area_ha': c['area_ha'],
-            'centroid': c['centroid'],
-            'bbox': c['bbox'],
-            'stats': {'mean': [], 'min': [], 'max': [], 'median': [], 'coverage': []},
-        } for c in catchments
-    }
-    frame_ts = []
-
-    for i, (ts, path) in enumerate(frames):
-        if i % 50 == 0 or i == len(frames) - 1:
-            print(f'[stormgrid]   frame {i+1}/{len(frames)}: {ts.isoformat()}', file=sys.stderr)
-        frame_ts.append(ts.strftime('%Y-%m-%dT%H:%M:%SZ'))
-        with rasterio.open(path) as src:
-            nodata = src.nodata
-            for c, gmap in zip(catchments, geom_mappings):
-                stats = stats_for_polygon(src, gmap, nodata)
-                for k in ('mean', 'min', 'max', 'median', 'coverage'):
-                    out_catchments[c['id']]['stats'][k].append(stats[k])
+    out_catchments = {}
+    for cid in (c['id'] for c in catchments):
+        means = per_catch_frame_means[cid]
+        pool_chunks = per_catch_pool[cid]
+        if not means or not pool_chunks:
+            continue   # skip catchments with no data
+        pool = np.concatenate(pool_chunks)
+        if pool.size == 0:
+            continue
+        out_catchments[cid] = {
+            'total_mm':     round(float(sum(means)),     4),
+            'mean_mm':      round(float(sum(means) / len(means)), 4),
+            'min_mm':       round(float(np.min(pool)),  4),
+            'max_mm':       round(float(np.max(pool)),  4),
+            'sample_count': int(pool.size),
+        }
 
     payload = {
-        'schema_version': SCHEMA_VERSION,
         'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-        'source': {
-            'kind': 'lizard_precipitation_australia',
-            'raster_uuid': meta_first.get('raster_uuid'),
-            'rastersource_uuid': meta_first.get('rastersource_uuid'),
-            'unit': meta_first.get('unit', 'mm'),
-            'interval_hours': meta_first.get('interval_hours', 3),
-            'projection': meta_first.get('projection', 'EPSG:4326'),
-            'note': 'Uncalibrated rainfall product. Not engineering rainfall.',
-        },
-        'catchment_dataset': {
-            'path': str(CATCHMENT_PATH.relative_to(REPO)).replace(os.sep, '/'),
-            'is_authoritative': False,
-            'feature_count': len(catchments),
-            'src_crs': catchment_src_crs,
-        },
+        'source': SOURCE_NAME,
         'window': {
             'start': start_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
             'end':   end_dt.strftime('%Y-%m-%dT%H:%M:%SZ'),
-            'frame_count': len(frame_ts),
+            'frame_count': frames_used,
         },
-        'frames': frame_ts,
         'catchments': out_catchments,
     }
 
     raw = json.dumps(payload, separators=(',', ':')).encode('utf-8')
-    size_mb = len(raw) / (1024 * 1024)
-    print(f'[stormgrid] payload: {size_mb:.2f} MB', file=sys.stderr)
-    if size_mb > args.limit_mb:
-        print(f'[stormgrid] ABORT: payload exceeds --limit-mb={args.limit_mb}. '
-              f'Reduce --days, or split the JSON into per-catchment shards.', file=sys.stderr)
-        sys.exit(3)
-
+    size_kb = len(raw) / 1024
     OUT_PRIMARY.parent.mkdir(parents=True, exist_ok=True)
     OUT_PAGE.parent.mkdir(parents=True, exist_ok=True)
     OUT_PRIMARY.write_bytes(raw)
     OUT_PAGE.write_bytes(raw)
+
+    # ── summary ───────────────────────────────────────────────────────
+    print('[stormgrid] ────── summary ──────', file=sys.stderr)
+    print(f'[stormgrid] frames used:    {frames_used}', file=sys.stderr)
+    print(f'[stormgrid] frames skipped: {frames_skipped}', file=sys.stderr)
+    print(f'[stormgrid] catchments in:  {len(catchments)}', file=sys.stderr)
+    print(f'[stormgrid] catchments out: {len(out_catchments)}', file=sys.stderr)
+    print(f'[stormgrid] payload:        {size_kb:.2f} KB', file=sys.stderr)
     print(f'[stormgrid] wrote {OUT_PRIMARY.relative_to(REPO)}', file=sys.stderr)
     print(f'[stormgrid] wrote {OUT_PAGE.relative_to(REPO)}', file=sys.stderr)
 
