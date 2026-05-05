@@ -94,7 +94,11 @@ function renderCard(card, onEdit) {
     <div class="${NS}-card__value">${escapeHtml(valueText)}</div>
     <p class="${NS}-card__reason">${escapeHtml(card.reason)}</p>
     <footer class="${NS}-card__foot">
-      <span class="${NS}-card__confidence">Confidence: ${escapeHtml(String(card.confidence))}</span>
+      <span class="${NS}-card__confidence ${NS}-card__confidence--${escapeAttr(card.confidence)}"
+            data-confidence="${escapeAttr(card.confidence)}"
+            title="Confidence: ${escapeAttr(String(card.confidence))}">
+        ${escapeHtml(formatConfidence(card.confidence))}
+      </span>
       <button type="button" class="${NS}-card__edit">Edit</button>
     </footer>
   `;
@@ -109,4 +113,16 @@ function escapeHtml(s) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+function escapeAttr(s) {
+  return String(s).replace(/[^a-zA-Z0-9_-]/g, '');
+}
+
+function formatConfidence(c) {
+  const v = String(c || '').toLowerCase();
+  if (v === 'low' || v === 'medium' || v === 'high') return v.toUpperCase();
+  if (v === 'manual') return 'MANUAL';
+  if (v === 'unknown' || v === '') return 'UNKNOWN';
+  return v.toUpperCase();
 }
