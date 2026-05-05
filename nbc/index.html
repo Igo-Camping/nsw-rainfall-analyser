@@ -8087,13 +8087,14 @@ function renderReliningPackagesMap(options = {}) {
         && !(startPair.lat === endPair.lat && startPair.lon === endPair.lon);
       const baseWeight = reliningPipeWeight(item.diameterMm);
       if (hasLine) {
-        L.polyline([[startPair.lat, startPair.lon], [endPair.lat, endPair.lon]], {
+        const line = L.polyline([[startPair.lat, startPair.lon], [endPair.lat, endPair.lon]], {
           color,
-          weight: style.isSelected ? Math.max(baseWeight + 4, 6) : baseWeight,
-          opacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : 0.92)
+          weight: style.isSelected ? baseWeight + 2 : baseWeight,
+          opacity: style.isSelected ? 1 : (style.isDimmed ? 0.65 : 0.92)
         }).on('click', () => focusReliningPackageOnMap(pkg.package_id, { scroll: false }))
           .bindPopup(buildReliningPackagePopup(pkg))
           .addTo(reliningPackagesLayer);
+        if (style.isSelected && line.bringToFront) line.bringToFront();
         lineDrawn += 1;
         drawn += 1;
       } else {
@@ -8107,8 +8108,8 @@ function renderReliningPackagesMap(options = {}) {
           color: style.isSelected ? '#111827' : '#fff',
           weight: style.isSelected ? 3 : 1.5,
           fillColor: color,
-          fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.18 : 0.78),
-          opacity: style.isDimmed ? 0.2 : 1
+          fillOpacity: style.isSelected ? 1 : (style.isDimmed ? 0.65 : 0.78),
+          opacity: style.isDimmed ? 0.7 : 1
         }).on('click', () => focusReliningPackageOnMap(pkg.package_id, { scroll: false }))
           .bindPopup(buildReliningPackagePopup(pkg))
           .addTo(reliningPackagesLayer);
