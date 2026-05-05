@@ -42,7 +42,7 @@ html, body {
 }
 
 .sg-page {
-  max-width: 1100px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 24px 20px 48px;
 }
@@ -271,4 +271,166 @@ html, body {
 .stormgrid-runreason {
   font-size: 12px;
   color: var(--sg-muted);
+}
+
+/* ── Top section: map + availability ────────────────────────────────── */
+
+.stormgrid-top {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 14px;
+  margin: 14px 0 18px;
+}
+@media (max-width: 900px) {
+  .stormgrid-top { grid-template-columns: 1fr; }
+}
+
+.stormgrid-mapcol {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.stormgrid-mapwrap {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--sg-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--sg-card-bg);
+}
+.stormgrid-map {
+  width: 100%;
+  height: 460px;
+  background: #e6ebf2;
+}
+.stormgrid-mapstatus {
+  padding: 6px 12px;
+  font-size: 11px;
+  color: var(--sg-muted);
+  background: var(--sg-default-bg);
+  border-top: 1px solid var(--sg-line);
+}
+.stormgrid-mapstatus--error { color: #8a1f1f; background: #fdecec; }
+
+.leaflet-tooltip.stormgrid-tooltip {
+  font-size: 11px;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+}
+
+/* Availability column ───────────────────────────────────────────────── */
+
+.stormgrid-availcol {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.stormgrid-availwrap {
+  border: 1px solid var(--sg-line);
+  border-radius: 8px;
+  background: var(--sg-card-bg);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.stormgrid-availhead h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.stormgrid-availmeta {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 14px;
+  font-size: 12px;
+}
+.stormgrid-availmeta div { display: contents; }
+.stormgrid-availmeta dt {
+  color: var(--sg-muted);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 10px;
+  padding-top: 2px;
+}
+.stormgrid-availmeta dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--sg-fg);
+}
+.stormgrid-availnote {
+  margin: 0;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--sg-muted);
+  line-height: 1.4;
+}
+.stormgrid-availmsg {
+  margin: 0;
+  padding: 10px 12px;
+  background: var(--sg-default-bg);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--sg-fg);
+}
+.stormgrid-availmsg--error {
+  background: #fdecec;
+  color: #7a1f1f;
+}
+.stormgrid-availmsg code {
+  background: rgba(0,0,0,0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 11px;
+}
+
+/* Selected-catchment stats ──────────────────────────────────────────── */
+
+.stormgrid-selstats {
+  border-top: 1px dashed var(--sg-line);
+  padding-top: 10px;
+}
+.stormgrid-selstats h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.stormgrid-selstats__sub {
+  font-weight: 500;
+  color: var(--sg-muted);
+  font-size: 11px;
+  margin-left: 6px;
+}
+.stormgrid-selstats__empty {
+  margin: 0;
+  font-size: 12px;
+  color: var(--sg-muted);
+}
+.stormgrid-selstats__grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 14px;
+}
+.stormgrid-selstats__grid div { display: contents; }
+.stormgrid-selstats__grid dt {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  color: var(--sg-muted);
+}
+.stormgrid-selstats__grid dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--sg-fg);
 }

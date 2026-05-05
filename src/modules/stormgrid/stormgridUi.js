@@ -1,12 +1,19 @@
 /* Stormgrid v0 — UI shell.
-   Pure DOM render. No fetches, no analysis, no rainfall data.
-   Mounts a card grid and a disabled Run button into a host element. */
+   Mounts: header, catchment map, availability panel (with selected-catchment
+   stats), card grid, run bar. Loads static rainfall JSON in parallel with
+   the catchment map. No imports from Stormgauge map/radar/station modules. */
 
-import { createStormgridState, markManuallyChanged, STATUS } from './stormgridState.js';
-import { buildDefaults }     from './stormgridDefaults.js';
-import { buildReviewModel }  from './stormgridReviewModel.js';
-import { validateRunReadiness } from './stormgridValidation.js';
+import {
+  createStormgridState, markManuallyChanged, STATUS,
+  setSelectedCatchment, setRainfallData,
+} from './stormgridState.js';
+import { buildDefaults }            from './stormgridDefaults.js';
+import { buildReviewModel }         from './stormgridReviewModel.js';
+import { validateRunReadiness }     from './stormgridValidation.js';
 import { registerStormgridMap, getMapContext } from './stormgridMapBridge.js';
+import { mountCatchmentMap }        from './stormgridCatchmentMap.js';
+import { loadStaticRainfall, aggregateTrailing } from './stormgridRainfallFetcher.js';
+import { renderAvailabilityPanel }  from './stormgridAvailability.js';
 
 const NS = 'stormgrid';
 
@@ -14,24 +21,34 @@ export function mountStormgridShell(host, options = {}) {
   if (!host || !(host instanceof HTMLElement)) {
     throw new Error('Stormgrid: mount host element is required.');
   }
-
   if (options && options.map) {
     registerStormgridMap(options.map);
   }
 
   const state = createStormgridState();
-  let defaults = buildDefaults({ map: getMapContext() });
+  let rainfallResult = null;
 
   host.classList.add(`${NS}-root`);
   host.innerHTML = '';
 
+  // ── Layout ────────────────────────────────────────────────────────────
   const header = document.createElement('header');
   header.className = `${NS}-header`;
   header.innerHTML = `
     <h2 class="${NS}-title">Stormgrid <span class="${NS}-version">v0 shell</span></h2>
-    <p class="${NS}-sub">Smart-default workflow. Editable assumption cards. No analysis yet.</p>
+    <p class="${NS}-sub">Click a catchment on the map. Stats are computed from the local Lizard rainfall archive (uncalibrated, non-engineering).</p>
   `;
   host.appendChild(header);
+
+  const top = document.createElement('section');
+  top.className = `${NS}-top`;
+  const mapHost = document.createElement('div');
+  mapHost.className = `${NS}-mapcol`;
+  const availHost = document.createElement('aside');
+  availHost.className = `${NS}-availcol`;
+  top.appendChild(mapHost);
+  top.appendChild(availHost);
+  host.appendChild(top);
 
   const grid = document.createElement('section');
   grid.className = `${NS}-grid`;
@@ -51,15 +68,32 @@ export function mountStormgridShell(host, options = {}) {
   runBar.appendChild(runReason);
   host.appendChild(runBar);
 
+  // ── Render ────────────────────────────────────────────────────────────
   function render() {
-    defaults = buildDefaults({ map: getMapContext() });
+    const selected = describeSelected(state);
+    const summary24h = state.integrationReady && state.selectedCatchmentId
+      ? aggregateTrailing(state.rainfallData, state.selectedCatchmentId, 24)
+      : null;
+    const defaults = buildDefaults({
+      map: getMapContext(),
+      selected,
+      summary24h,
+      rainfallData: state.rainfallData,
+    });
     const cards = buildReviewModel(state, defaults);
     grid.innerHTML = '';
     cards.forEach((card) => grid.appendChild(renderCard(card, onEdit)));
+
+    renderAvailabilityPanel(availHost, {
+      rainfallResult,
+      selected,
+      summary: summary24h,
+    });
+
     const readiness = validateRunReadiness(state);
     runBtn.disabled = !readiness.ready;
     runReason.textContent = readiness.ready
-      ? ''
+      ? 'Ready — click to compute (analysis stub).'
       : `Disabled — ${readiness.reasons.join(' ')}`;
   }
 
@@ -71,12 +105,48 @@ export function mountStormgridShell(host, options = {}) {
     render();
   }
 
+  function onCatchmentSelect(id, feature) {
+    setSelectedCatchment(state, id, feature);
+    render();
+  }
+
   render();
+
+  // ── Async wiring ──────────────────────────────────────────────────────
+  // 1. Map — async (catchments GeoJSON fetch).
+  mountCatchmentMap(mapHost, { onSelect: onCatchmentSelect })
+    .then(({ map }) => { if (map && options.map) registerStormgridMap(map); })
+    .catch((err) => { console.error('Stormgrid map mount failed:', err); });
+
+  // 2. Static rainfall — async (small JSON fetch).
+  loadStaticRainfall().then((res) => {
+    rainfallResult = res;
+    if (res.ok) {
+      setRainfallData(state, res.data, null);
+    } else {
+      setRainfallData(state, null, res.error);
+    }
+    render();
+  });
 
   return {
     state,
     rerender: render,
     destroy() { host.innerHTML = ''; host.classList.remove(`${NS}-root`); },
+  };
+}
+
+function describeSelected(state) {
+  if (!state.selectedCatchmentId || !state.rainfallData) {
+    return state.selectedCatchmentId ? { id: state.selectedCatchmentId } : null;
+  }
+  const c = state.rainfallData.catchments[state.selectedCatchmentId];
+  if (!c) return { id: state.selectedCatchmentId };
+  return {
+    id: state.selectedCatchmentId,
+    area_ha: c.area_ha,
+    centroid: c.centroid,
+    bbox: c.bbox,
   };
 }
 

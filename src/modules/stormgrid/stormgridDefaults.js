@@ -1,58 +1,107 @@
 /* Stormgrid v0 — smart defaults.
-   Deterministic, logic-based assumptions for each card.
-   No external APIs, no rainfall data, no randomness.
-   Manual overrides via the UI flip status to manually-changed.
-
-   When a map context is supplied (from stormgridMapBridge), the Area
-   card and the Rainfall event reason adapt to the current viewport.
-   Otherwise the static fallbacks are used. */
+   Deterministic, logic-based assumptions for each card. When a catchment
+   is selected and static rainfall data is loaded, the Area, Rainfall
+   event and Rainfall source cards adapt to the real data. */
 
 import { CARD_LABELS, CONFIDENCE, STATUS } from './stormgridState.js';
 
-export function buildDefaults({ now = new Date(), map = null } = {}) {
+export function buildDefaults({
+  now = new Date(),
+  map = null,
+  selected = null,
+  summary24h = null,
+  rainfallData = null,
+} = {}) {
   const bounds = map && map.bounds ? map.bounds : null;
   const center = map && map.center ? map.center : null;
 
-  const area = bounds
-    ? {
-        key: 'area',
-        label: CARD_LABELS.area,
-        value: formatViewport(bounds),
-        reason: 'Derived from current map view extent.',
-        confidence: CONFIDENCE.MEDIUM,
-        status: STATUS.DEFAULT,
-      }
-    : {
-        key: 'area',
-        label: CARD_LABELS.area,
-        value: 'Map view (not yet selected)',
-        reason: 'No polygon provided. Defaulting to current map viewport.',
-        confidence: CONFIDENCE.LOW,
-        status: STATUS.DEFAULT,
-      };
+  let area;
+  if (selected && selected.id) {
+    const ha = selected.area_ha != null ? Number(selected.area_ha).toFixed(0) : '—';
+    const c = selected.centroid;
+    const centroidStr = (Array.isArray(c) && c.length >= 2 && c[0] != null)
+      ? ` · centroid ${Number(c[1]).toFixed(4)}, ${Number(c[0]).toFixed(4)}`
+      : '';
+    area = {
+      key: 'area',
+      label: CARD_LABELS.area,
+      value: `Catchment ${selected.id} · ${ha} ha${centroidStr}`,
+      reason: 'Selected from the catchment map. Polygon comes from the local Lizard-derived dataset (non-authoritative).',
+      confidence: CONFIDENCE.HIGH,
+      status: STATUS.DEFAULT,
+    };
+  } else if (bounds) {
+    area = {
+      key: 'area',
+      label: CARD_LABELS.area,
+      value: formatViewport(bounds),
+      reason: 'No catchment selected — defaulting to current map view extent.',
+      confidence: CONFIDENCE.MEDIUM,
+      status: STATUS.DEFAULT,
+    };
+  } else {
+    area = {
+      key: 'area',
+      label: CARD_LABELS.area,
+      value: 'Click a catchment on the map',
+      reason: 'No catchment selected. Click a polygon to populate this card.',
+      confidence: CONFIDENCE.LOW,
+      status: STATUS.DEFAULT,
+    };
+  }
 
-  const rainfallEventReason = center
-    ? 'Defaulting to most recent event near current map view.'
-    : 'Defaulting to most recent analysis window for rapid assessment.';
-
-  return {
-    area,
-    rainfallEvent: {
+  let rainfallEvent;
+  if (summary24h && summary24h.total !== null && summary24h.total !== undefined) {
+    const cov = summary24h.coverageMean !== null
+      ? `${(summary24h.coverageMean * 100).toFixed(0)}% pixel coverage`
+      : 'unknown coverage';
+    rainfallEvent = {
+      key: 'rainfallEvent',
+      label: CARD_LABELS.rainfallEvent,
+      value: `${summary24h.total.toFixed(2)} mm over last ${summary24h.windowHours} h`,
+      reason: `Sum of mean-of-pixel rainfall across ${summary24h.framesCovered} of ${summary24h.framesRequested} frames · ${cov}.`,
+      confidence: CONFIDENCE.HIGH,
+      status: STATUS.DEFAULT,
+    };
+  } else {
+    rainfallEvent = {
       key: 'rainfallEvent',
       label: CARD_LABELS.rainfallEvent,
       value: 'Last 24 hours (rolling)',
-      reason: rainfallEventReason,
+      reason: center
+        ? 'Defaulting to most recent event near current map view.'
+        : 'Defaulting to most recent analysis window for rapid assessment.',
       confidence: CONFIDENCE.MEDIUM,
       status: STATUS.DEFAULT,
-    },
-    rainfallSource: {
+    };
+  }
+
+  let rainfallSource;
+  if (rainfallData && rainfallData.source) {
+    const s = rainfallData.source;
+    rainfallSource = {
+      key: 'rainfallSource',
+      label: CARD_LABELS.rainfallSource,
+      value: `${s.kind} (${s.unit} per ${s.interval_hours} h, ${s.projection})`,
+      reason: s.note || 'Static, locally-built rainfall product.',
+      confidence: CONFIDENCE.HIGH,
+      status: STATUS.DEFAULT,
+    };
+  } else {
+    rainfallSource = {
       key: 'rainfallSource',
       label: CARD_LABELS.rainfallSource,
       value: 'Rainfall radar (preferred), fallback to gauges',
       reason: 'Radar provides spatial coverage; gauges used for validation.',
       confidence: CONFIDENCE.HIGH,
       status: STATUS.DEFAULT,
-    },
+    };
+  }
+
+  return {
+    area,
+    rainfallEvent,
+    rainfallSource,
     gauges: {
       key: 'gauges',
       label: CARD_LABELS.gauges,
