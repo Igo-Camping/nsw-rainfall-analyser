@@ -1,7 +1,7 @@
 /* Stormgrid v0 — smart defaults.
-   Deterministic, logic-based assumptions for each card. When a catchment
-   is selected and static rainfall data is loaded, the Area, Rainfall
-   event and Rainfall source cards adapt to the real data. */
+   When a catchment is selected and the static rainfall JSON is loaded,
+   the Area / Rainfall event / Rainfall source cards adapt to the real
+   data. Without those, sensible static fallbacks are used. */
 
 import { CARD_LABELS, CONFIDENCE, STATUS } from './stormgridState.js';
 
@@ -9,11 +9,9 @@ export function buildDefaults({
   now = new Date(),
   map = null,
   selected = null,
-  summary24h = null,
   rainfallData = null,
 } = {}) {
   const bounds = map && map.bounds ? map.bounds : null;
-  const center = map && map.center ? map.center : null;
 
   let area;
   if (selected && selected.id) {
@@ -51,15 +49,12 @@ export function buildDefaults({
   }
 
   let rainfallEvent;
-  if (summary24h && summary24h.total !== null && summary24h.total !== undefined) {
-    const cov = summary24h.coverageMean !== null
-      ? `${(summary24h.coverageMean * 100).toFixed(0)}% pixel coverage`
-      : 'unknown coverage';
+  if (rainfallData && rainfallData.window) {
     rainfallEvent = {
       key: 'rainfallEvent',
       label: CARD_LABELS.rainfallEvent,
-      value: `${summary24h.total.toFixed(2)} mm over last ${summary24h.windowHours} h`,
-      reason: `Sum of mean-of-pixel rainfall across ${summary24h.framesCovered} of ${summary24h.framesRequested} frames · ${cov}.`,
+      value: `${formatTs(rainfallData.window.start)} → ${formatTs(rainfallData.window.end)}`,
+      reason: `Window of ${rainfallData.window.frame_count} archived frames.`,
       confidence: CONFIDENCE.HIGH,
       status: STATUS.DEFAULT,
     };
@@ -68,9 +63,7 @@ export function buildDefaults({
       key: 'rainfallEvent',
       label: CARD_LABELS.rainfallEvent,
       value: 'Last 24 hours (rolling)',
-      reason: center
-        ? 'Defaulting to most recent event near current map view.'
-        : 'Defaulting to most recent analysis window for rapid assessment.',
+      reason: 'Static rainfall JSON not yet loaded. Default rolling window applied.',
       confidence: CONFIDENCE.MEDIUM,
       status: STATUS.DEFAULT,
     };
@@ -78,12 +71,11 @@ export function buildDefaults({
 
   let rainfallSource;
   if (rainfallData && rainfallData.source) {
-    const s = rainfallData.source;
     rainfallSource = {
       key: 'rainfallSource',
       label: CARD_LABELS.rainfallSource,
-      value: `${s.kind} (${s.unit} per ${s.interval_hours} h, ${s.projection})`,
-      reason: s.note || 'Static, locally-built rainfall product.',
+      value: 'Lizard radar (precomputed)',
+      reason: `Source: ${String(rainfallData.source)}. Uncalibrated rainfall product, mm per frame.`,
       confidence: CONFIDENCE.HIGH,
       status: STATUS.DEFAULT,
     };
@@ -136,6 +128,11 @@ export function buildDefaults({
     },
     _generatedAt: now.toISOString(),
   };
+}
+
+function formatTs(s) {
+  if (!s) return '—';
+  return s.replace('T', ' ').replace('Z', ' UTC');
 }
 
 function formatViewport({ north, south, east, west }) {

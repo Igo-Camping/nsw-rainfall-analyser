@@ -1,30 +1,26 @@
 /* Stormgrid v0 — validation.
-   Run is enabled only when:
-     1. State exists
-     2. integrationReady (static rainfall JSON loaded)
-     3. A catchment is selected
-     4. The static dataset contains stats for that catchment */
+   Run is enabled only when all of the following are true:
+     1. Static rainfall JSON loaded
+     2. A catchment is selected
+     3. data.catchments[selectedId] exists with a numeric total_mm */
 
 export function validateRunReadiness(state) {
   if (!state) {
     return { ready: false, reasons: ['Stormgrid state not initialised.'] };
   }
   const reasons = [];
-  if (!state.integrationReady) {
+  if (!state.rainfallData) {
     reasons.push(state.rainfallError
-      ? `Static rainfall not loaded (${state.rainfallError}).`
-      : 'Static rainfall not loaded yet.');
+      ? `Rainfall data not available (${state.rainfallError}). Run local generator.`
+      : 'Rainfall data not available. Run local generator.');
   }
   if (!state.selectedCatchmentId) {
     reasons.push('No catchment selected — click a catchment on the map.');
   }
-  if (state.integrationReady && state.selectedCatchmentId) {
-    const data = state.rainfallData;
-    const c = data && data.catchments && data.catchments[state.selectedCatchmentId];
-    if (!c) {
+  if (state.rainfallData && state.selectedCatchmentId) {
+    const row = state.rainfallData.catchments && state.rainfallData.catchments[state.selectedCatchmentId];
+    if (!row || typeof row.total_mm !== 'number') {
       reasons.push(`No precomputed data for catchment ${state.selectedCatchmentId}.`);
-    } else if (!c.stats || !c.stats.mean || !c.stats.mean.length) {
-      reasons.push(`Empty stats series for ${state.selectedCatchmentId}.`);
     }
   }
   if (reasons.length === 0) {

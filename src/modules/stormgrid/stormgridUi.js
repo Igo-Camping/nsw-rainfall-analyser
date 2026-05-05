@@ -1,18 +1,19 @@
 /* Stormgrid v0 — UI shell.
-   Mounts: header, catchment map, availability panel (with selected-catchment
-   stats), card grid, run bar. Loads static rainfall JSON in parallel with
-   the catchment map. No imports from Stormgauge map/radar/station modules. */
+   Mounts: header, catchment map, availability/results panel, card grid,
+   run bar. Loads the static rainfall JSON in parallel with the catchment
+   map. No imports from Stormgauge map/radar/station modules. */
 
 import {
   createStormgridState, markManuallyChanged, STATUS,
   setSelectedCatchment, setRainfallData,
+  recordAnalysisRun, clearAnalysisRun,
 } from './stormgridState.js';
 import { buildDefaults }            from './stormgridDefaults.js';
 import { buildReviewModel }         from './stormgridReviewModel.js';
 import { validateRunReadiness }     from './stormgridValidation.js';
 import { registerStormgridMap, getMapContext } from './stormgridMapBridge.js';
 import { mountCatchmentMap }        from './stormgridCatchmentMap.js';
-import { loadStaticRainfall, aggregateTrailing } from './stormgridRainfallFetcher.js';
+import { loadStormgridData, getCatchmentRow } from './stormgridDataLoader.js';
 import { renderAvailabilityPanel }  from './stormgridAvailability.js';
 
 const NS = 'stormgrid';
@@ -36,7 +37,7 @@ export function mountStormgridShell(host, options = {}) {
   header.className = `${NS}-header`;
   header.innerHTML = `
     <h2 class="${NS}-title">Stormgrid <span class="${NS}-version">v0 shell</span></h2>
-    <p class="${NS}-sub">Click a catchment on the map. Stats are computed from the local Lizard rainfall archive (uncalibrated, non-engineering).</p>
+    <p class="${NS}-sub">Click a catchment, then click Run analysis. Stats come from the precomputed Lizard rainfall JSON (uncalibrated, non-engineering).</p>
   `;
   host.appendChild(header);
 
@@ -68,16 +69,23 @@ export function mountStormgridShell(host, options = {}) {
   runBar.appendChild(runReason);
   host.appendChild(runBar);
 
+  runBtn.addEventListener('click', () => {
+    const readiness = validateRunReadiness(state);
+    if (!readiness.ready) return;
+    recordAnalysisRun(state);
+    render();
+  });
+
   // ── Render ────────────────────────────────────────────────────────────
   function render() {
     const selected = describeSelected(state);
-    const summary24h = state.integrationReady && state.selectedCatchmentId
-      ? aggregateTrailing(state.rainfallData, state.selectedCatchmentId, 24)
+    const catchmentRow = state.rainfallData && state.selectedCatchmentId
+      ? getCatchmentRow(state.rainfallData, state.selectedCatchmentId)
       : null;
+
     const defaults = buildDefaults({
       map: getMapContext(),
       selected,
-      summary24h,
       rainfallData: state.rainfallData,
     });
     const cards = buildReviewModel(state, defaults);
@@ -87,13 +95,17 @@ export function mountStormgridShell(host, options = {}) {
     renderAvailabilityPanel(availHost, {
       rainfallResult,
       selected,
-      summary: summary24h,
+      catchmentRow,
+      analysisRun: !!state.analysisRun,
+      lastRunAt: state.lastRunAt,
     });
 
     const readiness = validateRunReadiness(state);
     runBtn.disabled = !readiness.ready;
     runReason.textContent = readiness.ready
-      ? 'Ready — click to compute (analysis stub).'
+      ? (state.analysisRun
+          ? `Ran ${formatTs(state.lastRunAt)} — click to recompute.`
+          : 'Ready — click to compute results.')
       : `Disabled — ${readiness.reasons.join(' ')}`;
   }
 
@@ -107,25 +119,21 @@ export function mountStormgridShell(host, options = {}) {
 
   function onCatchmentSelect(id, feature) {
     setSelectedCatchment(state, id, feature);
+    clearAnalysisRun(state);
     render();
   }
 
   render();
 
   // ── Async wiring ──────────────────────────────────────────────────────
-  // 1. Map — async (catchments GeoJSON fetch).
   mountCatchmentMap(mapHost, { onSelect: onCatchmentSelect })
     .then(({ map }) => { if (map && options.map) registerStormgridMap(map); })
     .catch((err) => { console.error('Stormgrid map mount failed:', err); });
 
-  // 2. Static rainfall — async (small JSON fetch).
-  loadStaticRainfall().then((res) => {
+  loadStormgridData().then((res) => {
     rainfallResult = res;
-    if (res.ok) {
-      setRainfallData(state, res.data, null);
-    } else {
-      setRainfallData(state, null, res.error);
-    }
+    if (res.ok) setRainfallData(state, res.data, null);
+    else        setRainfallData(state, null, res.error);
     render();
   });
 
@@ -137,17 +145,23 @@ export function mountStormgridShell(host, options = {}) {
 }
 
 function describeSelected(state) {
-  if (!state.selectedCatchmentId || !state.rainfallData) {
-    return state.selectedCatchmentId ? { id: state.selectedCatchmentId } : null;
-  }
-  const c = state.rainfallData.catchments[state.selectedCatchmentId];
-  if (!c) return { id: state.selectedCatchmentId };
+  if (!state.selectedCatchmentId) return null;
+  const id = state.selectedCatchmentId;
+  // Pull metadata from the GeoJSON feature (set by map click) — JSON
+  // payload is flat-summary-only and does not carry geometry props.
+  const feat = state.selectedCatchmentFeature;
+  const props = feat && feat.properties ? feat.properties : {};
   return {
-    id: state.selectedCatchmentId,
-    area_ha: c.area_ha,
-    centroid: c.centroid,
-    bbox: c.bbox,
+    id,
+    area_ha: props.area_ha,
+    centroid: [props.centroid_lon, props.centroid_lat],
+    bbox: [props.bbox_min_lon, props.bbox_min_lat, props.bbox_max_lon, props.bbox_max_lat],
   };
+}
+
+function formatTs(s) {
+  if (!s) return '—';
+  return String(s).replace('T', ' ').replace('Z', ' UTC');
 }
 
 function renderCard(card, onEdit) {

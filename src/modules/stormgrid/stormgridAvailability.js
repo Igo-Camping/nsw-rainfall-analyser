@@ -1,9 +1,14 @@
-/* Stormgrid v0 — availability panel.
-   Renders a small panel summarising the static rainfall payload:
-   source, generated_at, frame count, window, file size, plus the
-   stats for the currently selected catchment (if any). */
+/* Stormgrid v0 — availability + results panel.
+   Renders the static rainfall payload metadata and the selected
+   catchment's results (after the user clicks Run). */
 
-export function renderAvailabilityPanel(host, { rainfallResult, selected, summary }) {
+export function renderAvailabilityPanel(host, {
+  rainfallResult,
+  selected,
+  catchmentRow,
+  analysisRun,
+  lastRunAt,
+}) {
   host.innerHTML = '';
   host.classList.add('stormgrid-availwrap');
 
@@ -18,10 +23,9 @@ export function renderAvailabilityPanel(host, { rainfallResult, selected, summar
   }
   if (!rainfallResult.ok) {
     host.appendChild(blockMessage(
-      `No precomputed rainfall available (${rainfallResult.error}). ` +
-      `Generate locally with ` +
-      `<code>python scripts/build_stormgrid_static_rainfall.py</code> ` +
-      `then redeploy.`,
+      `Rainfall data not available (${escapeHtml(rainfallResult.error || 'unknown error')}). ` +
+      `Run local generator: ` +
+      `<code>python scripts/build_stormgrid_static_rainfall.py</code>`,
       'error'
     ));
     return;
@@ -31,43 +35,42 @@ export function renderAvailabilityPanel(host, { rainfallResult, selected, summar
   const meta = document.createElement('dl');
   meta.className = 'stormgrid-availmeta';
   meta.innerHTML = `
-    <div><dt>Source</dt><dd>${escapeHtml(d.source.kind)}</dd></div>
-    <div><dt>Unit</dt><dd>${escapeHtml(d.source.unit)} per ${d.source.interval_hours} h</dd></div>
-    <div><dt>Generated</dt><dd>${formatTs(d.generated_at)}</dd></div>
-    <div><dt>Window</dt><dd>${formatTs(d.window.start)} → ${formatTs(d.window.end)}</dd></div>
-    <div><dt>Frames</dt><dd>${d.window.frame_count}</dd></div>
-    <div><dt>Catchments</dt><dd>${d.catchment_dataset.feature_count}</dd></div>
-    <div><dt>Payload</dt><dd>${formatBytes(rainfallResult.sizeBytes)}</dd></div>
+    <div><dt>Source</dt>    <dd>${escapeHtml(d.source)}</dd></div>
+    <div><dt>Generated</dt> <dd>${formatTs(d.generated_at)}</dd></div>
+    <div><dt>Window</dt>    <dd>${formatTs(d.window.start)} → ${formatTs(d.window.end)}</dd></div>
+    <div><dt>Frames</dt>    <dd>${d.window.frame_count}</dd></div>
+    <div><dt>Catchments</dt><dd>${Object.keys(d.catchments || {}).length}</dd></div>
+    <div><dt>Payload</dt>   <dd>${formatBytes(rainfallResult.sizeBytes)}</dd></div>
   `;
   host.appendChild(meta);
 
-  const note = document.createElement('p');
-  note.className = 'stormgrid-availnote';
-  note.textContent = d.source.note || '';
-  host.appendChild(note);
-
-  // Selected-catchment stats
+  // Results section
   const sel = document.createElement('section');
   sel.className = 'stormgrid-selstats';
   if (!selected) {
-    sel.innerHTML = `<p class="stormgrid-selstats__empty">Click a catchment on the map to see rainfall.</p>`;
-  } else if (!summary) {
-    sel.innerHTML = `<p class="stormgrid-selstats__empty">Selected: <strong>${escapeHtml(selected.id)}</strong> — no stats for this window.</p>`;
-  } else {
-    const fmt = (n) => (n === null || n === undefined) ? '—' : `${n.toFixed(2)} mm`;
-    const cov = summary.coverageMean === null ? '—' : `${(summary.coverageMean * 100).toFixed(0)}%`;
+    sel.innerHTML = `<p class="stormgrid-selstats__empty">Click a catchment on the map to select it.</p>`;
+  } else if (!catchmentRow) {
+    sel.innerHTML = `<p class="stormgrid-selstats__empty">No precomputed data for <strong>${escapeHtml(selected.id)}</strong> in this window.</p>`;
+  } else if (!analysisRun) {
     sel.innerHTML = `
       <h4>${escapeHtml(selected.id)}
-        <span class="stormgrid-selstats__sub">last ${summary.windowHours} h
-          (${summary.framesCovered}/${summary.framesRequested} frames)</span>
+        <span class="stormgrid-selstats__sub">data ready · click Run analysis</span>
+      </h4>
+      <p class="stormgrid-selstats__empty">${catchmentRow.sample_count.toLocaleString()} pixel-frame samples available.</p>
+    `;
+  } else {
+    const fmtMm = (n) => (n === null || n === undefined) ? '—' : `${Number(n).toFixed(2)} mm`;
+    const ranAt = lastRunAt ? ` · ran ${formatTs(lastRunAt)}` : '';
+    sel.innerHTML = `
+      <h4>${escapeHtml(selected.id)}
+        <span class="stormgrid-selstats__sub">results${ranAt}</span>
       </h4>
       <dl class="stormgrid-selstats__grid">
-        <div><dt>Total mean</dt><dd>${fmt(summary.total)}</dd></div>
-        <div><dt>Mean / frame</dt><dd>${fmt(summary.mean)}</dd></div>
-        <div><dt>Median / frame</dt><dd>${fmt(summary.median)}</dd></div>
-        <div><dt>Min / frame</dt><dd>${fmt(summary.min)}</dd></div>
-        <div><dt>Max / frame</dt><dd>${fmt(summary.max)}</dd></div>
-        <div><dt>Coverage</dt><dd>${cov}</dd></div>
+        <div><dt>Total rainfall</dt><dd>${fmtMm(catchmentRow.total_mm)}</dd></div>
+        <div><dt>Mean / frame</dt> <dd>${fmtMm(catchmentRow.mean_mm)}</dd></div>
+        <div><dt>Min</dt>           <dd>${fmtMm(catchmentRow.min_mm)}</dd></div>
+        <div><dt>Max</dt>           <dd>${fmtMm(catchmentRow.max_mm)}</dd></div>
+        <div><dt>Samples</dt>       <dd>${catchmentRow.sample_count.toLocaleString()}</dd></div>
       </dl>
     `;
   }
@@ -83,8 +86,7 @@ function blockMessage(html, variant) {
 
 function formatTs(s) {
   if (!s) return '—';
-  // ISO UTC string, format briefly
-  return s.replace('T', ' ').replace('Z', ' UTC');
+  return String(s).replace('T', ' ').replace('Z', ' UTC');
 }
 
 function formatBytes(n) {

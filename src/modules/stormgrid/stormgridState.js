@@ -44,6 +44,8 @@ export function createStormgridState() {
     selectedCatchmentFeature: null,
     rainfallData: null,
     rainfallError: null,
+    analysisRun: false,
+    lastRunAt: null,
     cards: CARD_KEYS.reduce((acc, key) => {
       acc[key] = {
         key,
@@ -58,9 +60,26 @@ export function createStormgridState() {
   };
 }
 
+export function recordAnalysisRun(state, when = new Date()) {
+  state.analysisRun = true;
+  state.lastRunAt = (when instanceof Date) ? when.toISOString() : String(when);
+  return state;
+}
+
+export function clearAnalysisRun(state) {
+  state.analysisRun = false;
+  state.lastRunAt = null;
+  return state;
+}
+
 export function setSelectedCatchment(state, id, feature) {
+  const changed = state.selectedCatchmentId !== (id || null);
   state.selectedCatchmentId = id || null;
   state.selectedCatchmentFeature = feature || null;
+  if (changed) {
+    state.analysisRun = false;
+    state.lastRunAt = null;
+  }
   return state;
 }
 
