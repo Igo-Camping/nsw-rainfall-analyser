@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"/>
+<meta name="referrer" content="strict-origin-when-cross-origin"/>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" href="data:,"/>
+<title>Stormgrid v0 — Smart Defaults Preview (Staging)</title>
+<link rel="stylesheet" href="./stormgrid.css"/>
+</head>
+<body>
+<div class="sg-staging-banner" role="status" aria-live="polite">
+  Staging shell only. Analysis is disabled until real data integration is implemented.
+</div>
+
+<main class="sg-page">
+  <header class="sg-page__head">
+    <h1 class="sg-page__title">Stormgrid v0 — Smart Defaults Preview</h1>
+    <p class="sg-page__lede">
+      Editable assumption cards for the smart-default workflow. No live data,
+      no analysis, no exports. The Run button stays disabled by design.
+    </p>
+  </header>
+
+  <section id="stormgrid-host" class="sg-host" aria-label="Stormgrid v0 shell"></section>
+
+  <footer class="sg-page__foot">
+    <p>
+      Stormgauge AEP, IFD, station, radar, and export logic are untouched.
+      This page is reachable from staging only.
+    </p>
+  </footer>
+</main>
+
+<script type="module">
+  import { mountStormgridShell } from '../src/modules/stormgrid/stormgridUi.js';
+  const host = document.getElementById('stormgrid-host');
+  try {
+    window.__stormgrid = mountStormgridShell(host);
+  } catch (err) {
+    host.innerHTML = '<p class="sg-error">Stormgrid shell failed to mount: '
+      + String(err && err.message ? err.message : err) + '</p>';
+    console.error(err);
+  }
+</script>
+</body>
+</html>
