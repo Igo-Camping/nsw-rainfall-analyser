@@ -19,7 +19,6 @@ nsw_lga_boundaries.geojson
 *.xlsm
 *.xlsx
 *.geojson
-!Assets/Catchments/derived_v2/catchments_dissolved.geojson
 *.log
 nbc-rainfall-tool-standalone/
 
