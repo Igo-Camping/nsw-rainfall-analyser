@@ -1632,6 +1632,7 @@ loadAnalysisCache(); // pure localStorage read — no DOM access
 let map = null;
 let atmosBaseLayer = null;
 let atmosRadarLayer = null;
+let atmosRadarSiteIdr = null;     // product the BoM loop is currently running
 let atmosRadarPaneName = null;
 let atmosRadarTimestampControl = null;
 let atmosRadarTimestampEl = null;
@@ -1664,19 +1665,49 @@ function ensureAtmosMapSetup() {
 // Initial map centre: centroid of the resolved LGA's bounds. nsw_lga_boundaries.js is a
 // classic script loaded before this one, so the extent is available at map creation;
 // the seeded Northern Beaches polygon covers the fallback LGA. Mona Vale only if nothing resolves.
-function resolveInitialMapCenter() {
+function resolveInitialLga() {
   const features = window.NSW_LGA_BOUNDARIES?.features || [];
   const names = features.map(getFeatureLgaName).filter(Boolean);
-  const lga = resolveDefaultLga(names.length ? names : null);
+  return resolveDefaultLga(names.length ? names : null);
+}
+
+function resolveLgaBoundsAtInit(lga) {
   let bounds = getLgaLatLngBounds(lga);
   if (!bounds) {
+    const features = window.NSW_LGA_BOUNDARIES?.features || [];
     const feature = features.find(f => getFeatureLgaName(f) === lga);
     if (feature) {
       const b = getFeatureBounds(feature);
       bounds = L.latLngBounds([b.minLat, b.minLon], [b.maxLat, b.maxLon]);
     }
   }
-  return window.mapInit.resolveInitialCenter(bounds);
+  return bounds;
+}
+
+function resolveInitialMapCenter() {
+  return window.mapInit.resolveInitialCenter(resolveLgaBoundsAtInit(resolveInitialLga()));
+}
+
+// Radar site for an LGA: nearest verified BoM site to the LGA centroid (128 km product),
+// or Terrey Hills 64 km when the LGA lies wholly inside that range. See bomRadar.js.
+function resolveRadarSiteForLga(lga) {
+  const bounds = lga ? resolveLgaBoundsAtInit(lga) : null;
+  const extent = bounds
+    ? { south: bounds.getSouth(), west: bounds.getWest(), north: bounds.getNorth(), east: bounds.getEast() }
+    : null;
+  return window.bomRadar.selectRadarSite(extent);
+}
+
+// Restart the BoM loop when the selected LGA maps to a different radar product.
+function syncAtmosRadarToLga(lga) {
+  if (!map || !window.bomRadar) return;
+  const site = resolveRadarSiteForLga(lga || resolveInitialLga());
+  if (site.idr === atmosRadarSiteIdr) return;
+  const isBomLayer = !!(atmosRadarLayer && typeof atmosRadarLayer.getIdr === 'function');
+  if (atmosRadarLayer && !isBomLayer) return;   // RainViewer fallback active; BoM was unavailable
+  if (isBomLayer) { try { atmosRadarLayer.stop(); } catch (_) {} }
+  atmosRadarLayer = null;
+  initAtmosRadarLayer(map, site);
 }
 
 function initAtmosMap() {
@@ -1745,13 +1776,17 @@ function updateAtmosRadarTimestamp(frame) {
   atmosRadarTimestampEl.textContent = formatSydneyTimestamp(frame.timestamp);
 }
 
-async function initAtmosRadarLayer(mapInstance) {
+async function initAtmosRadarLayer(mapInstance, site = null) {
+  const radarSite = site || resolveRadarSiteForLga(resolveInitialLga());
   try {
-    console.info('[Atmos radar] Attempting BOM static radar (IDR712)');
+    console.info(`[Atmos radar] Attempting BOM static radar ${radarSite.idr} (${radarSite.name}, ${radarSite.rule}${radarSite.distanceKm != null ? `, ${Math.round(radarSite.distanceKm)} km` : ''})`);
     ensureAtmosRadarTimestampControl(mapInstance);
+    atmosRadarSiteIdr = radarSite.idr;
     atmosRadarLayer = window.bomRadar.createBomStaticRadarLayer({
       map: mapInstance,
       pane: atmosRadarPaneName,
+      idr: radarSite.idr,
+      bounds: radarSite.bounds,
       onFrameChange: updateAtmosRadarTimestamp
     });
     await atmosRadarLayer.start();
@@ -2152,6 +2187,9 @@ function onLgaChange() {
 
   // Radar accumulation surface (shown when the LGA intersects the published grid)
   updateRadarAccumulationSurface();
+
+  // Live radar loop follows the LGA's nearest verified BoM site
+  syncAtmosRadarToLga(lga);
 }
 
 function selectLgaFromMap(lgaName) {

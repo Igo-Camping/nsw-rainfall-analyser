@@ -8,18 +8,20 @@
 // IDR product code convention (trailing digit = range):
 //   IDR<NN>1 = 512 km   IDR<NN>2 = 256 km
 //   IDR<NN>3 = 128 km   IDR<NN>4 = 64 km
-// Default: IDR714 = Sydney (Terrey Hills) 64 km — Northern Beaches +
-// Sydney metro at ~0.25 km/pixel. Tighter than BoM's site default
-// (IDR713 128 km) but matches Stormgauge's NBC stormwater focus.
+// The site is chosen per selected LGA (nearest verified site to the LGA's
+// centroid, 128 km product), except that an LGA lying wholly inside Terrey
+// Hills' 64 km range keeps IDR714 (~0.25 km/pixel) for the NBC stormwater focus.
+// Terrey Hills IDR714 is also the last-resort fallback when no LGA resolves.
 //
-// PNG URL pattern (HTTPS, verified live 2026-05-28):
+// PNG URL pattern (HTTPS, verified live 2026-05-28, re-verified by browser 2026-09-07):
 //   https://www.bom.gov.au/radar/<IDR>.T.<YYYYMMDDHHMM>.png
-//   timestamp is UTC. The published cadence for individual radars is
-//   ~5 minutes, but the per-scan offset within each 5-minute window is
-//   not stable across radars or sessions (observed for IDR712: minutes
-//   ending in 4 or 9 — i.e. one minute before each round 5-minute boundary).
-//   Frame discovery therefore probes at a 1-minute stride rather than
-//   assuming a cadence-aligned grid.
+//   timestamp is UTC. Frames are published at minutes ending in 4 or 9
+//   (verified across all NSW sites on BoM's FTP mirror, 2026-09-07), i.e.
+//   one minute before each round 5-minute boundary. Discovery probes only
+//   those stamps. BoM's edge returns 403 to HEAD and rate-limits bursts
+//   (a few hundred requests in a minute blocked a browser for ~5 min), so
+//   probes are plain GETs via <img>, and a rediscover pass looks at no more
+//   than the last three candidate stamps.
 //
 // Bounds are computed from radar site centre + range (azimuthal equidistant
 // approximated as a lat/lng rectangle). At Sydney's latitude over 256 km
@@ -30,10 +32,9 @@ const BOM_RADAR_HOST = 'https://www.bom.gov.au';
 const BOM_RADAR_PATH = '/radar/';
 const DEFAULT_BOM_PANE = 'atmos-radar-pane';
 
-const DEFAULT_IDR = 'IDR714';
-const DEFAULT_CADENCE_MINUTES = 5; // informational; actual stride below
-const DEFAULT_PROBE_STEP_MINUTES = 1;
+const DEFAULT_CADENCE_MINUTES = 5; // frames land at minutes ending in 4 or 9
 const DEFAULT_HISTORY_HORIZON_MINUTES = 90;
+const MAX_REDISCOVER_CANDIDATES = 3;  // rate-limit guard: newest stamps only on refresh
 const MIN_FRAMES_FOR_ANIMATION = 2;
 const DEFAULT_FRAME_COUNT = 10;
 const DEFAULT_FRAME_INTERVAL_MS = 500;
@@ -42,10 +43,32 @@ const DEFAULT_REDISCOVER_INTERVAL_MS = 5 * 60 * 1000;
 const DEFAULT_PRELOAD_TIMEOUT_MS = 8000;
 const DEFAULT_OPACITY = 0.6;
 
-// Terrey Hills radar site (BoM site 71), conventional coordinates as used
-// across community BoM scraper projects.
-const TERREY_HILLS_LAT = -33.7008;
-const TERREY_HILLS_LON = 151.2094;
+// NSW/ACT BoM radar sites. Coordinates from BoM's NSW radar info page and
+// NSW/ACT sites table; frames_verified = the 128 km product was seen serving
+// frames on www.bom.gov.au/radar/ by browser at 06:14Z on 2026-09-07.
+//   55 Wagga Wagga: on the FTP mirror but not seen on HTTPS in a 20-minute
+//      window; FTP wrote 10 stamps 04:59-05:44Z then nothing for an hour.
+//   03 Wollongong (Appin): no frames anywhere (IDR034 last wrote Oct 2021).
+// Nearest-site selection considers verified sites only.
+export const BOM_RADAR_SITES = Object.freeze([
+  { site: '04', name: 'Newcastle',          lat: -32.730,  lon: 152.027,  frames_verified: true  },
+  { site: '28', name: 'Grafton',            lat: -29.62,   lon: 152.97,   frames_verified: true  },
+  { site: '40', name: 'Canberra',           lat: -35.66,   lon: 149.51,   frames_verified: true  },
+  { site: '53', name: 'Moree',              lat: -29.50,   lon: 149.85,   frames_verified: true  },
+  { site: '69', name: 'Namoi',              lat: -31.0240, lon: 150.1915, frames_verified: true  },
+  { site: '71', name: 'Terrey Hills',       lat: -33.701,  lon: 151.210,  frames_verified: true  },
+  { site: '93', name: 'Brewarrina',         lat: -29.96,   lon: 146.81,   frames_verified: true  },
+  { site: '94', name: 'Hillston',           lat: -33.55,   lon: 145.52,   frames_verified: true  },
+  { site: '96', name: 'Yeoval',             lat: -32.74,   lon: 148.70,   frames_verified: true  },
+  { site: '55', name: 'Wagga Wagga',        lat: -35.17,   lon: 147.47,   frames_verified: false },
+  { site: '03', name: 'Wollongong (Appin)', lat: -34.264,  lon: 150.874,  frames_verified: false }
+]);
+
+const TERREY_HILLS = BOM_RADAR_SITES.find((s) => s.site === '71');
+const TERREY_HILLS_LAT = TERREY_HILLS.lat;
+const TERREY_HILLS_LON = TERREY_HILLS.lon;
+const TERREY_HILLS_64KM_IDR = 'IDR714';
+const FALLBACK_IDR = TERREY_HILLS_64KM_IDR;   // last resort only, when no LGA resolves
 
 const RANGE_KM_BY_IDR_SUFFIX = { '1': 512, '2': 256, '3': 128, '4': 64 };
 
@@ -66,8 +89,58 @@ function computeRectangularBoundsKm(centerLat, centerLon, rangeKm) {
 const DEFAULT_BOUNDS = computeRectangularBoundsKm(
   TERREY_HILLS_LAT,
   TERREY_HILLS_LON,
-  rangeKmForIdr(DEFAULT_IDR)
+  rangeKmForIdr(FALLBACK_IDR)
 );
+
+export function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const toRad = (d) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2
+    + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+// Pick the radar product for an LGA extent { south, west, north, east } (degrees),
+// or a point { lat, lon }. Rules:
+//   1. The extent lies wholly within 64 km of Terrey Hills -> IDR714 (64 km).
+//   2. Otherwise the nearest frames_verified site to the centroid -> its 128 km product.
+//   3. No usable input -> Terrey Hills IDR714 (fallback).
+export function selectRadarSite(extent) {
+  const hasExtent = extent && ['south', 'west', 'north', 'east'].every((k) => Number.isFinite(extent[k]));
+  const hasPoint = extent && Number.isFinite(extent.lat) && Number.isFinite(extent.lon);
+  const describe = (site, idr, distanceKm, rule) => ({
+    site: site.site, name: site.name, lat: site.lat, lon: site.lon, idr,
+    rangeKm: rangeKmForIdr(idr), distanceKm, rule,
+    bounds: computeRectangularBoundsKm(site.lat, site.lon, rangeKmForIdr(idr))
+  });
+  if (!hasExtent && !hasPoint) return describe(TERREY_HILLS, FALLBACK_IDR, null, 'fallback');
+
+  const centroid = hasExtent
+    ? { lat: (extent.south + extent.north) / 2, lon: (extent.west + extent.east) / 2 }
+    : { lat: extent.lat, lon: extent.lon };
+
+  if (hasExtent) {
+    const corners = [
+      [extent.south, extent.west], [extent.south, extent.east],
+      [extent.north, extent.west], [extent.north, extent.east]
+    ];
+    const farthest = Math.max(...corners.map(([la, lo]) => haversineKm(la, lo, TERREY_HILLS_LAT, TERREY_HILLS_LON)));
+    if (farthest <= rangeKmForIdr(TERREY_HILLS_64KM_IDR)) {
+      return describe(TERREY_HILLS, TERREY_HILLS_64KM_IDR,
+        haversineKm(centroid.lat, centroid.lon, TERREY_HILLS_LAT, TERREY_HILLS_LON), 'inside-terrey-hills-64km');
+    }
+  }
+
+  let best = null, bestKm = Infinity;
+  for (const site of BOM_RADAR_SITES) {
+    if (!site.frames_verified) continue;
+    const km = haversineKm(centroid.lat, centroid.lon, site.lat, site.lon);
+    if (km < bestKm) { best = site; bestKm = km; }
+  }
+  return describe(best, `IDR${best.site}3`, bestKm, 'nearest-verified');
+}
 
 function pad2(n) {
   return String(n).padStart(2, '0');
@@ -105,36 +178,45 @@ function probeFrameUrl(url, timeoutMs) {
   });
 }
 
+// Candidate frame stamps, newest first: UTC minutes ending in 4 or 9 at or
+// before `now`, at most `limit` of them.
+export function candidateFrameStamps(now = Date.now(), limit = 1) {
+  const minuteMs = 60 * 1000;
+  let t = Math.floor(now / minuteMs) * minuteMs;
+  while (new Date(t).getUTCMinutes() % 5 !== 4) t -= minuteMs;   // back to a 4 or 9
+  const out = [];
+  for (let i = 0; i < limit; i++) out.push(new Date(t - i * 5 * minuteMs));
+  return out;
+}
+
 export async function fetchRecentBomFrames({
-  idr = DEFAULT_IDR,
+  idr = FALLBACK_IDR,
   count = DEFAULT_FRAME_COUNT,
   now = Date.now(),
   probeTimeoutMs = DEFAULT_PRELOAD_TIMEOUT_MS,
-  stepMinutes = DEFAULT_PROBE_STEP_MINUTES,
   historyMinutes = DEFAULT_HISTORY_HORIZON_MINUTES,
-  // Accepted for backwards compatibility; not used as probe stride.
-  // See header comment — BoM's per-scan offset within the cadence window
-  // is not stable, so probing at a 1-min stride is more reliable than
-  // a cadence-aligned grid walk.
+  // Cap on stamps probed in this pass. Initial discovery walks the history
+  // horizon; a rediscover pass passes MAX_REDISCOVER_CANDIDATES.
+  maxCandidates = null,
+  skipUrls = null,
   cadenceMinutes = DEFAULT_CADENCE_MINUTES // eslint-disable-line no-unused-vars
 } = {}) {
   void cadenceMinutes;
-  const stepMs = stepMinutes * 60 * 1000;
-  const startBucket = new Date(Math.floor(now / stepMs) * stepMs);
-  const maxAttempts = Math.max(count * 2, Math.ceil(historyMinutes / stepMinutes));
+  const limit = maxCandidates || Math.ceil(historyMinutes / 5);
   const frames = [];
-  const seenUrls = new Set();
 
-  for (let i = 0; i < maxAttempts && frames.length < count; i++) {
-    const ts = new Date(startBucket.getTime() - i * stepMs);
-    const stamp = formatUtcTimestamp(ts);
-    const url = buildFrameUrl(idr, stamp);
-    if (seenUrls.has(url)) continue;
+  for (const ts of candidateFrameStamps(now, limit)) {
+    if (frames.length >= count) break;
+    const url = buildFrameUrl(idr, formatUtcTimestamp(ts));
+    if (skipUrls && skipUrls.has(url)) continue;   // already held; no request
     const ok = await probeFrameUrl(url, probeTimeoutMs);
-    if (ok) {
-      frames.push({ timestamp: ts, url });
-      seenUrls.add(url);
-    }
+    if (ok) frames.push({ timestamp: ts, url });
+  }
+
+  if (skipUrls) {
+    // Rediscover pass: new frames only; the caller merges with what it holds.
+    frames.sort((a, b) => a.timestamp - b.timestamp);
+    return frames;
   }
 
   if (frames.length < MIN_FRAMES_FOR_ANIMATION) {
@@ -163,7 +245,7 @@ export function createBomStaticRadarLayer({
   map,
   pane = DEFAULT_BOM_PANE,
   opacity = DEFAULT_OPACITY,
-  idr = DEFAULT_IDR,
+  idr = FALLBACK_IDR,
   bounds = null,
   cadenceMinutes = DEFAULT_CADENCE_MINUTES,
   frameCount = DEFAULT_FRAME_COUNT,
@@ -253,10 +335,16 @@ export function createBomStaticRadarLayer({
     if (rediscoverHandle !== null) return;
     rediscoverHandle = setInterval(() => {
       if (stopped) return;
-      fetchRecentBomFrames({ idr, cadenceMinutes, count: frameCount })
+      // Probe only the newest few stamps (rate-limit guard), skip frames we
+      // already hold, then roll the window forward to the newest frameCount.
+      const held = new Set(frames.map((f) => f.url));
+      fetchRecentBomFrames({ idr, cadenceMinutes, count: frameCount, maxCandidates: MAX_REDISCOVER_CANDIDATES, skipUrls: held })
         .then((fresh) => preloadFrames(fresh).catch(() => null).then(() => fresh))
         .then((fresh) => {
-          frames = fresh;
+          if (stopped || !fresh.length) return;
+          frames = [...frames, ...fresh]
+            .sort((a, b) => a.timestamp - b.timestamp)
+            .slice(-frameCount);
           currentIdx = 0;
           if (overlay) overlay.setUrl(frames[0].url);
           notifyFrame();
@@ -298,7 +386,11 @@ export function createBomStaticRadarLayer({
     return frames[currentIdx];
   }
 
-  const controller = { start, stop, setOpacity, getCurrentFrame };
+  function getIdr() {
+    return idr;
+  }
+
+  const controller = { start, stop, setOpacity, getCurrentFrame, getIdr };
   return controller;
 }
 
