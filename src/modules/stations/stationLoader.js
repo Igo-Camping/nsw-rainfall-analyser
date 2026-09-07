@@ -5,7 +5,8 @@ export async function loadStations(ctx) {
   const stations = (stationDataset.stations || [])
     .map(station => normaliseConsolidatedRainfallStation(station, ctx))
     .filter(Boolean);
-  const mhlStations = stations.filter(station => station.source === 'mhl');
+  // Analysable KiWIS gauges: MHL (direct) and BoM Water Data Online (via API proxy)
+  const mhlStations = stations.filter(station => station.source === 'mhl' || station.source === 'wdo');
   const bomStations = stations.filter(station => station.source === 'bom');
   console.info('[Pluviometrics stations] dataset URL:', ctx.stationDataUrl);
   console.info('[Pluviometrics stations] consolidated rainfall stations loaded:', stations.length, '| MHL:', mhlStations.length, '| BOM:', bomStations.length, '| generated_at:', stationDataset.generated_at || 'unknown');
@@ -66,6 +67,7 @@ export function normaliseConsolidatedRainfallStation(station, ctx) {
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
   if (source === 'bom') return normaliseConsolidatedBomStation(station, lat, lon, ctx);
   if (source === 'mhl') return normaliseConsolidatedMhlStation(station, lat, lon);
+  if (source === 'wdo') return normaliseConsolidatedWdoStation(station, lat, lon);
   return null;
 }
 
@@ -79,6 +81,21 @@ export function normaliseConsolidatedMhlStation(station, lat, lon) {
     station_no: String(station.station_no || '').trim(),
     ts_id: tsId || null,
     name: String(station.station_name || station.name || station.station_id || 'MHL rainfall station').trim(),
+    lat: Number(station.lat),
+    lon: Number(station.lon)
+  };
+}
+
+export function normaliseConsolidatedWdoStation(station, lat, lon) {
+  const tsId = String(station.ts_id || extractDataIdentifierId(station, 'wdo') || '').trim();
+  return {
+    ...station,
+    source: 'wdo',
+    active: true,
+    station_id: String(station.station_id || tsId || '').trim(),
+    station_no: String(station.station_no || '').trim(),
+    ts_id: tsId || null,
+    name: String(station.station_name || station.name || station.station_id || 'WDO rainfall station').trim(),
     lat: Number(station.lat),
     lon: Number(station.lon)
   };

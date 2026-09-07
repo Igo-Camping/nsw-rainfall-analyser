@@ -1605,7 +1605,7 @@ function loadPreviousAnalysis(id) {
     const nbcSub  = document.getElementById('nbcSub');
     if (lgaSel) lgaSel.value = inputs.lga || '';
     if (search)  search.value  = inputs.search || '';
-    if (nbcSub && inputs.lga === 'Northern Beaches') nbcSub.value = inputs.nbcSub || 'official';
+    if (nbcSub) nbcSub.value = inputs.nbcSub || 'all-lga';
     topSiteResultsCache = [...results.topSiteResultsCache];
     topSiteResultsKey   = results.topSiteResultsKey;
     switchTab('top-site', true);
@@ -1866,7 +1866,7 @@ function setCachedActiveGaugeState(tsId, active) {
   persistActiveGaugeCache();
 }
 
-async function fetchMhlTimestampPresence(tsId, fromDt, toDt) {
+async function fetchMhlTimestampPresence(tsId, fromDt, toDt, source) {
   const fmt = d => {
     const p = n => String(n).padStart(2,'0');
     return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
@@ -1882,7 +1882,7 @@ async function fetchMhlTimestampPresence(tsId, fromDt, toDt) {
     returnfields: 'Timestamp'
   });
 
-  const resp = await fetch(`${MHL_BASE}?${params}`);
+  const resp = await fetch(`${kiwisBase(source)}?${params}`);
   if (!resp.ok) throw new Error(`MHL activity fetch ${resp.status}`);
   const data = await resp.json();
   return Number(data?.[0]?.rows || 0) > 0;
@@ -1899,7 +1899,7 @@ async function hasRecentGaugeReadings(station) {
     try {
       for (const days of ACTIVE_GAUGE_WINDOWS_DAYS) {
         const from = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
-        if (await fetchMhlTimestampPresence(station.ts_id, from, now)) {
+        if (await fetchMhlTimestampPresence(station.ts_id, from, now, station.source)) {
           setCachedActiveGaugeState(station.ts_id, true);
           return true;
         }
@@ -2018,7 +2018,7 @@ function buildLgaDropdown() {
   });
   lgaSel.value = 'Northern Beaches';
   onLgaChange();
-  document.getElementById('nbcSub').value = 'official';
+  document.getElementById('nbcSub').value = 'all-lga';
   onNbcSubChange();
 }
 
@@ -2414,7 +2414,7 @@ function getCurrentAnalysisContext(quiet = false) {
 function getTopSiteAnalysisKey(fromDt, toDt) {
   const lga = document.getElementById('lgaSel')?.value || '';
   const q = document.getElementById('search')?.value.toLowerCase().trim() || '';
-  const nbcSub = lga === 'Northern Beaches' ? (document.getElementById('nbcSub')?.value || 'all') : '';
+  const nbcSub = document.getElementById('nbcSub')?.value || 'all';
   return `${fromDt.toISOString()}|${toDt.toISOString()}|${lga}|${nbcSub}|${q}`;
 }
 
@@ -2736,6 +2736,13 @@ function onNbcSubChange() {
 // â"€â"€ MHL data fetch (browser â†’ MHL directly, no backend) â"€â"€â"€â"€
 const MHL_BASE = 'https://wiski.mhl.nsw.gov.au/KiWIS/KiWIS';
 
+// KiWIS endpoint per gauge source. MHL is fetched directly from the browser; BoM Water Data
+// Online has no CORS, so WDO gauges go through the API's /wdo/timeseries proxy with the
+// identical query. Same response shape, same parser.
+function kiwisBase(source) {
+  return source === 'wdo' ? `${API}/wdo/timeseries` : MHL_BASE;
+}
+
 async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -2749,7 +2756,7 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
   }
 }
 
-async function fetchMhlData(tsId, fromDt, toDt, debug) {
+async function fetchMhlData(tsId, fromDt, toDt, debug, source) {
   const fmt = d => {
     const p = n => String(n).padStart(2,'0');
     return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
@@ -2764,7 +2771,7 @@ async function fetchMhlData(tsId, fromDt, toDt, debug) {
     format:       'json',
     returnfields: 'Timestamp,Value'
   });
-  const url = `${MHL_BASE}?${params}`;
+  const url = `${kiwisBase(source)}?${params}`;
   if (debug) console.log('[DEBUG Oliver St] MHL endpoint:', url);
 
   const resp = await fetchWithTimeout(url);
@@ -2805,7 +2812,7 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
   }
 
   if (station?.ts_id) {
-    const mhlReadings = await fetchMhlData(station.ts_id, fromDt, toDt, dbg);
+    const mhlReadings = await fetchMhlData(station.ts_id, fromDt, toDt, dbg, station.source);
     if (dbg) {
       console.log('[DEBUG Oliver St] MHL readings after fetch:', mhlReadings.length);
       console.groupEnd();
@@ -3112,7 +3119,7 @@ async function fetchRainfallSinceMidnight(station) {
       format:       'json',
       returnfields: 'Timestamp,Value'
     });
-    const resp = await fetch(`${MHL_BASE}?${params}`);
+    const resp = await fetch(`${kiwisBase(station.source)}?${params}`);
     if (!resp.ok) throw new Error(`MHL midnight fetch ${resp.status}`);
     const data = await resp.json();
     const rows = data?.[0]?.data || [];
@@ -3155,7 +3162,7 @@ async function fetchRainfallWindow(station, days) {
   const from = new Date(mid.getTime() - days * 86400000);
 
   if (station?.ts_id) {
-    const readings = await fetchMhlData(station.ts_id, from, now);
+    const readings = await fetchMhlData(station.ts_id, from, now, false, station.source);
     return readings.reduce((sum, r) => sum + (r.value > 0 ? r.value : 0), 0);
   }
 
@@ -3378,7 +3385,7 @@ function computeRadarAccCalibration(rawTotals, startMs, endMs) {
         // A trustworthy ratio needs the radar to have seen something here.
         if (!(radar >= 0.5)) continue;
         try {
-          const readings = await fetchMhlData(g.ts_id, new Date(startMs), new Date(endMs));
+          const readings = await fetchMhlData(g.ts_id, new Date(startMs), new Date(endMs), false, g.source);
           if (readings.length < 6) continue;   // offline/silent — not a zero
           const gaugeMm = readings.reduce((s, r) => s + r.value, 0);
           points.push({
