@@ -1867,10 +1867,7 @@ function setCachedActiveGaugeState(tsId, active) {
 }
 
 async function fetchMhlTimestampPresence(tsId, fromDt, toDt, source) {
-  const fmt = d => {
-    const p = n => String(n).padStart(2,'0');
-    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
-  };
+  const fmt = d => formatKiwisTimestamp(d, source);
   const params = new URLSearchParams({
     service:      'kisters',
     type:         'queryServices',
@@ -2704,6 +2701,25 @@ function kiwisBase(source) {
   return source === 'wdo' ? `${API}/wdo/timeseries` : MHL_BASE;
 }
 
+// Query-bound timestamp for KiWIS from/to. MHL keeps the historical naive local-time form
+// (its server is on Sydney time). WDO is stateless about zone, so its bounds carry the
+// Sydney wall-clock time plus the offset actually in force on that date (+10:00 / +11:00),
+// derived from the same Australia/Sydney zone logic fmtDt uses for display.
+function formatKiwisTimestamp(d, source) {
+  const p = n => String(n).padStart(2, '0');
+  if (source !== 'wdo') {
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+  }
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-AU', {
+    timeZone: 'Australia/Sydney', hourCycle: 'h23',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    timeZoneName: 'longOffset'
+  }).formatToParts(d).map(x => [x.type, x.value]));
+  const offset = String(parts.timeZoneName || '').replace('GMT', '') || '+10:00';
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}${offset}`;
+}
+
 async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -2718,10 +2734,7 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = 30000) {
 }
 
 async function fetchMhlData(tsId, fromDt, toDt, debug, source) {
-  const fmt = d => {
-    const p = n => String(n).padStart(2,'0');
-    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
-  };
+  const fmt = d => formatKiwisTimestamp(d, source);
   const params = new URLSearchParams({
     service:      'kisters',
     type:         'queryServices',
@@ -2780,7 +2793,7 @@ async function fetchStationRainfall(station, fromDt, toDt, durationMinutes = 30)
     }
     return {
       readings: applyRainfallQc(mhlReadings, 5, sName),
-      source: 'MHL KiWIS 5-minute rainfall',
+      source: station.source === 'wdo' ? 'BoM Water Data Online rainfall' : 'MHL KiWIS 5-minute rainfall',
       intervalMinutes: 5
     };
   }
@@ -2850,29 +2863,35 @@ function isDurationSupportedForInterval(durationMinutes, intervalMinutes) {
 }
 
 // â"€â"€ Rolling max calculation (in browser) â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// Time-based rolling maximum. The window is defined by timestamps, not by a fixed
+// reading count, so irregular / event-based series (BoM Water Data Online) are handled
+// the same way as regular 5-minute series (MHL). For each start reading i the end
+// pointer j advances while ts[j] - ts[i] < durationMinutes; the window sums [i, j).
+// intervalMinutes is accepted for call-site compatibility and no longer affects the window.
 function calcRollingMax(readings, durationMinutes, intervalMinutes = 5) {
   if (!readings || !readings.length) return null;
+  const windowMs = Number(durationMinutes) * 60000;
+  if (!(windowMs > 0)) return null;
 
   const n = readings.length;
   const vals = readings.map(r => r.value);
-  const interval = Math.max(1, Number(intervalMinutes) || 5);
-  const count = Math.floor(Number(durationMinutes) / interval);
-  if (count < 1) return null;
-
-  // Prefix sums for O(n) sliding window
-  const prefix = [0];
-  for (let i = 0; i < n; i++) prefix.push(prefix[i] + vals[i]);
+  const ts = readings.map(r => new Date(r.timestamp).getTime());
 
   let maxDepth = 0, peakStart = null, peakEnd = null;
+  let j = 0, windowSum = 0;
 
-  for (let right = count - 1; right < n; right++) {
-    const left = right - count + 1;
-    const windowSum = prefix[right + 1] - prefix[left];
+  for (let i = 0; i < n; i++) {
+    if (j < i) { j = i; windowSum = 0; }
+    while (j < n && ts[j] - ts[i] < windowMs) {
+      windowSum += vals[j];
+      j++;
+    }
     if (windowSum > maxDepth) {
       maxDepth  = windowSum;
-      peakStart = readings[left].timestamp;
-      peakEnd   = readings[right].timestamp;
+      peakStart = readings[i].timestamp;
+      peakEnd   = readings[j - 1].timestamp;
     }
+    windowSum -= vals[i];
   }
 
   const totalDepth = vals.reduce((a, b) => a + b, 0);
@@ -3065,11 +3084,8 @@ async function fetchRainfallSinceMidnight(station) {
   mid.setHours(0, 0, 0, 0);
 
   if (station?.ts_id) {
-    // MHL gauge — format in local time so "midnight" is Sydney midnight, not UTC
-    const fmt = d => {
-      const p = n => String(n).padStart(2,'0');
-      return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
-    };
+    // KiWIS gauge — Sydney local bounds so "midnight" is Sydney midnight, not UTC
+    const fmt = d => formatKiwisTimestamp(d, station.source);
     const params = new URLSearchParams({
       service:      'kisters',
       type:         'queryServices',
