@@ -1962,14 +1962,11 @@ function ensureActiveGaugeProbes(stations) {
 async function filterStationsByRecentReadings(stations) {
   const ordered = Array.isArray(stations) ? stations.slice() : [];
   const keepIds = new Set();
-  ordered.filter(isProtectedNbcStation).forEach(station => keepIds.add(station.station_id));
-  const queue = ordered.filter(station => !isProtectedNbcStation(station));
+  const queue = ordered.slice();
   const total = ordered.length;
   let checked = 0;
 
   if (!total) return [];
-
-  checked = keepIds.size;
 
   const updateProgress = () => {
     if (checked === total || checked % 10 === 0) {
@@ -2031,7 +2028,6 @@ function getLGA(station) {
     if (region) return region;
     return 'Unknown';
   }
-  if (isProtectedNbcStation(station)) return 'Northern Beaches';
   if (station.lga && station.lga !== 'Unknown') return station.lga;
   // Check region field as fallback — consolidated JSON may provide this for MHL stations
   const mhlRegion = String(station.region || '').trim();
@@ -2686,37 +2682,6 @@ async function runAnalysis() {
   }
 }
 
-
-// â"€â"€ NBC Standard 15 gauges (from NBC_Rainfall_Calculator.xlsm) â"€
-const NBC_STANDARD_15 = [
-  'Avalon Rain', 'Cromer Depot', 'Great Mackerel Rain',
-  'Middle Creek', 'Mona Vale Rain', 'Newport Rain',
-  'Palm Beach Golf Rain', 'Warriewood Rain', 'Allambie Heights',
-  'Belrose Rain', 'Curl Curl', 'Manly CBD Rain',
-  'Manly Dam', 'Queenscliff', 'Spit Bridge'
-];
-
-// NBC North (Pittwater / Palm Beach end)
-const NBC_NORTH = [
-  'Avalon Rain', 'Great Mackerel Rain', 'Middle Creek',
-  'Mona Vale Rain', 'Newport Rain', 'Palm Beach Golf Rain',
-  'Warriewood Rain'
-];
-
-// NBC South (Manly / Warringah end)
-const NBC_SOUTH = [
-  'Allambie Heights', 'Belrose Rain', 'Cromer Depot',
-  'Curl Curl', 'Manly CBD Rain', 'Manly Dam',
-  'Queenscliff', 'Spit Bridge'
-];
-
-function isProtectedNbcStation(station) {
-  if (!station) return false;
-  return station.lga === 'Northern Beaches'
-    || NBC_STANDARD_15.includes(station.name)
-    || NBC_NORTH.includes(station.name)
-    || NBC_SOUTH.includes(station.name);
-}
 
 // Extended IFD data (1:200, 1:500, 1:1000) for NBC Standard 15 stations
 // Source: BoM IFD 2016 via NBC_Rainfall_Calculator.xlsm
@@ -5767,10 +5732,12 @@ async function loadAllLgaBoundaries() {
     });
     Object.keys(lgaBoundaryCache).forEach(name => delete lgaBoundaryCache[name]);
     Object.keys(lgaBoundaryMeta).forEach(name => delete lgaBoundaryMeta[name]);
+    Object.keys(lgaKeyIndex).forEach(key => delete lgaKeyIndex[key]);
     features.forEach(feature => {
       const name = getFeatureLgaName(feature);
       lgaBoundaryCache[name] = feature;
       lgaBoundaryMeta[name] = { bbox: getFeatureBounds(feature) };
+      lgaKeyIndex[normaliseLgaKey(name)] = name;
     });
 
     const colourMap = buildLgaBoundaryColourMap(features);
@@ -5811,6 +5778,24 @@ const lgaBoundaryCache = {
   'Northern Beaches': NBC_BOUNDARY_GEOJSON
 };
 const lgaBoundaryMeta = {};
+// Normalised-name index: catalogue lga values and boundary names are matched on this key,
+// and the boundary's display name is kept. Neither side is renamed.
+const lgaKeyIndex = {};
+
+function normaliseLgaKey(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/^city of\s+/, '')
+    .replace(/\s*\(nsw\)\s*$/, '')
+    .replace(/\s+(regional|shire|city|council)\s*$/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function resolveLgaName(value) {
+  const key = normaliseLgaKey(value);
+  return key ? (lgaKeyIndex[key] || null) : null;
+}
 
 function getFeatureLgaName(feature) {
   const p = feature?.properties;
@@ -5967,8 +5952,11 @@ function lookupLgaByPoint(lat, lon) {
 
 function assignStationsToLgas(stations) {
   stations.forEach(station => {
-    if (isProtectedNbcStation(station)) {
-      station.lga = 'Northern Beaches';
+    // The catalogue lga (master polygon assignment with coastal snap) is authoritative.
+    // Map it to the boundary file's display name via the normalised key.
+    const catalogueLga = String(station.lga || '').trim();
+    if (catalogueLga && catalogueLga !== 'Unknown') {
+      station.lga = resolveLgaName(catalogueLga) || catalogueLga;
       return;
     }
     const matched = lookupLgaByPoint(station.lat, station.lon);
