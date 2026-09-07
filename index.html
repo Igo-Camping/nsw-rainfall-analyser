@@ -1794,6 +1794,18 @@ async function loadStations() {
   const result = await window.stationLoader.loadStations(getStationLoaderDeps());
   allStations = result.allStations;
   bomRainfallGauges = result.bomRainfallGauges;
+  warmRenderApi();
+}
+
+// Fire-and-forget warm-up so the Render free tier is awake before the first analysis.
+// Runs once per page load, after the catalogue is in. Not awaited, not retried, result unused.
+let _renderApiWarmed = false;
+function warmRenderApi() {
+  if (_renderApiWarmed) return;
+  _renderApiWarmed = true;
+  try {
+    fetch(`${API}/health`, { cache: 'no-store' }).catch(() => {});
+  } catch (_) { /* warm-up is best-effort */ }
 }
 
 async function loadPluviometricsRainfallStationDataset() {
