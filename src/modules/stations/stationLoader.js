@@ -102,51 +102,14 @@ export function normaliseConsolidatedBomStation(station, lat, lon, ctx) {
     sourceLayer: station.source_layer || station.rainfall_api_source || '',
     lga: station.lga || station.region || '',
     lat,
-    lon,
-    ifdKey: ctx.getBomIfdKey(lat, lon),
-    has_ifd: !!ctx.bomIfdCache?.[ctx.getBomIfdKey(lat, lon)]
+    lon
   };
 }
 
-export function loadBomRainfallReferenceGauges(verifiedStations = null, ctx = {}) {
-  if (Array.isArray(verifiedStations)) {
-    return verifiedStations
-      .filter(station => Number.isFinite(station.lat) && Number.isFinite(station.lon))
-      .sort((a, b) => a.baseName.localeCompare(b.baseName) || a.element.localeCompare(b.element));
-  }
-  const data = ctx.bomNorthernBeachesGauges;
-  const features = data?.features || [];
-  return features
-    .map((feature, index) => {
-      const props = feature.properties || {};
-      const coords = feature.geometry?.coordinates || [];
-      const lon = Number(coords[0]);
-      const lat = Number(coords[1]);
-      const lgaName = ctx.formatLgaBoundaryName(props.lga_name || '');
-      if (!lgaName || !Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-      const element = String(props.element || props.source_layer || 'BOM record').trim();
-      const baseName = String(props.name || props.site || `BOM gauge ${index + 1}`).trim();
-      return {
-        station_id: `bom-${props.record_id || index}`,
-        isBomGauge: true,
-        active: true,
-        ts_id: null,
-        site: String(props.site || '').trim(),
-        name: `${baseName}${element && !baseName.toLowerCase().includes(element.toLowerCase()) ? ` - ${element}` : ''}`,
-        baseName,
-        element,
-        source: String(props.source || 'BOM').trim(),
-        sourceLayer: String(props.source_layer || '').trim(),
-        agency: String(props.agency || '').trim(),
-        locationTypes: String(props.location_types || '').trim(),
-        lga: lgaName,
-        lat,
-        lon,
-        ifdKey: ctx.getBomIfdKey(lat, lon),
-        has_ifd: !!ctx.bomIfdCache?.[ctx.getBomIfdKey(lat, lon)],
-        tail: String(props.tail || '').trim()
-      };
-    })
-    .filter(Boolean)
+export function loadBomRainfallReferenceGauges(verifiedStations = null) {
+  // BOM reference gauges come only from the consolidated station dataset.
+  if (!Array.isArray(verifiedStations)) return [];
+  return verifiedStations
+    .filter(station => Number.isFinite(station.lat) && Number.isFinite(station.lon))
     .sort((a, b) => a.baseName.localeCompare(b.baseName) || a.element.localeCompare(b.element));
 }

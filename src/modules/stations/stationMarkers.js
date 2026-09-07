@@ -84,7 +84,7 @@ export function buildBomRainfallPopup(gauge, ctx) {
     <small>${ctx.escapeHtml(gauge.element || 'BOM record')}</small><br>
     <small>${ctx.escapeHtml(gauge.source || 'BOM')}${gauge.agency ? ` \u00B7 ${ctx.escapeHtml(gauge.agency)}` : ''}</small><br>
     <small>${ctx.escapeHtml(ctx.getLGA(gauge))} \u00B7 ${gauge.lat.toFixed(5)}, ${gauge.lon.toFixed(5)}</small><br>
-    <small style="color:#888">${ctx.bomIfdCache?.[gauge.ifdKey] ? 'IFD table available.' : 'IFD table unavailable.'} Live rainfall analysis remains on official gauges.</small>`;
+    <small style="color:#888">${ctx.ifdCache?.[gauge.station_id] ? 'IFD table available.' : 'IFD table unavailable.'} Live rainfall analysis remains on official gauges.</small>`;
 }
 
 export function plotBomRainfallMarkers(gauges, ctx) {
