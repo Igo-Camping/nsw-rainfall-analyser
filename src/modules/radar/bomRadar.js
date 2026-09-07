@@ -107,7 +107,7 @@ export function haversineKm(lat1, lon1, lat2, lon2) {
 //   1. The extent lies wholly within 64 km of Terrey Hills -> IDR714 (64 km).
 //   2. Otherwise the nearest frames_verified site to the centroid -> its 128 km product.
 //   3. No usable input -> Terrey Hills IDR714 (fallback).
-export function selectRadarSite(extent) {
+export function selectRadarSite(extent, sites = BOM_RADAR_SITES) {
   const hasExtent = extent && ['south', 'west', 'north', 'east'].every((k) => Number.isFinite(extent[k]));
   const hasPoint = extent && Number.isFinite(extent.lat) && Number.isFinite(extent.lon);
   const describe = (site, idr, distanceKm, rule) => ({
@@ -134,7 +134,7 @@ export function selectRadarSite(extent) {
   }
 
   let best = null, bestKm = Infinity;
-  for (const site of BOM_RADAR_SITES) {
+  for (const site of sites) {
     if (!site.frames_verified) continue;
     const km = haversineKm(centroid.lat, centroid.lon, site.lat, site.lon);
     if (km < bestKm) { best = site; bestKm = km; }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com https://radar-tiles.service.bom.gov.au https://www.bom.gov.au https://tilecache.rainviewer.com; connect-src 'self' https://data.pluviometrics.com.au https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au https://api.rainviewer.com https://dns.google https://radar-tiles.service.bom.gov.au https://tilecache.rainviewer.com; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://cdn.sheetjs.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://server.arcgisonline.com https://radar-tiles.service.bom.gov.au https://www.bom.gov.au https://tilecache.rainviewer.com; connect-src 'self' https://data.pluviometrics.com.au https://radar-data.pluviometrics.com.au https://nsw-rainfall-analyser-api.onrender.com https://wiski.mhl.nsw.gov.au https://api.open-meteo.com https://portal.spatial.nsw.gov.au https://api.rainviewer.com https://dns.google https://radar-tiles.service.bom.gov.au https://tilecache.rainviewer.com; font-src 'self' https://cdnjs.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 <link rel="icon" href="data:,"/>
 <script>try{var _t=localStorage.getItem('sgTheme');document.documentElement.dataset.theme=(_t==='dark')?'dark':'light'}catch(e){document.documentElement.dataset.theme='light'}</script>
@@ -3353,6 +3353,7 @@ function shadeLgaBoundaryByRainfall() {
 // â"€â"€ Radar accumulation surface (Lizard-derived, NB AOI) â"€â"€â"€â"€â"€
 const RADAR_ACC_BASE = 'https://data.pluviometrics.com.au/radar/nb';    // Lizard, ~5.5 km native
 const RADAR_ACC_BASE2 = 'https://data.pluviometrics.com.au/radar/nb2';  // BoM IDR714, ~250 m native
+const RADAR_ACC_SITE_BASE = 'https://radar-data.pluviometrics.com.au';    // per-site BoM products (R2), ~500 m / ~1 km
 const RADAR_ACC_COVERAGE_MIN = 0.9;   // required frame coverage to prefer the 250 m source
 const RADAR_ACC_PANE = 'radar-acc-pane';
 
@@ -3369,12 +3370,14 @@ function radarAccClipFeature() {
   const lga = document.getElementById('lgaSel')?.value;
   return lga ? lgaBoundaryCache[lga] : null;
 }
-let radarAccMeta = null;
-let radarAccToday = null;               // { fetchedAt, data }
+let radarAccMeta = null;                // metadata of the active source (bbox, grid)
+let radarAccSource = null;              // { key, kind: 'nb' | 'site', base, slug?, name? }
+const radarAccMetaBySource = new Map(); // source key -> metadata.json
+let radarAccToday = null;               // { fetchedAt, data, fine, family, source, meta }
 let radarAccOverlay = null;
 let radarAccActive = false;
 let radarAccRunId = 0;
-const radarAccDailyCache = new Map();   // date -> values_mm array | null (unavailable)
+const radarAccDailyCache = new Map();   // `${source key}|${date}` -> { values, startMs, fine } | null
 
 // Heat-map ramp (blue -> green -> yellow -> orange -> red). The ramp is
 // stretched across the 2nd-98th percentile of the current window's values so
@@ -3407,6 +3410,91 @@ async function fetchRadarAccJson(name, base = RADAR_ACC_BASE) {
   return resp.json();
 }
 
+// ── Per-site accumulation source (R2) ─────────────────────────────────────
+// Slug convention of build_radar_sites.mjs: site name, parenthetical dropped,
+// lower-case, spaces to hyphens ("Terrey Hills" -> terrey-hills).
+function radarSiteSlug(site) {
+  return String(site?.name || '').replace(/\s*\(.*\)\s*$/, '').trim().toLowerCase().replace(/\s+/g, '-');
+}
+
+// Candidate sources for an LGA, preferred first. Northern Beaches keeps the
+// nb2/nb path (finer 250 m grid) while it exists, with the Terrey Hills site
+// product next; every other LGA uses the site picked by the same
+// selectRadarSite() the live loop uses.
+function resolveRadarAccSources(lga) {
+  const out = [];
+  if (lga === 'Northern Beaches') out.push({ key: 'nb', kind: 'nb', base: RADAR_ACC_BASE, name: 'Northern Beaches' });
+  const site = window.bomRadar ? resolveRadarSiteForLga(lga) : null;
+  if (site && site.rule !== 'fallback') {
+    const slug = radarSiteSlug(site);
+    out.push({ key: `site:${slug}`, kind: 'site', slug, name: site.name, base: `${RADAR_ACC_SITE_BASE}/${slug}` });
+  }
+  return out;
+}
+
+async function getRadarAccMeta(source) {
+  if (radarAccMetaBySource.has(source.key)) return radarAccMetaBySource.get(source.key);
+  try {
+    const m = await fetchRadarAccJson('metadata.json', source.base);
+    radarAccMetaBySource.set(source.key, m);
+    return m;
+  } catch (e) {
+    return null;   // not cached: a transient failure is retried next time
+  }
+}
+
+// Switching source changes the grid and bounds, so the overlay, the daily
+// cache reads and the gauge-correction cache all start over.
+function activateRadarAccSource(source, meta) {
+  if (radarAccSource?.key !== source.key) {
+    removeRadarAccSurface();
+    radarAccCalCache.clear();
+  }
+  radarAccSource = source;
+  radarAccMeta = meta;
+}
+
+function radarAccSourceLabel() {
+  if (radarAccSource?.kind === 'site') {
+    const cellM = Math.round((Number(radarAccMeta?.cell_size_km_approx) || 0.5) * 1000);
+    return `${cellM} m ${radarAccSource.name}`;
+  }
+  return radarAccToday?.fine ? '250 m' : '5.5 km';
+}
+
+// Site values: Uint16 little-endian, mm x encoding.scale, gzip. When the object
+// is served with content-encoding: gzip the browser has already inflated it;
+// a body that still carries the gzip magic is inflated here.
+async function fetchRadarAccBinary(name, base) {
+  const resp = await fetch(`${base}/${name}?v=${Math.floor(Date.now() / 600000)}`, { cache: 'no-store' });
+  if (!resp.ok) throw new Error(`${name} ${resp.status}`);
+  let bytes = new Uint8Array(await resp.arrayBuffer());
+  if (bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b) {
+    const inflated = await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+    bytes = new Uint8Array(inflated);
+  }
+  return bytes;
+}
+
+function decodeRadarAccValues(bytes, encoding) {
+  const scale = Number(encoding?.scale) || 10;
+  const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const n = Math.floor(bytes.byteLength / 2);
+  const out = new Array(n);
+  for (let i = 0; i < n; i++) out[i] = dv.getUint16(i * 2, true) / scale;
+  return out;
+}
+
+// One site day: sidecar JSON plus decoded values, shaped like the nb2 files
+// (values_mm, window_*_utc, frames_used, frames_expected, frames_last_used_utc).
+async function fetchSiteDay(base, stem) {
+  const meta = await fetchRadarAccJson(`${stem}.json`, base);
+  const bytes = await fetchRadarAccBinary(`${stem}.bin.gz`, base);
+  const values = decodeRadarAccValues(bytes, meta.encoding);
+  if (values.length !== meta.grid_rows * meta.grid_cols) throw new Error(`${stem}: ${values.length} values for ${meta.grid_rows}x${meta.grid_cols}`);
+  return { ...meta, values_mm: values };
+}
+
 // Frame coverage of a v2 (BoM) file over its elapsed window. The BoM FTP only
 // retains ~2h, so a file that started life mid-day stays partial forever —
 // those fall back to the coarse Lizard source.
@@ -3423,23 +3511,33 @@ function radarAccAddDays(dateStr, n) {
 }
 
 async function getRadarAccDaily(date) {
-  if (radarAccDailyCache.has(date)) return radarAccDailyCache.get(date);
+  const cacheKey = `${radarAccSource?.key || 'nb'}|${date}`;
+  if (radarAccDailyCache.has(cacheKey)) return radarAccDailyCache.get(cacheKey);
   let entry = null;
-  try {
-    const j = await fetchRadarAccJson(`daily/${date}.json`, RADAR_ACC_BASE2);
-    if (radarAccV2Coverage(j) >= RADAR_ACC_COVERAGE_MIN) {
-      entry = { values: j.values_mm, startMs: Date.parse(j.window_start_utc), fine: true };
-    }
-  } catch (e) { /* no v2 file for this date */ }
-  if (!entry) {
+  if (radarAccSource?.kind === 'site') {
+    // Site days come from the site prefix only; grids differ per source so
+    // days are never mixed across sources.
     try {
-      const j = await fetchRadarAccJson(`daily/${date}.json`);
-      entry = { values: j.values_mm, startMs: Date.parse(j.window_start_utc), fine: false };
-    } catch (e) {
-      entry = null;
+      const j = await fetchSiteDay(radarAccSource.base, `daily/${date}`);
+      if ((j.frames_used || 0) > 0) entry = { values: j.values_mm, startMs: Date.parse(j.window_start_utc), fine: true };
+    } catch (e) { /* no site file for this date */ }
+  } else {
+    try {
+      const j = await fetchRadarAccJson(`daily/${date}.json`, RADAR_ACC_BASE2);
+      if (radarAccV2Coverage(j) >= RADAR_ACC_COVERAGE_MIN) {
+        entry = { values: j.values_mm, startMs: Date.parse(j.window_start_utc), fine: true };
+      }
+    } catch (e) { /* no v2 file for this date */ }
+    if (!entry) {
+      try {
+        const j = await fetchRadarAccJson(`daily/${date}.json`);
+        entry = { values: j.values_mm, startMs: Date.parse(j.window_start_utc), fine: false };
+      } catch (e) {
+        entry = null;
+      }
     }
   }
-  radarAccDailyCache.set(date, entry);
+  radarAccDailyCache.set(cacheKey, entry);
   return entry;
 }
 
@@ -3643,12 +3741,11 @@ async function updateRadarAccumulationSurface() {
     removeRadarAccSurface();
     return;
   }
-  if (!radarAccMeta) {
-    try { radarAccMeta = await fetchRadarAccJson('metadata.json'); }
-    catch (e) { if (wrap) wrap.style.display = 'none'; removeRadarAccSurface(); return; }
-    if (runId !== radarAccRunId) return;
-  }
-  const covered = lgaIntersectsRadarAccBbox(lga, radarAccMeta.bbox);
+  // Candidate sources for this LGA; the preferred source's metadata bbox gates the control.
+  const sources = resolveRadarAccSources(lga);
+  const gateMeta = sources.length ? await getRadarAccMeta(sources[0]) : null;
+  if (runId !== radarAccRunId) return;
+  const covered = !!gateMeta && lgaIntersectsRadarAccBbox(lga, gateMeta.bbox);
   if (wrap) wrap.style.display = covered ? '' : 'none';
   if (!covered || !document.getElementById('radarAccOn')?.checked) {
     removeRadarAccSurface();
@@ -3657,16 +3754,34 @@ async function updateRadarAccumulationSurface() {
 
   const note = document.getElementById('radarAccNote');
   try {
-    if (!radarAccToday || (Date.now() - radarAccToday.fetchedAt) > 10 * 60 * 1000) {
-      // Prefer the 250 m BoM feed for today when it covers the day so far;
-      // fall back to the 3-hourly Lizard feed otherwise (transition days).
+    const family = sources[0].key;
+    if (!radarAccToday || radarAccToday.family !== family || (Date.now() - radarAccToday.fetchedAt) > 10 * 60 * 1000) {
       const sydToday = sydneyTodayDateString();
-      let data = null, fine = false;
-      try {
-        const j = await fetchRadarAccJson('today.json', RADAR_ACC_BASE2);
-        if (j.date === sydToday && radarAccV2Coverage(j) >= RADAR_ACC_COVERAGE_MIN) { data = j; fine = true; }
-      } catch (e) { /* v2 today unavailable */ }
-      if (!data) data = await fetchRadarAccJson('today.json');
+      let data = null, fine = false, used = sources[0], usedMeta = gateMeta;
+      if (sources[0].kind === 'nb') {
+        // 1. The 250 m nb2 feed when it covers the day so far.
+        try {
+          const j = await fetchRadarAccJson('today.json', RADAR_ACC_BASE2);
+          if (j.date === sydToday && radarAccV2Coverage(j) >= RADAR_ACC_COVERAGE_MIN) { data = j; fine = true; }
+        } catch (e) { /* v2 today unavailable */ }
+        // 2. The Terrey Hills site product (~500 m) — finer than the Lizard feed.
+        if (!data) {
+          const siteSrc = sources.find(s => s.kind === 'site');
+          if (siteSrc) {
+            try {
+              const sm = await getRadarAccMeta(siteSrc);
+              const j = sm ? await fetchSiteDay(siteSrc.base, 'today') : null;
+              if (j && j.date === sydToday && radarAccV2Coverage(j) >= RADAR_ACC_COVERAGE_MIN) { data = j; fine = true; used = siteSrc; usedMeta = sm; }
+            } catch (e) { /* site today unavailable */ }
+          }
+        }
+        // 3. The 3-hourly Lizard feed (transition days).
+        if (!data) data = await fetchRadarAccJson('today.json');
+      } else {
+        data = await fetchSiteDay(sources[0].base, 'today');
+        fine = true;
+      }
+      if (runId !== radarAccRunId) return;
       if (data.date !== sydToday) {
         // Just after Sydney midnight the published file can still be
         // yesterday's — don't render it mislabelled as "since midnight".
@@ -3675,8 +3790,9 @@ async function updateRadarAccumulationSurface() {
         if (note) note.textContent = "Awaiting today's first radar update.";
         return;
       }
-      radarAccToday = { fetchedAt: Date.now(), data, fine };
+      radarAccToday = { fetchedAt: Date.now(), data, fine, family, source: used, meta: usedMeta };
     }
+    activateRadarAccSource(radarAccToday.source, radarAccToday.meta);
     const today = radarAccToday.data;
     const days = Math.max(0, Math.min(90, Math.round(Number(document.getElementById('radarAccDays')?.value) || 0)));
 
@@ -3755,7 +3871,7 @@ async function updateRadarAccumulationSurface() {
       const coveredTo = new Date(today.frames_last_used_utc || today.as_of_utc);
       note.textContent =
         (days === 0 ? 'Since midnight' : `Last ${days} day${days > 1 ? 's' : ''} + today`) +
-        ` · ${radarAccToday.fine ? '250 m' : '5.5 km'} radar to ${coveredTo.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' })}` +
+        ` · ${radarAccSourceLabel()} radar to ${coveredTo.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' })}` +
         (wantCorrection
           ? (cal.points.length >= 3
               ? ` · anchored to ${cal.gauges} reporting gauges`
