@@ -386,7 +386,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
       </div>
     </div>
 
-    <!-- Radar accumulation surface (Northern Beaches AOI only) -->
+    <!-- Radar accumulation surface (LGAs intersecting the published radar grid) -->
     <div class="sb-section" id="radarAccWrap" style="display:none">
       <div class="lbl">Radar Accumulation</div>
       <label style="display:flex;align-items:center;gap:6px;font-size:12px;margin:4px 0;cursor:pointer">
@@ -1661,9 +1661,27 @@ function ensureAtmosMapSetup() {
   });
 }
 
+// Initial map centre: centroid of the resolved LGA's bounds. nsw_lga_boundaries.js is a
+// classic script loaded before this one, so the extent is available at map creation;
+// the seeded Northern Beaches polygon covers the fallback LGA. Mona Vale only if nothing resolves.
+function resolveInitialMapCenter() {
+  const features = window.NSW_LGA_BOUNDARIES?.features || [];
+  const names = features.map(getFeatureLgaName).filter(Boolean);
+  const lga = resolveDefaultLga(names.length ? names : null);
+  let bounds = getLgaLatLngBounds(lga);
+  if (!bounds) {
+    const feature = features.find(f => getFeatureLgaName(f) === lga);
+    if (feature) {
+      const b = getFeatureBounds(feature);
+      bounds = L.latLngBounds([b.minLat, b.minLon], [b.maxLat, b.maxLon]);
+    }
+  }
+  return window.mapInit.resolveInitialCenter(bounds);
+}
+
 function initAtmosMap() {
   if (map) return map;
-  map = window.mapInit.createAtmosMap({ L });
+  map = window.mapInit.createAtmosMap({ L, center: resolveInitialMapCenter() });
   atmosBaseLayer = window.mapLayers.addAtmosBaseLayer(map, { L });
   atmosRadarPaneName = window.mapLayers.ensureAtmosRadarPane(map);
   queueAtmosRadarLayer(map);
@@ -2000,9 +2018,35 @@ async function filterStationsByRecentReadings(stations) {
 }
 
 // â"€â"€ LGA dropdown â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+// Last-used LGA persistence (sg* localStorage convention, alongside sgTheme).
+const SG_LGA_KEY = 'sgLga';
+const LGA_FALLBACK = 'Northern Beaches';
+
+function readStoredLga() {
+  try { return localStorage.getItem(SG_LGA_KEY) || ''; } catch (_) { return ''; }
+}
+
+function writeStoredLga(lga) {
+  try {
+    if (lga) localStorage.setItem(SG_LGA_KEY, lga);
+    else localStorage.removeItem(SG_LGA_KEY);       // "All stations" is not persisted as a default
+  } catch (_) { /* storage unavailable */ }
+}
+
+// The last-used LGA when it is still offered (or when no option list is given), else the fallback.
+function resolveDefaultLga(available) {
+  const stored = readStoredLga();
+  if (stored && (!available || available.includes(stored))) return stored;
+  return LGA_FALLBACK;
+}
+
+function getLgaOptionValues() {
+  const sel = document.getElementById('lgaSel');
+  return sel ? [...sel.options].map(o => o.value).filter(Boolean) : null;
+}
+
 function buildLgaDropdown() {
   const lgaSel = document.getElementById('lgaSel');
-  const priority = ['Northern Beaches','Central Coast','Ku-ring-gai','Newcastle','Hunter Valley','Greater Sydney West','Lane Cove'];
   const lgas = new Set();
   Object.keys(lgaBoundaryCache).forEach(lga => {
     if (lga) lgas.add(lga);
@@ -2012,8 +2056,7 @@ function buildLgaDropdown() {
     if (lga) lgas.add(lga);
   });
   const sorted = [
-    ...priority.filter(l => lgas.has(l)),
-    ...[...lgas].filter(l => !priority.includes(l) && l !== 'NSW Other').sort(),
+    ...[...lgas].filter(l => l !== 'NSW Other').sort(),
     ...(lgas.has('NSW Other') ? ['NSW Other'] : [])
   ];
   sorted.forEach(lga => {
@@ -2022,7 +2065,7 @@ function buildLgaDropdown() {
     opt.textContent = `${lga} (${lgaOptionCount(lga)})`;
     lgaSel.appendChild(opt);
   });
-  lgaSel.value = 'Northern Beaches';
+  lgaSel.value = resolveDefaultLga(sorted);
   onLgaChange();
   document.getElementById('nbcSub').value = 'all-lga';
   onNbcSubChange();
@@ -2063,6 +2106,7 @@ function canAnalyseStation(station) {
 
 function onLgaChange() {
   const lga = document.getElementById('lgaSel').value;
+  writeStoredLga(lga);
 
   const allDisplay = getDisplayStations();
   const matching = allDisplay.filter(s => stationMatchesFilters(s, '', lga));
@@ -2106,7 +2150,7 @@ function onLgaChange() {
   // Refresh rainfall-since-midnight shading for the newly visible stations
   accumulateDisplayedRainfall();
 
-  // Radar accumulation surface (shows only for the Northern Beaches AOI)
+  // Radar accumulation surface (shown when the LGA intersects the published grid)
   updateRadarAccumulationSurface();
 }
 
@@ -2693,7 +2737,7 @@ async function runAnalysis() {
 
 
 function getNbcSubStations() {
-  const lga = document.getElementById('lgaSel')?.value || 'Northern Beaches';
+  const lga = document.getElementById('lgaSel')?.value || resolveDefaultLga(getLgaOptionValues());
   // Batch rainfall analysis can only run on official live gauges with time-series IDs.
   return allStations.filter(s => getLGA(s) === lga);
 }
@@ -3272,8 +3316,21 @@ function shadeLgaBoundaryByRainfall() {
 const RADAR_ACC_BASE = 'https://data.pluviometrics.com.au/radar/nb';    // Lizard, ~5.5 km native
 const RADAR_ACC_BASE2 = 'https://data.pluviometrics.com.au/radar/nb2';  // BoM IDR714, ~250 m native
 const RADAR_ACC_COVERAGE_MIN = 0.9;   // required frame coverage to prefer the 250 m source
-const RADAR_ACC_LGA = 'Northern Beaches';
 const RADAR_ACC_PANE = 'radar-acc-pane';
+
+// The surface applies to any LGA whose extent intersects the published grid bbox
+// ([minLon, minLat, maxLon, maxLat] in metadata.json); it is clipped to that LGA's polygon.
+function lgaIntersectsRadarAccBbox(lga, bbox) {
+  const b = lga ? getLgaLatLngBounds(lga) : null;
+  if (!b || !Array.isArray(bbox) || bbox.length !== 4) return false;
+  const [minLon, minLat, maxLon, maxLat] = bbox;
+  return b.getWest() <= maxLon && b.getEast() >= minLon && b.getSouth() <= maxLat && b.getNorth() >= minLat;
+}
+
+function radarAccClipFeature() {
+  const lga = document.getElementById('lgaSel')?.value;
+  return lga ? lgaBoundaryCache[lga] : null;
+}
 let radarAccMeta = null;
 let radarAccToday = null;               // { fetchedAt, data }
 let radarAccOverlay = null;
@@ -3445,7 +3502,7 @@ function renderRadarAccImage(totals, lo, hi) {
   const out = document.createElement('canvas');
   out.width = W; out.height = H;
   const ctx = out.getContext('2d');
-  const feature = lgaBoundaryCache[RADAR_ACC_LGA];
+  const feature = radarAccClipFeature();
   if (feature?.geometry) {
     const toX = lon => (lon - minLon) / (maxLon - minLon) * W;
     const toY = lat => (maxLat - lat) / (maxLat - minLat) * H;
@@ -3506,7 +3563,7 @@ function wireRadarAccHover() {
     const { lat, lng } = e.latlng;
     const [minLon, minLat, maxLon, maxLat] = radarAccMeta.bbox;
     if (lng < minLon || lng > maxLon || lat < minLat || lat > maxLat) { closeRadarAccCellTooltip(); return; }
-    const feature = lgaBoundaryCache[RADAR_ACC_LGA];
+    const feature = radarAccClipFeature();
     if (feature?.geometry && !pointInGeometry(lat, lng, feature.geometry)) { closeRadarAccCellTooltip(); return; }
     const rows = radarAccMeta.grid_rows, cols = radarAccMeta.grid_cols;
     const row = Math.min(rows - 1, Math.max(0, Math.floor((maxLat - lat) / (maxLat - minLat) * rows)));
@@ -3543,16 +3600,25 @@ async function updateRadarAccumulationSurface() {
   const runId = ++radarAccRunId;
   const wrap = document.getElementById('radarAccWrap');
   const lga = document.getElementById('lgaSel')?.value;
-  const isNb = lga === RADAR_ACC_LGA;
-  if (wrap) wrap.style.display = isNb ? '' : 'none';
-  if (!isNb || !document.getElementById('radarAccOn')?.checked || !map) {
+  if (!lga || !map) {
+    if (wrap) wrap.style.display = 'none';
+    removeRadarAccSurface();
+    return;
+  }
+  if (!radarAccMeta) {
+    try { radarAccMeta = await fetchRadarAccJson('metadata.json'); }
+    catch (e) { if (wrap) wrap.style.display = 'none'; removeRadarAccSurface(); return; }
+    if (runId !== radarAccRunId) return;
+  }
+  const covered = lgaIntersectsRadarAccBbox(lga, radarAccMeta.bbox);
+  if (wrap) wrap.style.display = covered ? '' : 'none';
+  if (!covered || !document.getElementById('radarAccOn')?.checked) {
     removeRadarAccSurface();
     return;
   }
 
   const note = document.getElementById('radarAccNote');
   try {
-    if (!radarAccMeta) radarAccMeta = await fetchRadarAccJson('metadata.json');
     if (!radarAccToday || (Date.now() - radarAccToday.fetchedAt) > 10 * 60 * 1000) {
       // Prefer the 250 m BoM feed for today when it covers the day so far;
       // fall back to the 3-hourly Lizard feed otherwise (transition days).
