@@ -139,7 +139,18 @@ export function selectRadarSite(extent) {
     const km = haversineKm(centroid.lat, centroid.lon, site.lat, site.lon);
     if (km < bestKm) { best = site; bestKm = km; }
   }
-  return describe(best, `IDR${best.site}3`, bestKm, 'nearest-verified');
+  // 128 km product when the whole extent is within its range; otherwise the 256 km product.
+  const reachKm = hasExtent
+    ? Math.max(...[
+        [extent.south, extent.west], [extent.south, extent.east],
+        [extent.north, extent.west], [extent.north, extent.east]
+      ].map(([la, lo]) => haversineKm(la, lo, best.lat, best.lon)))
+    : bestKm;
+  const within128 = reachKm <= RANGE_KM_BY_IDR_SUFFIX['3'];
+  const result = describe(best, `IDR${best.site}${within128 ? '3' : '2'}`, bestKm,
+    within128 ? 'nearest-verified-128km' : 'nearest-verified-256km');
+  result.reachKm = reachKm;
+  return result;
 }
 
 function pad2(n) {

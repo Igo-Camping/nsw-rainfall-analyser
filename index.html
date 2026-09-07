@@ -317,7 +317,7 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #2A4060; }
     <img class="home-logo" src="Assets/Logos/STORMGAUGE.png" alt="Stormgauge">
     <div class="home-kicker">Pluviometrics</div>
     <h1>Stormgauge</h1>
-    <p>Northern Beaches rainfall intelligence for live gauge review, event totals, intensity ranking, and AEP checks.</p>
+    <p>Pluviometrics Rainfall Intelligence</p>
     <button class="home-primary" onclick="switchPage('aep')">Open Rainfall Calculator</button>
   </section>
 
@@ -1779,7 +1779,7 @@ function updateAtmosRadarTimestamp(frame) {
 async function initAtmosRadarLayer(mapInstance, site = null) {
   const radarSite = site || resolveRadarSiteForLga(resolveInitialLga());
   try {
-    console.info(`[Atmos radar] Attempting BOM static radar ${radarSite.idr} (${radarSite.name}, ${radarSite.rule}${radarSite.distanceKm != null ? `, ${Math.round(radarSite.distanceKm)} km` : ''})`);
+    console.info(`[Atmos radar] Attempting BOM static radar ${radarSite.idr} (${radarSite.name}, ${radarSite.rule}${radarSite.distanceKm != null ? `, centroid ${Math.round(radarSite.distanceKm)} km` : ''}${radarSite.reachKm != null ? `, extent reach ${Math.round(radarSite.reachKm)} km, product range ${radarSite.rangeKm} km` : ''})`);
     ensureAtmosRadarTimestampControl(mapInstance);
     atmosRadarSiteIdr = radarSite.idr;
     atmosRadarLayer = window.bomRadar.createBomStaticRadarLayer({
